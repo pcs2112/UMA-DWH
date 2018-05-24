@@ -4,6 +4,8 @@ from .schemas.etl import (control_manager_schema, current_cycle_status_schema, c
                           procedure_history_schema, server_db_procedures_schema, server_dbs_schema,
                           try_catch_error_schema)
 
+ADMIN_CONSOLE_SP_IN_ARGS_LENGTH = 9
+
 
 def fetch_control_manager():
     """
@@ -40,9 +42,7 @@ def fetch_cycle_history(start_cycle_group=0, end_cycle_group=9):
       {
         'message': 'LOAD_ETL_HISTORY',
         'VARCHAR_01': str(start_cycle_group),
-        'VARCHAR_02': str(end_cycle_group),
-        'VARCHAR_03': '',
-        'VARCHAR_04': ''
+        'VARCHAR_02': str(end_cycle_group)
       },
       'TryCatchError_ID',
       cycle_history_schema
@@ -62,9 +62,7 @@ def fetch_procedure_history(db_name, procedure_name):
       {
         'message': 'GET_ETL_PROCEDURE_HISTORY',
         'VARCHAR_01': db_name,
-        'VARCHAR_02': procedure_name,
-        'VARCHAR_03': '',
-        'VARCHAR_04': ''
+        'VARCHAR_02': procedure_name
       },
       'TryCatchError_ID',
       procedure_history_schema
@@ -78,11 +76,7 @@ def fetch_servers():
     server_dbs = execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
       {
-        'message': 'GET SERVER DB LIST',
-        'VARCHAR_01': '',
-        'VARCHAR_02': '',
-        'VARCHAR_03': '',
-        'VARCHAR_04': ''
+        'message': 'GET SERVER DB LIST'
       },
       'TryCatchError_ID',
       server_dbs_schema
@@ -131,9 +125,7 @@ def fetch_server_db_procedures(server_name, db_name):
       {
         'message': 'GET TABLES AND STORED PROCEDURES',
         'VARCHAR_01': server_name,
-        'VARCHAR_02': db_name,
-        'VARCHAR_03': '',
-        'VARCHAR_04': ''
+        'VARCHAR_02': db_name
       },
       'TryCatchError_ID',
       server_db_procedures_schema
@@ -148,13 +140,10 @@ def fetch_error(error_id):
     """
     result = execute_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      {
+      fill_in_admin_console_sp_in_args({
         'message': 'GET_ERROR_TEXT',
         'VARCHAR_01': str(error_id),
-        'VARCHAR_02': '',
-        'VARCHAR_03': '',
-        'VARCHAR_04': ''
-      }
+      })
     )
 
     return result_set_as_dicts(try_catch_error_schema, result[0])
@@ -170,13 +159,30 @@ def fetch_run_check(run_check_name):
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
       {
         'message': 'RUN_CHECK',
-        'VARCHAR_01': run_check_name,
-        'VARCHAR_02': '',
-        'VARCHAR_03': '',
-        'VARCHAR_04': ''
+        'VARCHAR_01': run_check_name
       },
       'TryCatchError_ID'
     )
+
+
+def fill_in_admin_console_sp_in_args(in_args):
+    """
+    Helper function to ensure the MWH.UMA_WAREHOUSE_ADMIN_CONSOLE SP
+    is always called with the correct number of in arguments.
+
+    :param in_args: SP in arguments
+    :type in_args: dict
+    :return: dict
+    """
+    new_in_args = in_args.copy()
+    in_args_length = len(new_in_args.keys())
+    if in_args_length < ADMIN_CONSOLE_SP_IN_ARGS_LENGTH:
+        for x in range(in_args_length + 1, ADMIN_CONSOLE_SP_IN_ARGS_LENGTH + 1):
+            in_arg_prefix = '0' if x < 10 else ''
+            in_arg_name = f'VARCHAR_{in_arg_prefix}{(x-1)}'
+            new_in_args[in_arg_name] = ''
+
+    return new_in_args
 
 
 def execute_admin_console_sp(sp_name, in_args, out_arg, schema=()):
@@ -194,7 +200,7 @@ def execute_admin_console_sp(sp_name, in_args, out_arg, schema=()):
     :return: Stored procedure result sets and out argument
     :rtype: list
     """
-    result = execute_sp(sp_name, in_args, out_arg)
+    result = execute_sp(sp_name, fill_in_admin_console_sp_in_args(in_args), out_arg)
 
     status_code = result[len(result) - 1][0][0]
 
