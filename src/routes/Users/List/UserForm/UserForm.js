@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { reduxForm, Field } from 'redux-form';
 import { Form, Button } from 'semantic-ui-react';
 import { TextField } from 'components/ReduxForm';
-import validate from './validate';
 
 const UserForm = ({
   pristine, submitting, handleSubmit, onSubmit
@@ -42,6 +41,5 @@ export default reduxForm({
     'employee_phone',
     'employee_cell_phone',
     'employee_password'
-  ],
-  validate
+  ]
 })(UserForm);

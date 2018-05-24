@@ -6,6 +6,7 @@ import config from 'config';
 import globalCss from 'css/global';
 import users from 'redux/modules/users';
 import UserForm from './UserForm';
+import { newUserValidator, existingUserValidator } from './UserForm/validate';
 import ListTable from './ListTable';
 
 const emptyInitialValues = {};
@@ -106,6 +107,7 @@ class List extends Component {
               <UserForm
                 form="CreateUserForm"
                 onSubmit={() => {}}
+                validate={newUserValidator}
               />
             </Modal.Content>
           </Modal>
@@ -124,6 +126,7 @@ class List extends Component {
                 form="EditUserForm"
                 initialValues={initialValues}
                 onSubmit={() => {}}
+                validate={existingUserValidator}
               />
             </Modal.Content>
           </Modal>
