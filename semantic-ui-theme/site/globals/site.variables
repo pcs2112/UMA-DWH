@@ -1,0 +1,16 @@
+@defaultBorderRadius: 0;
+
+/*-------------------
+      Base Sizes
+--------------------*/
+
+/* This is the single variable that controls them all */
+@emSize   : 12px;
+
+/* The size of page text  */
+@fontSize : 12px;
+
+/* Close icon in inverted modals */
+.ui.inverted.page.modals.dimmer.transition.visible.active .close.icon {
+  color: #000 !important;
+}

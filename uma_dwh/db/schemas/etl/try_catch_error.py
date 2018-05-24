@@ -1,0 +1,12 @@
+schema = (
+  'ID',
+  'INSERT_DTTM',
+  'LST_MOD_USER',
+  'ERR',
+  'ERROR_SEVERITY',
+  'ERROR_STATE',
+  'ERROR_PROCEDURE',
+  'ERROR_LINE',
+  'ERROR_MESSAGE',
+  'ETL_PROCEDURE_NAME'
+)

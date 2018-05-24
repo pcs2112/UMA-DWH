@@ -1,0 +1,7 @@
+schema = (
+  'DATA_MART_NAME',
+  'ENGINE_STATUS',
+  'START_DTTM',
+  'END_DTTM',
+  'FULL_DATA_MART_RUNTIME'
+)

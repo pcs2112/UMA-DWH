@@ -1,0 +1,39 @@
+.ReactTable ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.ReactTable .rt-table {
+  background: #fff;
+  font-size: 10px;
+}
+
+.ReactTable.status-table .rt-table {
+  font-size: 10px;
+}
+
+.ReactTable.status-table .rt-td {
+  padding: 0px 2px !important;
+}
+
+.ReactTable.status-table .rt-tfoot .rt-td {
+  font-weight: bold;
+}
+
+.ReactTable .rt-thead .rt-th {
+  background: #f9fafb !important;
+  font-weight: 700;
+}
+
+.ReactTable .rt-td {
+  padding: 2px 2px !important;
+}
+
+.ReactTable .rt-td i.expander {
+  margin-right: 0px !important;
+}
+
+.ui.internally.celled.grid .row .column {
+  font-size: 10px;
+  padding: 2px 2px !important;
+}
