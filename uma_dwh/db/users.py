@@ -1,5 +1,6 @@
 from passlib.hash import pbkdf2_sha256 as sha256
-from .mssql_db import fetch_rows, fetch_row, execute_sp
+from .mssql_db import fetch_rows, fetch_row
+from .etl import execute_admin_console_sp
 from .schemas.users import users_schema
 
 
@@ -19,6 +20,16 @@ def fetch_user_by_email(email):
     return fetch_row(sql=sql, in_args=[email], schema=users_schema)
 
 
+def update_user():
+    execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+      {
+        'message': 'SAVE ADMIN CONSOLE USER'
+      },
+      'TryCatchError_ID'
+    )
+
+
 def login_user(email, password):
     """
     Returns True if the login credentials are valid.
@@ -34,15 +45,14 @@ def login_user(email, password):
     if verify_password_hash(password, user_result['employee_password']) is False:
         return -2
 
-    execute_sp(
+    execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
       {
         'message': 'LOGIN',
         'VARCHAR_01': email,
-        'VARCHAR_02': user_result['employee_password'],
-        'VARCHAR_03': '',
-        'VARCHAR_04': ''
-      }
+        'VARCHAR_02': user_result['employee_password']
+      },
+      'TryCatchError_ID'
     )
 
     return user_result['id']
