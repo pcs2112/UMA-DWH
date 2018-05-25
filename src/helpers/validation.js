@@ -13,8 +13,7 @@ const defaultMessages = {
  */
 export const phoneNumber = (length = 10, msg) => (value) => {
   let error = '';
-
-  const normalizedValue = `${value}`;
+  const normalizedValue = isEmpty(value) ? '' : `${value}`;
   if (!isEmpty(normalizedValue) && (!isNumber(normalizedValue) || normalizedValue.length !== length)) {
     error = (msg || defaultMessages.phoneNumber).replace('{length}', `${length}`);
   }
