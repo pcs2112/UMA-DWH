@@ -70,7 +70,7 @@ def create_user(data):
     if existing_user:
         raise DBException(f"{new_data['employee_email']} already exists.")
 
-    execute_admin_console_sp(
+    result = execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
       {
         'message': 'SAVE ADMIN CONSOLE USER',
@@ -83,11 +83,10 @@ def create_user(data):
         'VARCHAR_07': '',
         'VARCHAR_08': generate_password_hash(new_data['employee_password'])
       },
-      'TryCatchError_ID',
-      users_schema
+      'TryCatchError_ID'
     )
 
-    return fetch_user_by_email(new_data['employee_email'])
+    return fetch_user_by_id(result[0][0])
 
 
 def update_user(id_, data):
