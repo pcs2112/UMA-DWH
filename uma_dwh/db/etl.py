@@ -204,7 +204,7 @@ def execute_admin_console_sp(sp_name, in_args, out_arg, schema=()):
 
     status_code = result[len(result) - 1][0][0]
 
-    if status_code != 0:
+    if status_code > 1:
         raise SPException(f'Stored Procedure call to SP "{sp_name}" failed.', status_code)
 
     if len(schema) > 1:
