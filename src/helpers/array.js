@@ -24,5 +24,8 @@ export const replaceObjByValue = (list, item, value, key = 'id') => {
     return [...list];
   }
 
-  return list.splice(index, 1, item);
+  const newList = [...list];
+  newList[index] = item;
+
+  return newList;
 };

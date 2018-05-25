@@ -57,5 +57,8 @@ export const updateUser = (id, data) => ({
   makeRequest: client => client.post(`/api/users/${id}`, {
     data
   })
-    .catch(catchValidation)
+    .catch(catchValidation),
+  payload: {
+    id
+  }
 });
