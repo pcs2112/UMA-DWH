@@ -1,6 +1,6 @@
 import { SubmissionError } from 'redux-form';
-import { objectHasOwnProperty } from './utils';
 import { DEFAULT_FORM_ERROR } from 'constants/index';
+import { objectHasOwnProperty } from './utils';
 
 /**
  * Action creator for Redux aciton
