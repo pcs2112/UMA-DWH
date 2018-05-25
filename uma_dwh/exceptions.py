@@ -72,6 +72,6 @@ class InvalidUsage(Exception):
         return cls(**etl_error)
 
     @classmethod
-    def form_validation_error(cls, message, payload):
-        form_validation_error = http_error_template(401, 'FORM_VALIDATION_ERROR', message, payload)
+    def form_validation_error(cls, payload):
+        form_validation_error = http_error_template(401, 'FORM_VALIDATION_ERROR', 'Validation error.', payload)
         return cls(**form_validation_error)

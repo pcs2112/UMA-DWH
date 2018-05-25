@@ -1,5 +1,6 @@
 import { SubmissionError } from 'redux-form';
 import { objectHasOwnProperty } from './utils';
+import { DEFAULT_FORM_ERROR } from 'constants/index';
 
 /**
  * Action creator for Redux aciton
@@ -36,7 +37,7 @@ export const catchValidation = (error) => {
   if (objectHasOwnProperty(error, 'error_type') && error.error_type === 'FORM_VALIDATION_ERROR') {
     const errors = {
       ...error.payload,
-      _error: error.message
+      _error: DEFAULT_FORM_ERROR
     };
 
     throw new SubmissionError(errors);

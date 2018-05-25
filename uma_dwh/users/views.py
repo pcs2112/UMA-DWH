@@ -30,10 +30,10 @@ def post_login():
         raise InvalidUsage.etl_error(e.message, fetch_error(e.error_id))
 
     if result == -1:
-        raise InvalidUsage.form_validation_error('Invalid account.', {'email': 'Invalid account.'})
+        raise InvalidUsage.form_validation_error({'email': 'Invalid account.'})
 
     if result == -2:
-        raise InvalidUsage.form_validation_error('Invalid password.', {'password': 'Invalid password.'})
+        raise InvalidUsage.form_validation_error({'password': 'Invalid password.'})
 
     access_token = create_access_token(identity=body['email'])
     refresh_token = create_refresh_token(identity=body['email'])
