@@ -10,7 +10,10 @@ export const actionTypes = {
   LOGIN_SUCCESS: 'user/LOGIN_SUCCESS',
   LOGIN_FAIL: 'user/LOGIN_FAIL',
   SET_ACCESS_TOKENS: 'user/SET_ACCESS_TOKENS',
-  SET_ACCESS_TOKEN: 'user/SET_ACCESS_TOKEN'
+  SET_ACCESS_TOKEN: 'user/SET_ACCESS_TOKEN',
+  CREATE_BEGIN: 'user/CREATE_BEGIN',
+  CREATE_SUCCESS: 'user/CREATE_SUCCESS',
+  CREATE_FAIL: 'user/CREATE_FAIL',
 };
 
 /**
@@ -67,4 +70,21 @@ export const setAccessTokens = (accessToken, refreshToken) => ({
 export const setAccessToken = accessToken => ({
   type: actionTypes.SET_ACCESS_TOKEN,
   accessToken
+});
+
+/**
+ * Action to create a new user.
+ *
+ * @param {Object} data
+ */
+export const create = data => ({
+  types: [
+    actionTypes.CREATE_BEGIN,
+    actionTypes.CREATE_SUCCESS,
+    actionTypes.CREATE_FAIL
+  ],
+  makeRequest: client => client.post('/api/users', {
+    data
+  })
+    .catch(catchValidation)
 });
