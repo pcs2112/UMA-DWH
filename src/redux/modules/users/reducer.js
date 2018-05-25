@@ -21,6 +21,14 @@ export default (state = initialState, action) => {
     case actionTypes.FETCH_FAIL:
     case actionTypes.FETCH_SUCCESS:
       return itemListReducer(state, action);
+    case actionTypes.CREATE_SUCCESS: {
+      const newData = state.data.slice();
+      newData.push({ ...action.response });
+      return {
+        ...state,
+        data: newData
+      };
+    }
     case actionTypes.UPDATE_SUCCESS:
       return {
         ...state,
