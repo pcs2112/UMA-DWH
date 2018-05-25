@@ -58,7 +58,7 @@ class List extends Component {
         employee_email: currUser.employee_email,
         employee_phone: currUser.employee_phone,
         employee_cell_phone: currUser.employee_cell_phone,
-        employee_password: currUser.employee_password
+        employee_password: ''
       }
     });
   };
