@@ -86,7 +86,7 @@ class List extends Component {
   render() {
     const { creating, editing, editUserInitialValues } = this.state;
     const {
-      usersFetching, usersDataLoaded, usersData, usersFetchingError, createUser, updateUser
+      usersFetching, usersDataLoaded, usersData, usersFetchingError, createUser
     } = this.props;
     return (
       <div>
