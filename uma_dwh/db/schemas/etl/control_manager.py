@@ -1,8 +1,8 @@
 schema = (
-  'ID',
-  'PROCEDURE_NAME',
-  'DATA_MART_NAME',
-  'PRIORITY',
-  'SOURCE_SERVER_NAME',
-  'SOURCE_DB_NAME'
+  'id',
+  'procedure_name',
+  'data_mart_name',
+  'priority',
+  'source_server_name',
+  'source_db_name'
 )

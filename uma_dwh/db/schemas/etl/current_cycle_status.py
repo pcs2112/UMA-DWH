@@ -1,10 +1,10 @@
 schema = (
-  'DATA_MART_NAME',
-  'DATA_MART_STATUS',
-  'JOB_COUNT',
-  'JOBS_FINISHED',
-  'DATA_MART_START_DTTM',
-  'DATA_MART_END_DTTM',
-  'RUN_TIME_TO_CURRENT_DATA_MART_STATUS',
-  'DATA_MART_TRANS_RATE'
+  'data_mart_name',
+  'data_mart_status',
+  'job_count',
+  'jobs_finished',
+  'data_mart_start_dttm',
+  'data_mart_end_dttm',
+  'run_time_to_current_data_mart_status',
+  'data_mart_trans_rate'
 )

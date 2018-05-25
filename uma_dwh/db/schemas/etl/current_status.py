@@ -1,7 +1,7 @@
 schema = (
-  'DATA_MART_NAME',
-  'ENGINE_STATUS',
-  'START_DTTM',
-  'END_DTTM',
-  'FULL_DATA_MART_RUNTIME'
+  'data_mart_name',
+  'engine_status',
+  'start_dttm',
+  'end_dttm',
+  'full_data_mart_runtime'
 )

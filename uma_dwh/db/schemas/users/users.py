@@ -1,14 +1,14 @@
 schema = (
-  'ID',
-  'INSERT_DTTM',
-  'UPDATE_DTTM',
-  'LST_MOD_USER',
-  'MSTR_LOAD_ID',
-  'D_STAFF_ID',
-  'EMPLOYEE_LAST_NAME',
-  'EMPLOYEE_FIRST_NAME',
-  'EMPLOYEE_EMAIL',
-  'EMPLOYEE_PHONE',
-  'EMPLOYEE_CELL_PHONE',
-  'EMPLOYEE_PASSWORD'
+  'id',
+  'insert_dttm',
+  'update_dttm',
+  'lst_mod_user',
+  'mstr_load_id',
+  'd_staff_id',
+  'employee_last_name',
+  'employee_first_name',
+  'employee_email',
+  'employee_phone',
+  'employee_cell_phone',
+  'employee_password'
 )

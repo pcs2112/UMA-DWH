@@ -1,4 +1,4 @@
 schema = (
-  'SOURCE_SERVER_NAME',
-  'SOURCE_DB_NAME'
+  'source_server_name',
+  'source_db_name'
 )

@@ -1,12 +1,12 @@
 schema = (
-  'ID',
-  'INSERT_DTTM',
-  'LST_MOD_USER',
-  'ERR',
-  'ERROR_SEVERITY',
-  'ERROR_STATE',
-  'ERROR_PROCEDURE',
-  'ERROR_LINE',
-  'ERROR_MESSAGE',
-  'ETL_PROCEDURE_NAME'
+  'id',
+  'insert_dttm',
+  'lst_mod_user',
+  'err',
+  'error_severity',
+  'error_state',
+  'error_procedure',
+  'error_line',
+  'error_message',
+  'etl_procedure_name'
 )
