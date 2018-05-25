@@ -1,5 +1,4 @@
 import { SubmissionError } from 'redux-form';
-import { DEFAULT_FORM_ERROR } from 'constants/index';
 import { objectHasOwnProperty } from './utils';
 
 /**
@@ -37,7 +36,7 @@ export const catchValidation = (error) => {
   if (objectHasOwnProperty(error, 'error_type') && error.error_type === 'FORM_VALIDATION_ERROR') {
     const errors = {
       ...error.payload,
-      _error: DEFAULT_FORM_ERROR
+      _error: error.message
     };
 
     throw new SubmissionError(errors);
