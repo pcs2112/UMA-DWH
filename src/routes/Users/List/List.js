@@ -160,8 +160,8 @@ export default connect(
   }),
   dispatch => ({
     fetchUsers: () => dispatch(users.actions.fetchUsers()),
-    createUser: data => dispatch(users.actions.create(data)),
-    updateUser: (id, data) => dispatch(users.actions.update(id, data)),
+    createUser: data => dispatch(users.actions.createUser(data)),
+    updateUser: (id, data) => dispatch(users.actions.updateUser(id, data)),
   })
 )(List);
 

@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required,
                                 get_jwt_identity, get_jwt_claims)
 from uma_dwh.exceptions import InvalidUsage
-from uma_dwh.db.exceptions import SPException
+from uma_dwh.db.exceptions import SPException, DBException
 from uma_dwh.db.etl import fetch_error
 from uma_dwh.db.users import fetch_users, fetch_user_by_email, login_user, create_user, update_user
 
@@ -61,13 +61,19 @@ def get_users():
 
 @blueprint.route('/api/users', methods=('POST',))
 @jwt_required
-def create_user():
+def post_create_user():
     body = request.get_json(silent=True)
-    return jsonify(create_user(body))
+    try:
+        return jsonify(create_user(body))
+    except DBException as e:
+        raise InvalidUsage.form_validation_error({'employee_email': e.message})
 
 
 @blueprint.route('/api/users/<user_id>', methods=('POST',))
 @jwt_required
-def update_user(user_id):
+def post_update_user(user_id):
     body = request.get_json(silent=True)
-    return jsonify(update_user(user_id, body))
+    try:
+        return jsonify(update_user(user_id, body))
+    except DBException as e:
+        raise InvalidUsage.form_validation_error({'employee_email': e.message})

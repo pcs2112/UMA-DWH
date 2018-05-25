@@ -1,6 +1,8 @@
-import pyodbc
+from pydash.objects import pick, assign
+from pydash.predicates import is_empty
 from passlib.hash import pbkdf2_sha256 as sha256
 from .mssql_db import fetch_rows, fetch_row
+from .exceptions import DBException
 from .etl import execute_admin_console_sp
 from .schemas.users import users_schema
 
@@ -39,27 +41,53 @@ def create_user(data):
     :param data: New user data
     :type data: dict
     """
+    required_data = {
+      'employee_last_name': '',
+      'employee_first_name': '',
+      'employee_email': '',
+      'employee_phone': '',
+      'employee_cell_phone': '',
+      'employee_password': ''
+    }
+
+    new_data = assign(
+      required_data,
+      pick(
+        data,
+        'employee_last_name',
+        'employee_first_name',
+        'employee_email',
+        'employee_phone',
+        'employee_cell_phone',
+        'employee_password'
+      )
+    )
+
+    if is_empty(new_data['employee_email']):
+        raise DBException(f'"employee_email" is required.')
+
+    existing_user = fetch_user_by_email(new_data['employee_email'])
+    if existing_user:
+        raise DBException(f"{new_data['employee_email']} already exists.")
+
     execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
       {
         'message': 'SAVE ADMIN CONSOLE USER',
         'VARCHAR_01': '',
-        'VARCHAR_02': data['employee_last_name'],
-        'VARCHAR_03': data['employee_first_name'],
-        'VARCHAR_04': data['employee_email'],
-        'VARCHAR_05': data['employee_phone'],
-        'VARCHAR_06': data['employee_cell_phone'],
+        'VARCHAR_02': new_data['employee_last_name'],
+        'VARCHAR_03': new_data['employee_first_name'],
+        'VARCHAR_04': new_data['employee_email'],
+        'VARCHAR_05': new_data['employee_phone'],
+        'VARCHAR_06': new_data['employee_cell_phone'],
         'VARCHAR_07': '',
-        'VARCHAR_08': data['employee_password']
+        'VARCHAR_08': generate_password_hash(new_data['employee_password'])
       },
-      'TryCatchError_ID'
+      'TryCatchError_ID',
+      users_schema
     )
 
-    user = fetch_user_by_id(data['employee_email'])
-    if user is None:
-        raise pyodbc.ProgrammingError('The new user could not be created.')
-
-    return user
+    return fetch_user_by_email(new_data['employee_email'])
 
 
 def update_user(id_, data):
@@ -72,20 +100,42 @@ def update_user(id_, data):
     """
     user = fetch_user_by_id(id_)
     if user is None:
-        raise pyodbc.ProgrammingError(f'{id_} is and invalid user ID.')
+        raise DBException(f'{id_} is and invalid user ID.')
+
+    required_data = {
+      'employee_last_name': '',
+      'employee_first_name': '',
+      'employee_email': '',
+      'employee_phone': '',
+      'employee_cell_phone': '',
+      'employee_password': ''
+    }
+
+    new_data = assign(
+      required_data,
+      pick(
+        data,
+        'employee_last_name',
+        'employee_first_name',
+        'employee_email',
+        'employee_phone',
+        'employee_cell_phone',
+        'employee_password'
+      )
+    )
 
     execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
       {
         'message': 'SAVE ADMIN CONSOLE USER',
         'VARCHAR_01': id_,
-        'VARCHAR_02': data['employee_last_name'],
-        'VARCHAR_03': data['employee_first_name'],
-        'VARCHAR_04': data['employee_email'],
-        'VARCHAR_05': data['employee_phone'],
-        'VARCHAR_06': data['employee_cell_phone'],
+        'VARCHAR_02': new_data['employee_last_name'],
+        'VARCHAR_03': new_data['employee_first_name'],
+        'VARCHAR_04': new_data['employee_email'],
+        'VARCHAR_05': new_data['employee_phone'],
+        'VARCHAR_06': new_data['employee_cell_phone'],
         'VARCHAR_07': user['employee_password'],
-        'VARCHAR_08': data['employee_password']
+        'VARCHAR_08': new_data['employee_password'] if is_empty(new_data['employee_password']) else ''
       },
       'TryCatchError_ID'
     )

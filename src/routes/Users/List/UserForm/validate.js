@@ -5,8 +5,6 @@ export const newUserValidator = memoize(10)(createValidator({
   employee_first_name: required(),
   employee_last_name: required(),
   employee_email: [required(), email()],
-  employee_phone: required(),
-  employee_cell_phone: required(),
   employee_password: required()
 }));
 

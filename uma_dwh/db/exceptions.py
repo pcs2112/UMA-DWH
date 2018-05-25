@@ -3,3 +3,9 @@ class SPException(Exception):
         Exception.__init__(self)
         self.message = message
         self.error_id = error_id
+
+
+class DBException(Exception):
+    def __init__(self, message):
+        Exception.__init__(self)
+        self.message = message
