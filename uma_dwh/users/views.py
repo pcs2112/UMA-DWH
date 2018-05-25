@@ -4,7 +4,7 @@ from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_r
 from uma_dwh.exceptions import InvalidUsage
 from uma_dwh.db.exceptions import SPException
 from uma_dwh.db.etl import fetch_error
-from uma_dwh.db.users import fetch_users, fetch_user_by_email, login_user
+from uma_dwh.db.users import fetch_users, fetch_user_by_email, login_user, create_user, update_user
 
 
 blueprint = Blueprint('users', __name__)
@@ -57,3 +57,17 @@ def get_refresh_token():
 @jwt_required
 def get_users():
     return jsonify(fetch_users())
+
+
+@blueprint.route('/api/users', methods=('POST',))
+@jwt_required
+def create_user():
+    body = request.get_json(silent=True)
+    return jsonify(create_user(body))
+
+
+@blueprint.route('/api/users/<user_id>', methods=('POST',))
+@jwt_required
+def update_user(user_id):
+    body = request.get_json(silent=True)
+    return jsonify(update_user(user_id, body))
