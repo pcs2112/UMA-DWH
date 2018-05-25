@@ -2,16 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm, Field } from 'redux-form';
 import { Form, Button } from 'semantic-ui-react';
+import { isEmpty } from 'helpers/utils';
 import { TextField } from 'components/ReduxForm';
+import FormError from 'components/FormError';
 
 const UserForm = ({
-  pristine, submitting, handleSubmit, onSubmit
+  pristine, submitting, error, handleSubmit, onSubmit
 }) => (
   <Form
     onSubmit={handleSubmit(onSubmit)}
     size="small"
     loading={submitting}
+    error={!isEmpty(error)}
   >
+    {error && <FormError error={error} />}
     <Field name="employee_first_name" type="text" component={TextField} label="First Name" required />
     <Field name="employee_last_name" type="text" component={TextField} label="Last Name" required />
     <Field name="employee_email" type="text" component={TextField} label="Email" required />
@@ -29,6 +33,7 @@ const UserForm = ({
 UserForm.propTypes = {
   submitting: PropTypes.bool,
   pristine: PropTypes.bool,
+  error: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired
 };

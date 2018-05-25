@@ -17,7 +17,9 @@ class List extends Component {
     usersDataLoaded: PropTypes.bool.isRequired,
     usersData: PropTypes.array.isRequired,
     usersFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
-    fetchUsers: PropTypes.func.isRequired
+    fetchUsers: PropTypes.func.isRequired,
+    createUser: PropTypes.func.isRequired,
+    updateUser: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -25,7 +27,8 @@ class List extends Component {
     this.state = {
       creating: false,
       editing: false,
-      initialValues: emptyInitialValues
+      editUserId: false,
+      editUserInitialValues: emptyInitialValues
     };
   }
 
@@ -36,45 +39,54 @@ class List extends Component {
     }
   }
 
-  onCreate = () => {
+  onCreateUserClick = () => {
     this.setState({
       creating: true,
       editing: false
     });
   };
 
-  onEdit = (id) => {
+  onEditUserClick = (id) => {
     const currUser = this.props.usersData.find(user => user.id === id);
     this.setState({
       creating: false,
       editing: true,
-      initialValues: {
+      editUserId: id,
+      editUserInitialValues: {
         employee_first_name: currUser.employee_first_name,
         employee_last_name: currUser.employee_last_name,
         employee_email: currUser.employee_email,
         employee_phone: currUser.employee_phone,
-        employee_cell_phone: currUser.employee_cell_phone
+        employee_cell_phone: currUser.employee_cell_phone,
+        employee_password: currUser.employee_password
       }
     });
   };
 
-  onCreateClose = () => {
+  onCreateUserModalClose = () => {
     this.setState({
       creating: false
     });
   };
 
-  onEditClose = () => {
+  onEditUserModalClose = () => {
     this.setState({
       editing: false,
-      initialValues: emptyInitialValues
+      editUserId: false,
+      editUserInitialValues: emptyInitialValues
     });
   };
 
+  onEditUserSubmit = (data) => {
+    const { editUserId } = this.state;
+    const { updateUser } = this.props;
+    return updateUser(editUserId, data);
+  };
+
   render() {
-    const { creating, editing, initialValues } = this.state;
+    const { creating, editing, editUserInitialValues } = this.state;
     const {
-      usersFetching, usersDataLoaded, usersData, usersFetchingError
+      usersFetching, usersDataLoaded, usersData, usersFetchingError, createUser, updateUser
     } = this.props;
     return (
       <div>
@@ -84,7 +96,7 @@ class List extends Component {
           </h1>
         </Segment>
         <Segment>
-          <Button primary onClick={this.onCreate}>Create User</Button>
+          <Button primary onClick={this.onCreateUserClick}>Create User</Button>
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
           <ListTable
@@ -92,12 +104,12 @@ class List extends Component {
             dataLoaded={usersDataLoaded}
             data={usersData}
             fetchingError={usersFetchingError}
-            onEdit={this.onEdit}
+            onEdit={this.onEditUserClick}
           />
           {creating &&
           <Modal
             open={creating}
-            onClose={this.onCreateClose}
+            onClose={this.onCreateUserModalClose}
             size="tiny"
             closeIcon
             dimmer="inverted"
@@ -106,7 +118,8 @@ class List extends Component {
             <Modal.Content>
               <UserForm
                 form="CreateUserForm"
-                onSubmit={() => {}}
+                onSubmit={createUser}
+                onSubmitSuccess={this.onCreateUserModalClose}
                 validate={newUserValidator}
               />
             </Modal.Content>
@@ -115,7 +128,7 @@ class List extends Component {
           {editing &&
           <Modal
             open={editing}
-            onClose={this.onEditClose}
+            onClose={this.onEditUserModalClose}
             size="tiny"
             closeIcon
             dimmer="inverted"
@@ -124,8 +137,9 @@ class List extends Component {
             <Modal.Content>
               <UserForm
                 form="EditUserForm"
-                initialValues={initialValues}
-                onSubmit={() => {}}
+                initialValues={editUserInitialValues}
+                onSubmit={this.onEditUserSubmit}
+                onSubmitSuccess={this.onEditUserModalClose}
                 validate={existingUserValidator}
               />
             </Modal.Content>
@@ -145,7 +159,9 @@ export default connect(
     usersFetchingError: users.selectors.getFetchingError(state)
   }),
   dispatch => ({
-    fetchUsers: () => dispatch(users.actions.fetchUsers())
+    fetchUsers: () => dispatch(users.actions.fetchUsers()),
+    createUser: data => dispatch(users.actions.create(data)),
+    updateUser: (id, data) => dispatch(users.actions.update(id, data)),
   })
 )(List);
 
