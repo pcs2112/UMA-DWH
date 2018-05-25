@@ -1,3 +1,4 @@
+import pyodbc
 from passlib.hash import pbkdf2_sha256 as sha256
 from .mssql_db import fetch_rows, fetch_row
 from .etl import execute_admin_console_sp
@@ -32,9 +33,38 @@ def fetch_user_by_email(email):
     return fetch_row(sql=sql, in_args=[email], schema=users_schema)
 
 
+def create_user(data):
+    """
+    Creates a user and returns the new user information.
+    :param data: New user data
+    :type data: dict
+    """
+    execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+      {
+        'message': 'SAVE ADMIN CONSOLE USER',
+        'VARCHAR_01': '',
+        'VARCHAR_02': data['employee_last_name'],
+        'VARCHAR_03': data['employee_first_name'],
+        'VARCHAR_04': data['employee_email'],
+        'VARCHAR_05': data['employee_phone'],
+        'VARCHAR_06': data['employee_cell_phone'],
+        'VARCHAR_07': '',
+        'VARCHAR_08': data['employee_password']
+      },
+      'TryCatchError_ID'
+    )
+
+    user = fetch_user_by_id(data['employee_email'])
+    if user is None:
+        raise pyodbc.ProgrammingError('The new user could not be created.')
+
+    return user
+
+
 def update_user(id_, data):
     """
-    Returns the user information.
+    Updates a user and returns the new user information.
     :param id_: User ID
     :type id_: int
     :param data: New user data
@@ -42,7 +72,7 @@ def update_user(id_, data):
     """
     user = fetch_user_by_id(id_)
     if user is None:
-        return False
+        raise pyodbc.ProgrammingError(f'{id_} is and invalid user ID.')
 
     execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
