@@ -15,7 +15,7 @@ def fetch_users():
 def fetch_user_by_id(id_):
     """
     Returns the user information.
-    :param id_: User email
+    :param id_: User ID
     :type id_: int
     """
     sql = f'SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER WHERE ID = ?'
@@ -30,6 +30,37 @@ def fetch_user_by_email(email):
     """
     sql = f'SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER WHERE EmployeeEMAIL = ?'
     return fetch_row(sql=sql, in_args=[email], schema=users_schema)
+
+
+def update_user(id_, data):
+    """
+    Returns the user information.
+    :param id_: User ID
+    :type id_: int
+    :param data: New user data
+    :type data: dict
+    """
+    user = fetch_user_by_id(id_)
+    if user is None:
+        return False
+
+    execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+      {
+        'message': 'SAVE ADMIN CONSOLE USER',
+        'VARCHAR_01': id_,
+        'VARCHAR_02': data['employee_last_name'],
+        'VARCHAR_03': data['employee_first_name'],
+        'VARCHAR_04': data['employee_email'],
+        'VARCHAR_05': data['employee_phone'],
+        'VARCHAR_06': data['employee_cell_phone'],
+        'VARCHAR_07': user['employee_password'],
+        'VARCHAR_08': data['employee_password']
+      },
+      'TryCatchError_ID'
+    )
+
+    return fetch_user_by_id(id_)
 
 
 def login_user(email, password):
