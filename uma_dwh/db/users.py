@@ -12,22 +12,24 @@ def fetch_users():
     return fetch_rows(sql=sql, schema=users_schema)
 
 
+def fetch_user_by_id(id_):
+    """
+    Returns the user information.
+    :param id_: User email
+    :type id_: int
+    """
+    sql = f'SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER WHERE ID = ?'
+    return fetch_row(sql=sql, in_args=[id_], schema=users_schema)
+
+
 def fetch_user_by_email(email):
     """
     Returns the user information.
+    :param email: User email
+    :type email: str
     """
     sql = f'SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER WHERE EmployeeEMAIL = ?'
     return fetch_row(sql=sql, in_args=[email], schema=users_schema)
-
-
-def update_user():
-    execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      {
-        'message': 'SAVE ADMIN CONSOLE USER'
-      },
-      'TryCatchError_ID'
-    )
 
 
 def login_user(email, password):
