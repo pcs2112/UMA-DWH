@@ -1,3 +1,4 @@
+import { replaceObjByValue } from 'helpers/array';
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
 import { actionTypes } from './actions';
 
@@ -20,6 +21,11 @@ export default (state = initialState, action) => {
     case actionTypes.FETCH_FAIL:
     case actionTypes.FETCH_SUCCESS:
       return itemListReducer(state, action);
+    case actionTypes.UPDATE_SUCCESS:
+      return {
+        ...state,
+        data: replaceObjByValue(state.data, { ...action.response }, action.id)
+      };
     default:
       return state;
   }
