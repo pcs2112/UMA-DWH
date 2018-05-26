@@ -25,15 +25,14 @@ def get_current_user():
 def post_login():
     body = request.get_json(silent=True)
     try:
-        result = login_user(body['email'], body['password'])
+        login_user(body['email'], body['password'])
+    except DBException as e:
+        if e.code == -1:
+            raise InvalidUsage.form_validation_error({'email': 'Invalid account.'})
+        else:
+            raise InvalidUsage.form_validation_error({'password': 'Invalid password.'})
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, fetch_error(e.error_id))
-
-    if result == -1:
-        raise InvalidUsage.form_validation_error({'email': 'Invalid account.'})
-
-    if result == -2:
-        raise InvalidUsage.form_validation_error({'password': 'Invalid password.'})
 
     access_token = create_access_token(identity=body['email'])
     refresh_token = create_refresh_token(identity=body['email'])
