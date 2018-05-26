@@ -7,7 +7,7 @@ import { TextField } from 'components/ReduxForm';
 import FormError from 'components/FormError';
 
 const UserForm = ({
-  pristine, submitting, error, handleSubmit, onSubmit
+  pristine, submitting, error, handleSubmit, onSubmit, isCreate
 }) => (
   <Form
     onSubmit={handleSubmit(onSubmit)}
@@ -18,10 +18,17 @@ const UserForm = ({
     {error && <FormError error={error} />}
     <Field name="employee_first_name" type="text" component={TextField} label="First Name" required />
     <Field name="employee_last_name" type="text" component={TextField} label="Last Name" required />
-    <Field name="employee_email" type="text" component={TextField} label="Email" required />
+    <Field name="employee_email" type="text" component={TextField} label="Email" required readOnly={!isCreate} />
     <Field name="employee_phone" type="text" component={TextField} label="Phone" />
     <Field name="employee_cell_phone" type="text" component={TextField} label="Cell Phone" />
-    <Field name="employee_password" type="password" component={TextField} label="Password" />
+    <Field
+      name="employee_password"
+      type="password"
+      component={TextField}
+      label="Password"
+      autoComplete="new-password"
+      required={isCreate}
+    />
     <div className="field">
       <Button type="submit" fluid size="large" primary disabled={pristine || submitting}>
         Submit
@@ -35,7 +42,8 @@ UserForm.propTypes = {
   pristine: PropTypes.bool,
   error: PropTypes.string,
   handleSubmit: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  isCreate: PropTypes.bool.isRequired
 };
 
 export default reduxForm({

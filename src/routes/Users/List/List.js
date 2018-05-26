@@ -122,6 +122,7 @@ class List extends Component {
                 onSubmit={createUser}
                 onSubmitSuccess={this.onCreateUserModalClose}
                 validate={newUserValidator}
+                isCreate
               />
             </Modal.Content>
           </Modal>
@@ -143,6 +144,7 @@ class List extends Component {
                 onSubmit={this.onEditUserSubmit}
                 onSubmitSuccess={this.onEditUserModalClose}
                 validate={existingUserValidator}
+                isCreate={false}
               />
             </Modal.Content>
           </Modal>
