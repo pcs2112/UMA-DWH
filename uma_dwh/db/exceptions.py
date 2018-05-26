@@ -6,6 +6,7 @@ class SPException(Exception):
 
 
 class DBException(Exception):
-    def __init__(self, message):
+    def __init__(self, message, code=0):
         Exception.__init__(self)
         self.message = message
+        self.code = code
