@@ -113,6 +113,7 @@ class List extends Component {
             size="tiny"
             closeIcon
             dimmer="inverted"
+            closeOnDimmerClick={false}
           >
             <Header content={<h1>CREATE USER</h1>} />
             <Modal.Content>
@@ -132,6 +133,7 @@ class List extends Component {
             size="tiny"
             closeIcon
             dimmer="inverted"
+            closeOnDimmerClick={false}
           >
             <Header content={<h1>EDIT USER</h1>} />
             <Modal.Content>
