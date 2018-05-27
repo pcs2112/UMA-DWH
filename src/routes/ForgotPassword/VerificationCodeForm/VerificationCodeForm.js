@@ -16,7 +16,7 @@ const VerificationCodeForm = ({
     <Field
       name="verification_code"
       type="tel"
-      maxlength="6"
+      maxLength="6"
       component={TextField}
       placeholder="6-digit code"
     />
