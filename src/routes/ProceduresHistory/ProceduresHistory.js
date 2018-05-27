@@ -6,6 +6,7 @@ import config from 'config';
 import globalCss from 'css/global';
 import etlProcedureHistory from 'redux/modules/etlProcedureHistory';
 import etlServers from 'redux/modules/etlServers';
+import withMainLayout from 'components/WithMainLayout';
 import ProcedureHistoryTable from './ProcedureHistoryTable';
 import Filters from './Filters';
 
@@ -68,7 +69,7 @@ class ProceduresHistory extends Component {
   }
 }
 
-export default connect(
+export default withMainLayout(connect(
   state => ({
     isProcedureHistoryFetching: state.etlProcedureHistory.isFetching,
     procedureHistoryDataLoaded: state.etlProcedureHistory.dataLoaded,
@@ -84,4 +85,4 @@ export default connect(
       dispatch(etlProcedureHistory.actions.reset());
     }
   })
-)(ProceduresHistory);
+)(ProceduresHistory));

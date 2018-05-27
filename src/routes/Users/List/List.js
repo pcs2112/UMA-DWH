@@ -5,6 +5,7 @@ import { Segment, Modal, Header, Button } from 'semantic-ui-react';
 import config from 'config';
 import globalCss from 'css/global';
 import users from 'redux/modules/users';
+import withMainLayout from 'components/WithMainLayout';
 import UserForm from './UserForm';
 import { newUserValidator, existingUserValidator } from './UserForm/validate';
 import ListTable from './ListTable';
@@ -155,7 +156,7 @@ class List extends Component {
   }
 }
 
-export default connect(
+export default withMainLayout(connect(
   state => ({
     usersFetching: state.users.isFetching,
     usersDataLoaded: state.users.dataLoaded,
@@ -167,5 +168,5 @@ export default connect(
     createUser: data => dispatch(users.actions.createUser(data)),
     updateUser: (id, data) => dispatch(users.actions.updateUser(id, data)),
   })
-)(List);
+)(List));
 

@@ -6,6 +6,7 @@ import config from 'config';
 import intervalDurations from 'constants/currentStatusIntervalDurations';
 import etlCurrentStatus from 'redux/modules/etlCurrentStatus';
 import etlCycleHistory from 'redux/modules/etlCycleHistory';
+import withMainLayout from 'components/WithMainLayout';
 import CycleArrowPagination from 'components/CycleArrowPagination';
 import EtlErrorModal from 'components/EtlErrorModal';
 import globalCss from 'css/global';
@@ -173,7 +174,7 @@ class Home extends Component {
   }
 }
 
-export default connect(
+export default withMainLayout(connect(
   state => ({
     isCycleHistoryFetching: state.etlCycleHistory.isFetching,
     cycleHistoryDataLoaded: state.etlCycleHistory.dataLoaded,
@@ -202,4 +203,4 @@ export default connect(
     setCurrentStatusIntervalDuration: intervalDuration =>
       dispatch(etlCurrentStatus.actions.setIntervalDuration(intervalDuration)),
   })
-)(Home);
+)(Home));
