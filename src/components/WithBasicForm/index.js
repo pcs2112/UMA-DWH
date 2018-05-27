@@ -1,3 +1,3 @@
-import { withBasicForm } from './WithBasicForm';
+import withBasicForm from './WithBasicForm';
 
 export default withBasicForm;
