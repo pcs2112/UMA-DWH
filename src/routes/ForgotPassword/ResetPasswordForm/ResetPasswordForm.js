@@ -14,13 +14,13 @@ const ResetPasswordForm = ({
       Enter your and confirm your new password.
     </p>
     <Field
-      name="newPassword"
+      name="new_password"
       type="password"
       component={TextField}
       label="New Password"
     />
     <Field
-      name="confirmNewPassword"
+      name="confirm_new_password"
       type="password"
       component={TextField}
       label="Confirm New Password"
@@ -31,11 +31,10 @@ const ResetPasswordForm = ({
       </Button>
     </div>
     <Divider section />
-    <p className="center aligned text">
+    <p className="centered-aligned">
       Having trouble resetting your password?{' '}
       <a
         href="/"
-        className="boldText"
         onClick={(event) => {
           event.preventDefault();
           onGoBack();
@@ -55,6 +54,6 @@ ResetPasswordForm.propTypes = {
 
 export default reduxForm({
   form: 'ResetPasswordForm',
-  fields: ['newPassword', 'confirmNewPassword'],
+  fields: ['new_password', 'confirm_new_password'],
   validate
 })(withBasicForm(ResetPasswordForm));

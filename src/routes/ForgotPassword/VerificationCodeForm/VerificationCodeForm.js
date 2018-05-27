@@ -14,7 +14,7 @@ const VerificationCodeForm = ({
       Check your email for the code. Enter it below.
     </p>
     <Field
-      name="verificationCode"
+      name="verification_code"
       type="tel"
       maxlength="6"
       component={TextField}
@@ -30,7 +30,6 @@ const VerificationCodeForm = ({
       didn't get it, we can {' '}
       <a
         href="/"
-        className="boldText"
         onClick={(event) => {
           event.preventDefault();
           onResendCode();
@@ -43,7 +42,6 @@ const VerificationCodeForm = ({
       Didn't enter the right email address? {' '}
       <a
         href="/"
-        className="boldText"
         onClick={(event) => {
           event.preventDefault();
           onGoBack();
@@ -66,6 +64,6 @@ VerificationCodeForm.propTypes = {
 
 export default reduxForm({
   form: 'VerificationCodeForm',
-  fields: ['email'],
+  fields: ['verification_code'],
   validate
 })(withBasicForm(VerificationCodeForm));

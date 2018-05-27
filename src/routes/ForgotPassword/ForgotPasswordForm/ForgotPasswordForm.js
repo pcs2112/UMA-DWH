@@ -14,18 +14,17 @@ const ForgotPasswordForm = ({
     <p>
       Enter the email address associated with your account, and we'll email you a link to reset your password.
     </p>
-    <Field name="email" type="text" component={TextField} label="Email Address *" />
+    <Field name="email" type="text" component={TextField} label="Email Address" required />
     <div className="field">
       <Button type="submit" fluid size="large" color="red" disabled={pristine || submitting}>
         Send Reset Code
       </Button>
     </div>
     <Divider section />
-    <p className="center aligned text">
+    <p className="centered-aligned">
       Have an account?{' '}
       <Link
         to="/login"
-        className="boldText"
         onClick={(event) => {
           event.preventDefault();
           onGoToLogin();
