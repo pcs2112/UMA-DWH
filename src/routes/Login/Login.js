@@ -22,6 +22,7 @@ class Login extends Component {
         </Header>
         <Segment textAlign="left" color="grey">
           <LoginForm
+            formSize="large"
             onSubmit={onLogin}
             onSubmitSuccess={onLoginSuccess}
           />
