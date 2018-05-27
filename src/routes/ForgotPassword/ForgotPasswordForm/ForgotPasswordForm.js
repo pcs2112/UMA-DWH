@@ -12,7 +12,7 @@ const ForgotPasswordForm = ({
 }) => (
   <Fragment>
     <p>
-      Enter the email address associated with your account, and we'll email you a link to reset your password.
+      Enter the email address associated with your account, and we'll email you a code to reset your password.
     </p>
     <Field name="email" type="text" component={TextField} label="Email Address" required />
     <div className="field">
