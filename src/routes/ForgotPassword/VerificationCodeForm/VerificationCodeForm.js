@@ -26,8 +26,8 @@ const VerificationCodeForm = ({
       </Button>
     </div>
     <p>
-      Enter the confirmation code we sent to {email}. If you<br />
-      didn't get it, we can {' '}
+      Enter the confirmation code we sent to {email}. If you didn't get it, we can {' '}
+      <br />
       <a
         href="/"
         onClick={(event) => {
