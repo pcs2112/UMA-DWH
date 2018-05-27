@@ -85,8 +85,8 @@ export const forgotPassword = (data, scenario) => ({
     actionTypes.FORGOT_PASSWORD_FAIL
   ],
   makeRequest: client => client.post('/api/users/forgot', {
-    data,
-    params: {
+    data: {
+      ...data,
       scenario
     }
   })
