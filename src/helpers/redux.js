@@ -44,3 +44,11 @@ export const catchValidation = (error) => {
 
   throw new SubmissionError({ _error: error.message });
 };
+
+/**
+ * Returns the value for the specified field name inside the redux-form state.
+ * @param {Object} reduxFormState
+ * @param {String} fieldName
+ */
+export const getFormFieldValue = (reduxFormState, fieldName) =>
+  (reduxFormState && reduxFormState.values ? reduxFormState.values[fieldName] : '');
