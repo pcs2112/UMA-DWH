@@ -1,3 +1,3 @@
-import WithAuthRequiredRoute from './WithAuthRequiredRoute';
+import { withLoggedInLayout } from './withLoggedInLayout';
 
-export default WithAuthRequiredRoute;
+export default withLoggedInLayout;

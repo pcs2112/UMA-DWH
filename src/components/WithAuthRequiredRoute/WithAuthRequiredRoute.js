@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 import { getDisplayName } from 'javascript-utils/lib/react';
 
-const withAuthRequiredRoute = (WrappedComponent) => {
-  const WithAuthRequiredRoute = ({ loggedIn, ...rest }) => (
+export const withAuthRequiredRoute = (WrappedComponent) => {
+  const WithAuthRequiredRoute = ({ isLoggedIn, ...rest }) => (
     <Route
       {...rest}
       render={({ staticContext }) => {
-        if (loggedIn) {
+        if (isLoggedIn) {
           return <WrappedComponent {...rest} />;
         }
 
@@ -23,8 +23,7 @@ const withAuthRequiredRoute = (WrappedComponent) => {
   );
 
   WithAuthRequiredRoute.propTypes = {
-    loggedIn: PropTypes.bool.isRequired,
-    currentUser: PropTypes.object
+    isLoggedIn: PropTypes.bool.isRequired
   };
 
   WithAuthRequiredRoute.displayName = `WithAuthRequiredRoute(${getDisplayName(WrappedComponent)})`;
@@ -36,5 +35,3 @@ const withAuthRequiredRoute = (WrappedComponent) => {
     null
   )(WithAuthRequiredRoute);
 };
-
-export default withAuthRequiredRoute;
