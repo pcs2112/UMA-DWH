@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { destroy } from 'redux-form';
 import { Message, Icon } from 'semantic-ui-react';
 import {
   FORGOT_PASSWORD_SCENARIO,
@@ -174,5 +175,9 @@ export default connect(
   (state, ownProps) => ({
     email: getFormFieldValue(state.form[ownProps.formName], 'email')
   }),
-  null
+  (dispatch, ownProps) => ({
+    destroyFormState: () => {
+      dispatch(destroy(ownProps.formName));
+    }
+  })
 )(ForgotPasswordWizard);
