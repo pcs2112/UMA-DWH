@@ -24,7 +24,7 @@ export const withGuestLayout = (WrappedComponent) => {
         return (
           <Grid textAlign="center" verticalAlign="middle" style={mainGridStyles}>
             <Grid.Column style={mainColStyles}>
-              <WrappedComponent {...rest} />;
+              <WrappedComponent {...rest} />
             </Grid.Column>
           </Grid>
         );
