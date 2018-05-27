@@ -4,7 +4,7 @@ from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_r
 from uma_dwh.exceptions import InvalidUsage
 from uma_dwh.db.exceptions import SPException, DBException
 from uma_dwh.db.etl import fetch_error
-from uma_dwh.db.users import fetch_users, fetch_user_by_email, login_user, create_user, update_user
+from uma_dwh.db.users import fetch_users, fetch_user_by_email, login_user, create_user, update_user, forgot_password
 
 
 blueprint = Blueprint('users', __name__)
@@ -76,3 +76,15 @@ def post_update_user(user_id):
         return jsonify(update_user(user_id, body))
     except DBException as e:
         raise InvalidUsage.form_validation_error({'employee_email': e.message})
+
+
+@blueprint.route('/api/users/forgot', methods=('POST',))
+def post_forgot():
+    body = request.get_json(silent=True)
+    try:
+        return jsonify(forgot_password(body, body['scenario']))
+    except DBException as e:
+        if e.code == -2:
+            raise InvalidUsage.form_validation_error({'verification_code': e.message})
+        else:
+            raise InvalidUsage.form_validation_error({'email': e.message})
