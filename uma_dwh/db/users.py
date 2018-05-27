@@ -202,6 +202,35 @@ def reset_user_password(email, existing_password, new_password):
     return user_result['id']
 
 
+def forgot_password(data, scenario):
+    user_result = fetch_user_by_email(data['email'])
+    if user_result is None:
+        raise DBException(f'"{data["email"]}" is an invalid account.', -1)
+
+    if scenario == 1:
+        return '123456'
+
+    if scenario == 2:
+        if data['verification_code'] != '123456':
+            raise DBException(f'"{data["verification_code"]}" is an invalid verification code.', -2)
+
+        return ''
+
+    if scenario == 3:
+        execute_admin_console_sp(
+          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+          {
+            'message': 'PASSWORD RESET',
+            'VARCHAR_01': user_result['employee_email'],
+            'VARCHAR_02': user_result['employee_password'],
+            'VARCHAR_03': generate_password_hash(data['new_password'])
+          },
+          'TryCatchError_ID'
+        )
+
+        return user_result['id']
+
+
 def generate_password_hash(raw_password):
     """
     Encrypts a raw password using the sha256 algorithm.
