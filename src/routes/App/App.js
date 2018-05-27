@@ -1,24 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
-import { renderRoutes } from 'react-router-config';
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { renderRoutes } from 'react-router-config';
 import { reactRouterFetch } from 'javascript-utils/lib/react-router';
-import { Grid, Dimmer, Loader } from 'semantic-ui-react';
+import { Dimmer, Loader } from 'semantic-ui-react';
 import userModule from 'redux/modules/user';
-import MainMenu from 'components/MainMenu';
 import NProgress from 'components/NProgress';
-import Login from 'routes/Login';
-import { mainContentCss } from './css';
 
 class App extends Component {
   static propTypes = {
     routes: PropTypes.array.isRequired,
     location: PropTypes.object.isRequired,
-    isLoggedIn: PropTypes.bool.isRequired,
-    fetchUser: PropTypes.func.isRequired,
-    onLogout: PropTypes.func.isRequired
+    fetchUser: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -82,32 +76,32 @@ class App extends Component {
 
     reactRouterFetch(routes, location)
       .then(() => {
+        NProgress.done();
+
         this.setState({
           isInitialAppFetching: false,
           isAppFetching: false,
           appFetchingError: null
-        }, () => {
-          NProgress.done();
         });
       })
       .catch((err) => {
+        NProgress.done();
+
         this.setState({
           isInitialAppFetching: false,
           isAppFetching: false,
           appFetchingError: err
-        }, () => {
-          NProgress.done();
         });
       });
   }
 
   render() {
     const {
-      routes, location: { pathname }, isLoggedIn, onLogout
+      routes
     } = this.props;
     const { isInitialAppFetching, isAppFetching } = this.state;
 
-    if (isInitialAppFetching) {
+    if (isInitialAppFetching || (isInitialAppFetching && isAppFetching)) {
       return (
         <Dimmer active inverted>
           <Loader size="large" />
@@ -115,53 +109,18 @@ class App extends Component {
       );
     }
 
-    // Redirect to the login route
-    if (!isLoggedIn && pathname !== '/login') {
-      return (<Redirect to="/login" />);
-    }
-
-    if (pathname === '/login') {
-      // Redirect to home route
-      if (isLoggedIn) {
-        return (<Redirect to="/" />);
-      }
-
-      // Show login route
-      return (<Login />);
-    }
-
     return (
-      <div>
-        <MainMenu
-          currentPathName={pathname}
-          onLogout={onLogout}
-        />
-        <div style={mainContentCss}>
-          {isAppFetching &&
-            <Dimmer active inverted>
-              <Loader size="large">Loading</Loader>
-            </Dimmer>
-          }
-          <Grid>
-            <Grid.Row>
-              <Grid.Column>
-                {renderRoutes(routes)}
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        </div>
-      </div>
+      <Fragment>
+        {renderRoutes(routes)}
+      </Fragment>
     );
   }
 }
 
 const connectedApp = connect(
-  state => ({
-    isLoggedIn: state.user.isLoggedIn
-  }),
+  null,
   dispatch => ({
-    fetchUser: () => dispatch(userModule.actions.fetchUser()),
-    onLogout: () => dispatch(userModule.actions.logout())
+    fetchUser: () => dispatch(userModule.actions.fetchUser())
   })
 )(App);
 
