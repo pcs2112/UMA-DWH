@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import debounce from 'lodash/debounce';
 import { getDisplayName } from 'javascript-utils/lib/react';
 import { Responsive } from 'semantic-ui-react';
 import { getWindowHeight } from 'helpers/device';
@@ -11,6 +12,8 @@ export const withResponsiveTable = (WrappedComponent, minTableHeight = 320, offs
       this.state = {
         tableHeight: this.getTableHeight()
       };
+
+      this.handleResize = debounce(this.handleResize, 500);
     }
 
     getTableHeight = () => {
