@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import ReactTable from 'react-table';
-import { getWindowHeight } from 'helpers/device';
+import withResponsiveTable from 'components/WithResponsiveTable';
 
-const windowHeight = getWindowHeight();
 const keyName = 'id';
 
 /**
@@ -111,6 +110,7 @@ const columns = [
 
 class ProcedureHistoryTable extends Component {
   static propTypes = {
+    tableHeight: PropTypes.number.isRequired,
     isFetching: PropTypes.bool.isRequired,
     dataLoaded: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
@@ -139,14 +139,14 @@ class ProcedureHistoryTable extends Component {
 
   render() {
     const {
-      isFetching, dataLoaded, data, fetchingError
+      tableHeight, isFetching, dataLoaded, data, fetchingError
     } = this.props;
     return (
       <ReactTable
         data={data}
         columns={columns}
         style={{
-          height: `${windowHeight - 220}px`
+          height: `${tableHeight}px`
         }}
         manual
         showPaginationBottom={false}
@@ -161,4 +161,4 @@ class ProcedureHistoryTable extends Component {
   }
 }
 
-export default ProcedureHistoryTable;
+export default withResponsiveTable(ProcedureHistoryTable, 530, 220);

@@ -5,12 +5,11 @@ import ReactTable from 'react-table';
 import checkboxHOC from 'react-table/lib/hoc/selectTable';
 import { Icon } from 'semantic-ui-react';
 import { objectHasOwnProperty } from 'helpers/utils';
-import { getWindowHeight } from 'helpers/device';
 import globalCss from 'css/global';
+import withResponsiveTable from 'components/WithResponsiveTable';
 import { DetailsDiv, DetailsColDiv, DetailsLabel, DetailsRow } from '../css';
 
 const CheckboxTable = checkboxHOC(ReactTable);
-const windowHeight = getWindowHeight();
 const keyName = 'calling_proc';
 const noTrProps = {};
 const defaultExpanded = {};
@@ -135,6 +134,7 @@ const RowDetails = ({ row }) => { // eslint-disable-line
 
 class CycleHistoryTable extends Component {
   static propTypes = {
+    tableHeight: PropTypes.number.isRequired,
     isFetching: PropTypes.bool.isRequired,
     dataLoaded: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
@@ -225,14 +225,14 @@ class CycleHistoryTable extends Component {
 
   render() {
     const {
-      isFetching, dataLoaded, data, fetchingError
+      tableHeight, isFetching, dataLoaded, data, fetchingError
     } = this.props;
     return (
       <CheckboxTable
         data={data}
         columns={columns}
         style={{
-          height: `${windowHeight - 440}px`
+          height: `${tableHeight}px`
         }}
         showPaginationBottom={false}
         sortable={false}
@@ -257,4 +257,4 @@ class CycleHistoryTable extends Component {
   }
 }
 
-export default CycleHistoryTable;
+export default withResponsiveTable(CycleHistoryTable, 320, 440);

@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import ReactTable from 'react-table';
-import { getWindowHeight } from 'helpers/device';
+import withResponsiveTable from 'components/WithResponsiveTable';
 
-const windowHeight = getWindowHeight();
 const keyName = 'id';
 
 /**
@@ -45,6 +44,7 @@ const columns = [
 
 class ListTable extends Component {
   static propTypes = {
+    tableHeight: PropTypes.number.isRequired,
     isFetching: PropTypes.bool.isRequired,
     dataLoaded: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
@@ -90,14 +90,14 @@ class ListTable extends Component {
 
   render() {
     const {
-      isFetching, dataLoaded, data, fetchingError
+      tableHeight, isFetching, dataLoaded, data, fetchingError
     } = this.props;
     return (
       <ReactTable
         data={data}
         columns={this.getColumns()}
         style={{
-          height: `${windowHeight - 200}px`
+          height: `${tableHeight}px`
         }}
         manual
         showPaginationBottom={false}
@@ -112,4 +112,4 @@ class ListTable extends Component {
   }
 }
 
-export default ListTable;
+export default withResponsiveTable(ListTable, 510, 200);
