@@ -74,7 +74,7 @@ export const withAsyncPolling = (WrappedComponent) => {
         ...this.props,
         startPolling: this.startPolling,
         stopPolling: this.stopPolling,
-        isPolling: !!this.interval,
+        isPolling: !!this.interval
       };
     }
 
