@@ -36,7 +36,7 @@ const VerificationCodeForm = ({
         }}
       >
         resend the code
-      </a>.{' '}{resending && <Loader active inline size="small" as="span" />}
+      </a>.{' '}{resending && <Loader active inline size="tiny" as="span" />}
     </p>
     <p>
       Didn't enter the right email address? {' '}
