@@ -4,7 +4,7 @@
  */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { documentHiddenPropertyName } from 'helpers/device';
+import { documentHiddenPropertyName } from 'javascript-utils/lib/device';
 
 // Property used to detect if the browser window is active
 const documentHiddenProperty = documentHiddenPropertyName();

@@ -1,4 +1,4 @@
-import { getWindowWidth, getWindowHeight } from '../helpers/device';
+import { getWindowWidth, getWindowHeight } from 'javascript-utils/lib/device';
 
 const windowWith = getWindowWidth();
 const windowHeight = getWindowHeight();

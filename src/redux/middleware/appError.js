@@ -1,4 +1,4 @@
-import { objectHasOwnProperty } from 'helpers/utils';
+import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import userModule from 'redux/modules/user';
 
 export default () => next => (action) => {

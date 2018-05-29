@@ -4,7 +4,7 @@ import 'react-table/react-table.css';
 import ReactTable from 'react-table';
 import checkboxHOC from 'react-table/lib/hoc/selectTable';
 import { Icon } from 'semantic-ui-react';
-import { objectHasOwnProperty } from 'helpers/utils';
+import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import globalCss from 'css/global';
 import withResponsiveTable from 'components/WithResponsiveTable';
 import { DetailsDiv, DetailsColDiv, DetailsLabel, DetailsRow } from '../css';

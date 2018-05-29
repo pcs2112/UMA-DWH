@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import ReactTable from 'react-table';
 import checkboxHOC from 'react-table/lib/hoc/selectTable';
-import { objectHasOwnProperty } from 'helpers/utils';
+import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import withAsyncPolling from 'components/WithAsyncPolling';
 import globalCss from 'css/global';
 

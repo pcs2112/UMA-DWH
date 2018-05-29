@@ -1,5 +1,5 @@
+import { isEmpty } from 'javascript-utils/lib/utils';
 import { JWT_ACCESS_TOKEN_KEY, JWT_REFRESH_TOKEN_KEY } from 'constants/index';
-import { isEmpty } from './utils';
 
 /**
  * Returns the JWT access token.

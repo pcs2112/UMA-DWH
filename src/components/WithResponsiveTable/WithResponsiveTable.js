@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import debounce from 'lodash/debounce';
-import { getDisplayName } from 'javascript-utils/lib/react';
 import { Responsive } from 'semantic-ui-react';
-import { getWindowHeight } from 'helpers/device';
+import { getDisplayName } from 'javascript-utils/lib/react';
+import { getWindowHeight } from 'javascript-utils/lib/device';
 
 export const withResponsiveTable = (WrappedComponent, minTableHeight = 320, offsetHeight = 440) => {
   class WithResponsiveTable extends Component {

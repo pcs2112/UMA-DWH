@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { objectHasOwnProperty, isEmpty } from 'helpers/utils';
+import { objectHasOwnProperty, isEmpty } from 'javascript-utils/lib/utils';
 import etlCycleHistory from 'redux/modules/etlCycleHistory';
 import etlServers from 'redux/modules/etlServers';
 

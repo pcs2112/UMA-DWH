@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import reduxModalModule from 'redux/modules/reduxModal';
-import { getDisplayName } from 'helpers/react';
+import { getDisplayName } from 'javascript-utils/lib/react';
 
 /**
  * HOC to connect modals to the state.

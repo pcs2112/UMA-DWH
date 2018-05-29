@@ -1,20 +1,4 @@
 /**
- * Checks the specified value is empty.
- *
- * @param {String|undefined|null} value
- * @returns {Boolean}
- */
-export const isEmpty = value => value === undefined || value === null || value === '';
-
-/**
- * Delays execution of code by the specified amount of microseconds.
- *
- * @param {Number} ms
- * @returns {Promise}
- */
-export const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
-/**
  * Checks whether or not a new cycle should be fetched from the server.
  *
  * @param {Number} newCycleGroup
@@ -52,12 +36,3 @@ export const getNewStartCycleGroup = (newCycleGroup, currentStartCycleGroup, tot
 
   return newStartCycleGroup;
 };
-
-/**
- * Checks the obj has the specified property.
- *
- * @param {Object} obj
- * @param {String} prop
- * @returns {Boolean}
- */
-export const objectHasOwnProperty = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);

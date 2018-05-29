@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
+import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import etlControlManager from 'redux/modules/etlControlManager';
-import { objectHasOwnProperty } from 'helpers/utils';
 
 const emptyData = [];
 

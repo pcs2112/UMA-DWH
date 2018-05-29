@@ -1,5 +1,6 @@
+import { sleep } from 'javascript-utils/lib/utils';
 import { MAX_FETCH_CYCLE_GROUPS } from 'constants/index';
-import { sleep, shouldFetchCycle, getNewStartCycleGroup } from 'helpers/utils';
+import { shouldFetchCycle, getNewStartCycleGroup } from 'helpers/utils';
 
 export const actionTypes = {
   FETCH_BEGIN: 'etlCycleHistory/FETCH_BEGIN',

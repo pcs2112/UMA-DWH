@@ -1,5 +1,5 @@
 import { SubmissionError } from 'redux-form';
-import { objectHasOwnProperty } from './utils';
+import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 
 /**
  * Action creator for Redux aciton
