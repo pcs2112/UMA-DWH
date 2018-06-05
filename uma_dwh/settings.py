@@ -21,8 +21,8 @@ class Config(object):
         'http://127.0.0.1:3001',
         'http://127.0.0.1:5000'
     ]
-    OPSGENIE_API_KEY = ''
-    OPSGENIE_GENIE_KEY = ''
+    OPSGENIE_API_KEY = '602e1fed-1cee-496a-8454-5d63520bfba4'
+    OPSGENIE_GENIE_KEY = 'GenieKey'
 
 
 class ProdConfig(Config):

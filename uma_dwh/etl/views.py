@@ -5,6 +5,7 @@ from uma_dwh.db.etl import (fetch_control_manager, fetch_current_status, fetch_c
                             fetch_server_db_procedures, fetch_servers, fetch_error, fetch_run_check)
 from uma_dwh.exceptions import InvalidUsage
 from uma_dwh.db.exceptions import SPException
+from uma_dwh.utils.opsgenie import send_alert
 from .api_schemas import pagination_args, run_check_args, procedure_history_args, server_db_procedures_args
 
 
@@ -60,6 +61,11 @@ def get_servers():
         return jsonify(fetch_servers())
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, fetch_error(e.error_id))
+
+
+@blueprint.route('/api/etl/errors/<error_id>/alert', methods=('GET',))
+def post_error_alert(error_id):
+    send_alert(error_id)
 
 
 @blueprint.route('/api/etl/errors/<error_id>', methods=('GET',))

@@ -1,10 +1,10 @@
-from .mssql_db import fetch_rows, execute_sp, result_set_as_dicts
+from .mssql_db import fetch_rows, execute_sp, result_as_dict, result_set_as_dicts
 from .exceptions import SPException
 from .schemas.etl import (control_manager_schema, current_cycle_status_schema, cycle_history_schema,
                           procedure_history_schema, server_db_procedures_schema, server_dbs_schema,
                           try_catch_error_schema)
 
-ADMIN_CONSOLE_SP_IN_ARGS_LENGTH = 9
+ADMIN_CONSOLE_SP_IN_ARGS_LENGTH = 10
 
 
 def fetch_control_manager():
@@ -146,7 +146,7 @@ def fetch_error(error_id):
       })
     )
 
-    return result_set_as_dicts(try_catch_error_schema, result[0])
+    return result_as_dict(try_catch_error_schema, result[0][0])
 
 
 def fetch_run_check(run_check_name):
@@ -177,9 +177,9 @@ def fill_in_admin_console_sp_in_args(in_args):
     new_in_args = in_args.copy()
     in_args_length = len(new_in_args.keys())
     if in_args_length < ADMIN_CONSOLE_SP_IN_ARGS_LENGTH:
-        for x in range(in_args_length + 1, ADMIN_CONSOLE_SP_IN_ARGS_LENGTH + 1):
+        for x in range(in_args_length, ADMIN_CONSOLE_SP_IN_ARGS_LENGTH):
             in_arg_prefix = '0' if x < 10 else ''
-            in_arg_name = f'VARCHAR_{in_arg_prefix}{(x-1)}'
+            in_arg_name = f'VARCHAR_{in_arg_prefix}{x}'
             new_in_args[in_arg_name] = ''
 
     return new_in_args
