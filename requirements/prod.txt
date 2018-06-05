@@ -7,3 +7,5 @@ webargs==2.0.0
 flask-jwt-extended==3.9.1
 passlib==1.7.1
 pydash==4.5.0
+urllib3 >= 1.15.1
+opsgenie-sdk==0.3.1
