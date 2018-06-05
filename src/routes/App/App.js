@@ -72,27 +72,27 @@ class App extends Component {
 
     this.setState({
       isAppFetching: true
+    }, () => {
+      reactRouterFetch(routes, location)
+        .then(() => {
+          NProgress.done();
+
+          this.setState({
+            isInitialAppFetching: false,
+            isAppFetching: false,
+            appFetchingError: null
+          });
+        })
+        .catch((err) => {
+          NProgress.done();
+
+          this.setState({
+            isInitialAppFetching: false,
+            isAppFetching: false,
+            appFetchingError: err
+          });
+        });
     });
-
-    reactRouterFetch(routes, location)
-      .then(() => {
-        NProgress.done();
-
-        this.setState({
-          isInitialAppFetching: false,
-          isAppFetching: false,
-          appFetchingError: null
-        });
-      })
-      .catch((err) => {
-        NProgress.done();
-
-        this.setState({
-          isInitialAppFetching: false,
-          isAppFetching: false,
-          appFetchingError: err
-        });
-      });
   }
 
   render() {
