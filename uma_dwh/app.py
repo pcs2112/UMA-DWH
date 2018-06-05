@@ -3,10 +3,11 @@ from flask_jwt_extended import JWTManager
 from uma_dwh import etl
 from uma_dwh import users
 from uma_dwh.settings import ProdConfig
-from uma_dwh.db.mssql_db import init_app
+from uma_dwh.db.mssql_db import init_db
 from uma_dwh.extensions import cors
 from uma_dwh.exceptions import InvalidUsage, http_error_template
 from uma_dwh.json import JSONEnhanced
+from uma_dwh.utils.opsgenie import init_opsgenie
 
 
 def create_app(config_object=ProdConfig):
@@ -29,7 +30,11 @@ def create_app(config_object=ProdConfig):
 
 
 def register_db(app):
-    init_app(app)
+    init_db(app)
+
+
+def register_opsgenie(app):
+    init_opsgenie(app)
 
 
 def register_blueprints(app):
