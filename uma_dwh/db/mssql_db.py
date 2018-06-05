@@ -7,7 +7,7 @@ this.db = None  # Reference to the DB connection
 this.config = None   # Reference to the DB configuration settings
 
 
-def init_app(app):
+def init_db(app):
     if this.db is not None:
         raise RuntimeError('Database is already initialized.')
 
