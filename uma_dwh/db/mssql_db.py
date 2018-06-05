@@ -51,9 +51,68 @@ def close(*varargs):
         this.db = None
 
 
-def get_pairs(values):
-    """ Returns a list of keys and a list of values from a values dict."""
+def _get_pairs(values):
+    """
+    Returns a list of keys and a list of values from a values dict.
+    :param values
+    :type: dict
+    """
     return [(k, str(v)) for k, v in values.iteritems()]
+
+
+def _get_names(values):
+    """
+    Returns a list of all key names in the specified dict.
+    :param values
+    :type: dict
+    """
+    return [pair[0] for pair in _get_pairs(values)]
+
+
+def _get_values(values):
+    """
+    Returns a list of all the values in the specified dict.
+    :param values
+    :type: dict
+    """
+    return [pair[1] for pair in _get_pairs(values)]
+
+
+def _get_names_values(values):
+    """
+    Returns a list of all the keys and values in the specified dict as two
+    different lists.
+    :param values
+    :type: dict
+    """
+    return _get_names(values), _get_values(values)
+
+
+def insert(table_name, values):
+    """
+    Insert the values into the specified table.
+    :param table_name
+    :type: str
+    :param values
+    :type: dict
+    """
+    # Get the table fields and their values
+    fields, in_params = _get_names_values(values)
+
+    # Create the sql
+    sql = 'INSERT INTO %s (%s) VALUES (%s)' % (
+      table_name,
+      ', '.join(fields),
+      ', '.join(['?'] * len(in_params))
+    )
+
+    # Execute insert and return the ID
+    cursor = get_db().cursor()
+    cursor.execute(sql, in_params)
+    _id = cursor.lastrowid
+    cursor.close()
+
+    return _id
 
 
 def result_as_dict(schema, row):
