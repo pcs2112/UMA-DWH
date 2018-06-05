@@ -51,6 +51,11 @@ def close(*varargs):
         this.db = None
 
 
+def get_pairs(values):
+    """ Returns a list of keys and a list of values from a values dict."""
+    return [(k, str(v)) for k, v in values.iteritems()]
+
+
 def result_as_dict(schema, row):
     """
     Converts a result to a dict using the values in
