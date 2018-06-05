@@ -22,6 +22,7 @@ def create_app(config_object=ProdConfig):
     app.json_encoder = JSONEnhanced
 
     register_db(app)
+    register_opsgenie(app)
     register_blueprints(app)
     register_jwt(app)
     register_errorhandlers(app)
