@@ -20,7 +20,7 @@ export const withMainLayout = (WrappedComponent) => {
             staticContext.status = 302;
           }
 
-          return <Redirect to="/login" />;
+          return <Redirect to={{ pathname: '/login', state: { from: location } }} />;
         }
 
         return (

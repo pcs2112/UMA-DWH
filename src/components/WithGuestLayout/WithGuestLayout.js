@@ -8,7 +8,7 @@ import { mainColStyles, mainGridStyles } from './css';
 
 export const withGuestLayout = (WrappedComponent) => {
   const WithGuestLayout = ({
-    isLoggedIn, ...rest
+    location, isLoggedIn, ...rest
   }) => (
     <Route
       {...rest}
@@ -18,7 +18,9 @@ export const withGuestLayout = (WrappedComponent) => {
             staticContext.status = 302;
           }
 
-          return <Redirect to="/" />;
+          const { from } = location.state || { from: { pathname: '/' } };
+
+          return <Redirect to={from} />;
         }
 
         return (
@@ -33,6 +35,7 @@ export const withGuestLayout = (WrappedComponent) => {
   );
 
   WithGuestLayout.propTypes = {
+    location: PropTypes.object.isRequired,
     isLoggedIn: PropTypes.bool.isRequired
   };
 
