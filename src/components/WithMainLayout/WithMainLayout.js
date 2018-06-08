@@ -25,10 +25,7 @@ export const withMainLayout = (WrappedComponent) => {
 
         return (
           <div>
-            <MainMenu
-              currentPathName={location.pathname}
-              onLogout={onLogout}
-            />
+            <MainMenu onLogout={onLogout} />
             <div style={mainContentCss}>
               <Grid>
                 <Grid.Row>

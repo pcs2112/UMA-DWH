@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Menu } from 'semantic-ui-react';
 import { menuCss } from './css';
@@ -9,7 +10,7 @@ const isActive = (currentPathName, pathName) => currentPathName === pathName;
 
 class MainMenu extends Component {
   static propTypes = {
-    currentPathName: PropTypes.string.isRequired,
+    location: PropTypes.object.isRequired,
     onLogout: PropTypes.func.isRequired
   };
 
@@ -19,7 +20,7 @@ class MainMenu extends Component {
   };
 
   render() {
-    const { currentPathName } = this.props;
+    const { location: { pathname } } = this.props;
     return (
       <Menu inverted fixed="left" vertical size="large" style={menuCss}>
         <div className="item">
@@ -27,14 +28,17 @@ class MainMenu extends Component {
             <img src={logo} className="ui image" alt="UMA DWH" />
           </Link>
         </div>
-        <Menu.Item as={Link} to="/" active={isActive(currentPathName, '/')}>
+        <Menu.Item as={Link} to="/" active={isActive(pathname, '/')}>
           ETL Cycle History
         </Menu.Item>
-        <Menu.Item as={Link} to="/procedures/history" active={isActive(currentPathName, '/procedures/history')}>
+        <Menu.Item as={Link} to="/procedures/history" active={isActive(pathname, '/procedures/history')}>
           ETL Procedure History
         </Menu.Item>
-        <Menu.Item as={Link} to="/users" active={isActive(currentPathName, '/users')}>
+        <Menu.Item as={Link} to="/users" active={isActive(pathname, '/users')}>
           Users
+        </Menu.Item>
+        <Menu.Item as={Link} to="/errors/management" active={isActive(pathname, '/errors')}>
+          Error Type Management
         </Menu.Item>
         <Menu.Item as={Link} to="/logout" onClick={this.onLogout}>
           Logout
@@ -44,4 +48,4 @@ class MainMenu extends Component {
   }
 }
 
-export default MainMenu;
+export default withRouter(MainMenu);
