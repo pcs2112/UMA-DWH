@@ -6,6 +6,7 @@ import { renderRoutes } from 'react-router-config';
 import { reactRouterFetch } from 'javascript-utils/lib/react-router';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import userModule from 'redux/modules/user';
+import Error from 'routes/Error';
 import NProgress from 'components/NProgress';
 
 class App extends Component {
@@ -56,10 +57,6 @@ class App extends Component {
 
   componentDidUpdate() {
     window.scrollTo(0, 0);
-    if (this.state.appFetchingError) {
-      console.warn(this.state.appFetchingError.message);
-    }
-
     if (!this.state.isInitialAppFetching) {
       NProgress.enable();
     }
@@ -96,16 +93,23 @@ class App extends Component {
   }
 
   render() {
-    const {
-      routes
-    } = this.props;
-    const { isInitialAppFetching, isAppFetching } = this.state;
+    const { routes } = this.props;
+    const { isInitialAppFetching, isAppFetching, appFetchingError } = this.state;
 
     if (isInitialAppFetching || (isInitialAppFetching && isAppFetching)) {
       return (
         <Dimmer active inverted>
           <Loader size="large" />
         </Dimmer>
+      );
+    }
+
+    if (appFetchingError) {
+      return (
+        <Error
+          header={`${appFetchingError.status_code || 500} Error`}
+          content={appFetchingError.message}
+        />
       );
     }
 
