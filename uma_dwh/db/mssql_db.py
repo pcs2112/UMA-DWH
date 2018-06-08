@@ -115,6 +115,51 @@ def insert(table_name, values):
     return _id
 
 
+def update_by_id(table_name, _id, values):
+    """
+    Updates the values into the specified table.
+    :param table_name
+    :type: str
+    :param _id
+    :type: str
+    :param values
+    :type: dict
+    """
+    # Get the table fields and their values
+    fields, in_params = _get_names_values(values)
+
+    # Create the sql
+    sql = 'UPDATE %s SET %s WHERE id = ?' % (
+      table_name,
+      ' = ?, '.join(fields)
+    )
+
+    # Execute insert and return the ID
+    cursor = get_db().cursor()
+    cursor.execute(sql, in_params)
+
+    cursor.close()
+
+    return _id
+
+
+def get_by_id(table_name, _id, fields, schema=()):
+    """
+    Gets a record by id.
+    :param table_name
+    :type: str
+    :param _id
+    :type: str
+    :param fields
+    :type: dict
+    :param schema
+    :type: list
+    """
+    fields = ', '.join(fields)
+    sql = 'SELECT %s FROM %s WHERE ID = %s' % (fields, table_name, _id)
+    return fetch_row(sql, schema)
+
+
 def result_as_dict(schema, row):
     """
     Converts a result to a dict using the values in
