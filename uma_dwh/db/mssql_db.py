@@ -157,7 +157,26 @@ def get_by_id(table_name, _id, fields, schema=()):
     """
     fields = ', '.join(fields)
     sql = 'SELECT %s FROM %s WHERE ID = %s' % (fields, table_name, _id)
-    return fetch_row(sql, schema)
+    return fetch_row(sql=sql, schema=schema)
+
+
+def get_by_field(table_name, field, value, fields, schema=()):
+    """
+    Gets a record by the specified column value.
+    :param table_name
+    :type: str
+    :param field
+    :type: str
+    :param value
+    :type: str
+    :param fields
+    :type: dict
+    :param schema
+    :type: list
+    """
+    fields = ', '.join(fields)
+    sql = 'SELECT %s FROM %s WHERE %s = ?' % (fields, table_name, field)
+    return fetch_row(sql, [value], schema)
 
 
 def result_as_dict(schema, row):
