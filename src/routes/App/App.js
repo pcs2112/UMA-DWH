@@ -105,12 +105,14 @@ class App extends Component {
     }
 
     if (appFetchingError) {
-      return (
-        <Error
-          header={`${appFetchingError.status_code || 500} Error`}
-          content={appFetchingError.message}
-        />
-      );
+      if (appFetchingError.error_type !== 'JWT_ERROR' && appFetchingError.status_code !== 401) {
+        return (
+          <Error
+            header={`${appFetchingError.status_code || 500} Error`}
+            content={appFetchingError.message}
+          />
+        );
+      }
     }
 
     return (
