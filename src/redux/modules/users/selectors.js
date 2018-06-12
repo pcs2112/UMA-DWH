@@ -47,6 +47,7 @@ export const getUpdatingUserInitialValues = createSelector(
     }
 
     return {
+      id: user.id,
       employee_first_name: user.employee_first_name,
       employee_last_name: user.employee_last_name,
       employee_email: user.employee_email,

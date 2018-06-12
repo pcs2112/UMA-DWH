@@ -46,7 +46,7 @@ export default connectModal(
     initialValues: users.selectors.getUpdatingUserInitialValues(state)
   }),
   dispatch => ({
-    onSubmit: data => dispatch(users.actions.updateUser(1, data)),
+    onSubmit: data => dispatch(users.actions.updateUser(data.id, data)),
     onSubmitSuccess: () => {
       dispatch(users.actions.updatingUserEnd());
       dispatch(hideModal());

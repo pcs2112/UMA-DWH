@@ -45,22 +45,25 @@ const withUserForm = (scenario) => {
   };
 
   let validate;
+  const fields = [
+    'employee_first_name',
+    'employee_last_name',
+    'employee_email',
+    'employee_phone',
+    'employee_cell_phone',
+    'employee_password'
+  ];
+
   if (scenario === 'create') {
     validate = newUserValidator;
   } else {
+    fields.push('id');
     validate = existingUserValidator;
   }
 
   return reduxForm({
     validate,
-    fields: [
-      'employee_first_name',
-      'employee_last_name',
-      'employee_email',
-      'employee_phone',
-      'employee_cell_phone',
-      'employee_password'
-    ]
+    fields
   })(withBasicForm(WithUserForm));
 };
 
