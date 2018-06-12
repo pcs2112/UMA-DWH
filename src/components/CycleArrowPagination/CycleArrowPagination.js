@@ -48,7 +48,7 @@ class CycleArrowPagination extends Component {
       <NavDiv>
         <NavLeftColDiv>
           <a href="#prev" onClick={this.fetchPrev}>
-            <Icon name="long arrow left" size={arrowSize} color={arrowColor} disabled={prevDisabled} />
+            <Icon name="arrow left" size={arrowSize} color={arrowColor} disabled={prevDisabled} />
           </a>
         </NavLeftColDiv>
         <NavCenterColDiv>
@@ -62,7 +62,7 @@ class CycleArrowPagination extends Component {
         </NavCenterColDiv>
         <NavRightColDiv>
           <a href="#next" onClick={this.fetchNext}>
-            <Icon name="long arrow right" size={arrowSize} color={arrowColor} />
+            <Icon name="arrow right" size={arrowSize} color={arrowColor} />
           </a>
         </NavRightColDiv>
       </NavDiv>
