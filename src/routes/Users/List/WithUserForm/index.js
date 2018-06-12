@@ -1,3 +1,3 @@
-import WithUserForm from './WithUserForm';
+import withUserForm from './WithUserForm';
 
-export default WithUserForm;
+export default withUserForm;

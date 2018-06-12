@@ -34,6 +34,16 @@ export default (state = initialState, action) => {
         ...state,
         data: replaceObjByValue(state.data, { ...action.response }, action.id)
       };
+    case actionTypes.UPDATING_USER_START:
+      return {
+        ...state,
+        updating: action.id
+      };
+    case actionTypes.UPDATING_USER_END: {
+      const newState = { ...state };
+      delete newState.updating;
+      return newState;
+    }
     default:
       return state;
   }

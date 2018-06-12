@@ -5,6 +5,7 @@ import Error from './Error';
 import ForgotPassword from './ForgotPassword';
 import Login from './Login';
 import ProceduresHistory from './ProceduresHistory';
+import getErrorTypeManagementRoutes from './ErrorTypeManagement';
 import getUserRoutes from './Users';
 
 export default ({ dispatch }) => ([
@@ -22,6 +23,7 @@ export default ({ dispatch }) => ([
   }
 ]
   .concat(getUserRoutes(dispatch))
+  .concat(getErrorTypeManagementRoutes())
   .concat([
     {
       path: '/login',

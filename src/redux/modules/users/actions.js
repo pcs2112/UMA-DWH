@@ -10,7 +10,9 @@ export const actionTypes = {
   CREATE_USER_FAIL: 'users/CREATE_USER_FAIL',
   UPDATE_USER_BEGIN: 'users/UPDATE_USER_BEGIN',
   UPDATE_USER_SUCCESS: 'users/UPDATE_USER_SUCCESS',
-  UPDATE_USER_FAIL: 'users/UPDATE_USER_FAIL'
+  UPDATE_USER_FAIL: 'users/UPDATE_USER_FAIL',
+  UPDATING_USER_START: 'users/UPDATING_USER_START',
+  UPDATING_USER_END: 'users/UPDATING_USER_END'
 };
 
 /**
@@ -61,4 +63,20 @@ export const updateUser = (id, data) => ({
   payload: {
     id
   }
+});
+
+/**
+ * Action to mark a user as being updating.
+ * @param {Number} id
+ */
+export const updatingUserStart = id => ({
+  type: actionTypes.UPDATING_USER_START,
+  id
+});
+
+/**
+ * Action to remove current user as being updating.
+ */
+export const updatingUserEnd = () => ({
+  type: actionTypes.UPDATING_USER_END
 });

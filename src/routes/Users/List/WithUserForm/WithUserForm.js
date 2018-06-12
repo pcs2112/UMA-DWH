@@ -46,9 +46,9 @@ const withUserForm = (scenario) => {
 
   let validate;
   if (scenario === 'create') {
-    validate = existingUserValidator;
-  } else {
     validate = newUserValidator;
+  } else {
+    validate = existingUserValidator;
   }
 
   return reduxForm({
