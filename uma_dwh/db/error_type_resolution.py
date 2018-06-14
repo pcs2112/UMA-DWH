@@ -1,4 +1,15 @@
-from .mssql_db import execute_sp
+from .mssql_db import execute_sp, fetch_row
+from .schemas.error_type_resolution import files_schema
+
+
+def fetch_file_by_id(id_):
+    """
+    Returns the file information.
+    :param id_: File ID
+    :type id_: int
+    """
+    sql = f'SELECT * FROM MWH.ERROR_RESOLUTIONS WHERE ID = ?'
+    return fetch_row(sql=sql, in_args=[id_], schema=files_schema)
 
 
 def insert_error_type_resolution_file(description, file_path_filename):
