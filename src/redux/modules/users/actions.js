@@ -5,14 +5,14 @@ export const actionTypes = {
   FETCH_SUCCESS: 'users/FETCH_SUCCESS',
   FETCH_FAIL: 'users/FETCH_FAIL',
   RESET: 'users/RESET',
-  CREATE_USER_BEGIN: 'users/CREATE_USER_BEGIN',
-  CREATE_USER_SUCCESS: 'users/CREATE_USER_SUCCESS',
-  CREATE_USER_FAIL: 'users/CREATE_USER_FAIL',
-  UPDATE_USER_BEGIN: 'users/UPDATE_USER_BEGIN',
-  UPDATE_USER_SUCCESS: 'users/UPDATE_USER_SUCCESS',
-  UPDATE_USER_FAIL: 'users/UPDATE_USER_FAIL',
-  UPDATING_USER_START: 'users/UPDATING_USER_START',
-  UPDATING_USER_END: 'users/UPDATING_USER_END'
+  CREATE_BEGIN: 'users/CREATE_BEGIN',
+  CREATE_SUCCESS: 'users/CREATE_SUCCESS',
+  CREATE_FAIL: 'users/CREATE_FAIL',
+  UPDATE_BEGIN: 'users/UPDATE_BEGIN',
+  UPDATE_SUCCESS: 'users/UPDATE_SUCCESS',
+  UPDATE_FAIL: 'users/UPDATE_FAIL',
+  UPDATING_START: 'users/UPDATING_START',
+  UPDATING_END: 'users/UPDATING_END'
 };
 
 /**
@@ -34,9 +34,9 @@ export const fetchUsers = () => ({
  */
 export const createUser = data => ({
   types: [
-    actionTypes.CREATE_USER_BEGIN,
-    actionTypes.CREATE_USER_SUCCESS,
-    actionTypes.CREATE_USER_FAIL
+    actionTypes.CREATE_BEGIN,
+    actionTypes.CREATE_SUCCESS,
+    actionTypes.CREATE_FAIL
   ],
   makeRequest: client => client.post('/api/users', {
     data
@@ -52,9 +52,9 @@ export const createUser = data => ({
  */
 export const updateUser = (id, data) => ({
   types: [
-    actionTypes.UPDATE_USER_BEGIN,
-    actionTypes.UPDATE_USER_SUCCESS,
-    actionTypes.UPDATE_USER_FAIL
+    actionTypes.UPDATE_BEGIN,
+    actionTypes.UPDATE_SUCCESS,
+    actionTypes.UPDATE_FAIL
   ],
   makeRequest: client => client.post(`/api/users/${id}`, {
     data
@@ -70,7 +70,7 @@ export const updateUser = (id, data) => ({
  * @param {Number} id
  */
 export const updatingUserStart = id => ({
-  type: actionTypes.UPDATING_USER_START,
+  type: actionTypes.UPDATING_START,
   id
 });
 
@@ -78,5 +78,5 @@ export const updatingUserStart = id => ({
  * Action to remove current user as being updating.
  */
 export const updatingUserEnd = () => ({
-  type: actionTypes.UPDATING_USER_END
+  type: actionTypes.UPDATING_END
 });
