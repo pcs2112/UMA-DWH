@@ -17,13 +17,13 @@ export const actionTypes = {
 /**
  * Action to load the error type resolution data.
  */
-export const fetchData = () => ({
+export const fetchFiles = () => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,
     actionTypes.FETCH_FAIL
   ],
-  makeRequest: client => client.get('/api/error_type_resolution')
+  makeRequest: client => client.get('/api/error_type_resolution/files')
 });
 
 /**
@@ -37,7 +37,7 @@ export const createFile = data => ({
     actionTypes.CREATE_SUCCESS,
     actionTypes.CREATE_FAIL
   ],
-  makeRequest: client => client.post('/api/error_type_resolution', {
+  makeRequest: client => client.post('/api/error_type_resolution/files', {
     data
   })
     .catch(catchValidation)
@@ -55,7 +55,7 @@ export const updateFile = (id, data) => ({
     actionTypes.UPDATE_SUCCESS,
     actionTypes.UPDATE_FAIL
   ],
-  makeRequest: client => client.post(`/api/error_type_resolution/${id}`, {
+  makeRequest: client => client.post(`/api/error_type_resolution/files/${id}`, {
     data
   })
     .catch(catchValidation),
@@ -68,7 +68,7 @@ export const updateFile = (id, data) => ({
  * Action to mark a file as being updating.
  * @param {Number} id
  */
-export const updatingFiletart = id => ({
+export const updatingFileStart = id => ({
   type: actionTypes.UPDATING_START,
   id
 });
