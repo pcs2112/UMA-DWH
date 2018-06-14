@@ -67,7 +67,7 @@ class InvalidUsage(Exception):
         return cls(**UNKNOWN_ERROR)
 
     @classmethod
-    def etl_error(cls, message, payload):
+    def etl_error(cls, message, payload=None):
         etl_error = http_error_template(500, 'ETL_ERROR', message, payload)
         return cls(**etl_error)
 

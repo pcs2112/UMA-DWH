@@ -20,7 +20,7 @@ def fetch_file_by_id(id_):
     return fetch_row(sql=sql, in_args=[id_], schema=files_schema)
 
 
-def insert_file(description, file_path_filename):
+def create_file(description, file_path_filename):
     """
     Creates an error type resolution file record.
     :param description: File description

@@ -1,7 +1,6 @@
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
-from uma_dwh import etl
-from uma_dwh import users
+from uma_dwh import error_type_resolution, etl, users
 from uma_dwh.settings import ProdConfig
 from uma_dwh.db.mssql_db import init_db
 from uma_dwh.extensions import cors
@@ -41,6 +40,7 @@ def register_opsgenie(app):
 def register_blueprints(app):
     """Register Flask blueprints."""
     origins = app.config.get('CORS_ORIGIN_WHITELIST', '*')
+    cors.init_app(error_type_resolution.views.blueprint, origins=origins)
     cors.init_app(etl.views.blueprint, origins=origins)
     cors.init_app(users.views.blueprint, origins=origins)
 
