@@ -1,5 +1,13 @@
-from .mssql_db import execute_sp, fetch_row
+from .mssql_db import execute_sp, fetch_rows, fetch_row
 from .schemas.error_type_resolution import files_schema
+
+
+def fetch_files():
+    """
+    Returns the list of files.
+    """
+    sql = f'SELECT * FROM MWH.ERROR_RESOLUTIONS ORDER BY ID ASC'
+    return fetch_rows(sql=sql, schema=files_schema)
 
 
 def fetch_file_by_id(id_):
@@ -12,7 +20,7 @@ def fetch_file_by_id(id_):
     return fetch_row(sql=sql, in_args=[id_], schema=files_schema)
 
 
-def insert_error_type_resolution_file(description, file_path_filename):
+def insert_file(description, file_path_filename):
     """
     Creates an error type resolution file record.
     :param description: File description
@@ -32,7 +40,7 @@ def insert_error_type_resolution_file(description, file_path_filename):
     )
 
 
-def update_error_type_resolution_file(_id, description, file_path_filename):
+def update_file(_id, description, file_path_filename):
     """
     Updates an error type resolution file.
     :param _id: File ID
