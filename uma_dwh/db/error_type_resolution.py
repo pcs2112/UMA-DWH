@@ -1,7 +1,7 @@
 from .mssql_db import execute_sp
 
 
-def insert_error_resolution_file(description, file_path_filename):
+def insert_error_type_resolution_file(description, file_path_filename):
     """
     Creates an error type resolution file record.
     :param description: File description
@@ -21,7 +21,7 @@ def insert_error_resolution_file(description, file_path_filename):
     )
 
 
-def update_error_resolution_file(_id, description, file_path_filename):
+def update_error_type_resolution_file(_id, description, file_path_filename):
     """
     Updates an error type resolution file.
     :param _id: File ID
