@@ -1,40 +1,37 @@
 import { createSelector } from 'reselect';
-
-const emptyData = [];
+import {
+  createDataSelector,
+  createFetchingErrorSelector,
+  createGetItemsSelector,
+  createGetPropertySelector,
+  createGetItemByIdSelector
+} from 'helpers/selectors';
 
 /**
- * Returns the history data from the state.
+ * Returns the item list from the state.
+ */
+const _getData = createDataSelector('users');
+
+/**
+ * Returns the updating user id.
+ */
+const _getUpdatingUserId = createGetPropertySelector('users', 'updating');
+
+/**
+ * Returns the fetching error.
  * @param {Object} state
  */
-const getData = state => (state.users.dataLoaded ? state.users.data : emptyData);
-
-const getUpdatingUserId = state => state.users.updating;
+export const getFetchingError = createFetchingErrorSelector('users');
 
 /**
- * Returns the error from the state.
- * @param {Object} state
+ * Selector to get the users.
  */
-export const getFetchingError = state =>
-  (state.users.fetchingError && state.users.fetchingError.payload
-    ? state.users.fetchingError.payload
-    : false
-  );
-
-/**
- * Selector to get the selected items count.
- */
-export const getUsers = createSelector(
-  [getData],
-  users => users
-);
+export const getUsers = createGetItemsSelector(_getData);
 
 /**
  * Returns the current updating user.
  */
-export const getUpdatingUser = createSelector(
-  [getData, getUpdatingUserId],
-  (users, updatingUserId) => (updatingUserId ? users.find(user => user.id === updatingUserId) : undefined)
-);
+export const getUpdatingUser = createGetItemByIdSelector(_getData, _getUpdatingUserId);
 
 /**
  * Gets the initial form values for the updating user.
