@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Header } from 'semantic-ui-react';
 import { connectModal, hideModal } from 'redux-modal';
-import users from 'redux/modules/users';
-import withUserForm from '../WithUserForm';
+import errorTypeResolution from 'redux/modules/errorTypeResolution';
+import withFileForm from '../WithFileForm';
 
-const UserForm = withUserForm('update');
+const FileForm = withFileForm('update');
 
-const UpdateUserModal = ({
+const UpdateFileModal = ({
   name, open, onClose, onSubmit, onSubmitSuccess, initialValues
 }) => (
   <Modal
@@ -18,9 +18,9 @@ const UpdateUserModal = ({
     dimmer="inverted"
     closeOnDimmerClick={false}
   >
-    <Header content={<h1>UPDATE USER</h1>} />
+    <Header content={<h1>UPDATE ERROR TYPE MANAGEMENT FILE</h1>} />
     <Modal.Content>
-      <UserForm
+      <FileForm
         form={`${name}_FORM`}
         initialValues={initialValues}
         onSubmit={onSubmit}
@@ -30,7 +30,7 @@ const UpdateUserModal = ({
   </Modal>
 );
 
-UpdateUserModal.propTypes = {
+UpdateFileModal.propTypes = {
   name: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
@@ -40,20 +40,20 @@ UpdateUserModal.propTypes = {
 };
 
 export default connectModal(
-  UpdateUserModal,
+  UpdateFileModal,
   'modal',
   state => ({
-    initialValues: users.selectors.getUpdatingUserInitialValues(state)
+    initialValues: errorTypeResolution.selectors.getUpdatingFileInitialValues(state)
   }),
   dispatch => ({
-    onSubmit: data => dispatch(users.actions.updateUser(data.id, data)),
+    onSubmit: data => dispatch(errorTypeResolution.actions.updateFile(data.id, data)),
     onSubmitSuccess: () => {
       dispatch(hideModal());
-      dispatch(users.actions.updatingUserEnd());
+      dispatch(errorTypeResolution.actions.updatingFileEnd());
     },
     onClose: () => {
       dispatch(hideModal());
-      dispatch(users.actions.updatingUserEnd());
+      dispatch(errorTypeResolution.actions.updatingFileEnd());
     }
   })
 );

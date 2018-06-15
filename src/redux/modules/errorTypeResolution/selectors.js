@@ -1,12 +1,49 @@
 import { createSelector } from 'reselect';
+import {
+  createDataSelector,
+  createFetchingErrorSelector,
+  createGetItemsSelector,
+  createGetItemByIdSelector,
+  createGetPropertySelector
+} from 'helpers/selectors';
 
-const emptyData = [];
-const _getData = state => (state.errorTypeResolution.dataLoaded ? state.errorTypeResolution.data : emptyData);
+const _getData = createDataSelector('errorTypeResolution');
+
+/**
+ * Returns the updating file id.
+ */
+const _getUpdatingFileId = createGetPropertySelector('errorTypeResolution', 'updating');
+
+/**
+ * Returns the error from the state.
+ * @param {Object} state
+ */
+export const getFetchingError = createFetchingErrorSelector('errorTypeResolution');
 
 /**
  * Returns the Error type resolution data.
  */
-export const getData = createSelector(
-  [_getData],
-  data => data
+export const getFiles = createGetItemsSelector(_getData);
+
+/**
+ * Returns the current updating file.
+ */
+export const getUpdatingFile = createGetItemByIdSelector(_getData, _getUpdatingFileId);
+
+/**
+ * Gets the initial form values for the updating file.
+ */
+export const getUpdatingFileInitialValues = createSelector(
+  [getUpdatingFile],
+  (file) => {
+    if (!file) {
+      return {};
+    }
+
+    return {
+      id: file.id,
+      description: file.description,
+      file_path_filename: file.file_path_filename
+    };
+  }
 );
