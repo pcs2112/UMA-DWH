@@ -44,6 +44,7 @@ def register_blueprints(app):
     cors.init_app(etl.views.blueprint, origins=origins)
     cors.init_app(users.views.blueprint, origins=origins)
 
+    app.register_blueprint(error_type_resolution.views.blueprint)
     app.register_blueprint(etl.views.blueprint)
     app.register_blueprint(users.views.blueprint)
 
