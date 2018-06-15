@@ -6,7 +6,7 @@ import { Menu } from 'semantic-ui-react';
 import { menuCss } from './css';
 import logo from './logo.png';
 
-const isActive = (currentPathName, pathName) => currentPathName === pathName;
+const isActive = (currentPathName, pathName) => currentPathName.indexOf(pathName) > -1;
 
 class MainMenu extends Component {
   static propTypes = {
@@ -28,7 +28,7 @@ class MainMenu extends Component {
             <img src={logo} className="ui image" alt="UMA DWH" />
           </Link>
         </div>
-        <Menu.Item as={Link} to="/" active={isActive(pathname, '/')}>
+        <Menu.Item as={Link} to="/" active={pathname === '/'}>
           ETL Cycle History
         </Menu.Item>
         <Menu.Item as={Link} to="/procedures/history" active={isActive(pathname, '/procedures/history')}>
