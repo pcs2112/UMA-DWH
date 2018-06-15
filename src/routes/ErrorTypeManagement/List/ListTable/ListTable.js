@@ -22,7 +22,15 @@ const columns = [
   },
   {
     Header: 'FILE_PATH_FILENAME',
-    accessor: 'file_path_filename'
+    Cell: row => (
+      <a
+        href={`/api/run_books/${row.original.file_path_filename}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {row.original.file_path_filename}
+      </a>
+    )
   }
 ];
 
