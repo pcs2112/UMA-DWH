@@ -14,6 +14,9 @@ def catch_all(path):
     if "dist/" in path:
         return app.send_static_file(path)
 
+    if "run_books/" in path:
+        return app.send_static_file(path)
+
     return app.send_static_file('dist/index.html' if app.config["IS_PRODUCTION"] else 'templates/index.dev.html')
 
 

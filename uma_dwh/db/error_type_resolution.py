@@ -1,4 +1,6 @@
+import os
 from .mssql_db import execute_sp, fetch_rows, fetch_row
+from .exceptions import DBException
 from .schemas.error_type_resolution import files_schema
 
 
@@ -28,6 +30,9 @@ def create_file(description, file_path_filename):
     :type description: str
     :type file_path_filename: str
     """
+    if not is_valid_file_run_book(file_path_filename):
+        raise DBException(f'"{file_path_filename}" does not exist under the run_books directory', -1)
+
     execute_sp(
       'MWH.ERROR_RESOLUTIONS_MGR',
       {
@@ -40,16 +45,19 @@ def create_file(description, file_path_filename):
     )
 
 
-def update_file(_id, description, file_path_filename):
+def update_file(_id, file_path_filename, description):
     """
     Updates an error type resolution file.
     :param _id: File ID
-    :param description: File description
     :param file_path_filename: Full file path with file name
+    :param description: File description
     :type _id: int
-    :type description: str
     :type file_path_filename: str
+    :type description: str
     """
+    if not is_valid_file_run_book(file_path_filename):
+        raise DBException(f'"{file_path_filename}" does not exist under the run_books directory.', -1)
+
     execute_sp(
       'MWH.ERROR_RESOLUTIONS_MGR',
       {
@@ -60,3 +68,11 @@ def update_file(_id, description, file_path_filename):
         'FILE_PATH_FILENAME': file_path_filename
       }
     )
+
+
+def get_run_books_dir():
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__))) + '/static/run_books'
+
+
+def is_valid_file_run_book(file_path_filename):
+    return os.path.isfile(get_run_books_dir() + '/' + file_path_filename)

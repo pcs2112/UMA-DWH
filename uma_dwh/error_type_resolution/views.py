@@ -18,11 +18,13 @@ def get_files():
 @jwt_required
 def post_create_file():
     body = request.get_json(silent=True)
-    print(body)
     try:
         return jsonify(create_file(body['description'], body['file_path_filename']))
-    except DBException:
-        raise InvalidUsage.etl_error(message='Error creating file.')
+    except DBException as e:
+        if e.code == -1:
+            raise InvalidUsage.form_validation_error({'file_path_filename': e.message})
+        else:
+            raise InvalidUsage.etl_error(message='Error updating file.')
 
 
 @blueprint.route('/api/error_type_resolution/files/<file_id>', methods=('POST',))
@@ -30,6 +32,9 @@ def post_create_file():
 def post_update_file(file_id):
     body = request.get_json(silent=True)
     try:
-        return jsonify(update_file(file_id, body['description'], body['file_path_filename']))
-    except DBException:
-        raise InvalidUsage.etl_error(message='Error updating file.')
+        return jsonify(update_file(file_id, body['file_path_filename'], body['description']))
+    except DBException as e:
+        if e.code == -1:
+            raise InvalidUsage.form_validation_error({'file_path_filename': e.message})
+        else:
+            raise InvalidUsage.etl_error(message='Error updating file.')
