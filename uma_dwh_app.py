@@ -8,6 +8,11 @@ CONFIG = DevConfig if get_debug_flag() else ProdConfig
 app = create_app(CONFIG)
 
 
+@app.route('/api/run_books/<path:path>')
+def run_books(path):
+    return app.send_static_file('run_books/' + path)
+
+
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
