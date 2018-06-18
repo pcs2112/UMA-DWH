@@ -18,3 +18,8 @@ server_db_procedures_args = {
   'server_name': fields.Str(required=True),
   'db_name': fields.Str(required=True)
 }
+
+powerbi_report_history_args = {
+  'start_date': fields.Str(missing=''),
+  'end_date': fields.Str(missing='')
+}
