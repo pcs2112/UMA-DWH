@@ -165,6 +165,26 @@ def fetch_run_check(run_check_name):
     )
 
 
+def fetch_powerbi_report_history(start_date='', end_date=''):
+    """
+    Returns the POWERBI report history. Set the start_date and end_date
+    parameters to select a report within a date range.
+    :param start_date
+    :type start_date: str
+    :param end_date
+    :type end_date: str
+    """
+    return execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+      {
+        'message': 'GET POWER BI REPORT HISTORY',
+        'VARCHAR_01': start_date,
+        'VARCHAR_02': end_date
+      },
+      'TryCatchError_ID'
+    )
+
+
 def fill_in_admin_console_sp_in_args(in_args):
     """
     Helper function to ensure the MWH.UMA_WAREHOUSE_ADMIN_CONSOLE SP
