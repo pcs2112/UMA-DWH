@@ -23,3 +23,7 @@ powerbi_report_history_args = {
   'start_date': fields.Str(missing=''),
   'end_date': fields.Str(missing='')
 }
+
+powerbi_report_statistics_args = {
+  'report_name': fields.Str(missing='ALL')
+}
