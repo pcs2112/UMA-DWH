@@ -6,6 +6,7 @@ import ForgotPassword from './ForgotPassword';
 import Login from './Login';
 import ProceduresHistory from './ProceduresHistory';
 import getErrorTypeManagementRoutes from './ErrorTypeManagement';
+import getPowerbiRoutes from './Powerbi';
 import getUserRoutes from './Users';
 
 export default ({ dispatch }) => ([
@@ -22,8 +23,9 @@ export default ({ dispatch }) => ([
     fetch: () => dispatch(etlServers.actions.fetchServers())
   }
 ]
-  .concat(getUserRoutes(dispatch))
   .concat(getErrorTypeManagementRoutes())
+  .concat(getPowerbiRoutes())
+  .concat(getUserRoutes(dispatch))
   .concat([
     {
       path: '/login',
