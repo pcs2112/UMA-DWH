@@ -34,11 +34,14 @@ class MainMenu extends Component {
         <Menu.Item as={Link} to="/procedures/history" active={isActive(pathname, '/procedures/history')}>
           ETL Procedure History
         </Menu.Item>
-        <Menu.Item as={Link} to="/users" active={isActive(pathname, '/users')}>
-          Users
+        <Menu.Item as={Link} to="/powerbi/report/history" active={isActive(pathname, '/powerbi')}>
+          Powerbi Report History
         </Menu.Item>
         <Menu.Item as={Link} to="/errors/management" active={isActive(pathname, '/errors')}>
           Error Type Management
+        </Menu.Item>
+        <Menu.Item as={Link} to="/users" active={isActive(pathname, '/users')}>
+          Users
         </Menu.Item>
         <Menu.Item as={Link} to="/logout" onClick={this.onLogout}>
           Logout
