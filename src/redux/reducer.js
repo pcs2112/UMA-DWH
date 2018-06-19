@@ -9,6 +9,7 @@ import etlCycleHistory from './modules/etlCycleHistory';
 import etlRunCheck from './modules/etlRunCheck';
 import etlServers from './modules/etlServers';
 import powerbiReportHistory from './modules/powerbiReportHistory';
+import powerbiReportStatistics from './modules/powerbiReportStatistics';
 import user from './modules/user';
 import users from './modules/users';
 
@@ -23,6 +24,7 @@ export default combineReducers({
   etlRunCheck: etlRunCheck.reducer,
   etlServers: etlServers.reducer,
   powerbiReportHistory: powerbiReportHistory.reducer,
+  powerbiReportStatistics: powerbiReportStatistics.reducer,
   user: user.reducer,
   users: users.reducer
 });
