@@ -10,7 +10,7 @@ export const initialState = {
  * @param {Object} actionTypes
  * @returns {Function}
  */
-const crudReducerFor = ({
+const crudListReducerFor = ({
   CREATE_SUCCESS, UPDATE_SUCCESS, UPDATING_START, UPDATING_END
 }) => (state = initialState, action) => {
   switch (action.type) {
@@ -42,4 +42,4 @@ const crudReducerFor = ({
   }
 };
 
-export default crudReducerFor;
+export default crudListReducerFor;

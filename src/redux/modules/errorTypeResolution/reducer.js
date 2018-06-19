@@ -1,13 +1,13 @@
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
-import crudReducerFor, { initialState as crudInitialState } from '../../reducers/crudReducerFor';
+import crudListReducerFor, { initialState as crudListInitialState } from '../../reducers/crudListReducerFor';
 import { actionTypes } from './actions';
 
 // Initial state
-const initialState = Object.assign({}, itemListInitialState, crudInitialState);
+const initialState = Object.assign({}, itemListInitialState, crudListInitialState);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
-const crudReducer = crudReducerFor(actionTypes);
+const crudListReducer = crudListReducerFor(actionTypes);
 
 /**
  * Error type management reducer.
@@ -26,7 +26,7 @@ export default (state = initialState, action) => {
     case actionTypes.UPDATE_SUCCESS:
     case actionTypes.UPDATING_START:
     case actionTypes.UPDATING_END:
-      return crudReducer(state, action);
+      return crudListReducer(state, action);
     default:
       return state;
   }
