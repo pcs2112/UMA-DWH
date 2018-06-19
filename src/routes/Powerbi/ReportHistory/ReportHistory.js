@@ -12,7 +12,7 @@ class ReportHistory extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            {config.app.title} - Powerbi Report History
+            {config.app.title} - Power BI Report History
           </h1>
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>

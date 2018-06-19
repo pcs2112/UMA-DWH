@@ -35,7 +35,7 @@ class MainMenu extends Component {
           ETL Procedure History
         </Menu.Item>
         <Menu.Item as={Link} to="/powerbi/report/history" active={isActive(pathname, '/powerbi')}>
-          Powerbi Report History
+          Power BI Report History
         </Menu.Item>
         <Menu.Item as={Link} to="/errors/management" active={isActive(pathname, '/errors')}>
           Error Type Management
