@@ -185,6 +185,22 @@ def fetch_powerbi_report_history(start_date='', end_date=''):
     )
 
 
+def fetch_powerbi_report_statistics(report_name='ALL'):
+    """
+    Returns the POWERBI report stats. Set the report_name parameter to filter by report name.
+    :param report_name
+    :type report_name: str
+    """
+    return execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+      {
+        'message': 'GET POWER BI REPORT STATISTICS',
+        'VARCHAR_01': report_name
+      },
+      'TryCatchError_ID'
+    )
+
+
 def fill_in_admin_console_sp_in_args(in_args):
     """
     Helper function to ensure the MWH.UMA_WAREHOUSE_ADMIN_CONSOLE SP
