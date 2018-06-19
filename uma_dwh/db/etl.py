@@ -1,8 +1,8 @@
 from .mssql_db import fetch_rows, execute_sp, result_as_dict, result_set_as_dicts
 from .exceptions import SPException
 from .schemas.etl import (control_manager_schema, current_cycle_status_schema, cycle_history_schema,
-                          procedure_history_schema, server_db_procedures_schema, server_dbs_schema,
-                          try_catch_error_schema)
+                          powerbi_report_history_schema, powerbi_report_statistics_schema, procedure_history_schema,
+                          server_db_procedures_schema, server_dbs_schema, try_catch_error_schema)
 
 ADMIN_CONSOLE_SP_IN_ARGS_LENGTH = 10
 
@@ -181,7 +181,8 @@ def fetch_powerbi_report_history(start_date='', end_date=''):
         'VARCHAR_01': start_date,
         'VARCHAR_02': end_date
       },
-      'TryCatchError_ID'
+      'TryCatchError_ID',
+      powerbi_report_history_schema
     )
 
 
@@ -197,7 +198,8 @@ def fetch_powerbi_report_statistics(report_name='ALL'):
         'message': 'GET POWER BI REPORT STATISTICS',
         'VARCHAR_01': report_name
       },
-      'TryCatchError_ID'
+      'TryCatchError_ID',
+      powerbi_report_statistics_schema
     )
 
 
