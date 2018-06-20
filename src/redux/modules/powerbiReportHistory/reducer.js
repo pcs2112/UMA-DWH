@@ -7,6 +7,14 @@ const initialState = Object.assign({}, itemListInitialState);
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
 
+// Set the filters data
+const setFilters = (state, action) => {
+  const newState = { ...state };
+  newState.startDate = action.startDate;
+  newState.endDate = action.endDate;
+  return newState;
+};
+
 /**
  * Power BI report history reducer.
  *
@@ -19,6 +27,7 @@ export default (state = initialState, action) => {
     case actionTypes.FETCH_BEGIN:
     case actionTypes.FETCH_FAIL:
     case actionTypes.FETCH_SUCCESS:
+      setFilters(state, action);
       return itemListReducer(state, action);
     default:
       return state;
