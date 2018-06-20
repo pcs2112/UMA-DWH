@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import debounce from 'lodash/debounce';
 import { Grid, Dropdown } from 'semantic-ui-react';
 
 class Filters extends Component {
@@ -18,6 +19,8 @@ class Filters extends Component {
       dbName: props.dbName.toUpperCase(),
       procedureName: props.procedureName
     };
+
+    this.handleOnChange = debounce(this.handleOnChange, 200);
   }
 
   getServerOptions = () => this.props.servers.map(server => ({
@@ -52,7 +55,7 @@ class Filters extends Component {
   handleServerNameOnChange = (e, { value }) => {
     const normalizedValue = value.toUpperCase();
     if (normalizedValue !== this.state.serverName) {
-      const { servers, onChange } = this.props;
+      const { servers } = this.props;
       const server = servers.find(item => item.name.toUpperCase() === normalizedValue);
       const serverName = normalizedValue;
       const dbName = server.dbs[0].name.toUpperCase();
@@ -61,9 +64,7 @@ class Filters extends Component {
         serverName,
         dbName,
         procedureName,
-      }, () => {
-        onChange(serverName, dbName, procedureName);
-      });
+      }, this.handleOnChange);
     }
   };
 
@@ -71,31 +72,30 @@ class Filters extends Component {
     const normalizedValue = value.toUpperCase();
     if (normalizedValue !== this.state.dbName) {
       const { serverName } = this.state;
-      const { servers, onChange } = this.props;
+      const { servers } = this.props;
       const server = servers.find(item => item.name.toUpperCase() === serverName);
       const db = server.dbs.find(item => item.name.toUpperCase() === normalizedValue);
       const dbName = normalizedValue;
       const procedureName = db.procedures[0].etl_stored_procedure;
       this.setState({
         dbName,
-        procedureName: db.procedures[0].etl_stored_procedure,
-      }, () => {
-        onChange(serverName, dbName, procedureName);
-      });
+        procedureName,
+      }, this.handleOnChange);
     }
   };
 
   handleProcedureNameOnChange = (e, { value }) => {
     if (value !== this.state.procedureName) {
-      const { serverName, dbName } = this.state;
-      const { onChange } = this.props;
-      const procedureName = value;
       this.setState({
-        procedureName
-      }, () => {
-        onChange(serverName, dbName, procedureName);
-      });
+        procedureName: value
+      }, this.handleOnChange);
     }
+  };
+
+  handleOnChange = () => {
+    const { serverName, dbName, procedureName } = this.state;
+    const { onChange } = this.props;
+    onChange(serverName, dbName, procedureName);
   };
 
   render() {
