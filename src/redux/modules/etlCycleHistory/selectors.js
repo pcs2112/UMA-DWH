@@ -17,7 +17,7 @@ const _getData = createDataSelector('etlCycleHistory');
 /**
  * Return the selected order from the state.
  */
-const _getSelectedOrder = createGetPropertySelector('etlCycleHistory', 'selectedOrder');
+const _getSelectedOrder = state => createGetPropertySelector('etlCycleHistory', 'selectedOrder').;
 
 /**
  * Returns the ETL history from the state.
@@ -34,18 +34,18 @@ export const getFetchingError = createFetchingErrorSelector('etlCycleHistory');
  * Returns the selected items.
  * @param {Object} state
  */
-export const getSelected = createGetPropertySelector('etlCycleHistory', 'selected');
+export const getSelected = state => state.etlCycleHistory.selected;
 
 /**
  * Returns the current cycle group.
  */
-export const getCurrentCycleGroup = createGetPropertySelector('etlCycleHistory', 'currentCycleGroup');
+export const getCurrentCycleGroup = state => state.etlCycleHistory.currentCycleGroup || 0;
 
 /**
  * Returns the ETL history by cycle group from the state.
  */
 export const getHistoryByCycleGroup = createSelector(
-  [_getData, getCurrentCycleGroup, etlControlManager.selectors.controlManager],
+  [_getData, getCurrentCycleGroup, etlControlManager.selectors.getControlManager],
   (data, cycleGroup, controlManager) => {
     if (data.length < 1 || controlManager.length < 1) {
       return [];

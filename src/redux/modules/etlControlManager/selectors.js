@@ -1,12 +1,11 @@
-import { createSelector } from 'reselect';
+import {
+  createDataSelector,
+  createGetItemsSelector
+} from 'helpers/selectors';
 
-const emptyData = [];
-const getData = state => (state.etlControlManager.dataLoaded ? state.etlControlManager.data : emptyData);
+const _getData = createDataSelector('etlControlManager');
 
 /**
  * Returns the ETL control manager data from the state.
  */
-export const controlManager = createSelector(
-  [getData],
-  data => data
-);
+export const getControlManager = createGetItemsSelector(_getData);
