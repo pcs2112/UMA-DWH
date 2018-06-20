@@ -34,7 +34,7 @@ class Filters extends Component {
           />
           <div className="three wide field">
             <label>&nbsp;</label>
-            <Button type="submit" primary disabled={pristine || submitting}>
+            <Button type="submit" primary disabled={pristine || submitting} loading={submitting}>
               Submit
             </Button>
             <Button type="button" disabled={pristine || submitting} onClick={onCancel}>
