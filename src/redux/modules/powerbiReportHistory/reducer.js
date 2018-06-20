@@ -26,9 +26,10 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.FETCH_BEGIN:
     case actionTypes.FETCH_FAIL:
-    case actionTypes.FETCH_SUCCESS:
-      setFilters(state, action);
-      return itemListReducer(state, action);
+    case actionTypes.FETCH_SUCCESS: {
+      const newState = itemListReducer(state, action);
+      return setFilters(newState, action);
+    }
     default:
       return state;
   }
