@@ -1,7 +1,8 @@
 export const actionTypes = {
   FETCH_BEGIN: 'powerbiReportHistory/FETCH_BEGIN',
   FETCH_SUCCESS: 'powerbiReportHistory/FETCH_SUCCESS',
-  FETCH_FAIL: 'powerbiReportHistory/FETCH_FAIL'
+  FETCH_FAIL: 'powerbiReportHistory/FETCH_FAIL',
+  RESET: 'powerbiReportHistory/RESET'
 };
 
 /**

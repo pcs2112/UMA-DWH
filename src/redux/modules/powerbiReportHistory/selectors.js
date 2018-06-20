@@ -41,5 +41,8 @@ export const getPowerbiReportHistory = createGetItemsSelector(_getData);
  */
 export const getFilters = createSelector(
   [_getFilters],
-  filtersFromState => filtersFromState
+  (filtersFromState) => {
+    console.log(filtersFromState);
+    return filtersFromState;
+  }
 );

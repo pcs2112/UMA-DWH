@@ -1,3 +1,4 @@
+import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
 import { actionTypes } from './actions';
 
@@ -10,8 +11,14 @@ const itemListReducer = itemListReducerFor(actionTypes);
 // Set the filters data
 const setFilters = (state, action) => {
   const newState = { ...state };
-  newState.startDate = action.startDate;
-  newState.endDate = action.endDate;
+  if (objectHasOwnProperty(action, 'startDate')) {
+    newState.startDate = action.startDate;
+    newState.endDate = action.endDate;
+  } else {
+    delete (newState.startDate);
+    delete (newState.endDate);
+  }
+
   return newState;
 };
 
@@ -30,6 +37,8 @@ export default (state = initialState, action) => {
       const newState = itemListReducer(state, action);
       return setFilters(newState, action);
     }
+    case actionTypes.RESET:
+      return itemListReducer(state, action);
     default:
       return state;
   }
