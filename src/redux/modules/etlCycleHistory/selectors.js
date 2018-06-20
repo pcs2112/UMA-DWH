@@ -3,7 +3,8 @@ import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import {
   createDataSelector,
   createFetchingErrorSelector,
-  createGetItemsSelector
+  createGetItemsSelector,
+  createGetPropertySelector
 } from 'helpers/selectors';
 import etlControlManager from 'redux/modules/etlControlManager';
 
@@ -16,7 +17,7 @@ const _getData = createDataSelector('etlCycleHistory');
 /**
  * Return the selected order from the state.
  */
-const _getSelectedOrder = state => state.etlCycleHistory.selectedOrder;
+const _getSelectedOrder = createGetPropertySelector('etlCycleHistory', 'selectedOrder');
 
 /**
  * Returns the ETL history from the state.
@@ -33,12 +34,12 @@ export const getFetchingError = createFetchingErrorSelector('etlCycleHistory');
  * Returns the selected items.
  * @param {Object} state
  */
-export const getSelected = state => state.etlCycleHistory.selected;
+export const getSelected = createGetPropertySelector('etlCycleHistory', 'selected');
 
 /**
  * Returns the current cycle group.
  */
-export const getCurrentCycleGroup = state => state.etlCycleHistory.currentCycleGroup || 0;
+export const getCurrentCycleGroup = createGetPropertySelector('etlCycleHistory', 'currentCycleGroup');
 
 /**
  * Returns the ETL history by cycle group from the state.
