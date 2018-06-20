@@ -7,8 +7,8 @@ import {
 } from 'helpers/selectors';
 
 const emptyFilters = {
-  startDate: '',
-  endDate: ''
+  start_date: '',
+  end_date: ''
 };
 
 /**
@@ -21,8 +21,8 @@ const _getData = createDataSelector('powerbiReportHistory');
  * @param {Object} state
  */
 const _getFilters = state => (objectHasOwnProperty(state.powerbiReportHistory, 'startDate') ? {
-  startDate: state.powerbiReportHistory.startDate,
-  endDate: state.powerbiReportHistory.endDate
+  start_date: state.powerbiReportHistory.startDate,
+  end_date: state.powerbiReportHistory.endDate
 } : emptyFilters);
 
 /**
