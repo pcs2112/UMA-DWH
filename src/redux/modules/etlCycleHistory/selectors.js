@@ -17,7 +17,7 @@ const _getData = createDataSelector('etlCycleHistory');
 /**
  * Return the selected order from the state.
  */
-const _getSelectedOrder = state => createGetPropertySelector('etlCycleHistory', 'selectedOrder').;
+const _getSelectedOrder = createGetPropertySelector('etlCycleHistory', 'selectedOrder');
 
 /**
  * Returns the ETL history from the state.
