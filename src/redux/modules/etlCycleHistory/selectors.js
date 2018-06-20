@@ -1,26 +1,33 @@
 import { createSelector } from 'reselect';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
+import {
+  createDataSelector,
+  createFetchingErrorSelector,
+  createGetItemsSelector
+} from 'helpers/selectors';
 import etlControlManager from 'redux/modules/etlControlManager';
-
-const emptyData = [];
 
 /**
  * Returns the history data from the state.
  * @param {Object} state
  */
-const getData = state => (state.etlCycleHistory.dataLoaded ? state.etlCycleHistory.data : emptyData);
+const _getData = createDataSelector('etlCycleHistory');
 
-const getSelectedOrder = state => state.etlCycleHistory.selectedOrder;
+/**
+ * Return the selected order from the state.
+ */
+const _getSelectedOrder = state => state.etlCycleHistory.selectedOrder;
+
+/**
+ * Returns the ETL history from the state.
+ */
+export const getHistory = createGetItemsSelector(_getData);
 
 /**
  * Returns the error from the state.
  * @param {Object} state
  */
-const getError = state =>
-  (state.etlCycleHistory.fetchingError && state.etlCycleHistory.fetchingError.payload
-    ? state.etlCycleHistory.fetchingError.payload
-    : false
-  );
+export const getFetchingError = createFetchingErrorSelector('etlCycleHistory');
 
 /**
  * Returns the selected items.
@@ -31,13 +38,13 @@ export const getSelected = state => state.etlCycleHistory.selected;
 /**
  * Returns the current cycle group.
  */
-export const currentCycleGroup = state => state.etlCycleHistory.currentCycleGroup || 0;
+export const getCurrentCycleGroup = state => state.etlCycleHistory.currentCycleGroup || 0;
 
 /**
  * Returns the ETL history by cycle group from the state.
  */
-export const historyByCycleGroup = createSelector(
-  [getData, currentCycleGroup, etlControlManager.selectors.controlManager],
+export const getHistoryByCycleGroup = createSelector(
+  [_getData, getCurrentCycleGroup, etlControlManager.selectors.controlManager],
   (data, cycleGroup, controlManager) => {
     if (data.length < 1 || controlManager.length < 1) {
       return [];
@@ -82,25 +89,9 @@ export const historyByCycleGroup = createSelector(
 /**
  * Returns the current cycle group's start dttm.
  */
-export const currentCycleGroupStartDttm = createSelector(
-  [historyByCycleGroup],
+export const getCurrentCycleGroupStartDttm = createSelector(
+  [getHistoryByCycleGroup],
   data => (data.length > 0 ? data[0].start_dttm : 'N/A')
-);
-
-/**
- * Returns the ETL history from the state.
- */
-export const history = createSelector(
-  [getData],
-  data => data
-);
-
-/**
- * Returns the ETL history error from the state.
- */
-export const historyError = createSelector(
-  [getError],
-  error => error
 );
 
 /**
@@ -153,7 +144,7 @@ export const getProceduresSelected = createSelector(
  * Selector to get the last procedure selected.
  */
 export const getLastProcedureSelected = createSelector(
-  [getSelectedOrder, getSelected],
+  [_getSelectedOrder, getSelected],
   (selectedOrder, selected) => {
     if (selectedOrder.length < 1) {
       return undefined;
