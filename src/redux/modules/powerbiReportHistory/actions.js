@@ -7,11 +7,20 @@ export const actionTypes = {
 /**
  * Action to the Power BI report history.
  */
-export const fetchPowerbiReportHistory = () => ({
+export const fetchPowerbiReportHistory = (startDate = '', endDate = '') => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,
     actionTypes.FETCH_FAIL
   ],
-  makeRequest: client => client.get('/api/etl/powerbi_report_history')
+  makeRequest: client => client.get('/api/etl/powerbi_report_history', {
+    params: {
+      start_date: startDate,
+      end_date: endDate
+    }
+  }),
+  payload: {
+    startDate,
+    endDate
+  }
 });
