@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { Grid, Dropdown } from 'semantic-ui-react';
+import { FILTERS_EXEC_DELAY } from 'constants/index';
 
 class Filters extends Component {
   static propTypes = {
@@ -20,7 +21,7 @@ class Filters extends Component {
       procedureName: props.procedureName
     };
 
-    this.handleOnChange = debounce(this.handleOnChange, 200);
+    this.handleOnChange = debounce(this.handleOnChange, FILTERS_EXEC_DELAY);
   }
 
   getServerOptions = () => this.props.servers.map(server => ({

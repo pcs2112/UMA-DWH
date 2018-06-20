@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { reset, change } from 'redux-form';
 import { Segment } from 'semantic-ui-react';
 import config from 'config';
+import { sleep } from 'javascript-utils/lib/utils';
+import { FILTERS_EXEC_DELAY } from 'constants/index';
 import powerbiReportHistory from 'redux/modules/powerbiReportHistory';
 import withMainLayout from 'components/WithMainLayout';
 import globalCss from 'css/global';
@@ -80,16 +82,17 @@ export default withMainLayout(connect(
     powerbiReportHistoryFilters: powerbiReportHistory.selectors.getFilters(state)
   }),
   dispatch => ({
-    fetchPowerbiReportHistory: (data) => {
-      if (data) {
-        return dispatch(powerbiReportHistory.actions.fetchPowerbiReportHistory(
-          data.start_date,
-          data.end_date
-        ));
-      }
+    fetchPowerbiReportHistory: data => sleep(FILTERS_EXEC_DELAY)
+      .then(() => {
+        if (data) {
+          return dispatch(powerbiReportHistory.actions.fetchPowerbiReportHistory(
+            data.start_date,
+            data.end_date
+          ));
+        }
 
-      return dispatch(powerbiReportHistory.actions.fetchPowerbiReportHistory());
-    },
+        return dispatch(powerbiReportHistory.actions.fetchPowerbiReportHistory());
+      }),
     resetPowerbiReportHistory: () => dispatch(powerbiReportHistory.actions.reset()),
     setFilters: (data) => {
       dispatch(change(FILTERS_FORM_NAME, 'start_date', data.start_date));
@@ -97,7 +100,10 @@ export default withMainLayout(connect(
     },
     resetFilters: () => {
       dispatch(reset(FILTERS_FORM_NAME));
-      dispatch(powerbiReportHistory.actions.fetchPowerbiReportHistory());
+      sleep(FILTERS_EXEC_DELAY)
+        .then(() => {
+          dispatch(powerbiReportHistory.actions.fetchPowerbiReportHistory());
+        });
     }
   })
 )(ReportHistory));
