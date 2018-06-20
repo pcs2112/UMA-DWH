@@ -73,10 +73,10 @@ export default withMainLayout(connect(
   state => ({
     isProcedureHistoryFetching: state.etlProcedureHistory.isFetching,
     procedureHistoryDataLoaded: state.etlProcedureHistory.dataLoaded,
-    procedureHistoryData: etlProcedureHistory.selectors.procedureHistory(state),
-    procedureHistoryFetchingError: etlProcedureHistory.selectors.procedureHistoryError(state),
-    servers: etlServers.selectors.servers(state),
-    filters: etlProcedureHistory.selectors.filters(state)
+    procedureHistoryData: etlProcedureHistory.selectors.getProcedureHistory(state),
+    procedureHistoryFetchingError: etlProcedureHistory.selectors.getFetchingError(state),
+    servers: etlServers.selectors.getServers(state),
+    filters: etlProcedureHistory.selectors.getFilters(state)
   }),
   dispatch => ({
     fetchProcedureHistory: (serverName, dbName, procedureName) =>

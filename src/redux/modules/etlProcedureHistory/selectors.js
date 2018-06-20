@@ -1,9 +1,13 @@
 import { createSelector } from 'reselect';
 import { objectHasOwnProperty, isEmpty } from 'javascript-utils/lib/utils';
+import {
+  createDataSelector,
+  createFetchingErrorSelector,
+  createGetItemsSelector
+} from 'helpers/selectors';
 import etlCycleHistory from 'redux/modules/etlCycleHistory';
 import etlServers from 'redux/modules/etlServers';
 
-const emptyData = [];
 const emptyFilters = {
   serverName: '',
   dbName: '',
@@ -14,13 +18,13 @@ const emptyFilters = {
  * Returns the procedure history data from the state.
  * @param {Object} state
  */
-const getData = state => (state.etlProcedureHistory.dataLoaded ? state.etlProcedureHistory.data : emptyData);
+const _getData = createDataSelector('etlProcedureHistory');
 
 /**
  * Returns the filters from the state.
  * @param {Object} state
  */
-const getFilters = state => (objectHasOwnProperty(state.etlProcedureHistory, 'serverName') ? {
+const _getFilters = state => (objectHasOwnProperty(state.etlProcedureHistory, 'serverName') ? {
   serverName: state.etlProcedureHistory.serverName,
   dbName: state.etlProcedureHistory.dbName,
   procedureName: state.etlProcedureHistory.procedureName
@@ -30,33 +34,18 @@ const getFilters = state => (objectHasOwnProperty(state.etlProcedureHistory, 'se
  * Returns the error from the state.
  * @param {Object} state
  */
-const getError = state =>
-  (state.etlProcedureHistory.fetchingError && state.etlProcedureHistory.fetchingError.payload
-    ? state.etlProcedureHistory.fetchingError.payload
-    : false
-  );
+export const getFetchingError = createFetchingErrorSelector('etlProcedureHistory');
 
 /**
  * Returns the ETL procedure history data from the state.
  */
-export const procedureHistory = createSelector(
-  [getData],
-  data => data
-);
-
-/**
- * Returns the ETL procedure history error from the state.
- */
-export const procedureHistoryError = createSelector(
-  [getError],
-  error => error
-);
+export const getProcedureHistory = createGetItemsSelector(_getData);
 
 /**
  * Returns the default filters for the procedure history page.
  */
-export const filters = createSelector(
-  [etlServers.selectors.servers, etlCycleHistory.selectors.getLastProcedureSelected, getFilters],
+export const getFilters = createSelector(
+  [etlServers.selectors.getServers, etlCycleHistory.selectors.getLastProcedureSelected, _getFilters],
   (servers, lastProcedureSelected, filtersFromState) => {
     if (servers.length < 1) {
       return {

@@ -1,12 +1,11 @@
-import { createSelector } from 'reselect';
+import {
+  createDataSelector,
+  createGetItemsSelector
+} from 'helpers/selectors';
 
-const emptyData = [];
-const getData = state => (state.etlServers.dataLoaded ? state.etlServers.data : emptyData);
+const _getData = createDataSelector('etlServers');
 
 /**
  * Returns the ETL servers from the state.
  */
-export const servers = createSelector(
-  [getData],
-  data => (data.length > 0 ? data : emptyData)
-);
+export const getServers = createGetItemsSelector(_getData);

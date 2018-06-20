@@ -24,3 +24,11 @@ export const fetchPowerbiReportHistory = (startDate = '', endDate = '') => ({
     endDate
   }
 });
+
+
+/**
+ * Resets the state.
+ */
+export const reset = () => ({
+  type: actionTypes.RESET
+});
