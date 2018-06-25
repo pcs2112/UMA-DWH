@@ -100,6 +100,7 @@ class ReportHistoryTable extends Component {
         loadingText={this.getLoadingText()}
         noDataText={dataLoaded ? '0 Power BI report history records found.' : ''}
         keyField={keyName}
+        resizable={false}
       />
     );
   }
