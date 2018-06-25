@@ -17,22 +17,22 @@ const columns = [
   {
     Header: 'FROM_DTTM',
     accessor: 'from_dttm',
-    width: 110
+    width: 140
   },
   {
     Header: 'TO_DTTM',
     accessor: 'to_dttm',
-    width: 110
+    width: 140
   },
   {
     Header: 'STARTED',
     accessor: 'started',
-    width: 110
+    width: 140
   },
   {
     Header: 'FINISHED',
     accessor: 'finished',
-    width: 110
+    width: 140
   },
   {
     Header: 'RUN_TIME',
