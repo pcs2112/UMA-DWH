@@ -36,15 +36,18 @@ const columns = [
   },
   {
     Header: 'SCHEMA_TABLE_NAME',
-    accessor: 'source_table'
+    accessor: 'source_table',
+    width: 160
   },
   {
     Header: 'TARGET_SCHEMA_TABLE_NAME',
-    Cell: row => `${row.original.target_schema}.${row.original.target_table}`
+    Cell: row => `${row.original.target_schema}.${row.original.target_table}`,
+    width: 200
   },
   {
     Header: 'STORED_PROCEDURE',
-    accessor: 'procedure_name'
+    accessor: 'procedure_name',
+    width: 300
   },
   {
     Header: 'ETL_FROM_DTTM',
@@ -156,6 +159,7 @@ class ProcedureHistoryTable extends Component {
         loadingText={this.getLoadingText()}
         noDataText={dataLoaded ? '0 ETL procedure history records found.' : ''}
         keyField={keyName}
+        resizable={false}
       />
     );
   }
