@@ -132,6 +132,7 @@ class ReportHistoryTable extends Component {
         loading={isFetching || fetchingError}
         loadingText={this.getLoadingText()}
         noDataText={dataLoaded ? '0 Power BI report history records found.' : ''}
+        getTrProps={this.getTrProps}
         keyField={keyName}
         resizable={false}
       />
