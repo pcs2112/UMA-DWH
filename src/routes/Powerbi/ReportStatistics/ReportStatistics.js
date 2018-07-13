@@ -15,7 +15,7 @@ class ReportStatistics extends Component {
     isPowerbiReportStatisticsFetching: PropTypes.bool.isRequired,
     powerbiReportStatisticsDataLoaded: PropTypes.bool.isRequired,
     powerbiReportStatisticsData: PropTypes.array.isRequired,
-    powerbiReportStatisticsFetchingError: PropTypes.object.isRequired,
+    powerbiReportStatisticsFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     fetchPowerbiReportStatistics: PropTypes.func.isRequired,
     resetPowerbiReportStatistics: PropTypes.func.isRequired
   };

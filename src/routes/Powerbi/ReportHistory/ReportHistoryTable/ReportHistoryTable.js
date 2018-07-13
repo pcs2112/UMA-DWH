@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import 'react-table/react-table.css';
 import ReactTable from 'react-table';
+import { createUrl } from 'javascript-utils/lib/url';
 import withResponsiveTable from 'components/WithResponsiveTable';
 
 const keyName = 'id';
@@ -12,7 +14,15 @@ const keyName = 'id';
 const columns = [
   {
     Header: 'REPORT_NAME',
-    accessor: 'report_name'
+    accessor: 'report_name',
+    Cell: row => (
+      <Link to={createUrl('/powerbi/report/statistics', {
+        report: row.original.report_name
+      })}
+      >
+        {row.original.report_name}
+      </Link>
+    )
   },
   {
     Header: 'FROM_DTTM',
