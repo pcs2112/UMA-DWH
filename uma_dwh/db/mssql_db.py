@@ -12,7 +12,7 @@ def init_db(app):
         raise RuntimeError('Database is already initialized.')
 
     this.config = {
-        'DB_DRIVER': 'ODBC Driver 17 for SQL Server',
+        'DB_DRIVER': app.config["DB_DRIVER"],
         'DB_SERVER': app.config["DB_SERVER"],
         'DB_NAME': app.config["DB_NAME"],
         'DB_USER': app.config["DB_USER"],

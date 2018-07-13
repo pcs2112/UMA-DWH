@@ -35,6 +35,7 @@ class ProdConfig(Config):
     DB_NAME = "UMA_DWH"
     DB_USER = "sa"
     DB_PASSWORD = "1F0rg0t1"
+    DB_DRIVER = "ODBC Driver 17 for SQL Server"
 
 
 class DevConfig(Config):
@@ -47,3 +48,4 @@ class DevConfig(Config):
     DB_NAME = "UMA_DWH"
     DB_USER = "sa"
     DB_PASSWORD = "1F0rg0t1"
+    DB_DRIVER = "ODBC Driver 17 for SQL Server"
