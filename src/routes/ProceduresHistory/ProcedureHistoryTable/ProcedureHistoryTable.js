@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import ReactTable from 'react-table';
 import withResponsiveTable from 'components/WithResponsiveTable';
+import globalCss from 'css/global';
 
 const keyName = 'id';
+const noTrProps = {};
 
 /**
  * 'ENGINE_MESSAGE', 'ERROR_NUMBER'
@@ -131,6 +133,29 @@ class ProcedureHistoryTable extends Component {
     console.log('ProcedureHistoryTable::componentDidUpdate');
   }
 
+  getTrProps = (state, row) => {
+    if (!row) {
+      return noTrProps;
+    }
+
+    let color = 'none';
+    if (row.original.error_number > 0) {
+      color = globalCss.colors.error;
+    } else if (row.original.table_status === 'RUNNING') {
+      color = globalCss.colors.success;
+    }
+
+    if (color === 'none') {
+      return noTrProps;
+    }
+
+    return {
+      style: {
+        backgroundColor: color
+      }
+    };
+  };
+
   getLoadingText = () => {
     const { dataLoaded, fetchingError } = this.props;
     if (fetchingError) {
@@ -158,6 +183,7 @@ class ProcedureHistoryTable extends Component {
         loading={isFetching || fetchingError}
         loadingText={this.getLoadingText()}
         noDataText={dataLoaded ? '0 ETL procedure history records found.' : ''}
+        getTrProps={this.getTrProps}
         keyField={keyName}
         resizable={false}
       />
