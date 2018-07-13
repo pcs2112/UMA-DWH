@@ -5,8 +5,10 @@ import 'react-table/react-table.css';
 import ReactTable from 'react-table';
 import { createUrl } from 'javascript-utils/lib/url';
 import withResponsiveTable from 'components/WithResponsiveTable';
+import globalCss from 'css/global';
 
 const keyName = 'id';
+const noTrProps = {};
 
 /**
  * Table columns
@@ -81,6 +83,27 @@ class ReportHistoryTable extends Component {
       || nextProps.data !== this.props.data
       || nextProps.fetchingError !== this.props.fetchingError;
   }
+
+  getTrProps = (state, row) => {
+    if (!row) {
+      return noTrProps;
+    }
+
+    let color = 'none';
+    if (row.original.error_message) {
+      color = globalCss.colors.error;
+    }
+
+    if (color === 'none') {
+      return noTrProps;
+    }
+
+    return {
+      style: {
+        backgroundColor: color
+      }
+    };
+  };
 
   getLoadingText = () => {
     const { dataLoaded, fetchingError } = this.props;
