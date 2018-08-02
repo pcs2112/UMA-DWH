@@ -1,11 +1,27 @@
 """Application configuration."""
 import os
+from flask.helpers import get_debug_flag, get_env
+from dotenv import load_dotenv
 
 
-class Config(object):
+class Settings(object):
     """Base configuration."""
 
-    APP_DIR = os.path.abspath(os.path.dirname(__file__))  # This directory
+    # load dotenv in the base root
+    dotenv_path = os.path.join(os.path.dirname(__file__), '..', '.env')
+    load_dotenv(dotenv_path)
+
+    # Set config
+    ENV = get_env()
+    IS_PRODUCTION = get_env() == 'production'
+    DEBUG = get_debug_flag()
+    APP_DIR = os.path.abspath(os.path.dirname(__file__))
+    DB_SERVER = os.getenv('DB_HOST')
+    DB_NAME = os.getenv('DB_NAME')
+    DB_USER = os.getenv('DB_USER')
+    DB_PASSWORD = os.getenv('DB_PASSWORD')
+    DB_DRIVER = os.getenv('DB_DRIVER')
+    DB_TRUSTED_CONNECTION = os.getenv('DB_TRUSTED_CONNECTION')
     SECRET_KEY = 'DWH-ADMIN-CONSOLE-SECRET'
     JWT_SECRET_KEY = 'DWH-ADMIN-CONSOLE-JWT'
     JWT_TOKEN_LOCATION = ['headers']
@@ -23,29 +39,3 @@ class Config(object):
     ]
     OPSGENIE_API_KEY = '602e1fed-1cee-496a-8454-5d63520bfba4'
     OPSGENIE_GENIE_KEY = 'GenieKey'
-
-
-class ProdConfig(Config):
-    """Production configuration."""
-
-    ENV = 'prod'
-    IS_PRODUCTION = True
-    DEBUG = False
-    DB_SERVER = "127.0.0.1"
-    DB_NAME = "UMA_DWH"
-    DB_USER = "sa"
-    DB_PASSWORD = "1F0rg0t1"
-    DB_DRIVER = "ODBC Driver 17 for SQL Server"
-
-
-class DevConfig(Config):
-    """Development configuration."""
-
-    ENV = "dev"
-    IS_PRODUCTION = False
-    DEBUG = True
-    DB_SERVER = "127.0.0.1"
-    DB_NAME = "UMA_DWH"
-    DB_USER = "sa"
-    DB_PASSWORD = "1F0rg0t1"
-    DB_DRIVER = "ODBC Driver 17 for SQL Server"

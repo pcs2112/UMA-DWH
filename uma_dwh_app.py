@@ -1,9 +1,8 @@
 """Create an application instance."""
-from flask.helpers import get_debug_flag
 from uma_dwh.app import create_app
-from uma_dwh.settings import DevConfig, ProdConfig
+from uma_dwh.settings import Settings
 
-CONFIG = DevConfig if get_debug_flag() else ProdConfig
+CONFIG = Settings
 
 app = create_app(CONFIG)
 

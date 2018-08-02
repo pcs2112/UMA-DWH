@@ -12,11 +12,12 @@ def init_db(app):
         raise RuntimeError('Database is already initialized.')
 
     this.config = {
-        'DB_DRIVER': app.config["DB_DRIVER"],
-        'DB_SERVER': app.config["DB_SERVER"],
-        'DB_NAME': app.config["DB_NAME"],
-        'DB_USER': app.config["DB_USER"],
-        'DB_PASSWORD': app.config["DB_PASSWORD"]
+        'DB_DRIVER': app.config['DB_DRIVER'],
+        'DB_SERVER': app.config['DB_SERVER'],
+        'DB_NAME': app.config['DB_NAME'],
+        'DB_USER': app.config['DB_USER'],
+        'DB_PASSWORD': app.config['DB_PASSWORD'],
+        'DB_TRUSTED_CONNECTION': app.config['DB_TRUSTED_CONNECTION'] == '1'
     }
 
     app.teardown_request(close)
@@ -28,15 +29,28 @@ def get_db():
     exists one connection per request.
     """
     if this.db is None:
-        this.db = pyodbc.connect(
-            p_str=None,
-            driver=this.config["DB_DRIVER"],
-            server=this.config["DB_SERVER"],
-            database=this.config["DB_NAME"],
-            uid=this.config["DB_USER"],
-            pwd=this.config["DB_PASSWORD"],
-            autocommit=True
-        )
+        print(this.config)
+        if this.config['DB_TRUSTED_CONNECTION']:
+            cnxn_str = 'Driver=%s;Server=%s;DATABASE=%s;Trusted_Connection=yes;' % (
+              this.config['DB_DRIVER'],
+              this.config['DB_SERVER'],
+              this.config['DB_NAME']
+            )
+
+            this.db = pyodbc.connect(
+              cnxn_str,
+              autocommit=True
+            )
+        else:
+            this.db = pyodbc.connect(
+              p_str=None,
+              driver=this.config['DB_DRIVER'],
+              server=this.config['DB_SERVER'],
+              database=this.config['DB_NAME'],
+              uid=this.config['DB_USER'],
+              pwd=this.config['DB_PASSWORD'],
+              autocommit=True
+            )
 
     return this.db
 
