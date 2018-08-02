@@ -29,7 +29,6 @@ def get_db():
     exists one connection per request.
     """
     if this.db is None:
-        print(this.config)
         if this.config['DB_TRUSTED_CONNECTION']:
             cnxn_str = 'Driver=%s;Server=%s;DATABASE=%s;Trusted_Connection=yes;' % (
               this.config['DB_DRIVER'],
