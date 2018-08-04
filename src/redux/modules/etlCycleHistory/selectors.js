@@ -79,6 +79,12 @@ export const getHistoryByCycleGroup = createSelector(
         missingItem.cycle_group = cycleGroup;
         missingItem.data_mart_name = item.data_mart_name;
         missingItem.table_status = 'NOT STARTED';
+        missingItem.source_server_name = item.source_server_name;
+        missingItem.source_db_name = item.source_db_name;
+        missingItem.source_table_name = item.source_table_name;
+        missingItem.target_table_name = item.target_table_name;
+        missingItem.source_schema_name = item.source_schema_name;
+        missingItem.target_schema_name = item.target_schema_name;
         result.push(missingItem);
       }
     });
