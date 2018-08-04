@@ -183,8 +183,8 @@ class CycleHistoryTable extends Component {
       color = globalCss.colors.error;
     } else if (row.original.table_status === 'RUNNING') {
       color = globalCss.colors.success;
-    } else if (row.original.table_status === 'NOT STARTED' && row.original.cycle_group > 0) {
-      color = globalCss.colors.warning;
+    } else if (row.original.table_status === 'NOT STARTED') {
+      color = globalCss.colors[row.original.cycle_group > 0 ? 'warning' : 'paleGreen'];
     } else if (this.isSelected(row.original[keyName])) {
       color = globalCss.colors.rowHighLight;
     }
