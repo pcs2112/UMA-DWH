@@ -23,7 +23,7 @@ class Home extends Component {
     cycleHistoryFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     currentCycleGroup: PropTypes.number.isRequired,
     currentCycleGroupStartDttm: PropTypes.string.isRequired,
-    fetchCycleHistory: PropTypes.func.isRequired,
+    pollFirstCycleGroup: PropTypes.func.isRequired,
     fetchPrevCycleHistory: PropTypes.func.isRequired,
     fetchNextCycleHistory: PropTypes.func.isRequired,
     resetCycleHistory: PropTypes.func.isRequired,
@@ -41,10 +41,6 @@ class Home extends Component {
     fetchCurrentStatus: PropTypes.func.isRequired,
     setCurrentStatusIntervalDuration: PropTypes.func.isRequired
   };
-
-  componentDidMount() {
-    this.props.fetchCycleHistory(undefined, true);
-  }
 
   componentWillUnmount() {
     this.props.resetCycleHistory();
@@ -64,6 +60,7 @@ class Home extends Component {
       cycleHistoryFetchingError,
       currentCycleGroup,
       currentCycleGroupStartDttm,
+      pollFirstCycleGroup,
       fetchPrevCycleHistory,
       fetchNextCycleHistory,
       clearCycleHistoryFetchingError,
@@ -95,6 +92,8 @@ class Home extends Component {
             selectedData={cycleHistorySelectedData}
             selectData={selectCycleHistoryData}
             unselectData={unselectCycleHistoryData}
+            intervalDuration={currentStatusIntervalDuration}
+            onInterval={pollFirstCycleGroup}
           />
         </Segment>
         <Segment>
@@ -191,7 +190,7 @@ export default withMainLayout(connect(
     proceduresSelectedCount: etlCycleHistory.selectors.getProceduresSelectedCount(state)
   }),
   dispatch => ({
-    fetchCycleHistory: (cycleGroup, refresh) => dispatch(etlCycleHistory.actions.fetchHistory(cycleGroup, refresh)),
+    pollFirstCycleGroup: () => dispatch(etlCycleHistory.actions.pollFirstCycleGroup()),
     fetchPrevCycleHistory: () => dispatch(etlCycleHistory.actions.fetchPrev()),
     fetchNextCycleHistory: () => dispatch(etlCycleHistory.actions.fetchNext()),
     resetCycleHistory: () => dispatch(etlCycleHistory.actions.reset()),

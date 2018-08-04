@@ -13,6 +13,40 @@ export const actionTypes = {
   UNSELECT_ALL: 'etlCycleHistory/UNSELECT_ALL'
 };
 
+export const pollFirstCycleGroup = () => (dispatch, getState) => {
+  const { etlCycleHistory } = getState();
+  const { currentCycleGroup } = etlCycleHistory;
+  if (currentCycleGroup > 0) {
+    return Promise.resolve();
+  }
+
+  return new Promise((resolve, reject) => {
+    dispatch({
+      types: [
+        actionTypes.FETCH_BEGIN,
+        actionTypes.FETCH_SUCCESS,
+        actionTypes.FETCH_FAIL
+      ],
+      makeRequest: client => client.get('/api/etl/history', {
+        params: {
+          start_cycle_group: 0,
+          end_cycle_group: 0 + MAX_FETCH_CYCLE_GROUPS
+        }
+      }),
+      payload: {
+        currentCycleGroup: 0,
+        startCycleGroup: 0
+      }
+    })
+      .then(() => {
+        resolve();
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
 /**
  * Async action creator to fetch the ETL history.
  */

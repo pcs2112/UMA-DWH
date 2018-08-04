@@ -7,6 +7,7 @@ import { Icon } from 'semantic-ui-react';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import globalCss from 'css/global';
 import withResponsiveTable from 'components/WithResponsiveTable';
+import withAsyncPolling from 'components/WithAsyncPolling';
 import { DetailsDiv, DetailsColDiv, DetailsLabel, DetailsRow } from '../css';
 
 const CheckboxTable = checkboxHOC(ReactTable);
@@ -257,4 +258,4 @@ class CycleHistoryTable extends Component {
   }
 }
 
-export default withResponsiveTable(CycleHistoryTable, 320, 440);
+export default withAsyncPolling(withResponsiveTable(CycleHistoryTable, 320, 440));
