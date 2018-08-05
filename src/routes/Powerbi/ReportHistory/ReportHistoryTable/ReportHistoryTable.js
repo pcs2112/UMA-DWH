@@ -37,6 +37,14 @@ const columns = [
     width: 140
   },
   {
+    Header: 'STORED_PROCEDURE',
+    accessor: 'stored_procedure'
+  },
+  {
+    Header: 'SOURCE_TABLE_NAME',
+    accessor: 'source_table_name'
+  },
+  {
     Header: 'STARTED',
     accessor: 'started',
     width: 140
