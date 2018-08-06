@@ -22,6 +22,14 @@ def fetch_file_by_id(id_):
     return fetch_row(sql=sql, in_args=[id_], schema=files_schema)
 
 
+def fetch_last_inserted_file():
+    """
+    Returns the last inserted file record.
+    """
+    sql = f'SELECT * FROM MWH.ERROR_RESOLUTIONS ORDER BY ID DESC'
+    return fetch_row(sql=sql, schema=files_schema)
+
+
 def create_file(description, file_path_filename):
     """
     Creates an error type resolution file record.
@@ -44,14 +52,16 @@ def create_file(description, file_path_filename):
       }
     )
 
+    return fetch_last_inserted_file()
 
-def update_file(_id, file_path_filename, description):
+
+def update_file(id_, file_path_filename, description):
     """
     Updates an error type resolution file.
-    :param _id: File ID
+    :param id_: File ID
     :param file_path_filename: Full file path with file name
     :param description: File description
-    :type _id: int
+    :type id_: int
     :type file_path_filename: str
     :type description: str
     """
@@ -62,12 +72,14 @@ def update_file(_id, file_path_filename, description):
       'MWH.ERROR_RESOLUTIONS_MGR',
       {
         'message': 'save',
-        'ID': str(_id),
+        'ID': str(id_),
         'ACTIVE_FLAG': '1',
         'DESCRIPTION': description,
         'FILE_PATH_FILENAME': file_path_filename
       }
     )
+
+    return fetch_file_by_id(id_)
 
 
 def get_run_books_dir():
