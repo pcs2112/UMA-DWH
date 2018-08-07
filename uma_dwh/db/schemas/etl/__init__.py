@@ -4,6 +4,7 @@ from .current_status import schema as current_status_schema
 from .cycle_history import schema as cycle_history_schema
 from .powerbi_report_history import schema as powerbi_report_history_schema
 from .powerbi_report_statistics import schema as powerbi_report_statistics_schema
+from .powerbi_report_runs import schema as powerbi_report_runs_schema
 from .procedure_history import schema as procedure_history_schema
 from .server_db_procedures import schema as server_db_procedures_schema
 from .server_dbs import schema as server_dbs_schema

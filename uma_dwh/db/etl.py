@@ -1,8 +1,9 @@
 from .mssql_db import fetch_rows, execute_sp, result_as_dict, result_set_as_dicts
 from .exceptions import SPException
 from .schemas.etl import (control_manager_schema, current_cycle_status_schema, cycle_history_schema,
-                          powerbi_report_history_schema, powerbi_report_statistics_schema, procedure_history_schema,
-                          server_db_procedures_schema, server_dbs_schema, try_catch_error_schema)
+                          powerbi_report_history_schema, powerbi_report_statistics_schema, powerbi_report_runs_schema,
+                          procedure_history_schema, server_db_procedures_schema, server_dbs_schema,
+                          try_catch_error_schema)
 
 ADMIN_CONSOLE_SP_IN_ARGS_LENGTH = 10
 
@@ -200,6 +201,31 @@ def fetch_powerbi_report_statistics(report_name='ALL'):
       },
       'TryCatchError_ID',
       powerbi_report_statistics_schema
+    )
+
+
+def fetch_report_runs(report_name, from_num='', to_num=''):
+    """
+    Returns the POWERBI report runs for the specified report.
+    :param report_name
+    :type report_name: str
+    :param from_num
+    :type from_num: str
+    :type from_num: int
+    :param to_num
+    :type to_num: str
+    :type to_num: int
+    """
+    return execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+      {
+        'message': 'LIST REPORT RUNS',
+        'VARCHAR_01': report_name,
+        'VARCHAR_02': str(from_num),
+        'VARCHAR_03': str(to_num)
+      },
+      'TryCatchError_ID',
+      powerbi_report_runs_schema
     )
 
 
