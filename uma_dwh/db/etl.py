@@ -204,7 +204,7 @@ def fetch_powerbi_report_statistics(report_name='ALL'):
     )
 
 
-def fetch_report_runs(report_name, from_num='', to_num=''):
+def fetch_powerbi_report_runs(report_name, from_num='', to_num=''):
     """
     Returns the POWERBI report runs for the specified report.
     :param report_name

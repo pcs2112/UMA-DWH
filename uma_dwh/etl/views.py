@@ -2,13 +2,14 @@ from flask import Blueprint, jsonify
 from webargs.flaskparser import use_args
 from flask_jwt_extended import jwt_required
 from uma_dwh.db.etl import (fetch_control_manager, fetch_current_status, fetch_cycle_history,
-                            fetch_powerbi_report_history, fetch_powerbi_report_statistics, fetch_procedure_history,
-                            fetch_server_db_procedures, fetch_servers, fetch_error, fetch_run_check)
+                            fetch_powerbi_report_history, fetch_powerbi_report_statistics, fetch_powerbi_report_runs,
+                            fetch_procedure_history, fetch_server_db_procedures, fetch_servers, fetch_error,
+                            fetch_run_check)
 from uma_dwh.exceptions import InvalidUsage
 from uma_dwh.db.exceptions import SPException
 from uma_dwh.utils.opsgenie import send_alert
 from .api_schemas import (pagination_args, run_check_args, procedure_history_args, server_db_procedures_args,
-                          powerbi_report_history_args, powerbi_report_statistics_args)
+                          powerbi_report_history_args, powerbi_report_statistics_args, powerbi_report_runs_args)
 
 
 blueprint = Blueprint('etl', __name__)
@@ -52,6 +53,16 @@ def get_powerbi_report_history(args):
 def get_powerbi_report_statistics(args):
     try:
         return jsonify(fetch_powerbi_report_statistics(args['report_name']))
+    except SPException as e:
+        raise InvalidUsage.etl_error(e.message, fetch_error(e.error_id))
+
+
+@blueprint.route('/api/etl/powerbi_report_runs', methods=('GET',))
+@jwt_required
+@use_args(powerbi_report_runs_args, locations=('query',))
+def get_powerbi_report_runs(args):
+    try:
+        return jsonify(fetch_powerbi_report_runs(args['report_name'], args['from_num'], args['to_num']))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, fetch_error(e.error_id))
 

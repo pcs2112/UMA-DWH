@@ -27,3 +27,9 @@ powerbi_report_history_args = {
 powerbi_report_statistics_args = {
   'report_name': fields.Str(missing='ALL')
 }
+
+powerbi_report_runs_args = {
+  'report_name': fields.Str(required=True),
+  'from_num': fields.Str(missing=''),
+  'to_num': fields.Str(missing='')
+}
