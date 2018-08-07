@@ -101,8 +101,7 @@ const columns = [
     width: 200,
     getProps: () => ({
       style: {
-        textAlign: 'right',
-        paddingRight: '1rem'
+        textAlign: 'right'
       }
     })
   }
@@ -118,7 +117,8 @@ class ReportStatisticsTable extends Component {
   };
 
   shouldComponentUpdate(nextProps) {
-    return nextProps.isFetching !== this.props.isFetching
+    return nextProps.tableHeight !== this.props.tableHeight
+      || nextProps.isFetching !== this.props.isFetching
       || nextProps.dataLoaded !== this.props.dataLoaded
       || nextProps.data !== this.props.data
       || nextProps.fetchingError !== this.props.fetchingError;
