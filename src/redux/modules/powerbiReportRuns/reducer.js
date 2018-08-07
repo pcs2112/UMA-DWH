@@ -8,7 +8,7 @@ const initialState = Object.assign({}, itemListInitialState);
 const itemListReducer = itemListReducerFor(actionTypes);
 
 /**
- * Power BI report statistics reducer.
+ * Power BI report runs reducer.
  *
  * @param {Object} state
  * @param {Object} action
