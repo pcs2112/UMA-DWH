@@ -18,8 +18,14 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.FETCH_BEGIN:
     case actionTypes.FETCH_FAIL:
-    case actionTypes.FETCH_SUCCESS:
-      return itemListReducer(state, action);
+    case actionTypes.FETCH_SUCCESS: {
+      const newState = itemListReducer(state, action);
+      if (action.reportName) {
+        newState.reportName = action.reportName;
+      }
+
+      return newState;
+    }
     default:
       return state;
   }

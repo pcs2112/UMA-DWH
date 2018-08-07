@@ -12,6 +12,7 @@ import ReportStatisticsTable from './ReportStatisticsTable';
 class ReportStatistics extends Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
+    currentReportName: PropTypes.string.isRequired,
     isPowerbiReportStatisticsFetching: PropTypes.bool.isRequired,
     powerbiReportStatisticsDataLoaded: PropTypes.bool.isRequired,
     powerbiReportStatisticsData: PropTypes.array.isRequired,
@@ -32,6 +33,7 @@ class ReportStatistics extends Component {
 
   render() {
     const {
+      currentReportName,
       isPowerbiReportStatisticsFetching,
       powerbiReportStatisticsDataLoaded,
       powerbiReportStatisticsData,
@@ -41,7 +43,7 @@ class ReportStatistics extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            {config.app.title} - Power BI Report Statistics
+            {config.app.title} - {(currentReportName === 'ALL' ? 'Power BI' : currentReportName)} Report Statistics
           </h1>
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
@@ -59,6 +61,7 @@ class ReportStatistics extends Component {
 
 export default withMainLayout(connect(
   state => ({
+    currentReportName: state.powerbiReportStatistics.reportName,
     isPowerbiReportStatisticsFetching: state.powerbiReportStatistics.isFetching,
     powerbiReportStatisticsDataLoaded: state.powerbiReportStatistics.dataLoaded,
     powerbiReportStatisticsData: powerbiReportStatistics.selectors.getPowerbiReportStatistics(state),

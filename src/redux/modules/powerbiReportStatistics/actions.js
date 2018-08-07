@@ -18,7 +18,10 @@ export const fetchPowerbiReportStatistics = (reportName = 'ALL') => ({
     params: {
       report_name: reportName
     }
-  })
+  }),
+  payload: {
+    reportName
+  }
 });
 
 /**
