@@ -24,25 +24,28 @@ const columns = [
       >
         {row.original.report_name}
       </Link>
-    )
+    ),
+    width: 200
   },
   {
     Header: 'FROM_DTTM',
     accessor: 'from_dttm',
-    width: 140
+    width: 150
   },
   {
     Header: 'TO_DTTM',
     accessor: 'to_dttm',
-    width: 140
+    width: 150
   },
   {
     Header: 'STORED_PROCEDURE',
-    accessor: 'stored_procedure'
+    accessor: 'stored_procedure',
+    width: 250
   },
   {
     Header: 'SOURCE_TABLE_NAME',
-    accessor: 'source_table_name'
+    accessor: 'source_table_name',
+    width: 200
   },
   {
     Header: 'STARTED',
@@ -70,7 +73,8 @@ const columns = [
     width: 65,
     getProps: () => ({
       style: {
-        textAlign: 'right'
+        textAlign: 'right',
+        paddingRight: '1rem'
       }
     })
   }

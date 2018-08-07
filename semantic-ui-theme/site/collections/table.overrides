@@ -25,8 +25,8 @@
   font-weight: 700;
 }
 
-.ReactTable .rt-td {
-  padding: 2px 2px !important;
+.ReactTable .rt-tbody .rt-td {
+  padding: 2px 2px;
 }
 
 .ReactTable .rt-td i.expander {

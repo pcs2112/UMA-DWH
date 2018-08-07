@@ -54,12 +54,12 @@ const columns = [
   {
     Header: 'ETL_FROM_DTTM',
     accessor: 'etl_from_dttm',
-    width: 100
+    width: 150
   },
   {
     Header: 'ETL_TO_DTTM',
     accessor: 'etl_to_dttm',
-    width: 100
+    width: 150
   },
   {
     Header: 'INS',
@@ -107,7 +107,8 @@ const columns = [
     width: 65,
     getProps: () => ({
       style: {
-        textAlign: 'right'
+        textAlign: 'right',
+        paddingRight: '1rem'
       }
     })
   }

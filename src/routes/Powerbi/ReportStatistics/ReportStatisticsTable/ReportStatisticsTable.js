@@ -101,7 +101,8 @@ const columns = [
     width: 200,
     getProps: () => ({
       style: {
-        textAlign: 'right'
+        textAlign: 'right',
+        paddingRight: '1rem'
       }
     })
   }
