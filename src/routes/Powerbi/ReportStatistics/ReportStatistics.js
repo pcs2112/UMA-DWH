@@ -61,7 +61,7 @@ class ReportStatistics extends Component {
 
 export default withMainLayout(connect(
   state => ({
-    currentReportName: state.powerbiReportStatistics.reportName,
+    currentReportName: state.powerbiReportStatistics.reportName || 'ALL',
     isPowerbiReportStatisticsFetching: state.powerbiReportStatistics.isFetching,
     powerbiReportStatisticsDataLoaded: state.powerbiReportStatistics.dataLoaded,
     powerbiReportStatisticsData: powerbiReportStatistics.selectors.getPowerbiReportStatistics(state),
