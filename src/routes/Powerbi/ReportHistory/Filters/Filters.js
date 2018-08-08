@@ -38,7 +38,7 @@ class Filters extends Component {
               Submit
             </Button>
             <Button type="button" disabled={pristine || submitting} onClick={onCancel}>
-              Cancel
+              Clear
             </Button>
           </div>
         </Form.Group>
