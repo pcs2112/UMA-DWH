@@ -9,6 +9,7 @@ class CycleArrowPagination extends Component {
     arrowColor: PropTypes.string,
     arrowSize: PropTypes.string,
     prevDisabled: PropTypes.bool.isRequired,
+    nextDisabled: PropTypes.bool.isRequired,
     fetchPrev: PropTypes.func.isRequired,
     fetchNext: PropTypes.func.isRequired,
     cycleGroup: PropTypes.number.isRequired,
@@ -37,12 +38,14 @@ class CycleArrowPagination extends Component {
 
   fetchNext(e) {
     e.preventDefault();
-    this.props.fetchNext();
+    if (!this.props.nextDisabled) {
+      this.props.fetchNext();
+    }
   }
 
   render() {
     const {
-      arrowSize, arrowColor, prevDisabled, cycleGroup, cycleGroupStartDttm, cycleGroupStartDttmLabel
+      arrowSize, arrowColor, prevDisabled, nextDisabled, cycleGroup, cycleGroupStartDttm, cycleGroupStartDttmLabel
     } = this.props;
     return (
       <NavDiv>
@@ -62,7 +65,7 @@ class CycleArrowPagination extends Component {
         </NavCenterColDiv>
         <NavRightColDiv>
           <a href="#next" onClick={this.fetchNext}>
-            <Icon name="arrow right" size={arrowSize} color={arrowColor} />
+            <Icon name="arrow right" size={arrowSize} color={arrowColor} disabled={nextDisabled} />
           </a>
         </NavRightColDiv>
       </NavDiv>
