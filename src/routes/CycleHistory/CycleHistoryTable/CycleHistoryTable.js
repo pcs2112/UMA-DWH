@@ -46,8 +46,14 @@ const columns = [
     width: 80
   },
   {
+    Header: 'DATA_MART_NAME',
+    accessor: 'data_mart_name',
+    width: 120
+  },
+  {
     Header: 'SOURCE_SERVER_NAME',
-    accessor: 'source_server_name'
+    accessor: 'source_server_name',
+    width: 140
   },
   {
     Header: 'DB_NAME',
@@ -56,22 +62,27 @@ const columns = [
   },
   {
     Header: 'SCHEMA_TABLE_NAME',
-    Cell: row => `${row.original.source_schema_name}.${row.original.source_table_name}`
+    Cell: row => `${row.original.source_schema_name}.${row.original.source_table_name}`,
+    width: 200
   },
   {
     Header: 'TARGET_SCHEMA_TABLE_NAME',
-    Cell: row => `${row.original.target_schema_name}.${row.original.target_table_name}`
+    Cell: row => `${row.original.target_schema_name}.${row.original.target_table_name}`,
+    minWidth: 250
   },
   {
     Header: 'STORED_PROCEDURE',
-    accessor: 'calling_proc'
+    accessor: 'calling_proc',
+    minWidth: 300
   },
   {
     Header: 'INS',
     accessor: 'insert_cnt',
     width: 35,
     getProps: () => ({
-      className: 'right-aligned'
+      style: {
+        textAlign: 'right'
+      }
     })
   },
   {
@@ -79,7 +90,9 @@ const columns = [
     accessor: 'update_cnt',
     width: 35,
     getProps: () => ({
-      className: 'right-aligned'
+      style: {
+        textAlign: 'right'
+      }
     })
   },
   {
@@ -87,7 +100,9 @@ const columns = [
     accessor: 'delete_cnt',
     width: 35,
     getProps: () => ({
-      className: 'right-aligned'
+      style: {
+        textAlign: 'right'
+      }
     })
   },
   {
@@ -95,7 +110,9 @@ const columns = [
     accessor: 'run_time_sec',
     width: 70,
     getProps: () => ({
-      className: 'right-aligned'
+      style: {
+        textAlign: 'right'
+      }
     })
   },
   {
@@ -103,7 +120,10 @@ const columns = [
     accessor: 'trans_per_sec',
     width: 90,
     getProps: () => ({
-      className: 'right-aligned'
+      style: {
+        textAlign: 'right',
+        paddingRight: '1rem'
+      }
     })
   }
 ];
@@ -254,6 +274,7 @@ class CycleHistoryTable extends Component {
         SubComponent={row => <RowDetails row={row} />}
         expanded={this.state.expanded}
         onExpandedChange={this.onExpanded}
+        resizable={false}
       />
     );
   }
