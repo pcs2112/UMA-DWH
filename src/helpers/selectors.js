@@ -2,15 +2,15 @@ import { createSelector } from 'reselect';
 
 /**
  * Creates a selector function to get the data property from a state slice.
+ *
  * @param {String} stateName State slice name
- * @returns {function(*): Array}
  */
 export const createDataSelector = stateName => state => (state[stateName].dataLoaded ? state[stateName].data : []);
 
 /**
  * Creates a selector function to return the fetching error property from a state slice.
+ *
  * @param {String} stateName State slice name
- * @returns {function(*): Boolean|Object}
  */
 export const createFetchingErrorSelector = stateName => state =>
   (state[stateName].fetchingError && state[stateName].fetchingError.payload
@@ -20,14 +20,15 @@ export const createFetchingErrorSelector = stateName => state =>
 
 /**
  * Creates selector to return the value of a property in a state slice.
+ *
  * @param {String} stateName
  * @param {String} propertyName
- * @returns {function(*): *}
  */
 export const createGetPropertySelector = (stateName, propertyName) => state => state[stateName][propertyName];
 
 /**
  * Creates selector to return data.
+ *
  * @param {Function} getDataSelector
  */
 export const createGetItemsSelector = getDataSelector => createSelector(
@@ -37,6 +38,7 @@ export const createGetItemsSelector = getDataSelector => createSelector(
 
 /**
  * Creates a selector to get an item by Id.
+ *
  * @param {Function} getItemsSelector
  * @param {Function} getItemIdSelector
  */
@@ -47,12 +49,18 @@ export const createGetItemByIdSelector = (getItemsSelector, getItemIdSelector) =
 
 /**
  * Creates a selector to return the pagination's current cycle group.
+ *
+ * @param {String} stateName
+ * @param {String} propertyName
  */
 export const createGetCurrentCycleGroup = (stateName, propertyName = 'currentCycleGroup') =>
   state => state[stateName][propertyName] || 0;
 
 /**
  * Creates a selector to return the pagination's current cycle group's start dttm.
+ *
+ * @param {Function} getItemsSelector
+ * @param {String} startDttmKey
  */
 export const createGetCurrentCycleGroupStartDttm = (getItemsSelector, startDttmKey = 'start_dttm') =>
   createSelector(
@@ -61,7 +69,11 @@ export const createGetCurrentCycleGroupStartDttm = (getItemsSelector, startDttmK
   );
 
 /**
- * Returns the prev cycle group's pagination data.
+ * Creates a selector to return the prev cycle group's pagination data.
+ *
+ * @param {Function} getItemsSelector
+ * @param {Function} getCurrentCycleGroupSelector
+ * @param {Number} pageSize
  */
 export const createGetPrevCycleGroupStartData = (getItemsSelector, getCurrentCycleGroupSelector, pageSize = 1000) =>
   createSelector(
@@ -91,7 +103,11 @@ export const createGetPrevCycleGroupStartData = (getItemsSelector, getCurrentCyc
   );
 
 /**
- * Returns the next cycle group's pagination data.
+ * Creates a selector to return the next cycle group's pagination data.
+ *
+ * @param {Function} getItemsSelector
+ * @param {Function} getCurrentCycleGroupSelector
+ * @param {Number} pageSize
  */
 export const createGetNextCycleGroupStartData = (getItemsSelector, getCurrentCycleGroupSelector, pageSize = 1000) =>
   createSelector(
