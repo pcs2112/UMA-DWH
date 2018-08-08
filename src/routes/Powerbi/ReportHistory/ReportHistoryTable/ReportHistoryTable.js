@@ -25,7 +25,7 @@ const columns = [
         {row.original.report_name}
       </Link>
     ),
-    width: 200
+    minWidth: 200
   },
   {
     Header: 'FROM_DTTM',
@@ -40,7 +40,7 @@ const columns = [
   {
     Header: 'STORED_PROCEDURE',
     accessor: 'stored_procedure',
-    width: 250
+    minWidth: 250
   },
   {
     Header: 'SOURCE_TABLE_NAME',

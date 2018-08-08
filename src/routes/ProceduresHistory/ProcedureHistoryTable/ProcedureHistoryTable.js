@@ -49,7 +49,7 @@ const columns = [
   {
     Header: 'STORED_PROCEDURE',
     accessor: 'procedure_name',
-    width: 300
+    minWidth: 300
   },
   {
     Header: 'ETL_FROM_DTTM',

@@ -28,7 +28,7 @@ const columns = [
   {
     Header: 'STORED_PROCEDURE',
     accessor: 'stored_procedure',
-    width: 300
+    minWidth: 300
   },
   {
     Header: 'SOURCE_TABLE_NAME',
