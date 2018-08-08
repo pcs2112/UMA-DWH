@@ -155,6 +155,7 @@ class Home extends Component {
                 fetchPrev={fetchPrevCycleHistory}
                 fetchNext={fetchNextCycleHistory}
                 prevDisabled={currentCycleGroup < 1}
+                nextDisabled={cycleHistoryData.length < 1}
                 cycleGroup={currentCycleGroup}
                 cycleGroupStartDttm={currentCycleGroupStartDttm}
               />
