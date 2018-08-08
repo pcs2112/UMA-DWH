@@ -2,7 +2,9 @@ import itemListReducerFor, { initialState as itemListInitialState } from '../../
 import { actionTypes } from './actions';
 
 // Initial state
-const initialState = Object.assign({}, itemListInitialState);
+const initialState = Object.assign({
+  currentCycleGroup: 0
+}, itemListInitialState);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
@@ -22,6 +24,10 @@ export default (state = initialState, action) => {
       const newState = itemListReducer(state, action);
       if (action.reportName) {
         newState.reportName = action.reportName;
+      }
+
+      if (action.currentCycleGroup) {
+        newState.currentCycleGroup = action.currentCycleGroup;
       }
 
       return newState;

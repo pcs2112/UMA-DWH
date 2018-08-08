@@ -129,4 +129,4 @@ class ReportRunsTable extends Component {
   }
 }
 
-export default withResponsiveTable(ReportRunsTable, 320, 240);
+export default withResponsiveTable(ReportRunsTable, 320, 320);

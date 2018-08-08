@@ -1,13 +1,8 @@
 import glamorous from 'glamorous';
 
-export const runCheckButtonCss = {
-  marginTop: '1rem'
-};
-
 export const DetailsDiv = glamorous.div({
   display: 'flex',
-  flexWrap: 'wrap',
-  padding: '1rem 3rem 1rem 3rem'
+  flexWrap: 'wrap'
 });
 
 export const DetailsColDiv = glamorous.div({
