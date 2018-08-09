@@ -168,3 +168,42 @@ export const getLastProcedureSelected = createSelector(
     return selected[selectedProcedureName];
   }
 );
+
+/**
+ * Selector to get the total count of data marts selected.
+ */
+export const getDataMartsSelectedCount = createSelector(
+  [getSelected],
+  (selected) => {
+    const keys = Object.keys(selected);
+    let selectedCount = 0;
+
+    keys.forEach((key) => {
+      if (!objectHasOwnProperty(selected[key], 'calling_proc')) {
+        selectedCount++;
+      }
+    });
+
+    return selectedCount;
+  }
+);
+
+
+/**
+ * Selector to get the data marts selected.
+ */
+export const getDataMartsSelected = createSelector(
+  [getSelected],
+  (selected) => {
+    const dataMartsSelected = {};
+    const keys = Object.keys(selected);
+
+    keys.forEach((key) => {
+      if (!objectHasOwnProperty(selected[key], 'calling_proc')) {
+        dataMartsSelected[key] = selected[key];
+      }
+    });
+
+    return dataMartsSelected;
+  }
+);
