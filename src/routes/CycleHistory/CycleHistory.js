@@ -34,6 +34,7 @@ class Home extends Component {
     unselectAllCycleHistoryData: PropTypes.func.isRequired,
     cycleHistorySelectedCount: PropTypes.number.isRequired,
     proceduresSelectedCount: PropTypes.number.isRequired,
+    dataMartsSelectedCount: PropTypes.number.isRequired,
     isCurrentStatusFetching: PropTypes.bool.isRequired,
     currentStatusData: PropTypes.array.isRequired,
     currentStatusDataTotals: PropTypes.object.isRequired,
@@ -70,6 +71,7 @@ class Home extends Component {
       unselectAllCycleHistoryData,
       cycleHistorySelectedCount,
       proceduresSelectedCount,
+      dataMartsSelectedCount,
       isCurrentStatusFetching,
       currentStatusData,
       currentStatusDataTotals,
@@ -94,6 +96,7 @@ class Home extends Component {
             unselectData={unselectCycleHistoryData}
             intervalDuration={currentStatusIntervalDuration}
             onInterval={pollFirstCycleGroup}
+            dataMartsSelectedCount={dataMartsSelectedCount}
           />
         </Segment>
         <Segment>
@@ -188,7 +191,8 @@ export default withMainLayout(connect(
     currentStatusIntervalDuration: etlCurrentStatus.selectors.getIntervalDuration(state),
     cycleHistorySelectedData: etlCycleHistory.selectors.getSelected(state),
     cycleHistorySelectedCount: etlCycleHistory.selectors.getSelectedCount(state),
-    proceduresSelectedCount: etlCycleHistory.selectors.getProceduresSelectedCount(state)
+    proceduresSelectedCount: etlCycleHistory.selectors.getProceduresSelectedCount(state),
+    dataMartsSelectedCount: etlCycleHistory.selectors.getDataMartsSelectedCount(state),
   }),
   dispatch => ({
     pollFirstCycleGroup: () => dispatch(etlCycleHistory.actions.pollFirstCycleGroup()),

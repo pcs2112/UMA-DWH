@@ -162,7 +162,8 @@ class CycleHistoryTable extends Component {
     fetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     selectedData: PropTypes.object.isRequired,
     selectData: PropTypes.func.isRequired,
-    unselectData: PropTypes.func.isRequired
+    unselectData: PropTypes.func.isRequired,
+    dataMartsSelectedCount: PropTypes.number.isRequired
   };
 
   constructor(props) {
@@ -183,8 +184,10 @@ class CycleHistoryTable extends Component {
       || nextState.expanded !== this.state.expanded;
   }
 
-  componentDidUpdate() {
-    console.log('CycleHistoryTable::componentDidUpdate');
+  componentDidUpdate(prevProps) {
+    if (this.props.dataMartsSelectedCount !== prevProps.dataMartsSelectedCount) {
+      this.scrollTop();
+    }
   }
 
   onExpanded = (newExpanded, index) => {
@@ -231,6 +234,10 @@ class CycleHistoryTable extends Component {
     return dataLoaded ? '' : 'Loading...';
   };
 
+  scrollTop = () => {
+    document.getElementById('cycle-history-tbl').getElementsByClassName('rt-tbody')[0].scrollTop = 0;
+  };
+
   toggleSelection = (key, shift, row) => {
     const { selectedData, selectData, unselectData } = this.props;
 
@@ -250,32 +257,34 @@ class CycleHistoryTable extends Component {
       tableHeight, isFetching, dataLoaded, data, fetchingError
     } = this.props;
     return (
-      <CheckboxTable
-        data={data}
-        columns={columns}
-        style={{
-          height: `${tableHeight}px`
-        }}
-        showPaginationBottom={false}
-        sortable={false}
-        manual
-        className="-striped"
-        loading={isFetching || fetchingError}
-        loadingText={this.getLoadingText()}
-        noDataText={dataLoaded ? '0 ETL history records found.' : ''}
-        getTrProps={this.getTrProps}
-        isSelected={this.isSelected}
-        toggleSelection={this.toggleSelection}
-        toggleAll={false}
-        selectAll={false}
-        selectType="checkbox"
-        keyField={keyName}
-        SelectAllInputComponent={SelectAllInputComponent}
-        SubComponent={row => <RowDetails row={row} />}
-        expanded={this.state.expanded}
-        onExpandedChange={this.onExpanded}
-        resizable={false}
-      />
+      <div id="cycle-history-tbl">
+        <CheckboxTable
+          data={data}
+          columns={columns}
+          style={{
+            height: `${tableHeight}px`
+          }}
+          showPaginationBottom={false}
+          sortable={false}
+          manual
+          className="-striped"
+          loading={isFetching || fetchingError}
+          loadingText={this.getLoadingText()}
+          noDataText={dataLoaded ? '0 ETL history records found.' : ''}
+          getTrProps={this.getTrProps}
+          isSelected={this.isSelected}
+          toggleSelection={this.toggleSelection}
+          toggleAll={false}
+          selectAll={false}
+          selectType="checkbox"
+          keyField={keyName}
+          SelectAllInputComponent={SelectAllInputComponent}
+          SubComponent={row => <RowDetails row={row} />}
+          expanded={this.state.expanded}
+          onExpandedChange={this.onExpanded}
+          resizable={false}
+        />
+      </div>
     );
   }
 }
