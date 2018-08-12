@@ -139,6 +139,7 @@ class ReportHistoryTable extends Component {
           height: `${tableHeight}px`
         }}
         manual
+        minRows={50}
         showPaginationBottom={false}
         sortable={false}
         className="-striped"

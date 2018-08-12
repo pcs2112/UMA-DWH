@@ -132,8 +132,14 @@ const SelectAllInputComponent = () => (<span />);
 
 const RowDetails = ({ row }) => { // eslint-disable-line
   const keys = Object.keys(row.original);
+  const tableWidth = document.getElementById('cycle-history-tbl').offsetWidth;
+  const width = tableWidth < 1000 ? 1000 : tableWidth;
   return (
-    <DetailsDiv>
+    <DetailsDiv
+      style={{
+        width
+      }}
+    >
       <DetailsColDiv>
         {keys.slice(0, 10).map(key =>
           <DetailsRow key={key}><DetailsLabel>{key.toUpperCase()}: </DetailsLabel>{row.original[key]}</DetailsRow>)
@@ -267,6 +273,7 @@ class CycleHistoryTable extends Component {
           showPaginationBottom={false}
           sortable={false}
           manual
+          minRows={50}
           className="-striped"
           loading={isFetching || fetchingError}
           loadingText={this.getLoadingText()}
