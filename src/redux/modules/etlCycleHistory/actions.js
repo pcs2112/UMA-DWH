@@ -1,6 +1,7 @@
 import { sleep } from 'javascript-utils/lib/utils';
 import { MAX_FETCH_CYCLE_GROUPS } from 'constants/index';
 import { shouldFetchCycle, getNewStartCycleGroup } from 'helpers/utils';
+import etlCurrentStatus from '../etlCurrentStatus';
 
 export const actionTypes = {
   FETCH_BEGIN: 'etlCycleHistory/FETCH_BEGIN',
@@ -16,21 +17,21 @@ export const actionTypes = {
 export const pollFirstCycleGroup = () => (dispatch, getState) => {
   const { etlCycleHistory } = getState();
   const { dataLoaded, currentCycleGroup, startCycleGroup } = etlCycleHistory;
+  const promises = [];
 
-  if (dataLoaded && currentCycleGroup > 0) {
-    return Promise.resolve();
-  }
+  // Fetch current status
+  promises.push(dispatch(etlCurrentStatus.actions.fetchCurrentStatus()));
 
-  const newStartCycleGroup = getNewStartCycleGroup(
-    currentCycleGroup,
-    startCycleGroup,
-    MAX_FETCH_CYCLE_GROUPS
-  );
+  // Fetch the ETL Cycle history
+  if (!dataLoaded || currentCycleGroup < 1) {
+    const newStartCycleGroup = getNewStartCycleGroup(
+      currentCycleGroup,
+      startCycleGroup,
+      MAX_FETCH_CYCLE_GROUPS
+    );
 
-  const newEndCycleGroup = newStartCycleGroup + MAX_FETCH_CYCLE_GROUPS;
-
-  return new Promise((resolve, reject) => {
-    dispatch({
+    const newEndCycleGroup = newStartCycleGroup + MAX_FETCH_CYCLE_GROUPS;
+    promises.push(dispatch({
       types: [
         actionTypes.FETCH_BEGIN,
         actionTypes.FETCH_SUCCESS,
@@ -46,7 +47,11 @@ export const pollFirstCycleGroup = () => (dispatch, getState) => {
         currentCycleGroup,
         startCycleGroup: newStartCycleGroup
       }
-    })
+    }));
+  }
+
+  return new Promise((resolve, reject) => {
+    Promise.all(promises)
       .then(() => {
         resolve();
       })

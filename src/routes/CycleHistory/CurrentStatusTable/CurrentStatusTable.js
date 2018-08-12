@@ -4,7 +4,6 @@ import 'react-table/react-table.css';
 import ReactTable from 'react-table';
 import checkboxHOC from 'react-table/lib/hoc/selectTable';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
-import withAsyncPolling from 'components/WithAsyncPolling';
 import globalCss from 'css/global';
 
 const CheckboxTable = checkboxHOC(ReactTable);
@@ -88,6 +87,14 @@ class CurrentStatusTable extends Component {
     unselectData: PropTypes.func.isRequired
   };
 
+  shouldComponentUpdate(nextProps) {
+    return nextProps.isFetching !== this.props.isFetching
+      || nextProps.data !== this.props.data
+      || nextProps.dataTotals !== this.props.dataTotals
+      || nextProps.fetchingError !== this.props.fetchingError
+      || nextProps.selectedData !== this.props.selectedData;
+  }
+
   getTrProps = (state, row) => {
     if (!row || !this.isSelected(row.original[keyName])) {
       return {};
@@ -158,4 +165,4 @@ class CurrentStatusTable extends Component {
   }
 }
 
-export default withAsyncPolling(CurrentStatusTable);
+export default CurrentStatusTable;
