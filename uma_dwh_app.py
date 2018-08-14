@@ -23,7 +23,7 @@ def catch_all(path):
     if "run_books/" in path:
         return app.send_static_file(path)
 
-    body = app.send_static_file('dist/index.html' if app.config["IS_PRODUCTION"] else 'templates/index.dev.html')
+    body = app.send_static_file('dist/index.html' if app.config["IS_PRODUCTION"] else 'dist/index.html')
     res = set_no_cache_headers(make_response(body))
 
     return res

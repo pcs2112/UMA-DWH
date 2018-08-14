@@ -1,16 +1,13 @@
 """ DB module used to interact with SQL server """
 import sys
 import pyodbc
+from flask import g
 
 this = sys.modules[__name__]
-this.db = None  # Reference to the DB connection
 this.config = None   # Reference to the DB configuration settings
 
 
 def init_db(app):
-    if this.db is not None:
-        raise RuntimeError('Database is already initialized.')
-
     this.config = {
         'DB_DRIVER': app.config['DB_DRIVER'],
         'DB_SERVER': app.config['DB_SERVER'],
@@ -28,7 +25,8 @@ def get_db():
     Returns the current DB connection. This function makes sure there only
     exists one connection per request.
     """
-    if this.db is None:
+    db = getattr(g, '_database', None)
+    if db is None:
         if this.config['DB_TRUSTED_CONNECTION']:
             cnxn_str = 'Driver=%s;Server=%s;DATABASE=%s;Trusted_Connection=yes;' % (
               this.config['DB_DRIVER'],
@@ -36,12 +34,12 @@ def get_db():
               this.config['DB_NAME']
             )
 
-            this.db = pyodbc.connect(
+            db = g._database = pyodbc.connect(
               cnxn_str,
               autocommit=True
             )
         else:
-            this.db = pyodbc.connect(
+            db = g._database = pyodbc.connect(
               p_str=None,
               driver=this.config['DB_DRIVER'],
               server=this.config['DB_SERVER'],
@@ -50,18 +48,16 @@ def get_db():
               pwd=this.config['DB_PASSWORD'],
               autocommit=True
             )
-
-    return this.db
+    return db
 
 
 def close(*varargs):
     """
     Closes the current DB connection if any.
     """
-    if this.db is not None:
-        pyodbc.pooling = False
-        this.db.close()
-        this.db = None
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
 
 
 def result_as_dict(schema, row):
