@@ -1,6 +1,8 @@
 """Create an application instance."""
+from flask import make_response
 from uma_dwh.app import create_app
 from uma_dwh.settings import Settings
+from uma_dwh.utils.nocache import set_no_cache_headers
 
 CONFIG = Settings
 
@@ -21,7 +23,10 @@ def catch_all(path):
     if "run_books/" in path:
         return app.send_static_file(path)
 
-    return app.send_static_file('dist/index.html' if app.config["IS_PRODUCTION"] else 'templates/index.dev.html')
+    body = app.send_static_file('dist/index.html' if app.config["IS_PRODUCTION"] else 'templates/index.dev.html')
+    res = set_no_cache_headers(make_response(body))
+
+    return res
 
 
 if __name__ == '__main__':
