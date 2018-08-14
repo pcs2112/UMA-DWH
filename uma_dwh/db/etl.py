@@ -23,7 +23,7 @@ def fetch_current_status():
     result = execute_sp(
       'MWH.GET_CURRENT_ETL_CYCLE_STATUS',
       {
-        'FirstDataMartInCycle': 'I3_MCS'
+        'FirstDataMartInCycle': 'I3_NON-MCS'
       }
     )
 
