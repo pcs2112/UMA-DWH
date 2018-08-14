@@ -7,6 +7,14 @@ CONFIG = Settings
 app = create_app(CONFIG)
 
 
+@app.after_request
+def set_response_headers(response):
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
+
+
 @app.route('/api/run_books/<path:path>')
 def run_books(path):
     return app.send_static_file('run_books/' + path)
