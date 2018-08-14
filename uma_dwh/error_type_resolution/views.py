@@ -3,18 +3,21 @@ from flask_jwt_extended import jwt_required
 from uma_dwh.exceptions import InvalidUsage
 from uma_dwh.db.exceptions import DBException
 from uma_dwh.db.error_type_resolution import fetch_files, create_file, update_file
+from uma_dwh.utils.nocache import nocache
 
 
 blueprint = Blueprint('error_type_resolution', __name__)
 
 
 @blueprint.route('/api/error_type_resolution/files', methods=('GET',))
+@nocache
 @jwt_required
 def get_files():
     return jsonify(fetch_files())
 
 
 @blueprint.route('/api/error_type_resolution/files', methods=('POST',))
+@nocache
 @jwt_required
 def post_create_file():
     body = request.get_json(silent=True)
@@ -28,6 +31,7 @@ def post_create_file():
 
 
 @blueprint.route('/api/error_type_resolution/files/<file_id>', methods=('POST',))
+@nocache
 @jwt_required
 def post_update_file(file_id):
     body = request.get_json(silent=True)

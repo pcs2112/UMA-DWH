@@ -8,6 +8,7 @@ from uma_dwh.db.etl import (fetch_control_manager, fetch_current_status, fetch_c
 from uma_dwh.exceptions import InvalidUsage
 from uma_dwh.db.exceptions import SPException
 from uma_dwh.utils.opsgenie import send_alert
+from uma_dwh.utils.nocache import nocache
 from .api_schemas import (pagination_args, run_check_args, procedure_history_args, server_db_procedures_args,
                           powerbi_report_history_args, powerbi_report_statistics_args, powerbi_report_runs_args)
 
@@ -16,18 +17,21 @@ blueprint = Blueprint('etl', __name__)
 
 
 @blueprint.route('/api/etl/control_manager', methods=('GET',))
+@nocache
 @jwt_required
 def get_control_manager():
     return jsonify(fetch_control_manager())
 
 
 @blueprint.route('/api/etl/status', methods=('GET',))
+@nocache
 @jwt_required
 def get_status():
     return jsonify(fetch_current_status())
 
 
 @blueprint.route('/api/etl/history', methods=('GET',))
+@nocache
 @jwt_required
 @use_args(pagination_args, locations=('query',))
 def get_history(args):
@@ -38,6 +42,7 @@ def get_history(args):
 
 
 @blueprint.route('/api/etl/powerbi_report_history', methods=('GET',))
+@nocache
 @jwt_required
 @use_args(powerbi_report_history_args, locations=('query',))
 def get_powerbi_report_history(args):
@@ -48,6 +53,7 @@ def get_powerbi_report_history(args):
 
 
 @blueprint.route('/api/etl/powerbi_report_statistics', methods=('GET',))
+@nocache
 @jwt_required
 @use_args(powerbi_report_statistics_args, locations=('query',))
 def get_powerbi_report_statistics(args):
@@ -58,6 +64,7 @@ def get_powerbi_report_statistics(args):
 
 
 @blueprint.route('/api/etl/powerbi_report_runs', methods=('GET',))
+@nocache
 @jwt_required
 @use_args(powerbi_report_runs_args, locations=('query',))
 def get_powerbi_report_runs(args):
@@ -68,6 +75,7 @@ def get_powerbi_report_runs(args):
 
 
 @blueprint.route('/api/etl/procedure_history', methods=('GET',))
+@nocache
 @jwt_required
 @use_args(procedure_history_args, locations=('query',))
 def get_procedure_history(args):
@@ -78,6 +86,7 @@ def get_procedure_history(args):
 
 
 @blueprint.route('/api/etl/server_db_procedures', methods=('GET',))
+@nocache
 @jwt_required
 @use_args(server_db_procedures_args, locations=('query',))
 def get_server_db_procedures(args):
@@ -88,6 +97,7 @@ def get_server_db_procedures(args):
 
 
 @blueprint.route('/api/etl/servers', methods=('GET',))
+@nocache
 @jwt_required
 def get_servers():
     try:
@@ -97,17 +107,20 @@ def get_servers():
 
 
 @blueprint.route('/api/etl/errors/<error_id>/alert', methods=('GET',))
+@nocache
 def post_error_alert(error_id):
     send_alert(error_id)
 
 
 @blueprint.route('/api/etl/errors/<error_id>', methods=('GET',))
+@nocache
 def get_error(error_id):
     error = fetch_error(error_id)
     raise InvalidUsage.etl_error(f'get_error({error_id})', error)
 
 
 @blueprint.route('/api/etl/run_check', methods=('GET',))
+@nocache
 @jwt_required
 @use_args(run_check_args, locations=('query',))
 def get_run_check(args):
