@@ -31,6 +31,11 @@ export const getHistory = createGetItemsSelector(_getData);
 export const getFetchingError = createFetchingErrorSelector('etlCycleHistory');
 
 /**
+ * Returns the cycle history list filters.
+ */
+export const getFilters = createGetPropertySelector('etlCycleHistory', 'filters');
+
+/**
  * Returns the selected items.
  * @param {Object} state
  */
@@ -151,8 +156,8 @@ export const getDataMartsSelected = createSelector(
  * Returns the ETL history by cycle group from the state.
  */
 export const getHistoryByCycleGroup = createSelector(
-  [_getData, getCurrentCycleGroup, getDataMartsSelected, etlControlManager.selectors.getControlManager],
-  (data, cycleGroup, dataMarts, controlManager) => {
+  [_getData, getCurrentCycleGroup, getDataMartsSelected, etlControlManager.selectors.getControlManager, getFilters],
+  (data, cycleGroup, dataMarts, controlManager, filters) => {
     if (data.length < 1 || controlManager.length < 1) {
       return [];
     }
@@ -196,10 +201,15 @@ export const getHistoryByCycleGroup = createSelector(
           missingItem.target_table_name = item.target_table_name;
           missingItem.source_schema_name = item.source_schema_name;
           missingItem.target_schema_name = item.target_schema_name;
+          missingItem.active = 1;
           result.push(missingItem);
         }
       }
     });
+
+    if (objectHasOwnProperty(filters, 'active') && filters.active === 0) {
+      return result.filter(res => res.active === 0);
+    }
 
     return result;
   }

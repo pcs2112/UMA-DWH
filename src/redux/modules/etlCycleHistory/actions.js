@@ -11,7 +11,8 @@ export const actionTypes = {
   CLEAR_FETCH_FAIL: 'etlCycleHistory/CLEAR_FETCH_FAIL',
   SELECT: 'etlCycleHistory/SELECT',
   UNSELECT: 'etlCycleHistory/UNSELECT',
-  UNSELECT_ALL: 'etlCycleHistory/UNSELECT_ALL'
+  UNSELECT_ALL: 'etlCycleHistory/UNSELECT_ALL',
+  SET_FILTERS: 'etlCycleHistory/SET_FILTERS'
 };
 
 export const pollFirstCycleGroup = () => (dispatch, getState) => {
@@ -176,4 +177,15 @@ export const unselect = id => ({
  */
 export const unselectAll = () => ({
   type: actionTypes.UNSELECT_ALL
+});
+
+/**
+ * Action to set a list filters.
+ */
+export const setFilters = (key, value) => ({
+  type: actionTypes.SET_FILTERS,
+  filter: {
+    key,
+    value
+  }
 });

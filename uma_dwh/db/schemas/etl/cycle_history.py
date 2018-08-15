@@ -26,5 +26,6 @@ schema = (
   'engine_message',
   'err_num',
   'delete_cnt',
-  'exec_by_control_engine'
+  'exec_by_control_engine',
+  'active'
 )

@@ -135,9 +135,11 @@ class CurrentStatusTable extends Component {
       isFetching, data, dataTotals, fetchingError
     } = this.props;
 
-    columns.forEach((column) => {
-      column.Footer = (<span>{dataTotals[column.accessor]}</span>);
-    });
+    if (Object.keys(dataTotals).length > 0) {
+      columns.forEach((column) => {
+        column.Footer = (<span>{dataTotals[column.accessor]}</span>);
+      });
+    }
 
     return (
       <CheckboxTable

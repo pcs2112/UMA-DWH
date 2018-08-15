@@ -6,11 +6,27 @@ const initialState = Object.assign({
   currentCycleGroup: 0,
   startCycleGroup: 0,
   selected: {},
-  selectedOrder: []
+  selectedOrder: [],
+  filters: {}
 }, itemListInitialState);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
+
+// Set filters
+const setFilters = (state, action) => {
+  if (!action.filter) {
+    return state;
+  }
+
+  return {
+    ...state,
+    filters: {
+      ...state.filters,
+      [action.filter.key]: action.filter.value
+    }
+  };
+};
 
 /**
  * ETL history reducer.
@@ -88,6 +104,8 @@ export default (state = initialState, action) => {
         selected: initialState.selected,
         selectedOrder: initialState.selectedOrder
       };
+    case actionTypes.SET_FILTERS:
+      return setFilters(state, action);
     default:
       return state;
   }

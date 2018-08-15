@@ -169,7 +169,8 @@ class CycleHistoryTable extends Component {
     selectedData: PropTypes.object.isRequired,
     selectData: PropTypes.func.isRequired,
     unselectData: PropTypes.func.isRequired,
-    dataMartsSelectedCount: PropTypes.number.isRequired
+    dataMartsSelectedCount: PropTypes.number.isRequired,
+    filters: PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -191,7 +192,9 @@ class CycleHistoryTable extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.dataMartsSelectedCount !== prevProps.dataMartsSelectedCount) {
+    if (this.props.dataMartsSelectedCount !== prevProps.dataMartsSelectedCount
+      || this.props.filters !== prevProps.filters
+    ) {
       this.scrollTop();
     }
   }

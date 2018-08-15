@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Segment, Grid, Dropdown, Button } from 'semantic-ui-react';
 import config from 'config';
+import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import intervalDurations from 'constants/currentStatusIntervalDurations';
 import etlCurrentStatus from 'redux/modules/etlCurrentStatus';
 import etlCycleHistory from 'redux/modules/etlCycleHistory';
@@ -40,7 +41,9 @@ class Home extends Component {
     currentStatusDataTotals: PropTypes.object.isRequired,
     currentStatusIntervalDuration: PropTypes.number.isRequired,
     fetchCurrentStatus: PropTypes.func.isRequired,
-    setCurrentStatusIntervalDuration: PropTypes.func.isRequired
+    setCurrentStatusIntervalDuration: PropTypes.func.isRequired,
+    setCycleHistoryFilters: PropTypes.func.isRequired,
+    cycleHistoryFilters: PropTypes.object.isRequired
   };
 
   componentWillUnmount() {
@@ -51,6 +54,12 @@ class Home extends Component {
 
   handleViewHistoryOnClick = () => {
     this.props.history.push('/procedures/history');
+  };
+
+  handleActiveFilterButton = () => {
+    const { cycleHistoryFilters, setCycleHistoryFilters } = this.props;
+    setCycleHistoryFilters('active', !objectHasOwnProperty(cycleHistoryFilters, 'active')
+    || cycleHistoryFilters.active === 1 ? 0 : 1);
   };
 
   render() {
@@ -76,8 +85,10 @@ class Home extends Component {
       currentStatusData,
       currentStatusDataTotals,
       currentStatusIntervalDuration,
-      fetchCurrentStatus
+      fetchCurrentStatus,
+      cycleHistoryFilters
     } = this.props;
+    console.log(cycleHistoryFilters);
     return (
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
@@ -97,6 +108,7 @@ class Home extends Component {
             intervalDuration={currentStatusIntervalDuration}
             onInterval={pollFirstCycleGroup}
             dataMartsSelectedCount={dataMartsSelectedCount}
+            filters={cycleHistoryFilters}
           />
         </Segment>
         <Segment>
@@ -113,12 +125,22 @@ class Home extends Component {
                 selectData={selectCycleHistoryData}
                 unselectData={unselectCycleHistoryData}
               />
-              <Button size="small" primary style={runCheckButtonCss} disabled={cycleHistorySelectedCount < 1}>
+              <Button
+                size="small"
+                style={runCheckButtonCss}
+                disabled={cycleHistorySelectedCount < 1}
+              >
                 Run Check
               </Button>
               <Button
                 size="small"
-                color="green"
+                style={runCheckButtonCss}
+                onClick={this.handleActiveFilterButton}
+              >
+                {cycleHistoryFilters.active === 0 ? 'View All' : 'View Inactive'}
+              </Button>
+              <Button
+                size="small"
                 style={runCheckButtonCss}
                 disabled={proceduresSelectedCount < 1}
                 onClick={this.handleViewHistoryOnClick}
@@ -193,6 +215,7 @@ export default withMainLayout(connect(
     cycleHistorySelectedCount: etlCycleHistory.selectors.getSelectedCount(state),
     proceduresSelectedCount: etlCycleHistory.selectors.getProceduresSelectedCount(state),
     dataMartsSelectedCount: etlCycleHistory.selectors.getDataMartsSelectedCount(state),
+    cycleHistoryFilters: etlCycleHistory.selectors.getFilters(state),
   }),
   dispatch => ({
     pollFirstCycleGroup: () => dispatch(etlCycleHistory.actions.pollFirstCycleGroup()),
@@ -206,5 +229,6 @@ export default withMainLayout(connect(
     fetchCurrentStatus: () => dispatch(etlCurrentStatus.actions.fetchCurrentStatus()),
     setCurrentStatusIntervalDuration: intervalDuration =>
       dispatch(etlCurrentStatus.actions.setIntervalDuration(intervalDuration)),
+    setCycleHistoryFilters: (key, value) => dispatch(etlCycleHistory.actions.setFilters(key, value))
   })
 )(Home));
