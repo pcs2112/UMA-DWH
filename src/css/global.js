@@ -39,6 +39,10 @@ export default {
   pageHeaderSegmentH1: {
     textAlign: 'center'
   },
+  errorPageHeaderSegmentH1: {
+    textAlign: 'center',
+    color: error
+  },
   mainMenuWith: `${mainMenuWidth}px`,
   mainContainerWidth: `${mainContainerWidth}px`,
   mainTableHeight: `${windowHeight - 220}px`

@@ -62,6 +62,19 @@ class Home extends Component {
     || cycleHistoryFilters.active === 1 ? 0 : 1);
   };
 
+  renderPageTitle = () => {
+    const { cycleHistoryFilters } = this.props;
+    let title = `${config.app.title} - ETL Cycle History`;
+    if (cycleHistoryFilters.active === 0) {
+      title += ' (INACTIVE)';
+    }
+    return (
+      <h1 style={cycleHistoryFilters.active === 0 ? globalCss.errorPageHeaderSegmentH1 : globalCss.pageHeaderSegmentH1}>
+        {title}
+      </h1>
+    );
+  };
+
   render() {
     const {
       isCycleHistoryFetching,
@@ -88,13 +101,10 @@ class Home extends Component {
       fetchCurrentStatus,
       cycleHistoryFilters
     } = this.props;
-    console.log(cycleHistoryFilters);
     return (
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
-          <h1 style={globalCss.pageHeaderSegmentH1}>
-            {config.app.title} - ETL Cycle History
-          </h1>
+          {this.renderPageTitle()}
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
           <CycleHistoryTable
