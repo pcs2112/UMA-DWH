@@ -32,7 +32,7 @@ export const getCurrentCycleGroup = createGetCurrentCycleGroup('powerbiReportRun
 /**
  * Selector to get the pagination's current cycle group start dttm.
  */
-export const getCurrentCycleGroupStartDttm = createGetCurrentCycleGroupStartDttm(getPowerbiReportRuns);
+export const getCurrentCycleGroupStartDttm = createGetCurrentCycleGroupStartDttm(getPowerbiReportRuns, 'from_dttm');
 
 /**
  * Selector to get the pagination's prev cycle group start data.

@@ -5,6 +5,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { Segment, Grid } from 'semantic-ui-react';
 import { getAllUrlParams } from 'javascript-utils/lib/url';
 import config from 'config';
+import { CYCLE_GROUP_PAGE_SIZE } from 'constants/index';
 import withMainLayout from 'components/WithMainLayout';
 import CycleArrowPagination from 'components/CycleArrowPagination';
 import globalCss from 'css/global';
@@ -104,7 +105,7 @@ class ReportStatistics extends Component {
                 fetchPrev={fetchPrevReportRuns}
                 fetchNext={fetchNextReportRuns}
                 prevDisabled={reportRunsCurrentCycleGroup < 1}
-                nextDisabled={reportRunsData.length < 1}
+                nextDisabled={reportRunsData.length <= CYCLE_GROUP_PAGE_SIZE}
                 cycleGroup={reportRunsCurrentCycleGroup}
                 cycleGroupStartDttm={reportRunsCurrentCycleGroupStartDttm}
                 cycleGroupStartDttmLabel="Start DTTM"

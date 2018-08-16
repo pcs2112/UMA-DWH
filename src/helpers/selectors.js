@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { CYCLE_GROUP_PAGE_SIZE } from 'constants/index';
 
 /**
  * Creates a selector function to get the data property from a state slice.
@@ -75,7 +76,11 @@ export const createGetCurrentCycleGroupStartDttm = (getItemsSelector, startDttmK
  * @param {Function} getCurrentCycleGroupSelector
  * @param {Number} pageSize
  */
-export const createGetPrevCycleGroupStartData = (getItemsSelector, getCurrentCycleGroupSelector, pageSize = 1000) =>
+export const createGetPrevCycleGroupStartData = (
+  getItemsSelector,
+  getCurrentCycleGroupSelector,
+  pageSize = CYCLE_GROUP_PAGE_SIZE
+) =>
   createSelector(
     [getItemsSelector, getCurrentCycleGroupSelector],
     (data, currentCycleGroup) => {
@@ -109,7 +114,11 @@ export const createGetPrevCycleGroupStartData = (getItemsSelector, getCurrentCyc
  * @param {Function} getCurrentCycleGroupSelector
  * @param {Number} pageSize
  */
-export const createGetNextCycleGroupStartData = (getItemsSelector, getCurrentCycleGroupSelector, pageSize = 1000) =>
+export const createGetNextCycleGroupStartData = (
+  getItemsSelector,
+  getCurrentCycleGroupSelector,
+  pageSize = CYCLE_GROUP_PAGE_SIZE
+) =>
   createSelector(
     [getItemsSelector, getCurrentCycleGroupSelector],
     (data, currentCycleGroup) => {

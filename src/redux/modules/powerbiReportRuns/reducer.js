@@ -1,3 +1,4 @@
+import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
 import { actionTypes } from './actions';
 
@@ -22,11 +23,11 @@ export default (state = initialState, action) => {
     case actionTypes.FETCH_FAIL:
     case actionTypes.FETCH_SUCCESS: {
       const newState = itemListReducer(state, action);
-      if (action.reportName) {
+      if (objectHasOwnProperty(action, 'reportName')) {
         newState.reportName = action.reportName;
       }
 
-      if (action.currentCycleGroup) {
+      if (objectHasOwnProperty(action, 'currentCycleGroup')) {
         newState.currentCycleGroup = action.currentCycleGroup;
       }
 
