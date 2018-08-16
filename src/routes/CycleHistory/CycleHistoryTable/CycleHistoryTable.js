@@ -141,17 +141,18 @@ const RowDetails = ({ row }) => { // eslint-disable-line
       }}
     >
       <DetailsColDiv>
-        {keys.slice(0, 10).map(key =>
+        <DetailsRow key="id"><DetailsLabel>ID: </DetailsLabel>{row.original.id}</DetailsRow>
+        {keys.slice(1, 10).map(key =>
           <DetailsRow key={key}><DetailsLabel>{key.toUpperCase()}: </DetailsLabel>{row.original[key]}</DetailsRow>)
         }
       </DetailsColDiv>
       <DetailsColDiv>
-        {keys.slice(10, 20).map(key =>
+        {keys.slice(11, 21).map(key =>
           <DetailsRow key={key}><DetailsLabel>{key.toUpperCase()}: </DetailsLabel>{row.original[key]}</DetailsRow>)
         }
       </DetailsColDiv>
       <DetailsColDiv>
-        {keys.slice(20, 28).map(key =>
+        {keys.slice(21, 29).map(key =>
           <DetailsRow key={key}><DetailsLabel>{key.toUpperCase()}: </DetailsLabel>{row.original[key]}</DetailsRow>)
         }
       </DetailsColDiv>
