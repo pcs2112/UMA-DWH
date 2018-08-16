@@ -10,6 +10,7 @@ import etlCycleHistory from 'redux/modules/etlCycleHistory';
 import withMainLayout from 'components/WithMainLayout';
 import CycleArrowPagination from 'components/CycleArrowPagination';
 import EtlErrorModal from 'components/EtlErrorModal';
+import PageHeader from 'components/PageHeader';
 import globalCss from 'css/global';
 import CycleHistoryTable from './CycleHistoryTable';
 import CurrentStatusTable from './CurrentStatusTable';
@@ -64,14 +65,12 @@ class Home extends Component {
 
   renderPageTitle = () => {
     const { cycleHistoryFilters } = this.props;
-    let title = `${config.app.title} - ETL Cycle History`;
+    let headerText = `${config.app.title} - ETL Cycle History`;
     if (cycleHistoryFilters.active === 0) {
-      title += ' (INACTIVE)';
+      headerText += ' (INACTIVE)';
     }
     return (
-      <h1 style={cycleHistoryFilters.active === 0 ? globalCss.errorPageHeaderSegmentH1 : globalCss.pageHeaderSegmentH1}>
-        {title}
-      </h1>
+      <PageHeader headerText={headerText} state={cycleHistoryFilters.active === 0 ? 'error' : ''} />
     );
   };
 
