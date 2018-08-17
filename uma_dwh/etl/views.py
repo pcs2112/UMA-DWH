@@ -25,7 +25,6 @@ def get_control_manager():
 
 @blueprint.route('/api/etl/status', methods=('GET',))
 @nocache
-@jwt_required
 def get_status():
     return jsonify(fetch_current_status())
 
