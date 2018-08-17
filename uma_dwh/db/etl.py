@@ -1,3 +1,6 @@
+import time
+import uma_dwh.utils.appcache as appcache
+import uma_dwh.utils.opsgenie as opsgenie
 from .mssql_db import fetch_rows, execute_sp, result_as_dict, result_set_as_dicts
 from .exceptions import SPException
 from .schemas.etl import (control_manager_schema, current_cycle_status_schema, cycle_history_schema,
@@ -27,7 +30,10 @@ def fetch_current_status():
       }
     )
 
-    return result_set_as_dicts(current_cycle_status_schema, result[0])
+    status_data = result_set_as_dicts(current_cycle_status_schema, result[0])
+    check_etl_status(status_data)
+
+    return status_data
 
 
 def fetch_cycle_history(start_cycle_group=0, end_cycle_group=9):
@@ -227,6 +233,36 @@ def fetch_powerbi_report_runs(report_name, from_num='', to_num=''):
       'TryCatchError_ID',
       powerbi_report_runs_schema
     )
+
+
+def check_etl_status(status_data):
+    """
+    Helper function to retrieve the current ETL status.
+    :param status_data: SP in arguments
+    :type status_data: list
+    :return: str
+     """
+    new_etl_status = status_data[-1]['data_mart_status']
+
+    if 'STOPPED' not in new_etl_status:
+        new_etl_status = 'RUNNING'
+    elif new_etl_status == 'STOPPED!':
+        new_etl_status = 'FAILED'
+    elif new_etl_status == 'STOPPED':
+        new_etl_status = 'PAUSED'
+
+    current_etl_status = appcache.get_item('ETL_STATUS') or 'RUNNING'
+
+    if current_etl_status != 'FAILED' and new_etl_status == 'FAILED':
+        opsgenie.send_etl_status_alert()
+
+    if new_etl_status != current_etl_status:
+        appcache.set_item('ETL_STATUS', new_etl_status)
+        appcache.set_item('ETL_STATUS_UPDATED', time.time())
+
+    status_data[-1]['data_mart_status'] = new_etl_status
+
+    return new_etl_status
 
 
 def fill_in_admin_console_sp_in_args(in_args):

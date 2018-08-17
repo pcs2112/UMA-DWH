@@ -44,7 +44,8 @@ class Home extends Component {
     fetchCurrentStatus: PropTypes.func.isRequired,
     setCurrentStatusIntervalDuration: PropTypes.func.isRequired,
     setCycleHistoryFilters: PropTypes.func.isRequired,
-    cycleHistoryFilters: PropTypes.object.isRequired
+    cycleHistoryFilters: PropTypes.object.isRequired,
+    currentEtlStatus: PropTypes.string.isRequired
   };
 
   componentWillUnmount() {
@@ -64,13 +65,23 @@ class Home extends Component {
   };
 
   renderPageTitle = () => {
-    const { cycleHistoryFilters } = this.props;
+    const { cycleHistoryFilters, currentEtlStatus } = this.props;
+    let state = '';
     let headerText = `${config.app.title} - ETL Cycle History`;
-    if (cycleHistoryFilters.active === 0) {
+
+    if (currentEtlStatus === 'FAILED') {
+      state = 'error';
+      headerText += ' (FAILED)';
+    } else if (currentEtlStatus === 'PAUSED') {
+      state = 'warning';
+      headerText += ' (PAUSED)';
+    } else if (cycleHistoryFilters.active === 0) {
+      state = 'error';
       headerText += ' (INACTIVE)';
     }
+
     return (
-      <PageHeader headerText={headerText} state={cycleHistoryFilters.active === 0 ? 'error' : ''} />
+      <PageHeader headerText={headerText} state={state} />
     );
   };
 
@@ -225,6 +236,7 @@ export default withMainLayout(connect(
     proceduresSelectedCount: etlCycleHistory.selectors.getProceduresSelectedCount(state),
     dataMartsSelectedCount: etlCycleHistory.selectors.getDataMartsSelectedCount(state),
     cycleHistoryFilters: etlCycleHistory.selectors.getFilters(state),
+    currentEtlStatus: etlCurrentStatus.selectors.getCurrentEtlStatus(state)
   }),
   dispatch => ({
     pollFirstCycleGroup: () => dispatch(etlCycleHistory.actions.pollFirstCycleGroup()),

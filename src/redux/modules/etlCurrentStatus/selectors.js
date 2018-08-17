@@ -25,6 +25,24 @@ export const getCurrentStatusTotals = createSelector(
 );
 
 /**
+ * Returns the current ETL status.
+ */
+export const getCurrentEtlStatus = createSelector(
+  [_getData],
+  (data) => {
+    if (!data || data.length < 1) {
+      return 'RUNNING';
+    }
+
+    if (data.length < 6) {
+      return 'RUNNING';
+    }
+
+    return data[data.length - 1].data_mart_status;
+  }
+);
+
+/**
  * Returns the interval duration from the state.
  */
 export const getIntervalDuration = createGetPropertySelector('etlCurrentStatus', 'intervalDuration');
