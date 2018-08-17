@@ -49,3 +49,4 @@ npm-debug.log
 .env
 uma_dwh/static/dist/
 uma_dwh/static/run_books/
+.app_cache
