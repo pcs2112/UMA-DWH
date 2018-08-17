@@ -174,7 +174,7 @@ export const getHistoryByCycleGroup = createSelector(
     });
 
     // Get the empty result for missing history items
-    const keys = Object.keys(dataByCycleGroup[0]);
+    const keys = Object.keys(data[0]);
     const defaultMissingItem = {};
     keys.forEach((key) => {
       defaultMissingItem[key] = '';
