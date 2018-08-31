@@ -47,8 +47,8 @@ class Filters extends Component {
     return servers.find(server => server.name.toUpperCase() === serverName.toUpperCase())
       .dbs.find(db => db.name.toUpperCase() === dbName.toUpperCase())
       .procedures.map(procedure => ({
-        key: procedure.etl_stored_procedure,
-        value: procedure.etl_stored_procedure,
+        key: procedure.etl_stored_procedure.toUpperCase(),
+        value: procedure.etl_stored_procedure.toUpperCase(),
         text: procedure.etl_stored_procedure
       }));
   };
@@ -60,7 +60,7 @@ class Filters extends Component {
       const server = servers.find(item => item.name.toUpperCase() === normalizedValue);
       const serverName = normalizedValue;
       const dbName = server.dbs[0].name.toUpperCase();
-      const procedureName = server.dbs[0].procedures[0].etl_stored_procedure;
+      const procedureName = server.dbs[0].procedures[0].etl_stored_procedure.toUpperCase();
       this.setState({
         serverName,
         dbName,
@@ -77,7 +77,7 @@ class Filters extends Component {
       const server = servers.find(item => item.name.toUpperCase() === serverName);
       const db = server.dbs.find(item => item.name.toUpperCase() === normalizedValue);
       const dbName = normalizedValue;
-      const procedureName = db.procedures[0].etl_stored_procedure;
+      const procedureName = db.procedures[0].etl_stored_procedure.toUpperCase();
       this.setState({
         dbName,
         procedureName,
@@ -88,7 +88,7 @@ class Filters extends Component {
   handleProcedureNameOnChange = (e, { value }) => {
     if (value !== this.state.procedureName) {
       this.setState({
-        procedureName: value
+        procedureName: value.toUpperCase()
       }, this.handleOnChange);
     }
   };
