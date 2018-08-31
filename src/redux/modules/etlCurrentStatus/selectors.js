@@ -13,7 +13,7 @@ const _getData = createDataSelector('etlCurrentStatus');
  */
 export const getCurrentStatus = createSelector(
   [_getData],
-  data => (data.length > 5 ? data.slice(0, data.length - 1) : data)
+  data => (data.length > 0 ? data.slice(0, data.length - 1) : data)
 );
 
 /**
@@ -21,7 +21,7 @@ export const getCurrentStatus = createSelector(
  */
 export const getCurrentStatusTotals = createSelector(
   [_getData],
-  data => (data.length > 5 ? data[data.length - 1] : emptyDataTotals)
+  data => (data.length > 0 ? data[data.length - 1] : emptyDataTotals)
 );
 
 /**
@@ -31,10 +31,6 @@ export const getCurrentEtlStatus = createSelector(
   [_getData],
   (data) => {
     if (!data || data.length < 1) {
-      return 'RUNNING';
-    }
-
-    if (data.length < 6) {
       return 'RUNNING';
     }
 

@@ -135,6 +135,8 @@ class CurrentStatusTable extends Component {
       isFetching, data, dataTotals, fetchingError
     } = this.props;
 
+    const defaultMinRows = data.length < 1 ? 5 : data.length;
+
     if (Object.keys(dataTotals).length > 0) {
       columns.forEach((column) => {
         column.Footer = (<span>{dataTotals[column.accessor]}</span>);
@@ -153,8 +155,8 @@ class CurrentStatusTable extends Component {
         loadingText={this.getLoadingText(fetchingError)}
         noDataText="ETL status not found."
         getTrProps={this.getTrProps}
-        defaultPageSize={data.length}
-        minRows={5}
+        defaultPageSize={defaultMinRows}
+        minRows={defaultMinRows}
         isSelected={this.isSelected}
         toggleSelection={this.toggleSelection}
         toggleAll={false}
