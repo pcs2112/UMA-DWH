@@ -31,7 +31,7 @@ def fetch_current_status():
     )
 
     status_data = result_set_as_dicts(current_cycle_status_schema, result[0])
-    check_etl_status(status_data)
+    # check_etl_status(status_data)
 
     return status_data
 
