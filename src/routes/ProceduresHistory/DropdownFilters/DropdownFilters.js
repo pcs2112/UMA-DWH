@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
-import { Grid, Dropdown } from 'semantic-ui-react';
+import { Dropdown, Form } from 'semantic-ui-react';
 import { FILTERS_EXEC_DELAY } from 'constants/index';
 
 class Filters extends Component {
@@ -102,44 +102,55 @@ class Filters extends Component {
   render() {
     const { serverName, dbName, procedureName } = this.state;
     return (
-      <Grid>
-        <Grid.Column width={3}>
-          <label>Server Name</label>
-          <Dropdown
-            fluid
-            selectOnNavigation={false}
-            selection
-            name="false"
-            options={this.getServerOptions()}
-            onChange={this.handleServerNameOnChange}
-            value={serverName}
-          />
-        </Grid.Column>
-        <Grid.Column width={3}>
-          <label>DB Name</label>
-          <Dropdown
-            fluid
-            selectOnNavigation={false}
-            selection
-            name="false"
-            options={this.getDbOptions()}
-            onChange={this.handleDbNameOnChange}
-            value={dbName}
-          />
-        </Grid.Column>
-        <Grid.Column width={6}>
-          <label>Procedure Name</label>
-          <Dropdown
-            fluid
-            selectOnNavigation={false}
-            selection
-            name="false"
-            options={this.getProcedureOptions()}
-            onChange={this.handleProcedureNameOnChange}
-            value={procedureName}
-          />
-        </Grid.Column>
-      </Grid>
+      <Form size="small">
+        <Form.Group inline>
+          <Form.Field width={3} className="right-aligned">
+            <label>Server Name</label>
+          </Form.Field>
+          <Form.Field width={13}>
+            <Dropdown
+              selectOnNavigation={false}
+              selection
+              name="false"
+              options={this.getServerOptions()}
+              onChange={this.handleServerNameOnChange}
+              value={serverName}
+            />
+          </Form.Field>
+        </Form.Group>
+        <Form.Group inline>
+          <Form.Field width={3} className="right-aligned">
+            <label>DB Name</label>
+          </Form.Field>
+          <Form.Field width={13}>
+            <Dropdown
+              fluid
+              selectOnNavigation={false}
+              selection
+              name="false"
+              options={this.getDbOptions()}
+              onChange={this.handleDbNameOnChange}
+              value={dbName}
+            />
+          </Form.Field>
+        </Form.Group>
+        <Form.Group inline>
+          <Form.Field width={3} className="right-aligned">
+            <label>Proc. Name</label>
+          </Form.Field>
+          <Form.Field width={13}>
+            <Dropdown
+              fluid
+              selectOnNavigation={false}
+              selection
+              name="false"
+              options={this.getProcedureOptions()}
+              onChange={this.handleProcedureNameOnChange}
+              value={procedureName}
+            />
+          </Form.Field>
+        </Form.Group>
+      </Form>
     );
   }
 }
