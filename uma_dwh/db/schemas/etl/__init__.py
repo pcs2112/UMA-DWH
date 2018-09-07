@@ -9,3 +9,4 @@ from .procedure_history import schema as procedure_history_schema
 from .server_db_procedures import schema as server_db_procedures_schema
 from .server_dbs import schema as server_dbs_schema
 from .try_catch_error import schema as try_catch_error_schema
+from .procedure_search_chart_data import schema as procedure_search_chart_data_schema

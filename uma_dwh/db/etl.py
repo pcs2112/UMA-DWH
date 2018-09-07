@@ -1,12 +1,9 @@
 import time
 import uma_dwh.utils.appcache as appcache
 import uma_dwh.utils.opsgenie as opsgenie
-from .mssql_db import fetch_rows, execute_sp, result_as_dict, result_set_as_dicts
+from .mssql_db import execute_sp, result_as_dict, result_set_as_dicts
 from .exceptions import SPException
-from .schemas.etl import (control_manager_schema, current_cycle_status_schema, cycle_history_schema,
-                          powerbi_report_history_schema, powerbi_report_statistics_schema, powerbi_report_runs_schema,
-                          procedure_history_schema, server_db_procedures_schema, server_dbs_schema,
-                          try_catch_error_schema)
+from .schemas import etl as etl_schemas
 
 ADMIN_CONSOLE_SP_IN_ARGS_LENGTH = 10
 
@@ -15,8 +12,14 @@ def fetch_control_manager():
     """
     Returns a the list of procedures in the ETL_CONTROL_MANAGER table.
     """
-    sql = f'SELECT * FROM MWH.ETL_CONTROL_MANAGER_view ORDER BY DATA_MART_NAME ASC, PRIORITY DESC'
-    return fetch_rows(sql=sql, schema=control_manager_schema)
+    return execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+      {
+        'message': 'LIST_CONTROL_MANAGER_DETAILS'
+      },
+      'TryCatchError_ID',
+      etl_schemas.control_manager_schema
+    )
 
 
 def fetch_current_status():
@@ -30,7 +33,7 @@ def fetch_current_status():
       }
     )
 
-    status_data = result_set_as_dicts(current_cycle_status_schema, result[0])
+    status_data = result_set_as_dicts(etl_schemas.current_cycle_status_schema, result[0])
     # check_etl_status(status_data)
 
     return status_data
@@ -52,7 +55,7 @@ def fetch_cycle_history(start_cycle_group=0, end_cycle_group=9):
         'VARCHAR_02': str(end_cycle_group)
       },
       'TryCatchError_ID',
-      cycle_history_schema
+      etl_schemas.cycle_history_schema
     )
 
 
@@ -72,7 +75,7 @@ def fetch_procedure_history(db_name, procedure_name):
         'VARCHAR_02': procedure_name
       },
       'TryCatchError_ID',
-      procedure_history_schema
+      etl_schemas.procedure_history_schema
     )
 
 
@@ -86,7 +89,7 @@ def fetch_servers():
         'message': 'GET SERVER DB LIST'
       },
       'TryCatchError_ID',
-      server_dbs_schema
+      etl_schemas.server_dbs_schema
     )
 
     tmp_servers_dict = {}
@@ -135,7 +138,7 @@ def fetch_server_db_procedures(server_name, db_name):
         'VARCHAR_02': db_name
       },
       'TryCatchError_ID',
-      server_db_procedures_schema
+      etl_schemas.server_db_procedures_schema
     )
 
 
@@ -153,7 +156,7 @@ def fetch_error(error_id):
       })
     )
 
-    return result_as_dict(try_catch_error_schema, result[0][0])
+    return result_as_dict(etl_schemas.try_catch_error_schema, result[0][0])
 
 
 def fetch_run_check(run_check_name):
@@ -189,7 +192,7 @@ def fetch_powerbi_report_history(start_date='', end_date=''):
         'VARCHAR_02': end_date
       },
       'TryCatchError_ID',
-      powerbi_report_history_schema
+      etl_schemas.powerbi_report_history_schema
     )
 
 
@@ -206,7 +209,7 @@ def fetch_powerbi_report_statistics(report_name='ALL'):
         'VARCHAR_01': report_name
       },
       'TryCatchError_ID',
-      powerbi_report_statistics_schema
+      etl_schemas.powerbi_report_statistics_schema
     )
 
 
@@ -231,7 +234,7 @@ def fetch_powerbi_report_runs(report_name, from_num='', to_num=''):
         'VARCHAR_03': str(to_num)
       },
       'TryCatchError_ID',
-      powerbi_report_runs_schema
+      etl_schemas.powerbi_report_runs_schema
     )
 
 
@@ -263,6 +266,29 @@ def check_etl_status(status_data):
     status_data[-1]['data_mart_status'] = new_etl_status
 
     return new_etl_status
+
+
+def fetch_procedure_search_chart_data(procedure_name, start_date, months=6):
+    """
+    Returns the data for a procedure's the search chart.
+    :param procedure_name
+    :type procedure_name: str
+    :param start_date
+    :type start_date: str
+    :type months: int
+    :param months
+    """
+    return execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+      {
+        'message': 'LOAD_SEARCH_CHART',
+        'VARCHAR_01': procedure_name,
+        'VARCHAR_02': start_date,
+        'VARCHAR_03': str(months)
+      },
+      'TryCatchError_ID',
+      etl_schemas.procedure_search_chart_data_schema
+    )
 
 
 def fill_in_admin_console_sp_in_args(in_args):
