@@ -4,7 +4,7 @@ import debounce from 'lodash/debounce';
 import { Dropdown, Form } from 'semantic-ui-react';
 import { FILTERS_EXEC_DELAY } from 'constants/index';
 
-class Filters extends Component {
+class DropdownFilters extends Component {
   static propTypes = {
     servers: PropTypes.array.isRequired,
     serverName: PropTypes.string.isRequired,
@@ -155,4 +155,4 @@ class Filters extends Component {
   }
 }
 
-export default Filters;
+export default DropdownFilters;

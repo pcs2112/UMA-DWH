@@ -1,3 +1,3 @@
-import Filters from './Filters';
+import DropdownFilters from './DropdownFilters';
 
-export default Filters;
+export default DropdownFilters;
