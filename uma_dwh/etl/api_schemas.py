@@ -34,7 +34,7 @@ powerbi_report_runs_args = {
   'to_num': fields.Str(missing='')
 }
 
-procedure_load_search_chart_data_args = {
+procedure_runtime_chart_data_args = {
   'procedure_name': fields.Str(required=True),
   'start_date': fields.Str(missing=''),
   'months': fields.Int(missing=6)

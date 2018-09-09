@@ -125,13 +125,13 @@ def get_run_check(args):
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
 
 
-@blueprint.route('/api/etl/procedure_load_search_chart_data', methods=('GET',))
+@blueprint.route('/api/etl/procedure_runtime_chart_data', methods=('GET',))
 @nocache
 @jwt_required
-@use_args(procedure_load_search_chart_data_args, locations=('query',))
-def get_procedure_load_search_chart_data(args):
+@use_args(procedure_runtime_chart_data_args, locations=('query',))
+def get_procedure_runtime_chart_data(args):
     try:
-        return jsonify(etl.fetch_procedure_load_search_chart_data(
+        return jsonify(etl.fetch_procedure_runtime_chart_data(
           args['procedure_name'], args['start_date'], args['months']
         ))
     except SPException as e:

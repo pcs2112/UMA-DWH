@@ -268,9 +268,9 @@ def check_etl_status(status_data):
     return new_etl_status
 
 
-def fetch_procedure_load_search_chart_data(procedure_name, start_date, months=6):
+def fetch_procedure_runtime_chart_data(procedure_name, start_date, months=6):
     """
-    Returns the data for a procedure's load search chart.
+    Returns the data for a procedure's runtime chart.
     :param procedure_name
     :type procedure_name: str
     :param start_date
@@ -287,7 +287,7 @@ def fetch_procedure_load_search_chart_data(procedure_name, start_date, months=6)
         'VARCHAR_03': str(months)
       },
       'TryCatchError_ID',
-      etl_schemas.procedure_load_search_chart_data_schema
+      etl_schemas.procedure_runtime_chart_data_schema
     )
 
 
