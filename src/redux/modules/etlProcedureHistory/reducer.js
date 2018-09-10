@@ -7,8 +7,8 @@ const initialState = Object.assign({}, itemListInitialState);
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
 
-// Set the procedure data
-const setProcedure = (state, action) => {
+// Set the filters
+const setFilters = (state, action) => {
   const newState = { ...state };
   newState.serverName = action.serverName;
   newState.dbName = action.dbName;
@@ -30,12 +30,12 @@ export default (state = initialState, action) => {
     case actionTypes.FETCH_FAIL:
     case actionTypes.FETCH_SUCCESS: {
       const newState = itemListReducer(state, action);
-      return setProcedure(newState, action);
+      return setFilters(newState, action);
     }
     case actionTypes.RESET:
       return itemListReducer(state, action);
-    case actionTypes.SET_INITIAL_PROCEDURE:
-      return setProcedure(state, action);
+    case actionTypes.SET_INITIAL_FILTERS:
+      return setFilters(state, action);
     default:
       return state;
   }
