@@ -95,6 +95,9 @@ class DateChartFilter extends Component {
               afterBody: this.renderTooltipFooter
             },
           },
+          onHover: (event, chartElement) => {
+            event.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+          },
           scales: {
             xAxes: [{
               type: 'time',
