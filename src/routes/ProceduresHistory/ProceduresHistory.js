@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Segment, Grid } from 'semantic-ui-react';
+import { Segment, Grid, Button } from 'semantic-ui-react';
 import moment from 'moment';
 import config from 'config';
 import globalCss from 'css/global';
@@ -26,7 +26,8 @@ class ProceduresHistory extends Component {
     isProcedureRuntimeChartFetching: PropTypes.bool.isRequired,
     procedureRuntimeChartDataLoaded: PropTypes.bool.isRequired,
     procedureRuntimeChartData: PropTypes.array.isRequired,
-    fetchAllData: PropTypes.func.isRequired
+    fetchAllData: PropTypes.func.isRequired,
+    resetProcedureRuntimeChart: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -39,7 +40,16 @@ class ProceduresHistory extends Component {
 
   componentWillUnmount() {
     this.props.resetProcedureHistory();
+    this.props.resetProcedureRuntimeChart();
   }
+
+  resetChart = () => {
+    const { fetchAllData } = this.props;
+    const {
+      serverName, dbName, procedureName
+    } = this.props.filters;
+    fetchAllData(serverName, dbName, procedureName, moment().format(DEFAULT_DATE_FORMAT));
+  };
 
   render() {
     const {
@@ -54,12 +64,16 @@ class ProceduresHistory extends Component {
       procedureRuntimeChartData,
       fetchAllData
     } = this.props;
+
+    const current = moment(filters.date, DEFAULT_DATE_FORMAT);
+    const today = moment();
+
     return (
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
             {config.app.title} - ETL Procedures History{' '}
-            ({moment(filters.date, DEFAULT_DATE_FORMAT).format('MMM D, YYYY')})
+            ({current.format('MMM D, YYYY')})
           </h1>
         </Segment>
         <Segment>
@@ -79,6 +93,11 @@ class ProceduresHistory extends Component {
                 onChange={fetchAllData}
                 {...filters}
               />
+              <div className="right-aligned">
+                <Button primary onClick={this.resetChart} disabled={today.isSame(current, 'day')}>
+                  Reset Chart
+                </Button>
+              </div>
             </Grid.Column>
           </Grid>
         </Segment>
@@ -115,6 +134,9 @@ export default withMainLayout(connect(
       ]),
     resetProcedureHistory: () => {
       dispatch(etlProcedureHistory.actions.reset());
+    },
+    resetProcedureRuntimeChart: () => {
+      dispatch(procedureRuntimeChart.actions.reset());
     }
   })
 )(ProceduresHistory));

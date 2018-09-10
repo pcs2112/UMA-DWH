@@ -28,6 +28,13 @@ export const fetch = (procedureName, date) => ({
 });
 
 /**
+ * Resets the state.
+ */
+export const reset = () => ({
+  type: actionTypes.RESET
+});
+
+/**
  * Sets the initial filters.
  */
 export const setInitialFilters = (procedureName, date) => ({

@@ -30,7 +30,7 @@ class DateChartFilter extends Component {
   };
 
   getChartData = () => {
-    const { data } = this.props;
+    const { data, procedureName } = this.props;
     const labels = data.map(item => moment(item.date, DEFAULT_DATE_FORMAT).toDate());
     const chartData = data.map(item => item.avg_runtime_sec);
 
@@ -38,7 +38,7 @@ class DateChartFilter extends Component {
       labels,
       datasets: [
         {
-          label: 'Avg. Runtime in seconds',
+          label: `${procedureName} average runtime`,
           data: chartData,
           fill: false,
           backgroundColor: 'rgb(54, 162, 235)',
