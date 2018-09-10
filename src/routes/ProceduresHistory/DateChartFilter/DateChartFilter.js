@@ -38,7 +38,7 @@ class DateChartFilter extends Component {
       labels,
       datasets: [
         {
-          label: `${procedureName} average runtime`,
+          label: `${procedureName} runtimes`,
           data: chartData,
           fill: false,
           backgroundColor: 'rgb(54, 162, 235)',
