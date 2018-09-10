@@ -43,10 +43,10 @@ class DateChartFilter extends Component {
           fill: false,
           backgroundColor: 'rgb(54, 162, 235)',
           borderColor: 'rgb(54, 162, 235)',
-          borderWidth: 1,
-          pointBorderWidth: 1,
-          pointRadius: 1,
-          pointHoverRadius: 1
+          borderWidth: 1.5,
+          pointBorderWidth: 1.5,
+          pointRadius: 1.5,
+          pointHoverRadius: 1.5
         }
       ]
     };
@@ -70,7 +70,7 @@ class DateChartFilter extends Component {
     const { isFetching, dataLoaded } = this.props;
     if (isFetching && !dataLoaded) {
       return (
-        <div style={{ height: '150px', position: 'relative' }}>
+        <div style={{ height: '200px', position: 'relative' }}>
           <Dimmer active inverted>
             <Loader size="large" />
           </Dimmer>
@@ -81,7 +81,7 @@ class DateChartFilter extends Component {
     return (
       <LineChart
         data={this.getChartData()}
-        height={150}
+        height={200}
         getElementAtEvent={this.onClick}
         options={{
           maintainAspectRatio: false,
@@ -102,19 +102,14 @@ class DateChartFilter extends Component {
             xAxes: [{
               type: 'time',
               time: {
-                format: 'MM/DD/YYYY HH:mm',
+                parser: 'MM/DD/YYYY HH:mm',
                 tooltipFormat: 'll',
                 unit: 'day'
               }
             }],
             yAxes: [{
               display: true,
-              type: 'linear',
-              ticks: {
-                max: 10,
-                min: 0,
-                stepSize: 5
-              }
+              type: 'linear'
             }]
           }
         }}

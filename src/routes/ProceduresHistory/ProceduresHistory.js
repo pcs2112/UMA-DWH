@@ -20,7 +20,6 @@ class ProceduresHistory extends Component {
     procedureHistoryDataLoaded: PropTypes.bool.isRequired,
     procedureHistoryData: PropTypes.array.isRequired,
     procedureHistoryFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
-    fetchProcedureHistory: PropTypes.func.isRequired,
     resetProcedureHistory: PropTypes.func.isRequired,
     servers: PropTypes.array.isRequired,
     filters: PropTypes.object.isRequired,
@@ -48,7 +47,6 @@ class ProceduresHistory extends Component {
       procedureHistoryDataLoaded,
       procedureHistoryData,
       procedureHistoryFetchingError,
-      fetchProcedureHistory,
       servers,
       filters,
       isProcedureRuntimeChartFetching,
@@ -66,19 +64,19 @@ class ProceduresHistory extends Component {
         </Segment>
         <Segment>
           <Grid>
-            <Grid.Column width={6}>
-              <DropdownFilters
-                servers={servers}
-                onChange={fetchProcedureHistory}
-                {...filters}
-              />
-            </Grid.Column>
             <Grid.Column width={10}>
               <DateChartFilter
                 isFetching={isProcedureRuntimeChartFetching}
                 dataLoaded={procedureRuntimeChartDataLoaded}
                 data={procedureRuntimeChartData}
                 onClick={fetchAllData}
+                {...filters}
+              />
+            </Grid.Column>
+            <Grid.Column width={6}>
+              <DropdownFilters
+                servers={servers}
+                onChange={fetchAllData}
                 {...filters}
               />
             </Grid.Column>
@@ -110,15 +108,13 @@ export default withMainLayout(connect(
     procedureRuntimeChartData: procedureRuntimeChart.selectors.getProcedureRuntimeChartData(state)
   }),
   dispatch => ({
-    fetchProcedureHistory: (serverName, dbName, procedureName, date) =>
-      dispatch(etlProcedureHistory.actions.fetchHistory(serverName, dbName, procedureName, date)),
-    resetProcedureHistory: () => {
-      dispatch(etlProcedureHistory.actions.reset());
-    },
     fetchAllData: (serverName, dbName, procedureName, date) =>
       Promise.all([
         dispatch(etlProcedureHistory.actions.fetchHistory(serverName, dbName, procedureName, date)),
         dispatch(procedureRuntimeChart.actions.fetch(procedureName, date))
-      ])
+      ]),
+    resetProcedureHistory: () => {
+      dispatch(etlProcedureHistory.actions.reset());
+    }
   })
 )(ProceduresHistory));
