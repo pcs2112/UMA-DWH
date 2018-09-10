@@ -14,7 +14,7 @@ const emptyFilters = {
   serverName: '',
   dbName: '',
   procedureName: '',
-  date: moment.format(DEFAULT_DATE_FORMAT)
+  date: moment().format(DEFAULT_DATE_FORMAT)
 };
 
 /**
@@ -56,7 +56,7 @@ export const getFilters = createSelector(
         serverName: '',
         dbName: '',
         procedureName: '',
-        date: moment.format(DEFAULT_DATE_FORMAT)
+        date: moment().format(DEFAULT_DATE_FORMAT)
       };
     }
 
@@ -65,7 +65,7 @@ export const getFilters = createSelector(
         serverName: lastProcedureSelected.source_server_name,
         dbName: lastProcedureSelected.source_db_name,
         procedureName: lastProcedureSelected.calling_proc,
-        date: moment.format(DEFAULT_DATE_FORMAT)
+        date: moment().format(DEFAULT_DATE_FORMAT)
       };
     }
 
@@ -94,7 +94,7 @@ export const getFilters = createSelector(
 
     // Set the default date
     if (date === '') {
-      date = moment.format(DEFAULT_DATE_FORMAT);
+      date = moment().format(DEFAULT_DATE_FORMAT);
     }
 
     return {
