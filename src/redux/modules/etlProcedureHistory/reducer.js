@@ -13,6 +13,7 @@ const setProcedure = (state, action) => {
   newState.serverName = action.serverName;
   newState.dbName = action.dbName;
   newState.procedureName = action.procedureName;
+  newState.date = action.date;
   return newState;
 };
 

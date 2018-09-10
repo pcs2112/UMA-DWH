@@ -9,7 +9,7 @@ export const actionTypes = {
 /**
  * Action to fetch the ETL current status.
  */
-export const fetchHistory = (serverName, dbName, procedureName) => ({
+export const fetchHistory = (serverName, dbName, procedureName, date) => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,
@@ -18,13 +18,15 @@ export const fetchHistory = (serverName, dbName, procedureName) => ({
   makeRequest: client => client.get('/api/etl/procedure_history', {
     params: {
       db_name: dbName,
-      procedure_name: procedureName
+      procedure_name: procedureName,
+      date
     }
   }),
   payload: {
     serverName,
     dbName,
-    procedureName
+    procedureName,
+    date
   }
 });
 
@@ -38,9 +40,10 @@ export const reset = () => ({
 /**
  * Sets the initial procedure.
  */
-export const setInitialProcedure = (serverName, dbName, procedureName) => ({
+export const setInitialProcedure = (serverName, dbName, procedureName, date) => ({
   type: actionTypes.SET_INITIAL_PROCEDURE,
   serverName,
   dbName,
-  procedureName
+  procedureName,
+  date
 });

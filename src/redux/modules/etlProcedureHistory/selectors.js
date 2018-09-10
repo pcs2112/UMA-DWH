@@ -1,5 +1,7 @@
 import { createSelector } from 'reselect';
+import moment from 'moment';
 import { objectHasOwnProperty, isEmpty } from 'javascript-utils/lib/utils';
+import { DEFAULT_DATE_FORMAT } from 'constants/index';
 import {
   createDataSelector,
   createFetchingErrorSelector,
@@ -11,7 +13,8 @@ import etlServers from 'redux/modules/etlServers';
 const emptyFilters = {
   serverName: '',
   dbName: '',
-  procedureName: ''
+  procedureName: '',
+  date: moment.format(DEFAULT_DATE_FORMAT)
 };
 
 /**
@@ -27,7 +30,8 @@ const _getData = createDataSelector('etlProcedureHistory');
 const _getFilters = state => (objectHasOwnProperty(state.etlProcedureHistory, 'serverName') ? {
   serverName: state.etlProcedureHistory.serverName,
   dbName: state.etlProcedureHistory.dbName,
-  procedureName: state.etlProcedureHistory.procedureName
+  procedureName: state.etlProcedureHistory.procedureName,
+  date: state.etlProcedureHistory.date
 } : emptyFilters);
 
 /**
@@ -51,7 +55,8 @@ export const getFilters = createSelector(
       return {
         serverName: '',
         dbName: '',
-        procedureName: ''
+        procedureName: '',
+        date: moment.format(DEFAULT_DATE_FORMAT)
       };
     }
 
@@ -59,11 +64,14 @@ export const getFilters = createSelector(
       return {
         serverName: lastProcedureSelected.source_server_name,
         dbName: lastProcedureSelected.source_db_name,
-        procedureName: lastProcedureSelected.calling_proc
+        procedureName: lastProcedureSelected.calling_proc,
+        date: moment.format(DEFAULT_DATE_FORMAT)
       };
     }
 
-    let { serverName, dbName, procedureName } = filtersFromState;
+    let {
+      serverName, dbName, procedureName, date
+    } = filtersFromState;
 
     // Set the default serverName
     if (serverName === '') {
@@ -84,10 +92,16 @@ export const getFilters = createSelector(
         .procedures[0].etl_stored_procedure;
     }
 
+    // Set the default date
+    if (date === '') {
+      date = moment.format(DEFAULT_DATE_FORMAT);
+    }
+
     return {
       serverName,
       dbName,
-      procedureName
+      procedureName,
+      date
     };
   }
 );
