@@ -269,7 +269,7 @@ def check_etl_status(status_data):
     return new_etl_status
 
 
-def fetch_procedure_runtime_chart_data(procedure_name, date, months=6):
+def fetch_procedure_runtime_chart_data(procedure_name, date, months=3):
     """
     Returns the data for a procedure's runtime chart.
     :param procedure_name
