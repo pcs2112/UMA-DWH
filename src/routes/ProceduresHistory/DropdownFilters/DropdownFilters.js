@@ -10,6 +10,7 @@ class DropdownFilters extends Component {
     serverName: PropTypes.string.isRequired,
     dbName: PropTypes.string.isRequired,
     procedureName: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired
   };
 
@@ -94,9 +95,11 @@ class DropdownFilters extends Component {
   };
 
   handleOnChange = () => {
-    const { serverName, dbName, procedureName } = this.state;
-    const { onChange } = this.props;
-    onChange(serverName, dbName, procedureName);
+    const {
+      serverName, dbName, procedureName
+    } = this.state;
+    const { date, onChange } = this.props;
+    onChange(serverName, dbName, procedureName, date);
   };
 
   render() {
@@ -104,7 +107,7 @@ class DropdownFilters extends Component {
     return (
       <Form size="small">
         <Form.Group inline>
-          <Form.Field width={3} className="right-aligned">
+          <Form.Field width={3}>
             <label>Server Name</label>
           </Form.Field>
           <Form.Field width={13}>
@@ -119,7 +122,7 @@ class DropdownFilters extends Component {
           </Form.Field>
         </Form.Group>
         <Form.Group inline>
-          <Form.Field width={3} className="right-aligned">
+          <Form.Field width={3}>
             <label>DB Name</label>
           </Form.Field>
           <Form.Field width={13}>
@@ -135,7 +138,7 @@ class DropdownFilters extends Component {
           </Form.Field>
         </Form.Group>
         <Form.Group inline>
-          <Form.Field width={3} className="right-aligned">
+          <Form.Field width={3}>
             <label>Proc. Name</label>
           </Form.Field>
           <Form.Field width={13}>

@@ -194,4 +194,4 @@ class ProcedureHistoryTable extends Component {
   }
 }
 
-export default withResponsiveTable(ProcedureHistoryTable, 530, 220);
+export default withResponsiveTable(ProcedureHistoryTable, 340, 310);
