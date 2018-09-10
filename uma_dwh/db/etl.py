@@ -328,11 +328,15 @@ def execute_admin_console_sp(sp_name, in_args, out_arg, schema=()):
     :rtype: list
     """
     result = execute_sp(sp_name, fill_in_admin_console_sp_in_args(in_args), out_arg)
+    result_count = len(result)
 
-    status_code = result[len(result) - 1][0][0]
+    status_code = result[result_count - 1][0][0]
 
     if status_code > 1:
         raise SPException(f'Stored Procedure call to SP "{sp_name}" failed.', status_code)
+
+    if result_count == 1:
+        return []
 
     if len(schema) > 1:
         data = result_set_as_dicts(schema, result[0])
