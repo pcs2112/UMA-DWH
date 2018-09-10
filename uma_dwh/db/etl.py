@@ -59,7 +59,7 @@ def fetch_cycle_history(start_cycle_group=0, end_cycle_group=9):
     )
 
 
-def fetch_procedure_history(db_name, procedure_name):
+def fetch_procedure_history(db_name, procedure_name, date):
     """
     Returns the ETL procedure history.
     :param db_name: DB name
@@ -72,7 +72,8 @@ def fetch_procedure_history(db_name, procedure_name):
       {
         'message': 'GET_ETL_PROCEDURE_HISTORY',
         'VARCHAR_01': db_name,
-        'VARCHAR_02': procedure_name
+        'VARCHAR_02': procedure_name,
+        'VARCHAR_03': date
       },
       'TryCatchError_ID',
       etl_schemas.procedure_history_schema
@@ -268,13 +269,13 @@ def check_etl_status(status_data):
     return new_etl_status
 
 
-def fetch_procedure_runtime_chart_data(procedure_name, start_date, months=6):
+def fetch_procedure_runtime_chart_data(procedure_name, date, months=6):
     """
     Returns the data for a procedure's runtime chart.
     :param procedure_name
     :type procedure_name: str
-    :param start_date
-    :type start_date: str
+    :param date
+    :type date: str
     :type months: int
     :param months
     """
@@ -283,7 +284,7 @@ def fetch_procedure_runtime_chart_data(procedure_name, start_date, months=6):
       {
         'message': 'LOAD_SEARCH_CHART',
         'VARCHAR_01': procedure_name,
-        'VARCHAR_02': start_date,
+        'VARCHAR_02': date,
         'VARCHAR_03': str(months)
       },
       'TryCatchError_ID',

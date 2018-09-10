@@ -75,7 +75,7 @@ def get_powerbi_report_runs(args):
 @use_args(procedure_history_args, locations=('query',))
 def get_procedure_history(args):
     try:
-        return jsonify(etl.fetch_procedure_history(args['db_name'], args['procedure_name']))
+        return jsonify(etl.fetch_procedure_history(args['db_name'], args['procedure_name'], args['date']))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
 
@@ -132,7 +132,7 @@ def get_run_check(args):
 def get_procedure_runtime_chart_data(args):
     try:
         return jsonify(etl.fetch_procedure_runtime_chart_data(
-          args['procedure_name'], args['start_date'], args['months']
+          args['procedure_name'], args['date'], args['months']
         ))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))

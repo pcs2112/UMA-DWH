@@ -11,7 +11,8 @@ run_check_args = {
 
 procedure_history_args = {
   'db_name': fields.Str(required=True),
-  'procedure_name': fields.Str(required=True)
+  'procedure_name': fields.Str(required=True),
+  'date': fields.Str(required=True)
 }
 
 server_db_procedures_args = {
@@ -36,6 +37,6 @@ powerbi_report_runs_args = {
 
 procedure_runtime_chart_data_args = {
   'procedure_name': fields.Str(required=True),
-  'start_date': fields.Str(missing=''),
+  'date': fields.Str(missing=''),
   'months': fields.Int(missing=6)
 }
