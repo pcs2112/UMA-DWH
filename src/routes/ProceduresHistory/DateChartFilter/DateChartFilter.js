@@ -52,6 +52,20 @@ class DateChartFilter extends Component {
     };
   };
 
+  renderTooltip = () => '';
+
+  renderTooltipFooter = (tooltipItem) => {
+    const { data } = this.props;
+    const item = data[tooltipItem[0].index];
+    return [
+      `Avg. runtime: ${item.avg_runtime_sec}s`,
+      `Day count: ${item.day_count}`,
+      `Total Runtime: ${item.total_runtime}s`,
+      `Total ins/upts: ${item.total_inserts + item.total_updates}`,
+      `Avg. row / sec: ${item.avg_row_p_sec}`
+    ];
+  };
+
   render() {
     const { isFetching, dataLoaded } = this.props;
     if (isFetching && !dataLoaded) {
@@ -74,6 +88,12 @@ class DateChartFilter extends Component {
           title: {
             display: false,
             text: ''
+          },
+          tooltips: {
+            callbacks: {
+              label: this.renderTooltip,
+              afterBody: this.renderTooltipFooter
+            },
           },
           scales: {
             xAxes: [{
