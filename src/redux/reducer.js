@@ -11,6 +11,7 @@ import etlServers from './modules/etlServers';
 import powerbiReportHistory from './modules/powerbiReportHistory';
 import powerbiReportRuns from './modules/powerbiReportRuns';
 import powerbiReportStatistics from './modules/powerbiReportStatistics';
+import procedureRuntimeChart from './modules/procedureRuntimeChart';
 import user from './modules/user';
 import users from './modules/users';
 
@@ -27,6 +28,7 @@ export default combineReducers({
   powerbiReportHistory: powerbiReportHistory.reducer,
   powerbiReportRuns: powerbiReportRuns.reducer,
   powerbiReportStatistics: powerbiReportStatistics.reducer,
+  procedureRuntimeChart: procedureRuntimeChart.reducer,
   user: user.reducer,
   users: users.reducer
 });
