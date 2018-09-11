@@ -19,47 +19,55 @@ class DropdownFilters extends Component {
     this.state = {
       serverName: props.serverName.toUpperCase(),
       dbName: props.dbName.toUpperCase(),
-      procedureName: props.procedureName
+      procedureName: props.procedureName.toUpperCase()
     };
 
     this.handleOnChange = debounce(this.handleOnChange, FILTERS_EXEC_DELAY);
   }
 
-  getServerOptions = () => this.props.servers.map(server => ({
-    key: server.name.toUpperCase(),
-    value: server.name.toUpperCase(),
-    text: server.name
-  }));
+  getServerOptions = () => this.props.servers.map((server) => {
+    const serverName = server.name.toUpperCase();
+    return {
+      key: serverName,
+      value: serverName,
+      text: serverName
+    };
+  });
 
   getDbOptions = () => {
     const { servers } = this.props;
     const { serverName } = this.state;
-    return servers.find(server => server.name.toUpperCase() === serverName.toUpperCase())
-      .dbs.map(db => ({
-        key: db.name.toUpperCase(),
-        value: db.name.toUpperCase(),
-        text: db.name
-      }));
+    return servers.find(server => server.name.toUpperCase() === serverName)
+      .dbs.map((db) => {
+        const dbName = db.name.toUpperCase();
+        return {
+          key: dbName,
+          value: dbName,
+          text: dbName
+        };
+      });
   };
 
   getProcedureOptions = () => {
     const { serverName, dbName } = this.state;
     const { servers } = this.props;
-    return servers.find(server => server.name.toUpperCase() === serverName.toUpperCase())
-      .dbs.find(db => db.name.toUpperCase() === dbName.toUpperCase())
-      .procedures.map(procedure => ({
-        key: procedure.etl_stored_procedure.toUpperCase(),
-        value: procedure.etl_stored_procedure.toUpperCase(),
-        text: procedure.etl_stored_procedure
-      }));
+    return servers.find(server => server.name.toUpperCase() === serverName)
+      .dbs.find(db => db.name.toUpperCase() === dbName)
+      .procedures.map((procedure) => {
+        const procedureName = procedure.etl_stored_procedure.toUpperCase();
+        return {
+          key: procedureName,
+          value: procedureName,
+          text: procedureName
+        };
+      });
   };
 
   handleServerNameOnChange = (e, { value }) => {
-    const normalizedValue = value.toUpperCase();
-    if (normalizedValue !== this.state.serverName) {
+    if (value !== this.state.serverName) {
       const { servers } = this.props;
-      const server = servers.find(item => item.name.toUpperCase() === normalizedValue);
-      const serverName = normalizedValue;
+      const server = servers.find(item => item.name.toUpperCase() === value);
+      const serverName = value;
       const dbName = server.dbs[0].name.toUpperCase();
       const procedureName = server.dbs[0].procedures[0].etl_stored_procedure.toUpperCase();
       this.setState({
@@ -71,13 +79,12 @@ class DropdownFilters extends Component {
   };
 
   handleDbNameOnChange = (e, { value }) => {
-    const normalizedValue = value.toUpperCase();
-    if (normalizedValue !== this.state.dbName) {
+    if (value !== this.state.dbName) {
       const { serverName } = this.state;
       const { servers } = this.props;
       const server = servers.find(item => item.name.toUpperCase() === serverName);
-      const db = server.dbs.find(item => item.name.toUpperCase() === normalizedValue);
-      const dbName = normalizedValue;
+      const db = server.dbs.find(item => item.name.toUpperCase() === value);
+      const dbName = value;
       const procedureName = db.procedures[0].etl_stored_procedure.toUpperCase();
       this.setState({
         dbName,
@@ -89,7 +96,7 @@ class DropdownFilters extends Component {
   handleProcedureNameOnChange = (e, { value }) => {
     if (value !== this.state.procedureName) {
       this.setState({
-        procedureName: value.toUpperCase()
+        procedureName: value
       }, this.handleOnChange);
     }
   };

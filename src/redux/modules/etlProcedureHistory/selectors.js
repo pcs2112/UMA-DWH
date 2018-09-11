@@ -64,9 +64,9 @@ export const getFilters = createSelector(
 
     if (lastProcedureSelected && !isEmpty(lastProcedureSelected.source_server_name)) {
       return {
-        serverName: lastProcedureSelected.source_server_name,
-        dbName: lastProcedureSelected.source_db_name,
-        procedureName: lastProcedureSelected.calling_proc,
+        serverName: lastProcedureSelected.source_server_name.toUpperCase(),
+        dbName: lastProcedureSelected.source_db_name.toUpperCase(),
+        procedureName: lastProcedureSelected.calling_proc.toUpperCase(),
         date: date === '' ? moment().format(DEFAULT_DATE_FORMAT) : date
       };
     }
@@ -81,18 +81,24 @@ export const getFilters = createSelector(
       dbName = '';
     }
 
+    const normalizedServerName = serverName.toUpperCase();
+
     // Set the default dbName
     if (dbName === '') {
-      dbName = servers.find(server => server.name.toUpperCase() === serverName.toUpperCase()).dbs[0].name;
+      dbName = servers.find(server => server.name.toUpperCase() === normalizedServerName).dbs[0].name;
       procedureName = '';
     }
 
+    const normalizedDbName = dbName.toUpperCase();
+
     // Set the default procedureName
     if (procedureName === '') {
-      procedureName = servers.find(server => server.name.toUpperCase() === serverName.toUpperCase())
-        .dbs.find(db => db.name.toUpperCase() === dbName.toUpperCase())
+      procedureName = servers.find(server => server.name.toUpperCase() === normalizedServerName)
+        .dbs.find(db => db.name.toUpperCase() === normalizedDbName)
         .procedures[0].etl_stored_procedure;
     }
+
+    const normalizedProcedureName = procedureName.toUpperCase();
 
     // Set the default date
     if (date === '') {
@@ -100,9 +106,9 @@ export const getFilters = createSelector(
     }
 
     return {
-      serverName,
-      dbName,
-      procedureName,
+      serverName: normalizedServerName,
+      dbName: normalizedDbName,
+      procedureName: normalizedProcedureName,
       date
     };
   }
