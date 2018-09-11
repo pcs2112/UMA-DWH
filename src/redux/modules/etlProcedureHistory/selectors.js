@@ -60,17 +60,19 @@ export const getFilters = createSelector(
       };
     }
 
+    let { date } = filtersFromState;
+
     if (lastProcedureSelected && !isEmpty(lastProcedureSelected.source_server_name)) {
       return {
         serverName: lastProcedureSelected.source_server_name,
         dbName: lastProcedureSelected.source_db_name,
         procedureName: lastProcedureSelected.calling_proc,
-        date: moment().format(DEFAULT_DATE_FORMAT)
+        date: date === '' ? moment().format(DEFAULT_DATE_FORMAT) : date
       };
     }
 
     let {
-      serverName, dbName, procedureName, date
+      serverName, dbName, procedureName
     } = filtersFromState;
 
     // Set the default serverName
