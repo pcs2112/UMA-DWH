@@ -20,14 +20,13 @@ class ProceduresHistory extends Component {
     procedureHistoryDataLoaded: PropTypes.bool.isRequired,
     procedureHistoryData: PropTypes.array.isRequired,
     procedureHistoryFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
-    resetProcedureHistory: PropTypes.func.isRequired,
     servers: PropTypes.array.isRequired,
     filters: PropTypes.object.isRequired,
     isProcedureRuntimeChartFetching: PropTypes.bool.isRequired,
     procedureRuntimeChartDataLoaded: PropTypes.bool.isRequired,
     procedureRuntimeChartData: PropTypes.array.isRequired,
     fetchAllData: PropTypes.func.isRequired,
-    resetProcedureRuntimeChart: PropTypes.func.isRequired
+    resetAllData: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -39,8 +38,7 @@ class ProceduresHistory extends Component {
   }
 
   componentWillUnmount() {
-    this.props.resetProcedureHistory();
-    this.props.resetProcedureRuntimeChart();
+    this.props.resetAllData();
   }
 
   resetChart = () => {
@@ -132,10 +130,8 @@ export default withMainLayout(connect(
         dispatch(etlProcedureHistory.actions.fetchHistory(serverName, dbName, procedureName, date)),
         dispatch(procedureRuntimeChart.actions.fetch(procedureName, date))
       ]),
-    resetProcedureHistory: () => {
+    resetAllData: () => {
       dispatch(etlProcedureHistory.actions.reset());
-    },
-    resetProcedureRuntimeChart: () => {
       dispatch(procedureRuntimeChart.actions.reset());
     }
   })

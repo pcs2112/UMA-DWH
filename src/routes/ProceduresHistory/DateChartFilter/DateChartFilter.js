@@ -25,7 +25,9 @@ class DateChartFilter extends Component {
       isFetching, data, serverName, dbName, procedureName, onClick
     } = this.props;
     if (!isFetching && elems.length > 0) {
-      onClick(serverName, dbName, procedureName, data[elems[0]._index].date);
+      setTimeout(() => {
+        onClick(serverName, dbName, procedureName, data[elems[0]._index].date);
+      }, 250);
     }
   };
 
