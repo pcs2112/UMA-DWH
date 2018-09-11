@@ -76,9 +76,9 @@ const columns = [
     minWidth: 300
   },
   {
-    Header: 'INS',
+    Header: 'INSERT',
     accessor: 'insert_cnt',
-    width: 35,
+    width: 65,
     getProps: () => ({
       style: {
         textAlign: 'right'
@@ -86,9 +86,9 @@ const columns = [
     })
   },
   {
-    Header: 'UPT',
+    Header: 'UPDATE',
     accessor: 'update_cnt',
-    width: 35,
+    width: 65,
     getProps: () => ({
       style: {
         textAlign: 'right'
@@ -96,9 +96,9 @@ const columns = [
     })
   },
   {
-    Header: 'DEL',
+    Header: 'DELETE',
     accessor: 'delete_cnt',
-    width: 35,
+    width: 65,
     getProps: () => ({
       style: {
         textAlign: 'right'
@@ -108,7 +108,7 @@ const columns = [
   {
     Header: 'RUN_TIME',
     accessor: 'run_time_sec',
-    width: 70,
+    width: 65,
     getProps: () => ({
       style: {
         textAlign: 'right'

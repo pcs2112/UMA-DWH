@@ -62,9 +62,9 @@ const columns = [
     width: 150
   },
   {
-    Header: 'INS',
+    Header: 'INSERT',
     accessor: 'insert_count',
-    width: 35,
+    width: 65,
     getProps: () => ({
       style: {
         textAlign: 'right'
@@ -72,9 +72,9 @@ const columns = [
     })
   },
   {
-    Header: 'UPT',
+    Header: 'UPDATE',
     accessor: 'update_count',
-    width: 35,
+    width: 65,
     getProps: () => ({
       style: {
         textAlign: 'right'
@@ -82,9 +82,9 @@ const columns = [
     })
   },
   {
-    Header: 'DEL',
+    Header: 'DELETE',
     accessor: 'delete_count',
-    width: 35,
+    width: 65,
     getProps: () => ({
       style: {
         textAlign: 'right'
