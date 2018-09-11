@@ -4,6 +4,7 @@ import { Line as LineChart } from 'react-chartjs-2';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import moment from 'moment';
 import { DEFAULT_DATE_FORMAT } from 'constants/index';
+import globalCss from 'css/global';
 
 class DateChartFilter extends Component {
   static propTypes = {
@@ -32,23 +33,37 @@ class DateChartFilter extends Component {
   };
 
   getChartData = () => {
-    const { data, procedureName } = this.props;
+    const { data } = this.props;
     const labels = data.map(item => moment(item.date, DEFAULT_DATE_FORMAT).toDate());
-    const chartData = data.map(item => item.avg_runtime_sec);
+    const runTimesData = data.map(item => item.avg_runtime_sec);
+    const runCountsData = data.map(item => item.day_count);
 
     return {
       labels,
       datasets: [
         {
-          label: `${procedureName} runtimes`,
-          data: chartData,
+          label: 'Run time (secs)',
+          data: runTimesData,
           fill: false,
-          backgroundColor: 'rgb(54, 162, 235)',
-          borderColor: 'rgb(54, 162, 235)',
+          backgroundColor: globalCss.colors.darkTurquoise,
+          borderColor: globalCss.colors.darkTurquoise,
           borderWidth: 1.5,
           pointBorderWidth: 1.5,
           pointRadius: 1.5,
-          pointHoverRadius: 1.5
+          pointHoverRadius: 1.5,
+          yAxisID: 'y-axis-1',
+        },
+        {
+          label: 'Day count',
+          data: runCountsData,
+          fill: false,
+          backgroundColor: globalCss.colors.red,
+          borderColor: globalCss.colors.red,
+          borderWidth: 1.5,
+          pointBorderWidth: 1.5,
+          pointRadius: 1.5,
+          pointHoverRadius: 1.5,
+          yAxisID: 'y-axis-2',
         }
       ]
     };
@@ -69,7 +84,7 @@ class DateChartFilter extends Component {
   };
 
   render() {
-    const { isFetching, dataLoaded } = this.props;
+    const { isFetching, dataLoaded, procedureName } = this.props;
     if (isFetching && !dataLoaded) {
       return (
         <div style={{ height: '200px', position: 'relative' }}>
@@ -88,8 +103,8 @@ class DateChartFilter extends Component {
         options={{
           maintainAspectRatio: false,
           title: {
-            display: false,
-            text: ''
+            display: true,
+            text: procedureName
           },
           tooltips: {
             callbacks: {
@@ -109,10 +124,23 @@ class DateChartFilter extends Component {
                 unit: 'day'
               }
             }],
-            yAxes: [{
-              display: true,
-              type: 'linear'
-            }]
+            yAxes: [
+              {
+                display: true,
+                type: 'linear',
+                position: 'left',
+                id: 'y-axis-1'
+              },
+              {
+                type: 'linear',
+                display: true,
+                position: 'right',
+                gridLines: {
+                  drawOnChartArea: false
+                },
+                id: 'y-axis-2'
+              }
+            ]
           }
         }}
       />

@@ -31,7 +31,8 @@ export default {
     success,
     error,
     warning,
-    rowHighLight
+    rowHighLight,
+    red: error
   },
   pageHeaderSegment: {
     background: lighterSteelBlue
