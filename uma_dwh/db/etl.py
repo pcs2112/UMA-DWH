@@ -39,20 +39,23 @@ def fetch_current_status():
     return status_data
 
 
-def fetch_cycle_history(start_cycle_group=0, end_cycle_group=9):
+def fetch_cycle_history(start_cycle_group=0, end_cycle_group=9, date=''):
     """
     Returns the ETL history.
     :param start_cycle_group: Starting cycle group
     :param end_cycle_group: Ending cycle group
+    :param date: Cycle date
     :type start_cycle_group: int
     :type end_cycle_group: int
+    :type date: str
     """
     return execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
       {
         'message': 'LOAD_ETL_HISTORY',
         'VARCHAR_01': str(start_cycle_group),
-        'VARCHAR_02': str(end_cycle_group)
+        'VARCHAR_02': str(end_cycle_group),
+        'VARCHAR_03': date
       },
       'TryCatchError_ID',
       etl_schemas.cycle_history_schema
@@ -64,8 +67,10 @@ def fetch_procedure_history(db_name, procedure_name, date):
     Returns the ETL procedure history.
     :param db_name: DB name
     :param procedure_name: Stored procedure name
+    :param date: History date
     :type db_name: str
     :type procedure_name: str
+    :type date: str
     """
     return execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',

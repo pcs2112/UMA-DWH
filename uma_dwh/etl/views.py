@@ -31,7 +31,7 @@ def get_status():
 @use_args(pagination_args, locations=('query',))
 def get_history(args):
     try:
-        return jsonify(etl.fetch_cycle_history(args['start_cycle_group'], args['end_cycle_group']))
+        return jsonify(etl.fetch_cycle_history(args['start_cycle_group'], args['end_cycle_group'], args['date']))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
 

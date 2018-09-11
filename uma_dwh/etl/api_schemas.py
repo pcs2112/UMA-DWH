@@ -2,7 +2,8 @@ from webargs import fields
 
 pagination_args = {
   'start_cycle_group': fields.Int(missing=0),
-  'end_cycle_group': fields.Int(missing=9)
+  'end_cycle_group': fields.Int(missing=9),
+  'date': fields.Str(missing='')
 }
 
 run_check_args = {
