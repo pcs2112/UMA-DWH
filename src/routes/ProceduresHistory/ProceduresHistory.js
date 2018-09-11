@@ -76,7 +76,7 @@ class ProceduresHistory extends Component {
         </Segment>
         <Segment>
           <Grid>
-            <Grid.Column width={10}>
+            <Grid.Column width={11}>
               <DateChartFilter
                 isFetching={isProcedureRuntimeChartFetching}
                 dataLoaded={procedureRuntimeChartDataLoaded}
@@ -85,7 +85,7 @@ class ProceduresHistory extends Component {
                 {...filters}
               />
             </Grid.Column>
-            <Grid.Column width={6}>
+            <Grid.Column width={5}>
               <DropdownFilters
                 servers={servers}
                 onChange={fetchAllData}
