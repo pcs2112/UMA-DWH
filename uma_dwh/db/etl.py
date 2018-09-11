@@ -27,7 +27,7 @@ def fetch_current_status():
     Returns the current status for the ETL data marts.
     """
     result = execute_sp(
-      'MWH.GET_CURRENT_ETL_CYCLE_STATsUS',
+      'MWH.GET_CURRENT_ETL_CYCLE_STATUS',
       {
         'FirstDataMartInCycle': 'I3_NON-MCS'
       }
