@@ -64,7 +64,7 @@ def register_errorhandlers(app):
 def register_logger(app):
     """Register the application logging"""
     if app.config['IS_PRODUCTION'] and app.config['DEBUG'] is False:
-        log_handler = RotatingFileHandler(app.config['APP_DIR'] + '/logs/app.log')
+        log_handler = RotatingFileHandler(app.config['APP_DIR'] + '/logs/app.txt')
         log_handler.setLevel(logging.ERROR)
         app.logger.setLevel(logging.ERROR)
         app.logger.addHandler(log_handler)
