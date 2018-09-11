@@ -9,3 +9,9 @@
 .left-aligned {
   text-align: left !important;
 }
+
+.right-aligned-label {
+  text-align: right !important;
+  font-weight: bold;
+  width: 100%
+}

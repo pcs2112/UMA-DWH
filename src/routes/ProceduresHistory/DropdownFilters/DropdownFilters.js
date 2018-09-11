@@ -108,7 +108,9 @@ class DropdownFilters extends Component {
       <Form size="small">
         <Form.Group inline>
           <Form.Field width={3}>
-            <label>Server Name</label>
+            <div className="right-aligned-label">
+              <label>Server Name</label>
+            </div>
           </Form.Field>
           <Form.Field width={13}>
             <Dropdown
@@ -123,7 +125,9 @@ class DropdownFilters extends Component {
         </Form.Group>
         <Form.Group inline>
           <Form.Field width={3}>
-            <label>DB Name</label>
+            <div className="right-aligned-label">
+              <label>DB Name</label>
+            </div>
           </Form.Field>
           <Form.Field width={13}>
             <Dropdown
@@ -139,7 +143,9 @@ class DropdownFilters extends Component {
         </Form.Group>
         <Form.Group inline>
           <Form.Field width={3}>
-            <label>Proc. Name</label>
+            <div className="right-aligned-label">
+              <label>Proc. Name</label>
+            </div>
           </Form.Field>
           <Form.Field width={13}>
             <Dropdown
