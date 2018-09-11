@@ -1,6 +1,4 @@
 """Create an application instance."""
-import logging
-from logging.handlers import RotatingFileHandler
 from flask import make_response
 from uma_dwh.app import create_app
 from uma_dwh.settings import Settings
@@ -32,8 +30,4 @@ def catch_all(path):
 
 
 if __name__ == '__main__':
-    logHandler = RotatingFileHandler('app.log')
-    logHandler.setLevel(logging.WARNING)
-    app.logger.setLevel(logging.WARNING)
-    app.logger.addHandler(logHandler)
     app.run(host='0.0.0.0', debug=CONFIG.DEBUG)

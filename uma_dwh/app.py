@@ -1,3 +1,5 @@
+import logging
+from logging.handlers import RotatingFileHandler
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
 from uma_dwh import error_type_resolution, etl, users
@@ -24,6 +26,7 @@ def create_app(config_object):
     register_blueprints(app)
     register_jwt(app)
     register_errorhandlers(app)
+    register_logger(app)
 
     return app
 
@@ -56,6 +59,15 @@ def register_errorhandlers(app):
         return response
 
     app.errorhandler(InvalidUsage)(error_handler)
+
+
+def register_logger(app):
+    """Register the application logging"""
+    if app.config['IS_PRODUCTION'] and app.config['DEBUG'] is False:
+        log_handler = RotatingFileHandler(app.config['APP_DIR'] + '/logs/app.log')
+        log_handler.setLevel(logging.ERROR)
+        app.logger.setLevel(logging.ERROR)
+        app.logger.addHandler(log_handler)
 
 
 def register_jwt(app):
