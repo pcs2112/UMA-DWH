@@ -222,3 +222,8 @@ export const getCurrentCycleGroupStartDttm = createSelector(
   [_getData],
   data => (data.length > 0 ? data[0].start_dttm : 'N/A')
 );
+
+/**
+ * Returns the interval duration from the state.
+ */
+export const getIntervalDuration = createGetPropertySelector('etlCycleHistory', 'intervalDuration');

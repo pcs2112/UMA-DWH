@@ -25,6 +25,7 @@ class Home extends Component {
     cycleHistoryFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     currentCycleGroup: PropTypes.number.isRequired,
     currentCycleGroupStartDttm: PropTypes.string.isRequired,
+    cycleHistoryIntervalDuration: PropTypes.number.isRequired,
     pollFirstCycleGroup: PropTypes.func.isRequired,
     fetchPrevCycleHistory: PropTypes.func.isRequired,
     fetchNextCycleHistory: PropTypes.func.isRequired,
@@ -40,9 +41,8 @@ class Home extends Component {
     isCurrentStatusFetching: PropTypes.bool.isRequired,
     currentStatusData: PropTypes.array.isRequired,
     currentStatusDataTotals: PropTypes.object.isRequired,
-    currentStatusIntervalDuration: PropTypes.number.isRequired,
     fetchCurrentStatus: PropTypes.func.isRequired,
-    setCurrentStatusIntervalDuration: PropTypes.func.isRequired,
+    setCycleHistoryIntervalDuration: PropTypes.func.isRequired,
     setCycleHistoryFilters: PropTypes.func.isRequired,
     cycleHistoryFilters: PropTypes.object.isRequired,
     currentEtlStatus: PropTypes.string.isRequired
@@ -52,7 +52,7 @@ class Home extends Component {
     this.props.resetCycleHistory();
   }
 
-  handleCurrentStatusIntervalOnChange = (e, { value }) => this.props.setCurrentStatusIntervalDuration(value);
+  handleCycleHistoryIntervalOnChange = (e, { value }) => this.props.setCycleHistoryIntervalDuration(value);
 
   handleViewHistoryOnClick = () => {
     this.props.history.push('/procedures/history');
@@ -91,6 +91,7 @@ class Home extends Component {
       cycleHistoryDataLoaded,
       cycleHistoryData,
       cycleHistoryFetchingError,
+      cycleHistoryIntervalDuration,
       currentCycleGroup,
       currentCycleGroupStartDttm,
       pollFirstCycleGroup,
@@ -107,7 +108,6 @@ class Home extends Component {
       isCurrentStatusFetching,
       currentStatusData,
       currentStatusDataTotals,
-      currentStatusIntervalDuration,
       fetchCurrentStatus,
       cycleHistoryFilters
     } = this.props;
@@ -125,7 +125,7 @@ class Home extends Component {
             selectedData={cycleHistorySelectedData}
             selectData={selectCycleHistoryData}
             unselectData={unselectCycleHistoryData}
-            intervalDuration={currentStatusIntervalDuration}
+            intervalDuration={cycleHistoryIntervalDuration}
             onInterval={pollFirstCycleGroup}
             dataMartsSelectedCount={dataMartsSelectedCount}
             filters={cycleHistoryFilters}
@@ -139,7 +139,7 @@ class Home extends Component {
                 data={currentStatusData}
                 dataTotals={currentStatusDataTotals}
                 fetchingError={false}
-                intervalDuration={currentStatusIntervalDuration}
+                intervalDuration={cycleHistoryIntervalDuration}
                 onInterval={fetchCurrentStatus}
                 selectedData={cycleHistorySelectedData}
                 selectData={selectCycleHistoryData}
@@ -186,9 +186,9 @@ class Home extends Component {
                 name="false"
                 options={intervalDurations}
                 placeholder="Interval"
-                onChange={this.handleCurrentStatusIntervalOnChange}
+                onChange={this.handleCycleHistoryIntervalOnChange}
                 upward
-                defaultValue={currentStatusIntervalDuration}
+                defaultValue={cycleHistoryIntervalDuration}
               />
             </Grid.Column>
           </Grid>
@@ -227,10 +227,10 @@ export default withMainLayout(connect(
     cycleHistoryFetchingError: etlCycleHistory.selectors.getFetchingError(state),
     currentCycleGroup: etlCycleHistory.selectors.getCurrentCycleGroup(state),
     currentCycleGroupStartDttm: etlCycleHistory.selectors.getCurrentCycleGroupStartDttm(state),
+    cycleHistoryIntervalDuration: etlCycleHistory.selectors.getIntervalDuration(state),
     isCurrentStatusFetching: state.etlCurrentStatus.isFetching,
     currentStatusData: etlCurrentStatus.selectors.getCurrentStatus(state),
     currentStatusDataTotals: etlCurrentStatus.selectors.getCurrentStatusTotals(state),
-    currentStatusIntervalDuration: etlCurrentStatus.selectors.getIntervalDuration(state),
     cycleHistorySelectedData: etlCycleHistory.selectors.getSelected(state),
     cycleHistorySelectedCount: etlCycleHistory.selectors.getSelectedCount(state),
     proceduresSelectedCount: etlCycleHistory.selectors.getProceduresSelectedCount(state),
@@ -248,8 +248,8 @@ export default withMainLayout(connect(
     unselectCycleHistoryData: id => dispatch(etlCycleHistory.actions.unselect(id)),
     unselectAllCycleHistoryData: () => dispatch(etlCycleHistory.actions.unselectAll()),
     fetchCurrentStatus: () => dispatch(etlCurrentStatus.actions.fetchCurrentStatus()),
-    setCurrentStatusIntervalDuration: intervalDuration =>
-      dispatch(etlCurrentStatus.actions.setIntervalDuration(intervalDuration)),
+    setCycleHistoryIntervalDuration: intervalDuration =>
+      dispatch(etlCycleHistory.actions.setIntervalDuration(intervalDuration)),
     setCycleHistoryFilters: (key, value) => dispatch(etlCycleHistory.actions.setFilters(key, value))
   })
 )(Home));

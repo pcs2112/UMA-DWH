@@ -1,5 +1,5 @@
 import { sleep } from 'javascript-utils/lib/utils';
-import { MAX_FETCH_CYCLE_GROUPS } from 'constants/index';
+import { MAX_FETCH_CYCLE_GROUPS, CURRENT_STATUS_INTERAL_DURATION } from 'constants/index';
 import { shouldFetchCycle, getNewStartCycleGroup } from 'helpers/utils';
 import etlCurrentStatus from '../etlCurrentStatus';
 
@@ -12,7 +12,8 @@ export const actionTypes = {
   SELECT: 'etlCycleHistory/SELECT',
   UNSELECT: 'etlCycleHistory/UNSELECT',
   UNSELECT_ALL: 'etlCycleHistory/UNSELECT_ALL',
-  SET_FILTERS: 'etlCycleHistory/SET_FILTERS'
+  SET_FILTERS: 'etlCycleHistory/SET_FILTERS',
+  SET_INTERVAL_DURATION: 'etlCycleHistory/SET_INTERVAL_DURATION'
 };
 
 export const pollFirstCycleGroup = () => (dispatch, getState) => {
@@ -188,4 +189,13 @@ export const setFilters = (key, value) => ({
     key,
     value
   }
+});
+
+/**
+ * Sets the interval duration
+ * @param {Number} intervalDuration
+ */
+export const setIntervalDuration = (intervalDuration = CURRENT_STATUS_INTERAL_DURATION) => ({
+  type: actionTypes.SET_INTERVAL_DURATION,
+  intervalDuration
 });

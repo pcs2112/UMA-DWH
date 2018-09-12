@@ -7,7 +7,8 @@ const initialState = Object.assign({
   startCycleGroup: 0,
   selected: {},
   selectedOrder: [],
-  filters: {}
+  filters: {},
+  intervalDuration: 15000
 }, itemListInitialState);
 
 // Create helper reducers
@@ -106,6 +107,11 @@ export default (state = initialState, action) => {
       };
     case actionTypes.SET_FILTERS:
       return setFilters(state, action);
+    case actionTypes.SET_INTERVAL_DURATION:
+      return {
+        ...state,
+        intervalDuration: action.intervalDuration
+      };
     default:
       return state;
   }

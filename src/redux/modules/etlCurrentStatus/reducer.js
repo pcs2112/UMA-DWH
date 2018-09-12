@@ -3,9 +3,7 @@ import itemListReducerFor, { initialState as itemListInitialState } from '../../
 import { actionTypes } from './actions';
 
 // Initial state
-const initialState = Object.assign({
-  intervalDuration: 15000
-}, itemListInitialState);
+const initialState = Object.assign({}, itemListInitialState);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
@@ -32,11 +30,6 @@ export default (state = initialState, action) => {
         isFetching: false
       };
     }
-    case actionTypes.SET_INTERVAL_DURATION:
-      return {
-        ...state,
-        intervalDuration: action.intervalDuration
-      };
     default:
       return state;
   }

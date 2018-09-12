@@ -1,8 +1,5 @@
 import { createSelector } from 'reselect';
-import {
-  createDataSelector,
-  createGetPropertySelector
-} from 'helpers/selectors';
+import { createDataSelector } from 'helpers/selectors';
 
 const emptyDataTotals = {};
 
@@ -37,8 +34,3 @@ export const getCurrentEtlStatus = createSelector(
     return data[data.length - 1].data_mart_status;
   }
 );
-
-/**
- * Returns the interval duration from the state.
- */
-export const getIntervalDuration = createGetPropertySelector('etlCurrentStatus', 'intervalDuration');
