@@ -1,4 +1,5 @@
 @defaultBorderRadius: 0;
+@absoluteBorderRadius: 0;
 
 /*-------------------
       Base Sizes

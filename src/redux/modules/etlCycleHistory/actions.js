@@ -1,4 +1,4 @@
-import { sleep } from 'javascript-utils/lib/utils';
+import { sleep, isEmpty } from 'javascript-utils/lib/utils';
 import { MAX_FETCH_CYCLE_GROUPS, CURRENT_STATUS_INTERAL_DURATION } from 'constants/index';
 import { shouldFetchCycle, getNewStartCycleGroup } from 'helpers/utils';
 import etlCurrentStatus from '../etlCurrentStatus';
@@ -18,14 +18,16 @@ export const actionTypes = {
 
 export const pollFirstCycleGroup = () => (dispatch, getState) => {
   const { etlCycleHistory } = getState();
-  const { dataLoaded, currentCycleGroup, startCycleGroup } = etlCycleHistory;
+  const {
+    dataLoaded, currentCycleGroup, startCycleGroup, cycleDate
+  } = etlCycleHistory;
   const promises = [];
 
   // Fetch current status
   promises.push(dispatch(etlCurrentStatus.actions.fetchCurrentStatus()));
 
   // Fetch the ETL Cycle history
-  if (!dataLoaded || currentCycleGroup < 1) {
+  if (!dataLoaded || (currentCycleGroup < 1 && isEmpty(cycleDate))) {
     const newStartCycleGroup = getNewStartCycleGroup(
       currentCycleGroup,
       startCycleGroup,
@@ -42,12 +44,14 @@ export const pollFirstCycleGroup = () => (dispatch, getState) => {
       makeRequest: client => client.get('/api/etl/history', {
         params: {
           start_cycle_group: newStartCycleGroup,
-          end_cycle_group: newEndCycleGroup
+          end_cycle_group: newEndCycleGroup,
+          date: cycleDate
         }
       }),
       payload: {
         currentCycleGroup,
-        startCycleGroup: newStartCycleGroup
+        startCycleGroup: newStartCycleGroup,
+        cycleDate
       }
     }));
   }
@@ -66,7 +70,7 @@ export const pollFirstCycleGroup = () => (dispatch, getState) => {
 /**
  * Async action creator to fetch the ETL history.
  */
-export const fetchHistory = (cycleGroup, refresh = false) => (dispatch, getState) => {
+export const fetchHistory = (cycleGroup, cycleDate = '', refresh = false) => (dispatch, getState) => {
   const { etlCycleHistory } = getState();
   const { currentCycleGroup, startCycleGroup } = etlCycleHistory;
   const normalizedNewCycleGroup = typeof cycleGroup === 'undefined' ? currentCycleGroup : cycleGroup;
@@ -90,12 +94,14 @@ export const fetchHistory = (cycleGroup, refresh = false) => (dispatch, getState
         makeRequest: client => client.get('/api/etl/history', {
           params: {
             start_cycle_group: newStartCycleGroup,
-            end_cycle_group: newEndCycleGroup
+            end_cycle_group: newEndCycleGroup,
+            date: cycleDate
           }
         }),
         payload: {
           currentCycleGroup: normalizedNewCycleGroup,
-          startCycleGroup: newStartCycleGroup
+          startCycleGroup: newStartCycleGroup,
+          cycleDate
         }
       })
         .then(() => {
@@ -119,7 +125,8 @@ export const fetchHistory = (cycleGroup, refresh = false) => (dispatch, getState
         dispatch({
           type: actionTypes.FETCH_SUCCESS,
           currentCycleGroup: normalizedNewCycleGroup,
-          startCycleGroup
+          startCycleGroup,
+          cycleDate
         });
 
         resolve();
@@ -134,13 +141,13 @@ export const fetchHistory = (cycleGroup, refresh = false) => (dispatch, getState
  * Action to fetch the previous cycle group before the current cycle group.
  */
 export const fetchPrev = () => (dispatch, getState) =>
-  dispatch(fetchHistory(getState().etlCycleHistory.currentCycleGroup - 1));
+  dispatch(fetchHistory(getState().etlCycleHistory.currentCycleGroup - 1, getState().etlCycleHistory.cycleDate));
 
 /**
  * Action to fetch the next cycle group after the current cycle group.
  */
 export const fetchNext = () => (dispatch, getState) =>
-  dispatch(fetchHistory(getState().etlCycleHistory.currentCycleGroup + 1));
+  dispatch(fetchHistory(getState().etlCycleHistory.currentCycleGroup + 1, getState().etlCycleHistory.cycleDate));
 
 /**
  * Resets the state.

@@ -5,6 +5,7 @@ import { actionTypes } from './actions';
 const initialState = Object.assign({
   currentCycleGroup: 0,
   startCycleGroup: 0,
+  cycleDate: '',
   selected: {},
   selectedOrder: [],
   filters: {},
@@ -55,6 +56,7 @@ export default (state = initialState, action) => {
 
       newState.currentCycleGroup = action.currentCycleGroup;
       newState.startCycleGroup = action.startCycleGroup;
+      newState.cycleDate = action.cycleDate;
 
       return newState;
     }

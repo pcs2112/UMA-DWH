@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Segment, Grid, Dropdown, Button } from 'semantic-ui-react';
+import moment from 'moment';
+import { Segment, Grid, Dropdown, Button, Form, Input } from 'semantic-ui-react';
 import config from 'config';
-import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
-import intervalDurations from 'constants/currentStatusIntervalDurations';
+import { objectHasOwnProperty, isEmpty } from 'javascript-utils/lib/utils';
+import { DEFAULT_DATE_FORMAT } from 'constants/index';
+import intervalDurations from 'constants/cycleHistoryIntervalDurations';
 import etlCurrentStatus from 'redux/modules/etlCurrentStatus';
 import etlCycleHistory from 'redux/modules/etlCycleHistory';
 import withMainLayout from 'components/WithMainLayout';
@@ -26,7 +28,9 @@ class Home extends Component {
     currentCycleGroup: PropTypes.number.isRequired,
     currentCycleGroupStartDttm: PropTypes.string.isRequired,
     cycleHistoryIntervalDuration: PropTypes.number.isRequired,
+    cycleHistoryDate: PropTypes.string,
     pollFirstCycleGroup: PropTypes.func.isRequired,
+    fetchCycleHistory: PropTypes.func.isRequired,
     fetchPrevCycleHistory: PropTypes.func.isRequired,
     fetchNextCycleHistory: PropTypes.func.isRequired,
     resetCycleHistory: PropTypes.func.isRequired,
@@ -64,8 +68,13 @@ class Home extends Component {
     || cycleHistoryFilters.active === 1 ? 0 : 1);
   };
 
+  handleDateFilter = (e, { value }) => {
+    const { fetchCycleHistory } = this.props;
+    fetchCycleHistory(0, value);
+  };
+
   renderPageTitle = () => {
-    const { cycleHistoryFilters, currentEtlStatus } = this.props;
+    const { cycleHistoryFilters, currentEtlStatus, cycleHistoryDate } = this.props;
     let state = '';
     let headerText = `${config.app.title} - ETL Cycle History`;
 
@@ -78,6 +87,9 @@ class Home extends Component {
     } else if (cycleHistoryFilters.active === 0) {
       state = 'error';
       headerText += ' (INACTIVE)';
+    } else if (!isEmpty(cycleHistoryDate)) {
+      state = 'error';
+      headerText += ` (${moment(cycleHistoryDate, DEFAULT_DATE_FORMAT).format('MMM D, YYYY')})`;
     }
 
     return (
@@ -109,7 +121,8 @@ class Home extends Component {
       currentStatusData,
       currentStatusDataTotals,
       fetchCurrentStatus,
-      cycleHistoryFilters
+      cycleHistoryFilters,
+      cycleHistoryDate
     } = this.props;
     return (
       <div>
@@ -178,18 +191,33 @@ class Home extends Component {
             </Grid.Column>
             <Grid.Column width={2} />
             <Grid.Column width={4}>
-              <label>Refresh Interval</label>
-              <Dropdown
-                fluid
-                selectOnNavigation={false}
-                selection
-                name="false"
-                options={intervalDurations}
-                placeholder="Interval"
-                onChange={this.handleCycleHistoryIntervalOnChange}
-                upward
-                defaultValue={cycleHistoryIntervalDuration}
-              />
+              <Form size="small">
+                <Form.Field>
+                  <label>Date</label>
+                  <Input
+                    type="date"
+                    name="date"
+                    fluid
+                    onChange={this.handleDateFilter}
+                    value={cycleHistoryDate}
+                    max={moment().subtract(1, 'days').format(DEFAULT_DATE_FORMAT)}
+                  />
+                </Form.Field>
+                <Form.Field>
+                  <label>Refresh Interval</label>
+                  <Dropdown
+                    fluid
+                    selectOnNavigation={false}
+                    selection
+                    name="false"
+                    options={intervalDurations}
+                    placeholder="Interval"
+                    onChange={this.handleCycleHistoryIntervalOnChange}
+                    upward
+                    defaultValue={cycleHistoryIntervalDuration}
+                  />
+                </Form.Field>
+              </Form>
             </Grid.Column>
           </Grid>
         </Segment>
@@ -233,6 +261,7 @@ export default withMainLayout(connect(
     currentStatusDataTotals: etlCurrentStatus.selectors.getCurrentStatusTotals(state),
     cycleHistorySelectedData: etlCycleHistory.selectors.getSelected(state),
     cycleHistorySelectedCount: etlCycleHistory.selectors.getSelectedCount(state),
+    cycleHistoryDate: etlCycleHistory.selectors.getCycleDate(state),
     proceduresSelectedCount: etlCycleHistory.selectors.getProceduresSelectedCount(state),
     dataMartsSelectedCount: etlCycleHistory.selectors.getDataMartsSelectedCount(state),
     cycleHistoryFilters: etlCycleHistory.selectors.getFilters(state),
@@ -240,6 +269,7 @@ export default withMainLayout(connect(
   }),
   dispatch => ({
     pollFirstCycleGroup: () => dispatch(etlCycleHistory.actions.pollFirstCycleGroup()),
+    fetchCycleHistory: (cycleGroup, cycleDate) => dispatch(etlCycleHistory.actions.fetchHistory(cycleGroup, cycleDate)),
     fetchPrevCycleHistory: () => dispatch(etlCycleHistory.actions.fetchPrev()),
     fetchNextCycleHistory: () => dispatch(etlCycleHistory.actions.fetchNext()),
     resetCycleHistory: () => dispatch(etlCycleHistory.actions.reset()),
