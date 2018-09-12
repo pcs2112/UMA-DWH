@@ -277,7 +277,7 @@ class CycleHistoryTable extends Component {
           showPaginationBottom={false}
           sortable={false}
           manual
-          minRows={50}
+          minRows={100}
           className="-striped"
           loading={isFetching || fetchingError}
           loadingText={this.getLoadingText()}

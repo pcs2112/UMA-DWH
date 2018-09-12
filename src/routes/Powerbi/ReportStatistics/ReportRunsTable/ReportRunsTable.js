@@ -116,7 +116,7 @@ class ReportRunsTable extends Component {
           height: `${tableHeight}px`
         }}
         manual
-        minRows={50}
+        minRows={100}
         showPaginationBottom={false}
         sortable={false}
         className="-striped"
