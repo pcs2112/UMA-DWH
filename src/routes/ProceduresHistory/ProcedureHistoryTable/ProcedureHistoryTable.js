@@ -49,7 +49,7 @@ const columns = [
   {
     Header: 'STORED_PROCEDURE',
     accessor: 'procedure_name',
-    minWidth: 300
+    width: 300
   },
   {
     Header: 'ETL_FROM_DTTM',
@@ -111,6 +111,11 @@ const columns = [
         paddingRight: '1rem'
       }
     })
+  },
+  {
+    Header: 'ERROR_MESSAGE',
+    accessor: 'try_catch_err_message',
+    minWidth: 300
   }
 ];
 
@@ -141,7 +146,7 @@ class ProcedureHistoryTable extends Component {
     }
 
     let color = 'none';
-    if (row.original.error_number > 0) {
+    if (row.original.error_number > 0 || row.original.try_catch_err_id > 0) {
       color = globalCss.colors.error;
     } else if (row.original.table_status === 'RUNNING') {
       color = globalCss.colors.success;

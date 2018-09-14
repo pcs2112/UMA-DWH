@@ -152,7 +152,7 @@ const RowDetails = ({ row }) => { // eslint-disable-line
         }
       </DetailsColDiv>
       <DetailsColDiv>
-        {keys.slice(21, 29).map(key =>
+        {keys.slice(21, 31).map(key =>
           <DetailsRow key={key}><DetailsLabel>{key.toUpperCase()}: </DetailsLabel>{row.original[key]}</DetailsRow>)
         }
       </DetailsColDiv>
@@ -214,7 +214,7 @@ class CycleHistoryTable extends Component {
     }
 
     let color = 'none';
-    if (row.original.err_num > 0) {
+    if (row.original.err_num > 0 || row.original.try_catch_err_id > 0) {
       color = globalCss.colors.error;
     } else if (row.original.table_status === 'RUNNING') {
       color = globalCss.colors.success;

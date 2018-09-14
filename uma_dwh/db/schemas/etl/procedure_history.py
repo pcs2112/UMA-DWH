@@ -17,5 +17,7 @@ schema = (
   'trans_per_sec',
   'user',
   'engine_message',
-  'error_number'
+  'error_number',
+  'try_catch_err_id',
+  'try_catch_err_message'
 )

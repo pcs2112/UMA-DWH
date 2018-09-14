@@ -1,8 +1,8 @@
 schema = (
+  'id',
   'cycle_group',
   'data_mart_group',
   'data_mart_name',
-  'id',
   'target_table_runtime',
   'start_dttm',
   'end_dttm',
@@ -27,5 +27,7 @@ schema = (
   'err_num',
   'delete_cnt',
   'exec_by_control_engine',
-  'active'
+  'active',
+  'try_catch_err_id',
+  'try_catch_err_message'
 )
