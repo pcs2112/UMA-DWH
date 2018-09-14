@@ -1,13 +1,12 @@
 import { createSelector } from 'reselect';
 import moment from 'moment';
-import { objectHasOwnProperty, isEmpty } from 'javascript-utils/lib/utils';
+import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import { DEFAULT_DATE_FORMAT } from 'constants/index';
 import {
   createDataSelector,
   createFetchingErrorSelector,
   createGetItemsSelector
 } from 'helpers/selectors';
-import etlCycleHistory from 'redux/modules/etlCycleHistory';
 import etlServers from 'redux/modules/etlServers';
 
 const emptyFilters = {
@@ -49,8 +48,8 @@ export const getProcedureHistory = createGetItemsSelector(_getData);
  * Returns the default filters for the procedure history page.
  */
 export const getFilters = createSelector(
-  [etlServers.selectors.getServers, etlCycleHistory.selectors.getLastProcedureSelected, _getFilters],
-  (servers, lastProcedureSelected, filtersFromState) => {
+  [etlServers.selectors.getServers, _getFilters],
+  (servers, filtersFromState) => {
     if (servers.length < 1) {
       return {
         serverName: '',
@@ -60,19 +59,8 @@ export const getFilters = createSelector(
       };
     }
 
-    let { date } = filtersFromState;
-
-    if (lastProcedureSelected && !isEmpty(lastProcedureSelected.source_server_name)) {
-      return {
-        serverName: lastProcedureSelected.source_server_name.toUpperCase(),
-        dbName: lastProcedureSelected.source_db_name.toUpperCase(),
-        procedureName: lastProcedureSelected.calling_proc.toUpperCase(),
-        date: date === '' ? moment().format(DEFAULT_DATE_FORMAT) : date
-      };
-    }
-
     let {
-      serverName, dbName, procedureName
+      serverName, dbName, procedureName, date
     } = filtersFromState;
 
     // Set the default serverName

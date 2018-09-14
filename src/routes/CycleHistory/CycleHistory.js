@@ -9,6 +9,7 @@ import { DEFAULT_DATE_FORMAT } from 'constants/index';
 import intervalDurations from 'constants/cycleHistoryIntervalDurations';
 import etlCurrentStatus from 'redux/modules/etlCurrentStatus';
 import etlCycleHistory from 'redux/modules/etlCycleHistory';
+import etlProcedureHistory from 'redux/modules/etlProcedureHistory';
 import withMainLayout from 'components/WithMainLayout';
 import CycleArrowPagination from 'components/CycleArrowPagination';
 import EtlErrorModal from 'components/EtlErrorModal';
@@ -48,8 +49,10 @@ class Home extends Component {
     fetchCurrentStatus: PropTypes.func.isRequired,
     setCycleHistoryIntervalDuration: PropTypes.func.isRequired,
     setCycleHistoryFilters: PropTypes.func.isRequired,
+    setProcedureHistoryFilters: PropTypes.func.isRequired,
     cycleHistoryFilters: PropTypes.object.isRequired,
-    currentEtlStatus: PropTypes.string.isRequired
+    currentEtlStatus: PropTypes.string.isRequired,
+    lastProcedureSelected: PropTypes.object
   };
 
   componentWillUnmount() {
@@ -59,6 +62,16 @@ class Home extends Component {
   handleCycleHistoryIntervalOnChange = (e, { value }) => this.props.setCycleHistoryIntervalDuration(value);
 
   handleViewHistoryOnClick = () => {
+    const { setProcedureHistoryFilters, lastProcedureSelected } = this.props;
+    if (lastProcedureSelected && !isEmpty(lastProcedureSelected.source_server_name)) {
+      setProcedureHistoryFilters(
+        lastProcedureSelected.source_server_name.toUpperCase(),
+        lastProcedureSelected.source_db_name.toUpperCase(),
+        lastProcedureSelected.calling_proc.toUpperCase(),
+        moment().format(DEFAULT_DATE_FORMAT)
+      );
+    }
+
     this.props.history.push('/procedures/history');
   };
 
@@ -265,7 +278,8 @@ export default withMainLayout(connect(
     proceduresSelectedCount: etlCycleHistory.selectors.getProceduresSelectedCount(state),
     dataMartsSelectedCount: etlCycleHistory.selectors.getDataMartsSelectedCount(state),
     cycleHistoryFilters: etlCycleHistory.selectors.getFilters(state),
-    currentEtlStatus: etlCurrentStatus.selectors.getCurrentEtlStatus(state)
+    currentEtlStatus: etlCurrentStatus.selectors.getCurrentEtlStatus(state),
+    lastProcedureSelected: etlCycleHistory.selectors.getLastProcedureSelected(state)
   }),
   dispatch => ({
     pollFirstCycleGroup: () => dispatch(etlCycleHistory.actions.pollFirstCycleGroup()),
@@ -280,6 +294,8 @@ export default withMainLayout(connect(
     fetchCurrentStatus: () => dispatch(etlCurrentStatus.actions.fetchCurrentStatus()),
     setCycleHistoryIntervalDuration: intervalDuration =>
       dispatch(etlCycleHistory.actions.setIntervalDuration(intervalDuration)),
-    setCycleHistoryFilters: (key, value) => dispatch(etlCycleHistory.actions.setFilters(key, value))
+    setCycleHistoryFilters: (key, value) => dispatch(etlCycleHistory.actions.setFilters(key, value)),
+    setProcedureHistoryFilters: (serverName, dbName, procedureName, date) =>
+      dispatch(etlProcedureHistory.actions.setInitialFilters(serverName, dbName, procedureName, date))
   })
 )(Home));
