@@ -1,14 +1,14 @@
 export const actionTypes = {
-  FETCH_BEGIN: 'powerbiReportHistory/FETCH_BEGIN',
-  FETCH_SUCCESS: 'powerbiReportHistory/FETCH_SUCCESS',
-  FETCH_FAIL: 'powerbiReportHistory/FETCH_FAIL',
-  RESET: 'powerbiReportHistory/RESET'
+  FETCH_BEGIN: 'reportHistory/FETCH_BEGIN',
+  FETCH_SUCCESS: 'reportHistory/FETCH_SUCCESS',
+  FETCH_FAIL: 'reportHistory/FETCH_FAIL',
+  RESET: 'reportHistory/RESET'
 };
 
 /**
- * Action to the Power BI report history.
+ * Action to fetch the report history.
  */
-export const fetchPowerbiReportHistory = (startDate = '', endDate = '') => ({
+export const fetchReportHistory = (startDate = '', endDate = '') => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,

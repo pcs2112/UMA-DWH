@@ -48,6 +48,6 @@ class Filters extends Component {
 }
 
 export default reduxForm({
-  form: 'PowerbiReportHistoryFilters',
+  form: 'ReportHistoryFilters',
   validate
 })(withBasicForm(Filters));

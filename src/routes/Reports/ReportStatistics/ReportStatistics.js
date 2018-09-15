@@ -9,8 +9,8 @@ import { CYCLE_GROUP_PAGE_SIZE } from 'constants/index';
 import withMainLayout from 'components/WithMainLayout';
 import CycleArrowPagination from 'components/CycleArrowPagination';
 import globalCss from 'css/global';
-import powerbiReportStatistics from 'redux/modules/powerbiReportStatistics';
-import powerbiReportRuns from 'redux/modules/powerbiReportRuns';
+import reportStatistics from 'redux/modules/reportStatistics';
+import reportRuns from 'redux/modules/reportRuns';
 import ReportStatisticsTable from './ReportStatisticsTable';
 import ReportRunsTable from './ReportRunsTable';
 
@@ -71,7 +71,7 @@ class ReportStatistics extends Component {
     if (!queryParams || !queryParams.report) {
       return (
         <Route
-          render={() => (<Redirect to="/powerbi/report/history" />)}
+          render={() => (<Redirect to="/report/history" />)}
         />
       );
     }
@@ -120,25 +120,25 @@ class ReportStatistics extends Component {
 
 export default withMainLayout(connect(
   state => ({
-    isReportStatisticsFetching: state.powerbiReportStatistics.isFetching,
-    reportStatisticsDataLoaded: state.powerbiReportStatistics.dataLoaded,
-    reportStatisticsData: powerbiReportStatistics.selectors.getPowerbiReportStatistics(state),
-    reportStatisticsFetchingError: powerbiReportStatistics.selectors.getFetchingError(state),
-    isReportRunsFetching: state.powerbiReportRuns.isFetching,
-    reportRunsDataLoaded: state.powerbiReportRuns.dataLoaded,
-    reportRunsData: powerbiReportRuns.selectors.getPowerbiReportRuns(state),
-    reportRunsFetchingError: powerbiReportRuns.selectors.getFetchingError(state),
-    reportRunsCurrentCycleGroup: powerbiReportRuns.selectors.getCurrentCycleGroup(state),
-    reportRunsCurrentCycleGroupStartDttm: powerbiReportRuns.selectors.getCurrentCycleGroupStartDttm(state)
+    isReportStatisticsFetching: state.reportStatistics.isFetching,
+    reportStatisticsDataLoaded: state.reportStatistics.dataLoaded,
+    reportStatisticsData: reportStatistics.selectors.getReportStatistics(state),
+    reportStatisticsFetchingError: reportStatistics.selectors.getFetchingError(state),
+    isReportRunsFetching: state.reportRuns.isFetching,
+    reportRunsDataLoaded: state.reportRuns.dataLoaded,
+    reportRunsData: reportRuns.selectors.getReportRuns(state),
+    reportRunsFetchingError: reportRuns.selectors.getFetchingError(state),
+    reportRunsCurrentCycleGroup: reportRuns.selectors.getCurrentCycleGroup(state),
+    reportRunsCurrentCycleGroupStartDttm: reportRuns.selectors.getCurrentCycleGroupStartDttm(state)
   }),
   dispatch => ({
     fetchReportStatistics: reportName =>
-      dispatch(powerbiReportStatistics.actions.fetchPowerbiReportStatistics(reportName)),
-    resetReportStatistics: () => dispatch(powerbiReportStatistics.actions.reset()),
+      dispatch(reportStatistics.actions.fetchReportStatistics(reportName)),
+    resetReportStatistics: () => dispatch(reportStatistics.actions.reset()),
     fetchReportRuns: reportName =>
-      dispatch(powerbiReportRuns.actions.fetchPowerbiReportRuns(reportName)),
-    fetchPrevReportRuns: () => dispatch(powerbiReportRuns.actions.fetchPrev()),
-    fetchNextReportRuns: () => dispatch(powerbiReportRuns.actions.fetchNext()),
-    resetReportRuns: () => dispatch(powerbiReportRuns.actions.reset())
+      dispatch(reportRuns.actions.fetchReportRuns(reportName)),
+    fetchPrevReportRuns: () => dispatch(reportRuns.actions.fetchPrev()),
+    fetchNextReportRuns: () => dispatch(reportRuns.actions.fetchNext()),
+    resetReportRuns: () => dispatch(reportRuns.actions.reset())
   })
 )(ReportStatistics));

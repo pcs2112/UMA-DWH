@@ -6,7 +6,7 @@ import ForgotPassword from './ForgotPassword';
 import Login from './Login';
 import ProceduresHistory from './ProceduresHistory';
 import getErrorTypeManagementRoutes from './ErrorTypeManagement';
-import getPowerbiRoutes from './Powerbi';
+import getReportRoutes from './Reports';
 import getUserRoutes from './Users';
 
 export default ({ dispatch }) => ([
@@ -24,7 +24,7 @@ export default ({ dispatch }) => ([
   }
 ]
   .concat(getErrorTypeManagementRoutes())
-  .concat(getPowerbiRoutes())
+  .concat(getReportRoutes())
   .concat(getUserRoutes(dispatch))
   .concat([
     {

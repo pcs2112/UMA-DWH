@@ -8,9 +8,9 @@ import etlProcedureHistory from './modules/etlProcedureHistory';
 import etlCycleHistory from './modules/etlCycleHistory';
 import etlRunCheck from './modules/etlRunCheck';
 import etlServers from './modules/etlServers';
-import powerbiReportHistory from './modules/powerbiReportHistory';
-import powerbiReportRuns from './modules/powerbiReportRuns';
-import powerbiReportStatistics from './modules/powerbiReportStatistics';
+import reportHistory from './modules/reportHistory';
+import reportRuns from './modules/reportRuns';
+import reportStatistics from './modules/reportStatistics';
 import procedureRuntimeChart from './modules/procedureRuntimeChart';
 import user from './modules/user';
 import users from './modules/users';
@@ -25,9 +25,9 @@ export default combineReducers({
   etlProcedureHistory: etlProcedureHistory.reducer,
   etlRunCheck: etlRunCheck.reducer,
   etlServers: etlServers.reducer,
-  powerbiReportHistory: powerbiReportHistory.reducer,
-  powerbiReportRuns: powerbiReportRuns.reducer,
-  powerbiReportStatistics: powerbiReportStatistics.reducer,
+  reportHistory: reportHistory.reducer,
+  reportRuns: reportRuns.reducer,
+  reportStatistics: reportStatistics.reducer,
   procedureRuntimeChart: procedureRuntimeChart.reducer,
   user: user.reducer,
   users: users.reducer

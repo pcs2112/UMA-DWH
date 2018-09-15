@@ -3,12 +3,12 @@ import ReportStatistics from './ReportStatistics';
 
 export default () => [
   {
-    path: '/powerbi/report/history',
+    path: '/report/history',
     component: ReportHistory,
     exact: true
   },
   {
-    path: '/powerbi/report/statistics',
+    path: '/report/statistics',
     component: ReportStatistics,
     exact: true
   }

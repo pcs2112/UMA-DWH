@@ -1,4 +1,3 @@
-import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
 import { actionTypes } from './actions';
 
@@ -8,22 +7,8 @@ const initialState = Object.assign({}, itemListInitialState);
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
 
-// Set the filters data
-const setFilters = (state, action) => {
-  const newState = { ...state };
-  if (objectHasOwnProperty(action, 'startDate')) {
-    newState.startDate = action.startDate;
-    newState.endDate = action.endDate;
-  } else {
-    delete (newState.startDate);
-    delete (newState.endDate);
-  }
-
-  return newState;
-};
-
 /**
- * Power BI report history reducer.
+ * Report statistics reducer.
  *
  * @param {Object} state
  * @param {Object} action
@@ -35,10 +20,12 @@ export default (state = initialState, action) => {
     case actionTypes.FETCH_FAIL:
     case actionTypes.FETCH_SUCCESS: {
       const newState = itemListReducer(state, action);
-      return setFilters(newState, action);
+      if (action.reportName) {
+        newState.reportName = action.reportName;
+      }
+
+      return newState;
     }
-    case actionTypes.RESET:
-      return itemListReducer(state, action);
     default:
       return state;
   }

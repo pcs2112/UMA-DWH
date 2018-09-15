@@ -1,16 +1,16 @@
 import { getPrevCycleGroupStartData, getNextCycleGroupStartData } from './selectors';
 
 export const actionTypes = {
-  FETCH_BEGIN: 'powerbiReportRuns/FETCH_BEGIN',
-  FETCH_SUCCESS: 'powerbiReportRuns/FETCH_SUCCESS',
-  FETCH_FAIL: 'powerbiReportRuns/FETCH_FAIL',
-  RESET: 'powerbiReportRuns/RESET'
+  FETCH_BEGIN: 'reportRuns/FETCH_BEGIN',
+  FETCH_SUCCESS: 'reportRuns/FETCH_SUCCESS',
+  FETCH_FAIL: 'reportRuns/FETCH_FAIL',
+  RESET: 'reportRuns/RESET'
 };
 
 /**
- * Action to the Power BI report runs.
+ * Action to fetch the report runs.
  */
-export const fetchPowerbiReportRuns = (reportName, cycleGroup = 0, fromNum = '', toNum = '') => ({
+export const fetchReportRuns = (reportName, cycleGroup = 0, fromNum = '', toNum = '') => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,
@@ -35,8 +35,8 @@ export const fetchPowerbiReportRuns = (reportName, cycleGroup = 0, fromNum = '',
 export const fetchPrev = () => (dispatch, getState) => {
   const state = getState();
   const { currentCycleGroup, fromNum, toNum } = getPrevCycleGroupStartData(state);
-  const { reportName } = state.powerbiReportRuns;
-  dispatch(fetchPowerbiReportRuns(reportName, currentCycleGroup, fromNum, toNum));
+  const { reportName } = state.reportRuns;
+  dispatch(fetchReportRuns(reportName, currentCycleGroup, fromNum, toNum));
 };
 
 /**
@@ -45,8 +45,8 @@ export const fetchPrev = () => (dispatch, getState) => {
 export const fetchNext = () => (dispatch, getState) => {
   const state = getState();
   const { currentCycleGroup, fromNum, toNum } = getNextCycleGroupStartData(state);
-  const { reportName } = state.powerbiReportRuns;
-  dispatch(fetchPowerbiReportRuns(reportName, currentCycleGroup, fromNum, toNum));
+  const { reportName } = state.reportRuns;
+  dispatch(fetchReportRuns(reportName, currentCycleGroup, fromNum, toNum));
 };
 
 /**

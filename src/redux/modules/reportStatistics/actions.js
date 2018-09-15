@@ -1,14 +1,14 @@
 export const actionTypes = {
-  FETCH_BEGIN: 'powerbiReportStatistics/FETCH_BEGIN',
-  FETCH_SUCCESS: 'powerbiReportStatistics/FETCH_SUCCESS',
-  FETCH_FAIL: 'powerbiReportStatistics/FETCH_FAIL',
-  RESET: 'powerbiReportStatistics/RESET'
+  FETCH_BEGIN: 'reportStatistics/FETCH_BEGIN',
+  FETCH_SUCCESS: 'reportStatistics/FETCH_SUCCESS',
+  FETCH_FAIL: 'reportStatistics/FETCH_FAIL',
+  RESET: 'reportStatistics/RESET'
 };
 
 /**
- * Action to the Power BI report Statistics.
+ * Action to the report Statistics.
  */
-export const fetchPowerbiReportStatistics = (reportName = 'ALL') => ({
+export const fetchReportStatistics = (reportName = 'ALL') => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,
