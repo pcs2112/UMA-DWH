@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { Dropdown, Form } from 'semantic-ui-react';
 import { FILTERS_EXEC_DELAY } from 'constants/index';
+import monthFilterOptions from 'constants/monthFilterOptions';
 
 class DropdownFilters extends Component {
   static propTypes = {
@@ -11,6 +12,7 @@ class DropdownFilters extends Component {
     dbName: PropTypes.string.isRequired,
     procedureName: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
+    months: PropTypes.number.isRequired,
     onChange: PropTypes.func.isRequired
   };
 
@@ -19,7 +21,8 @@ class DropdownFilters extends Component {
     this.state = {
       serverName: props.serverName.toUpperCase(),
       dbName: props.dbName.toUpperCase(),
-      procedureName: props.procedureName.toUpperCase()
+      procedureName: props.procedureName.toUpperCase(),
+      months: props.months
     };
 
     this.handleOnChange = debounce(this.handleOnChange, FILTERS_EXEC_DELAY);
@@ -101,16 +104,26 @@ class DropdownFilters extends Component {
     }
   };
 
+  handleMonthsOnChange = (e, { value }) => {
+    if (value !== this.state.months) {
+      this.setState({
+        months: parseInt(value, 10)
+      }, this.handleOnChange);
+    }
+  };
+
   handleOnChange = () => {
     const {
-      serverName, dbName, procedureName
+      serverName, dbName, procedureName, months
     } = this.state;
     const { date, onChange } = this.props;
-    onChange(serverName, dbName, procedureName, date);
+    onChange(serverName, dbName, procedureName, date, months);
   };
 
   render() {
-    const { serverName, dbName, procedureName } = this.state;
+    const {
+      serverName, dbName, procedureName, months
+    } = this.state;
     return (
       <Form size="small">
         <Form.Group inline>
@@ -163,6 +176,24 @@ class DropdownFilters extends Component {
               options={this.getProcedureOptions()}
               onChange={this.handleProcedureNameOnChange}
               value={procedureName}
+            />
+          </Form.Field>
+        </Form.Group>
+        <Form.Group inline>
+          <Form.Field width={3}>
+            <div className="right-aligned-label">
+              <label>Chart Date Range</label>
+            </div>
+          </Form.Field>
+          <Form.Field width={13}>
+            <Dropdown
+              fluid
+              selectOnNavigation={false}
+              selection
+              name="false"
+              options={monthFilterOptions}
+              onChange={this.handleMonthsOnChange}
+              value={months}
             />
           </Form.Field>
         </Form.Group>

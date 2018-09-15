@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { Segment, Grid, Dropdown, Button, Form, Input } from 'semantic-ui-react';
 import { objectHasOwnProperty, isEmpty } from 'javascript-utils/lib/utils';
-import { DEFAULT_DATE_FORMAT } from 'constants/index';
+import { DEFAULT_DATE_FORMAT, DEAULT_MONTHS_SIZE } from 'constants/index';
 import intervalDurations from 'constants/cycleHistoryIntervalDurations';
 import etlCurrentStatus from 'redux/modules/etlCurrentStatus';
 import etlCycleHistory from 'redux/modules/etlCycleHistory';
@@ -68,7 +68,8 @@ class Home extends Component {
         lastProcedureSelected.source_server_name.toUpperCase(),
         lastProcedureSelected.source_db_name.toUpperCase(),
         lastProcedureSelected.calling_proc.toUpperCase(),
-        moment().format(DEFAULT_DATE_FORMAT)
+        moment().format(DEFAULT_DATE_FORMAT),
+        DEAULT_MONTHS_SIZE
       );
     }
 
@@ -267,7 +268,7 @@ export default withMainLayout(connect(
       dispatch(etlCycleHistory.actions.setIntervalDuration(intervalDuration)),
     setCycleHistoryFilters: (key, value) => dispatch(etlCycleHistory.actions.setFilters(key, value)),
     fetchCurrentStatus: () => dispatch(etlCurrentStatus.actions.fetchCurrentStatus()),
-    setProcedureHistoryFilters: (serverName, dbName, procedureName, date) =>
-      dispatch(etlProcedureHistory.actions.setFilters(serverName, dbName, procedureName, date))
+    setProcedureHistoryFilters: (serverName, dbName, procedureName, date, months) =>
+      dispatch(etlProcedureHistory.actions.setFilters(serverName, dbName, procedureName, date, months))
   })
 )(Home));

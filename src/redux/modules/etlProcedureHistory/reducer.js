@@ -14,6 +14,7 @@ const setFilters = (state, action) => {
   newState.dbName = action.dbName;
   newState.procedureName = action.procedureName;
   newState.date = action.date;
+  newState.months = action.months;
   return newState;
 };
 

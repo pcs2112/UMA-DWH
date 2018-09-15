@@ -10,3 +10,4 @@ export const FORGOT_PASSWORD_SUCCESS_SCENARIO = 4;
 export const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
 export const FILTERS_EXEC_DELAY = 150;
 export const CYCLE_GROUP_PAGE_SIZE = 1000;
+export const DEAULT_MONTHS_SIZE = 6;

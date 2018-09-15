@@ -12,6 +12,7 @@ const setFilters = (state, action) => {
   const newState = { ...state };
   newState.procedureName = action.procedureName;
   newState.date = action.date;
+  newState.months = action.months;
   return newState;
 };
 
@@ -32,7 +33,7 @@ export default (state = initialState, action) => {
     }
     case actionTypes.RESET:
       return itemListReducer(state, action);
-    case actionTypes.SET_INITIAL_FILTERS:
+    case actionTypes.SET_FILTERS:
       return setFilters(state, action);
     default:
       return state;

@@ -32,9 +32,9 @@ class ProceduresHistory extends Component {
   componentDidMount() {
     const { fetchAllData } = this.props;
     const {
-      serverName, dbName, procedureName, date
+      serverName, dbName, procedureName, date, months
     } = this.props.filters;
-    fetchAllData(serverName, dbName, procedureName, date);
+    fetchAllData(serverName, dbName, procedureName, date, months);
   }
 
   componentWillUnmount() {
@@ -125,10 +125,10 @@ export default withMainLayout(connect(
     procedureRuntimeChartData: procedureRuntimeChart.selectors.getProcedureRuntimeChartData(state)
   }),
   dispatch => ({
-    fetchAllData: (serverName, dbName, procedureName, date) =>
+    fetchAllData: (serverName, dbName, procedureName, date, months) =>
       Promise.all([
-        dispatch(etlProcedureHistory.actions.fetchHistory(serverName, dbName, procedureName, date)),
-        dispatch(procedureRuntimeChart.actions.fetch(procedureName, date))
+        dispatch(etlProcedureHistory.actions.fetchHistory(serverName, dbName, procedureName, date, months)),
+        dispatch(procedureRuntimeChart.actions.fetch(procedureName, date, months))
       ]),
     resetAllData: () => {
       dispatch(etlProcedureHistory.actions.reset());

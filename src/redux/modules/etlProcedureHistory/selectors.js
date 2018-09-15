@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import moment from 'moment';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
-import { DEFAULT_DATE_FORMAT } from 'constants/index';
+import { DEFAULT_DATE_FORMAT, DEAULT_MONTHS_SIZE } from 'constants/index';
 import {
   createDataSelector,
   createFetchingErrorSelector,
@@ -13,7 +13,8 @@ const emptyFilters = {
   serverName: '',
   dbName: '',
   procedureName: '',
-  date: moment().format(DEFAULT_DATE_FORMAT)
+  date: moment().format(DEFAULT_DATE_FORMAT),
+  months: DEAULT_MONTHS_SIZE
 };
 
 /**
@@ -30,7 +31,8 @@ const _getFilters = state => (objectHasOwnProperty(state.etlProcedureHistory, 's
   serverName: state.etlProcedureHistory.serverName,
   dbName: state.etlProcedureHistory.dbName,
   procedureName: state.etlProcedureHistory.procedureName,
-  date: state.etlProcedureHistory.date
+  date: state.etlProcedureHistory.date,
+  months: state.etlProcedureHistory.months
 } : emptyFilters);
 
 /**
@@ -55,12 +57,13 @@ export const getFilters = createSelector(
         serverName: '',
         dbName: '',
         procedureName: '',
-        date: moment().format(DEFAULT_DATE_FORMAT)
+        date: moment().format(DEFAULT_DATE_FORMAT),
+        months: DEAULT_MONTHS_SIZE
       };
     }
 
     let {
-      serverName, dbName, procedureName, date
+      serverName, dbName, procedureName, date, months
     } = filtersFromState;
 
     // Set the default serverName
@@ -93,11 +96,17 @@ export const getFilters = createSelector(
       date = moment().format(DEFAULT_DATE_FORMAT);
     }
 
+    // Set the default months
+    if (months === '') {
+      months = DEAULT_MONTHS_SIZE;
+    }
+
     return {
       serverName: normalizedServerName,
       dbName: normalizedDbName,
       procedureName: normalizedProcedureName,
-      date
+      date,
+      months
     };
   }
 );

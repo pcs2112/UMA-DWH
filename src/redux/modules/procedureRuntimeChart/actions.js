@@ -3,13 +3,13 @@ export const actionTypes = {
   FETCH_SUCCESS: 'procedureRuntimeChart/FETCH_SUCCESS',
   FETCH_FAIL: 'procedureRuntimeChart/FETCH_FAIL',
   RESET: 'procedureRuntimeChart/RESET',
-  SET_INITIAL_FILTERS: 'procedureRuntimeChart/SET_INITIAL_FILTERS'
+  SET_FILTERS: 'procedureRuntimeChart/SET_FILTERS'
 };
 
 /**
  * Action to fetch the ETL procedure runtime chart data.
  */
-export const fetch = (procedureName, date) => ({
+export const fetch = (procedureName, date, months) => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,
@@ -18,12 +18,14 @@ export const fetch = (procedureName, date) => ({
   makeRequest: client => client.get('/api/etl/procedure_runtime_chart_data', {
     params: {
       procedure_name: procedureName,
-      date
+      date,
+      months
     }
   }),
   payload: {
     procedureName,
-    date
+    date,
+    months
   }
 });
 
@@ -35,10 +37,11 @@ export const reset = () => ({
 });
 
 /**
- * Sets the initial filters.
+ * Sets filters.
  */
-export const setInitialFilters = (procedureName, date) => ({
-  type: actionTypes.SET_INITIAL_FILTERS,
+export const setFilters = (procedureName, date, months) => ({
+  type: actionTypes.SET_FILTERS,
   procedureName,
-  date
+  date,
+  months
 });

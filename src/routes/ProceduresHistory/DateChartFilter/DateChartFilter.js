@@ -14,6 +14,7 @@ class DateChartFilter extends Component {
     serverName: PropTypes.string.isRequired,
     dbName: PropTypes.string.isRequired,
     procedureName: PropTypes.string.isRequired,
+    months: PropTypes.number.isRequired,
     onClick: PropTypes.func.isRequired
   };
 
@@ -23,11 +24,11 @@ class DateChartFilter extends Component {
 
   onClick = (elems) => {
     const {
-      isFetching, data, serverName, dbName, procedureName, onClick
+      isFetching, data, serverName, dbName, procedureName, months, onClick
     } = this.props;
     if (!isFetching && elems.length > 0) {
       setTimeout(() => {
-        onClick(serverName, dbName, procedureName, data[elems[0]._index].date);
+        onClick(serverName, dbName, procedureName, data[elems[0]._index].date, months);
       }, 250);
     }
   };

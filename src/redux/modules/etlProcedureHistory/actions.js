@@ -9,7 +9,7 @@ export const actionTypes = {
 /**
  * Action to fetch the ETL current status.
  */
-export const fetchHistory = (serverName, dbName, procedureName, date) => ({
+export const fetchHistory = (serverName, dbName, procedureName, date, months) => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,
@@ -26,7 +26,8 @@ export const fetchHistory = (serverName, dbName, procedureName, date) => ({
     serverName,
     dbName,
     procedureName,
-    date
+    date,
+    months
   }
 });
 
@@ -40,10 +41,11 @@ export const reset = () => ({
 /**
  * Sets the filters.
  */
-export const setFilters = (serverName, dbName, procedureName, date) => ({
+export const setFilters = (serverName, dbName, procedureName, date, months) => ({
   type: actionTypes.SET_FILTERS,
   serverName,
   dbName,
   procedureName,
-  date
+  date,
+  months
 });
