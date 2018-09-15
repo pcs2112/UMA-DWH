@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import ReactTable from 'react-table';
 import checkboxHOC from 'react-table/lib/hoc/selectTable';
-import { Icon } from 'semantic-ui-react';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import globalCss from 'css/global';
 import withResponsiveTable from 'components/WithResponsiveTable';
 import withAsyncPolling from 'components/WithAsyncPolling';
-import { DetailsDiv, DetailsColDiv, DetailsLabel, DetailsRow } from '../css';
+import RowDetails from './RowDetails';
+import RowExpander from './RowExpander';
 
 const CheckboxTable = checkboxHOC(ReactTable);
 const keyName = 'calling_proc';
@@ -21,13 +21,7 @@ const defaultExpanded = {};
 const columns = [
   {
     expander: true,
-    Expander: ({ isExpanded }) => ( // eslint-disable-line
-      <div className="centered-aligned">
-        {isExpanded
-          ? <Icon name="minus square outline" size="large" className="expander" />
-          : <Icon name="plus square outline" size="large" className="expander" />}
-      </div>
-    ),
+    Expander: RowExpander,
     width: 30
   },
   {
@@ -129,36 +123,6 @@ const columns = [
 ];
 
 const SelectAllInputComponent = () => (<span />);
-
-const RowDetails = ({ row }) => { // eslint-disable-line
-  const keys = Object.keys(row.original);
-  const tableWidth = document.getElementById('cycle-history-tbl').offsetWidth;
-  const width = tableWidth < 1000 ? 1000 : tableWidth;
-  return (
-    <DetailsDiv
-      style={{
-        width
-      }}
-    >
-      <DetailsColDiv>
-        <DetailsRow key="id"><DetailsLabel>ID: </DetailsLabel>{row.original.id}</DetailsRow>
-        {keys.slice(1, 10).map(key =>
-          <DetailsRow key={key}><DetailsLabel>{key.toUpperCase()}: </DetailsLabel>{row.original[key]}</DetailsRow>)
-        }
-      </DetailsColDiv>
-      <DetailsColDiv>
-        {keys.slice(11, 21).map(key =>
-          <DetailsRow key={key}><DetailsLabel>{key.toUpperCase()}: </DetailsLabel>{row.original[key]}</DetailsRow>)
-        }
-      </DetailsColDiv>
-      <DetailsColDiv>
-        {keys.slice(21, 31).map(key =>
-          <DetailsRow key={key}><DetailsLabel>{key.toUpperCase()}: </DetailsLabel>{row.original[key]}</DetailsRow>)
-        }
-      </DetailsColDiv>
-    </DetailsDiv>
-  );
-};
 
 class CycleHistoryTable extends Component {
   static propTypes = {

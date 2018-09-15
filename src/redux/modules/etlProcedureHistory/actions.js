@@ -3,7 +3,7 @@ export const actionTypes = {
   FETCH_SUCCESS: 'etlProcedureHistory/FETCH_SUCCESS',
   FETCH_FAIL: 'etlProcedureHistory/FETCH_FAIL',
   RESET: 'etlProcedureHistory/RESET',
-  SET_INITIAL_FILTERS: 'etlProcedureHistory/SET_INITIAL_FILTERS'
+  SET_FILTERS: 'etlProcedureHistory/SET_FILTERS'
 };
 
 /**
@@ -38,10 +38,10 @@ export const reset = () => ({
 });
 
 /**
- * Sets the initial filters.
+ * Sets the filters.
  */
-export const setInitialFilters = (serverName, dbName, procedureName, date) => ({
-  type: actionTypes.SET_INITIAL_FILTERS,
+export const setFilters = (serverName, dbName, procedureName, date) => ({
+  type: actionTypes.SET_FILTERS,
   serverName,
   dbName,
   procedureName,

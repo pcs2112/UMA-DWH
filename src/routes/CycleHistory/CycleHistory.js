@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { Segment, Grid, Dropdown, Button, Form, Input } from 'semantic-ui-react';
-import config from 'config';
 import { objectHasOwnProperty, isEmpty } from 'javascript-utils/lib/utils';
 import { DEFAULT_DATE_FORMAT } from 'constants/index';
 import intervalDurations from 'constants/cycleHistoryIntervalDurations';
@@ -12,16 +11,16 @@ import etlCycleHistory from 'redux/modules/etlCycleHistory';
 import etlProcedureHistory from 'redux/modules/etlProcedureHistory';
 import withMainLayout from 'components/WithMainLayout';
 import CycleArrowPagination from 'components/CycleArrowPagination';
-import EtlErrorModal from 'components/EtlErrorModal';
-import PageHeader from 'components/PageHeader';
 import globalCss from 'css/global';
 import CycleHistoryTable from './CycleHistoryTable';
 import CurrentStatusTable from './CurrentStatusTable';
+import CycleHistoryPageHeader from './CycleHistoryPageHeader';
 import { runCheckButtonCss } from './css';
 
 class Home extends Component {
   static propTypes = {
     history: PropTypes.object.isRequired,
+    // Cycle history props
     isCycleHistoryFetching: PropTypes.bool.isRequired,
     cycleHistoryDataLoaded: PropTypes.bool.isRequired,
     cycleHistoryData: PropTypes.array.isRequired,
@@ -30,29 +29,30 @@ class Home extends Component {
     currentCycleGroupStartDttm: PropTypes.string.isRequired,
     cycleHistoryIntervalDuration: PropTypes.number.isRequired,
     cycleHistoryDate: PropTypes.string,
+    cycleHistoryFilters: PropTypes.object.isRequired,
+    cycleHistorySelectedCount: PropTypes.number.isRequired,
+    cycleHistorySelectedData: PropTypes.object.isRequired,
+    proceduresSelectedCount: PropTypes.number.isRequired,
+    lastProcedureSelected: PropTypes.object,
+    dataMartsSelectedCount: PropTypes.number.isRequired,
     pollFirstCycleGroup: PropTypes.func.isRequired,
     fetchCycleHistory: PropTypes.func.isRequired,
     fetchPrevCycleHistory: PropTypes.func.isRequired,
     fetchNextCycleHistory: PropTypes.func.isRequired,
     resetCycleHistory: PropTypes.func.isRequired,
-    clearCycleHistoryFetchingError: PropTypes.func.isRequired,
-    cycleHistorySelectedData: PropTypes.object.isRequired,
     selectCycleHistoryData: PropTypes.func.isRequired,
     unselectCycleHistoryData: PropTypes.func.isRequired,
     unselectAllCycleHistoryData: PropTypes.func.isRequired,
-    cycleHistorySelectedCount: PropTypes.number.isRequired,
-    proceduresSelectedCount: PropTypes.number.isRequired,
-    dataMartsSelectedCount: PropTypes.number.isRequired,
+    setCycleHistoryIntervalDuration: PropTypes.func.isRequired,
+    setCycleHistoryFilters: PropTypes.func.isRequired,
+    // Control status props
     isCurrentStatusFetching: PropTypes.bool.isRequired,
     currentStatusData: PropTypes.array.isRequired,
     currentStatusDataTotals: PropTypes.object.isRequired,
-    fetchCurrentStatus: PropTypes.func.isRequired,
-    setCycleHistoryIntervalDuration: PropTypes.func.isRequired,
-    setCycleHistoryFilters: PropTypes.func.isRequired,
-    setProcedureHistoryFilters: PropTypes.func.isRequired,
-    cycleHistoryFilters: PropTypes.object.isRequired,
     currentEtlStatus: PropTypes.string.isRequired,
-    lastProcedureSelected: PropTypes.object
+    fetchCurrentStatus: PropTypes.func.isRequired,
+    // Procedure history props
+    setProcedureHistoryFilters: PropTypes.func.isRequired
   };
 
   componentWillUnmount() {
@@ -86,61 +86,41 @@ class Home extends Component {
     fetchCycleHistory(0, value);
   };
 
-  renderPageTitle = () => {
-    const { cycleHistoryFilters, currentEtlStatus, cycleHistoryDate } = this.props;
-    let state = '';
-    let headerText = `${config.app.title} - ETL Cycle History`;
-
-    if (currentEtlStatus === 'FAILED') {
-      state = 'error';
-      headerText += ' (FAILED)';
-    } else if (currentEtlStatus === 'PAUSED') {
-      state = 'warning';
-      headerText += ' (PAUSED)';
-    } else if (cycleHistoryFilters.active === 0) {
-      state = 'error';
-      headerText += ' (INACTIVE)';
-    } else if (!isEmpty(cycleHistoryDate)) {
-      state = 'error';
-      headerText += ` (${moment(cycleHistoryDate, DEFAULT_DATE_FORMAT).format('MMM D, YYYY')})`;
-    }
-
-    return (
-      <PageHeader headerText={headerText} state={state} />
-    );
-  };
-
   render() {
     const {
       isCycleHistoryFetching,
       cycleHistoryDataLoaded,
       cycleHistoryData,
       cycleHistoryFetchingError,
-      cycleHistoryIntervalDuration,
       currentCycleGroup,
       currentCycleGroupStartDttm,
+      cycleHistoryIntervalDuration,
+      cycleHistoryDate,
+      cycleHistoryFilters,
+      cycleHistorySelectedCount,
+      cycleHistorySelectedData,
+      proceduresSelectedCount,
+      dataMartsSelectedCount,
       pollFirstCycleGroup,
       fetchPrevCycleHistory,
       fetchNextCycleHistory,
-      clearCycleHistoryFetchingError,
-      cycleHistorySelectedData,
       selectCycleHistoryData,
       unselectCycleHistoryData,
       unselectAllCycleHistoryData,
-      cycleHistorySelectedCount,
-      proceduresSelectedCount,
-      dataMartsSelectedCount,
       isCurrentStatusFetching,
       currentStatusData,
       currentStatusDataTotals,
-      fetchCurrentStatus,
-      cycleHistoryFilters,
-      cycleHistoryDate
+      currentEtlStatus,
+      fetchCurrentStatus
     } = this.props;
     return (
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
-          {this.renderPageTitle()}
+          <CycleHistoryPageHeader
+            cycleHistoryFilters={cycleHistoryFilters}
+            currentEtlStatus={currentEtlStatus}
+            cycleHistoryDate={cycleHistoryDate}
+          />
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
           <CycleHistoryTable
@@ -248,13 +228,6 @@ class Home extends Component {
             </Grid.Column>
           </Grid>
         </Segment>
-        {cycleHistoryFetchingError &&
-          <EtlErrorModal
-            open
-            error={cycleHistoryFetchingError}
-            onClose={clearCycleHistoryFetchingError}
-          />
-        }
       </div>
     );
   }
@@ -269,17 +242,17 @@ export default withMainLayout(connect(
     currentCycleGroup: etlCycleHistory.selectors.getCurrentCycleGroup(state),
     currentCycleGroupStartDttm: etlCycleHistory.selectors.getCurrentCycleGroupStartDttm(state),
     cycleHistoryIntervalDuration: etlCycleHistory.selectors.getIntervalDuration(state),
+    cycleHistoryDate: etlCycleHistory.selectors.getCycleDate(state),
+    cycleHistoryFilters: etlCycleHistory.selectors.getFilters(state),
+    cycleHistorySelectedCount: etlCycleHistory.selectors.getSelectedCount(state),
+    cycleHistorySelectedData: etlCycleHistory.selectors.getSelected(state),
+    proceduresSelectedCount: etlCycleHistory.selectors.getProceduresSelectedCount(state),
+    lastProcedureSelected: etlCycleHistory.selectors.getLastProcedureSelected(state),
+    dataMartsSelectedCount: etlCycleHistory.selectors.getDataMartsSelectedCount(state),
     isCurrentStatusFetching: state.etlCurrentStatus.isFetching,
     currentStatusData: etlCurrentStatus.selectors.getCurrentStatus(state),
     currentStatusDataTotals: etlCurrentStatus.selectors.getCurrentStatusTotals(state),
-    cycleHistorySelectedData: etlCycleHistory.selectors.getSelected(state),
-    cycleHistorySelectedCount: etlCycleHistory.selectors.getSelectedCount(state),
-    cycleHistoryDate: etlCycleHistory.selectors.getCycleDate(state),
-    proceduresSelectedCount: etlCycleHistory.selectors.getProceduresSelectedCount(state),
-    dataMartsSelectedCount: etlCycleHistory.selectors.getDataMartsSelectedCount(state),
-    cycleHistoryFilters: etlCycleHistory.selectors.getFilters(state),
-    currentEtlStatus: etlCurrentStatus.selectors.getCurrentEtlStatus(state),
-    lastProcedureSelected: etlCycleHistory.selectors.getLastProcedureSelected(state)
+    currentEtlStatus: etlCurrentStatus.selectors.getCurrentEtlStatus(state)
   }),
   dispatch => ({
     pollFirstCycleGroup: () => dispatch(etlCycleHistory.actions.pollFirstCycleGroup()),
@@ -287,15 +260,14 @@ export default withMainLayout(connect(
     fetchPrevCycleHistory: () => dispatch(etlCycleHistory.actions.fetchPrev()),
     fetchNextCycleHistory: () => dispatch(etlCycleHistory.actions.fetchNext()),
     resetCycleHistory: () => dispatch(etlCycleHistory.actions.reset()),
-    clearCycleHistoryFetchingError: () => dispatch(etlCycleHistory.actions.clearFetchingError()),
     selectCycleHistoryData: (id, data) => dispatch(etlCycleHistory.actions.select(id, data)),
     unselectCycleHistoryData: id => dispatch(etlCycleHistory.actions.unselect(id)),
     unselectAllCycleHistoryData: () => dispatch(etlCycleHistory.actions.unselectAll()),
-    fetchCurrentStatus: () => dispatch(etlCurrentStatus.actions.fetchCurrentStatus()),
     setCycleHistoryIntervalDuration: intervalDuration =>
       dispatch(etlCycleHistory.actions.setIntervalDuration(intervalDuration)),
     setCycleHistoryFilters: (key, value) => dispatch(etlCycleHistory.actions.setFilters(key, value)),
+    fetchCurrentStatus: () => dispatch(etlCurrentStatus.actions.fetchCurrentStatus()),
     setProcedureHistoryFilters: (serverName, dbName, procedureName, date) =>
-      dispatch(etlProcedureHistory.actions.setInitialFilters(serverName, dbName, procedureName, date))
+      dispatch(etlProcedureHistory.actions.setFilters(serverName, dbName, procedureName, date))
   })
 )(Home));

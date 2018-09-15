@@ -34,7 +34,7 @@ export default (state = initialState, action) => {
     }
     case actionTypes.RESET:
       return itemListReducer(state, action);
-    case actionTypes.SET_INITIAL_FILTERS:
+    case actionTypes.SET_FILTERS:
       return setFilters(state, action);
     default:
       return state;
