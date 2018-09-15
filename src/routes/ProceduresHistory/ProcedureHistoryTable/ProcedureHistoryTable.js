@@ -136,29 +136,29 @@ class ProcedureHistoryTable extends Component {
       || nextProps.fetchingError !== this.props.fetchingError;
   }
 
-  componentDidUpdate() {
-    console.log('ProcedureHistoryTable::componentDidUpdate');
-  }
-
   getTrProps = (state, row) => {
     if (!row) {
       return noTrProps;
     }
 
-    let color = 'none';
+    let bgColor = 'none';
+    let textColor = '#000';
     if (row.original.error_number > 0 || row.original.try_catch_err_id > 0) {
-      color = globalCss.colors.error;
+      bgColor = globalCss.colors.error;
+      textColor = '#FFF';
     } else if (row.original.table_status === 'RUNNING') {
-      color = globalCss.colors.success;
+      bgColor = globalCss.colors.success;
+      textColor = '#FFF';
     }
 
-    if (color === 'none') {
+    if (bgColor === 'none') {
       return noTrProps;
     }
 
     return {
       style: {
-        backgroundColor: color
+        backgroundColor: bgColor,
+        color: textColor
       }
     };
   };

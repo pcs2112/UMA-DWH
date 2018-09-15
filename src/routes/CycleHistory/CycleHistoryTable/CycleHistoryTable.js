@@ -177,24 +177,28 @@ class CycleHistoryTable extends Component {
       return noTrProps;
     }
 
-    let color = 'none';
+    let bgColor = 'none';
+    let textColor = '#000';
     if (row.original.err_num > 0 || row.original.try_catch_err_id > 0) {
-      color = globalCss.colors.error;
+      bgColor = globalCss.colors.error;
+      textColor = '#FFF';
     } else if (row.original.table_status === 'RUNNING') {
-      color = globalCss.colors.success;
+      bgColor = globalCss.colors.success;
+      textColor = '#FFF';
     } else if (row.original.table_status === 'NOT STARTED') {
-      color = globalCss.colors[row.original.cycle_group > 0 ? 'warning' : 'paleGreen'];
+      bgColor = globalCss.colors[row.original.cycle_group > 0 ? 'warning' : 'paleGreen'];
     } else if (this.isSelected(row.original[keyName])) {
-      color = globalCss.colors.rowHighLight;
+      bgColor = globalCss.colors.rowHighLight;
     }
 
-    if (color === 'none') {
+    if (bgColor === 'none') {
       return noTrProps;
     }
 
     return {
       style: {
-        backgroundColor: color
+        backgroundColor: bgColor,
+        color: textColor
       }
     };
   };
