@@ -136,3 +136,16 @@ def get_procedure_runtime_chart_data(args):
         ))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
+
+
+@blueprint.route('/api/etl/report_runtime_chart_data', methods=('GET',))
+@nocache
+@jwt_required
+@use_args(report_runtime_chart_data_args, locations=('query',))
+def get_report_runtime_chart_data(args):
+    try:
+        return jsonify(etl.fetch_report_runtime_chart_data(
+          args['report_name'], args['date'], args['months']
+        ))
+    except SPException as e:
+        raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))

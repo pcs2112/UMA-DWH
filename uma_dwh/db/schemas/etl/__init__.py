@@ -10,3 +10,4 @@ from .server_db_procedures import schema as server_db_procedures_schema
 from .server_dbs import schema as server_dbs_schema
 from .try_catch_error import schema as try_catch_error_schema
 from .procedure_runtime_chart_data import schema as procedure_runtime_chart_data_schema
+from .report_runtime_chart_data import schema as report_runtime_chart_data_schema

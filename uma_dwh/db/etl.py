@@ -287,13 +287,36 @@ def fetch_procedure_runtime_chart_data(procedure_name, date, months=3):
     return execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
       {
-        'message': 'LOAD_SEARCH_CHART',
+        'message': 'LOAD_ETL_SEARCH_CHART',
         'VARCHAR_01': procedure_name,
         'VARCHAR_02': date,
         'VARCHAR_03': str(months)
       },
       'TryCatchError_ID',
       etl_schemas.procedure_runtime_chart_data_schema
+    )
+
+
+def fetch_report_runtime_chart_data(report_name, date, months=3):
+    """
+    Returns the data for a reports's runtime chart.
+    :param report_name
+    :type report_name: str
+    :param date
+    :type date: str
+    :type months: int
+    :param months
+    """
+    return execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+      {
+        'message': 'LOAD_REPORT_SEARCH_CHART',
+        'VARCHAR_01': report_name,
+        'VARCHAR_02': date,
+        'VARCHAR_03': str(months)
+      },
+      'TryCatchError_ID',
+      etl_schemas.report_runtime_chart_data_schema
     )
 
 

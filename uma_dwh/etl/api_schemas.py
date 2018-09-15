@@ -41,3 +41,9 @@ procedure_runtime_chart_data_args = {
   'date': fields.Str(missing=''),
   'months': fields.Int(missing=6)
 }
+
+report_runtime_chart_data_args = {
+  'report_name': fields.Str(required=True),
+  'date': fields.Str(missing=''),
+  'months': fields.Int(missing=6)
+}
