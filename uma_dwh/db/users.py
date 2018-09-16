@@ -72,18 +72,15 @@ def create_user(data):
 
     result = execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      {
-        'message': 'SAVE ADMIN CONSOLE USER',
-        'VARCHAR_01': '',
-        'VARCHAR_02': new_data['employee_last_name'],
-        'VARCHAR_03': new_data['employee_first_name'],
-        'VARCHAR_04': new_data['employee_email'],
-        'VARCHAR_05': new_data['employee_phone'],
-        'VARCHAR_06': new_data['employee_cell_phone'],
-        'VARCHAR_07': '',
-        'VARCHAR_08': generate_password_hash(new_data['employee_password'])
-      },
-      'TryCatchError_ID'
+      'SAVE ADMIN CONSOLE USER',
+      '',
+      new_data['employee_last_name'],
+      new_data['employee_first_name'],
+      new_data['employee_email'],
+      new_data['employee_phone'],
+      new_data['employee_cell_phone'],
+      '',
+      generate_password_hash(new_data['employee_password'])
     )
 
     return fetch_user_by_id(result[0][0])
@@ -126,18 +123,15 @@ def update_user(id_, data):
 
     execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      {
-        'message': 'SAVE ADMIN CONSOLE USER',
-        'VARCHAR_01': id_,
-        'VARCHAR_02': new_data['employee_last_name'],
-        'VARCHAR_03': new_data['employee_first_name'],
-        'VARCHAR_04': new_data['employee_email'],
-        'VARCHAR_05': new_data['employee_phone'],
-        'VARCHAR_06': new_data['employee_cell_phone'],
-        'VARCHAR_07': user['employee_password'],
-        'VARCHAR_08': new_data['employee_password'] if is_empty(new_data['employee_password']) else ''
-      },
-      'TryCatchError_ID'
+      'SAVE ADMIN CONSOLE USER',
+      id_,
+      new_data['employee_last_name'],
+      new_data['employee_first_name'],
+      new_data['employee_email'],
+      new_data['employee_phone'],
+      new_data['employee_cell_phone'],
+      user['employee_password'],
+      new_data['employee_password'] if is_empty(new_data['employee_password']) else ''
     )
 
     return fetch_user_by_id(id_)
@@ -160,12 +154,9 @@ def login_user(email, password):
 
     execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      {
-        'message': 'LOGIN',
-        'VARCHAR_01': email,
-        'VARCHAR_02': user_result['employee_password']
-      },
-      'TryCatchError_ID'
+      'LOGIN',
+      email,
+      user_result['employee_password']
     )
 
     return user_result['id']
@@ -190,13 +181,10 @@ def reset_user_password(email, existing_password, new_password):
 
     execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      {
-        'message': 'PASSWORD RESET',
-        'VARCHAR_01': email,
-        'VARCHAR_02': user_result['employee_password'],
-        'VARCHAR_03': generate_password_hash(new_password)
-      },
-      'TryCatchError_ID'
+      'PASSWORD RESET',
+      email,
+      user_result['employee_password'],
+      generate_password_hash(new_password)
     )
 
     return user_result['id']
@@ -219,13 +207,10 @@ def forgot_password(data, scenario):
     if scenario == 3:
         execute_admin_console_sp(
           'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-          {
-            'message': 'PASSWORD RESET',
-            'VARCHAR_01': user_result['employee_email'],
-            'VARCHAR_02': user_result['employee_password'],
-            'VARCHAR_03': generate_password_hash(data['new_password'])
-          },
-          'TryCatchError_ID'
+          'PASSWORD RESET',
+          user_result['employee_email'],
+          user_result['employee_password'],
+          generate_password_hash(data['new_password'])
         )
 
         return user_result['id']

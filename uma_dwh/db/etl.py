@@ -7,19 +7,18 @@ from .schemas import etl as etl_schemas
 
 ADMIN_CONSOLE_SP_IN_ARGS_LENGTH = 10
 
-
-def fetch_control_manager():
-    """
-    Returns a the list of procedures in the ETL_CONTROL_MANAGER table.
-    """
-    return execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-      {
-        'message': 'LIST_CONTROL_MANAGER_DETAILS'
-      },
-      'TryCatchError_ID',
-      etl_schemas.control_manager_schema
-    )
+message_schema_map = {
+  'LIST_CONTROL_MANAGER_DETAILS': etl_schemas.control_manager_schema,
+  'LOAD_ETL_HISTORY': etl_schemas.cycle_history_schema,
+  'GET_ETL_PROCEDURE_HISTORY': etl_schemas.procedure_history_schema,
+  'GET TABLES AND STORED PROCEDURES': etl_schemas.server_db_procedures_schema,
+  'GET POWER BI REPORT HISTORY': etl_schemas.powerbi_report_history_schema,
+  'GET POWER BI REPORT STATISTICS': etl_schemas.powerbi_report_statistics_schema,
+  'LIST REPORT RUNS': etl_schemas.powerbi_report_runs_schema,
+  'LOAD_ETL_SEARCH_CHART': etl_schemas.procedure_runtime_chart_data_schema,
+  'LOAD_REPORT_SEARCH_CHART': etl_schemas.report_runtime_chart_data_schema,
+  'GET SERVER DB LIST': etl_schemas.server_dbs_schema
+}
 
 
 def fetch_current_status():
@@ -39,64 +38,11 @@ def fetch_current_status():
     return status_data
 
 
-def fetch_cycle_history(start_cycle_group=0, end_cycle_group=9, date=''):
-    """
-    Returns the ETL history.
-    :param start_cycle_group: Starting cycle group
-    :param end_cycle_group: Ending cycle group
-    :param date: Cycle date
-    :type start_cycle_group: int
-    :type end_cycle_group: int
-    :type date: str
-    """
-    return execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      {
-        'message': 'LOAD_ETL_HISTORY',
-        'VARCHAR_01': str(start_cycle_group),
-        'VARCHAR_02': str(end_cycle_group),
-        'VARCHAR_03': date
-      },
-      'TryCatchError_ID',
-      etl_schemas.cycle_history_schema
-    )
-
-
-def fetch_procedure_history(db_name, procedure_name, date):
-    """
-    Returns the ETL procedure history.
-    :param db_name: DB name
-    :param procedure_name: Stored procedure name
-    :param date: History date
-    :type db_name: str
-    :type procedure_name: str
-    :type date: str
-    """
-    return execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      {
-        'message': 'GET_ETL_PROCEDURE_HISTORY',
-        'VARCHAR_01': db_name,
-        'VARCHAR_02': procedure_name,
-        'VARCHAR_03': date
-      },
-      'TryCatchError_ID',
-      etl_schemas.procedure_history_schema
-    )
-
-
 def fetch_servers():
     """
     Returns the ETL servers with their dbs and procedures.
     """
-    server_dbs = execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      {
-        'message': 'GET SERVER DB LIST'
-      },
-      'TryCatchError_ID',
-      etl_schemas.server_dbs_schema
-    )
+    server_dbs = execute_admin_console_sp('MWH.UMA_WAREHOUSE_ADMIN_CONSOLE', 'GET SERVER DB LIST')
 
     tmp_servers_dict = {}
 
@@ -115,37 +61,18 @@ def fetch_servers():
         }
 
         for db_name in tmp_servers_dict[server_name]:
+            procedures = execute_admin_console_sp(
+              'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE', 'GET TABLES AND STORED PROCEDURES', server_name, db_name
+            )
+
             server['dbs'].append({
               'name': db_name,
-              'procedures': fetch_server_db_procedures(server_name, db_name)
+              'procedures': procedures
             })
 
         servers.append(server)
 
     return servers
-
-
-def fetch_server_db_procedures(server_name, db_name):
-    """
-    Returns the ETL server db procedures.
-    :param server_name: DB name
-    :param db_name: DB name
-    :type server_name: str
-    :type db_name: str
-    """
-    """
-    Returns the ETL procedure names.
-    """
-    return execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      {
-        'message': 'GET TABLES AND STORED PROCEDURES',
-        'VARCHAR_01': server_name,
-        'VARCHAR_02': db_name
-      },
-      'TryCatchError_ID',
-      etl_schemas.server_db_procedures_schema
-    )
 
 
 def fetch_error(error_id):
@@ -163,85 +90,6 @@ def fetch_error(error_id):
     )
 
     return result_as_dict(etl_schemas.try_catch_error_schema, result[0][0])
-
-
-def fetch_run_check(run_check_name):
-    """
-    Returns the ETL run check.
-    :param run_check_name: Run check name
-    :type run_check_name: str
-    """
-    return execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      {
-        'message': 'RUN_CHECK',
-        'VARCHAR_01': run_check_name
-      },
-      'TryCatchError_ID'
-    )
-
-
-def fetch_powerbi_report_history(start_date='', end_date=''):
-    """
-    Returns the POWERBI report history. Set the start_date and end_date
-    parameters to select a report within a date range.
-    :param start_date
-    :type start_date: str
-    :param end_date
-    :type end_date: str
-    """
-    return execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      {
-        'message': 'GET POWER BI REPORT HISTORY',
-        'VARCHAR_01': start_date,
-        'VARCHAR_02': end_date
-      },
-      'TryCatchError_ID',
-      etl_schemas.powerbi_report_history_schema
-    )
-
-
-def fetch_powerbi_report_statistics(report_name='ALL'):
-    """
-    Returns the POWERBI report stats. Set the report_name parameter to filter by report name.
-    :param report_name
-    :type report_name: str
-    """
-    return execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      {
-        'message': 'GET POWER BI REPORT STATISTICS',
-        'VARCHAR_01': report_name
-      },
-      'TryCatchError_ID',
-      etl_schemas.powerbi_report_statistics_schema
-    )
-
-
-def fetch_powerbi_report_runs(report_name, from_num='', to_num=''):
-    """
-    Returns the POWERBI report runs for the specified report.
-    :param report_name
-    :type report_name: str
-    :param from_num
-    :type from_num: str
-    :type from_num: int
-    :param to_num
-    :type to_num: str
-    :type to_num: int
-    """
-    return execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      {
-        'message': 'LIST REPORT RUNS',
-        'VARCHAR_01': report_name,
-        'VARCHAR_02': str(from_num),
-        'VARCHAR_03': str(to_num)
-      },
-      'TryCatchError_ID',
-      etl_schemas.powerbi_report_runs_schema
-    )
 
 
 def check_etl_status(status_data):
@@ -274,52 +122,6 @@ def check_etl_status(status_data):
     return new_etl_status
 
 
-def fetch_procedure_runtime_chart_data(procedure_name, date, months=3):
-    """
-    Returns the data for a procedure's runtime chart.
-    :param procedure_name
-    :type procedure_name: str
-    :param date
-    :type date: str
-    :type months: int
-    :param months
-    """
-    return execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-      {
-        'message': 'LOAD_ETL_SEARCH_CHART',
-        'VARCHAR_01': procedure_name,
-        'VARCHAR_02': date,
-        'VARCHAR_03': str(months)
-      },
-      'TryCatchError_ID',
-      etl_schemas.procedure_runtime_chart_data_schema
-    )
-
-
-def fetch_report_runtime_chart_data(report_name, date, months=3):
-    """
-    Returns the data for a reports's runtime chart.
-    :param report_name
-    :type report_name: str
-    :param date
-    :type date: str
-    :type months: int
-    :param months
-    """
-    return execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-      {
-        'message': 'LOAD_REPORT_SEARCH_CHART',
-        'VARCHAR_01': report_name,
-        'VARCHAR_02': date,
-        'VARCHAR_03': str(months)
-      },
-      'TryCatchError_ID',
-      etl_schemas.report_runtime_chart_data_schema
-    )
-
-
 def fill_in_admin_console_sp_in_args(in_args):
     """
     Helper function to ensure the MWH.UMA_WAREHOUSE_ADMIN_CONSOLE SP
@@ -340,21 +142,30 @@ def fill_in_admin_console_sp_in_args(in_args):
     return new_in_args
 
 
-def execute_admin_console_sp(sp_name, in_args, out_arg, schema=()):
+def execute_admin_console_sp(*args, schema=None):
     """
     Helper function to execute the MWH.UMA_WAREHOUSE_ADMIN_CONSOLE stored procedure.
-
-    :param sp_name: Stored procedure name
-    :param in_args: Dictionary of store procedure parameters and values
-    :param out_arg: Output parameter
-    :param schema: List of column names to map to each row value
-    :type sp_name: str
-    :type in_args: dict
-    :type out_arg: str
-    :type schema: list
     :return: Stored procedure result sets and out argument
     :rtype: list
     """
+    sp_name = args[0]
+    sp_message = args[1]
+    out_arg = 'TryCatchError_ID'
+
+    if schema is None:
+        schema = []
+        if sp_message in message_schema_map:
+            schema = message_schema_map[sp_message]
+
+    in_args = {
+      'message': sp_message
+    }
+
+    for x in range(2, len(args)):
+        in_arg_prefix = '0' if x < 10 else ''
+        in_arg = f'VARCHAR_{in_arg_prefix}{x - 1}'
+        in_args[in_arg] = str(args[x])
+
     result = execute_sp(sp_name, fill_in_admin_console_sp_in_args(in_args), out_arg)
     result_count = len(result)
 

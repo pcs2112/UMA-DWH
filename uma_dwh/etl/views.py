@@ -16,7 +16,9 @@ blueprint = Blueprint('etl', __name__)
 @nocache
 @jwt_required
 def get_control_manager():
-    return jsonify(etl.fetch_control_manager())
+    return jsonify(etl.execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS', 'LIST_CONTROL_MANAGER_DETAILS'
+    ))
 
 
 @blueprint.route('/api/etl/status', methods=('GET',))
@@ -31,7 +33,13 @@ def get_status():
 @use_args(pagination_args, locations=('query',))
 def get_history(args):
     try:
-        return jsonify(etl.fetch_cycle_history(args['start_cycle_group'], args['end_cycle_group'], args['date']))
+        return jsonify(etl.execute_admin_console_sp(
+          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+          'LOAD_ETL_HISTORY',
+          args['start_cycle_group'],
+          args['end_cycle_group'],
+          args['date']
+        ))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
 
@@ -42,7 +50,12 @@ def get_history(args):
 @use_args(powerbi_report_history_args, locations=('query',))
 def get_powerbi_report_history(args):
     try:
-        return jsonify(etl.fetch_powerbi_report_history(args['start_date'], args['end_date']))
+        return jsonify(etl.execute_admin_console_sp(
+          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+          'GET POWER BI REPORT HISTORY',
+          args['start_date'],
+          args['end_date']
+        ))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
 
@@ -53,7 +66,11 @@ def get_powerbi_report_history(args):
 @use_args(powerbi_report_statistics_args, locations=('query',))
 def get_powerbi_report_statistics(args):
     try:
-        return jsonify(etl.fetch_powerbi_report_statistics(args['report_name']))
+        return jsonify(etl.execute_admin_console_sp(
+          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+          'GET POWER BI REPORT STATISTICS',
+          args['report_name']
+        ))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
 
@@ -64,7 +81,13 @@ def get_powerbi_report_statistics(args):
 @use_args(powerbi_report_runs_args, locations=('query',))
 def get_powerbi_report_runs(args):
     try:
-        return jsonify(etl.fetch_powerbi_report_runs(args['report_name'], args['from_num'], args['to_num']))
+        return jsonify(etl.execute_admin_console_sp(
+          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+          'LIST REPORT RUNS',
+          args['report_name'],
+          args['from_num'],
+          args['to_num']
+        ))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
 
@@ -75,18 +98,13 @@ def get_powerbi_report_runs(args):
 @use_args(procedure_history_args, locations=('query',))
 def get_procedure_history(args):
     try:
-        return jsonify(etl.fetch_procedure_history(args['db_name'], args['procedure_name'], args['date']))
-    except SPException as e:
-        raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
-
-
-@blueprint.route('/api/etl/server_db_procedures', methods=('GET',))
-@nocache
-@jwt_required
-@use_args(server_db_procedures_args, locations=('query',))
-def get_server_db_procedures(args):
-    try:
-        return jsonify(etl.fetch_server_db_procedures(args.server_name, args.db_name))
+        return jsonify(etl.execute_admin_console_sp(
+          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+          'GET_ETL_PROCEDURE_HISTORY',
+          args['db_name'],
+          args['procedure_name'],
+          args['date']
+        ))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
 
@@ -120,7 +138,9 @@ def get_error(error_id):
 @use_args(run_check_args, locations=('query',))
 def get_run_check(args):
     try:
-        return jsonify(etl.fetch_run_check(args['run_check_name']))
+        return jsonify(etl.execute_admin_console_sp(
+          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE', 'RUN_CHECK', args['run_check_name']
+        ))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
 
@@ -131,8 +151,12 @@ def get_run_check(args):
 @use_args(procedure_runtime_chart_data_args, locations=('query',))
 def get_procedure_runtime_chart_data(args):
     try:
-        return jsonify(etl.fetch_procedure_runtime_chart_data(
-          args['procedure_name'], args['date'], args['months']
+        return jsonify(etl.execute_admin_console_sp(
+          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+          'LOAD_ETL_SEARCH_CHART',
+          args['procedure_name'],
+          args['date'],
+          args['months']
         ))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
@@ -144,8 +168,12 @@ def get_procedure_runtime_chart_data(args):
 @use_args(report_runtime_chart_data_args, locations=('query',))
 def get_report_runtime_chart_data(args):
     try:
-        return jsonify(etl.fetch_report_runtime_chart_data(
-          args['report_name'], args['date'], args['months']
+        return jsonify(etl.execute_admin_console_sp(
+          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+          'LOAD_REPORT_SEARCH_CHART',
+          args['report_name'],
+          args['date'],
+          args['months']
         ))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
