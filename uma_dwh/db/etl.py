@@ -85,7 +85,7 @@ def fetch_error(error_id):
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
       fill_in_admin_console_sp_in_args({
         'message': 'GET_ERROR_TEXT',
-        'VARCHAR_01': str(error_id),
+        'VARCHAR_01': error_id
       })
     )
 

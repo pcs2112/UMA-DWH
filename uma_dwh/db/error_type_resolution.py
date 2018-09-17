@@ -83,7 +83,7 @@ def update_file(id_, file_path_filename, description):
       'MWH.ERROR_RESOLUTIONS_MGR',
       {
         'message': 'save',
-        'ID': str(id_),
+        'ID': id_,
         'ACTIVE_FLAG': '1',
         'DESCRIPTION': description,
         'FILE_PATH_FILENAME': file_path_filename

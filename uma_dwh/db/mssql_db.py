@@ -168,7 +168,7 @@ def execute_sp(sp_name, in_args, out_arg=None):
     in_params = []
     for key in in_args:
         sql += f'@{key} = ?, '
-        in_params.append(in_args[key])
+        in_params.append(str(in_args[key]))   # Convert all in args to string
 
     sql = sql.rstrip(', ')
     sql += f';'
