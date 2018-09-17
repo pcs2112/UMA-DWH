@@ -1,5 +1,6 @@
 import os
-from .mssql_db import execute_sp, fetch_rows, fetch_row
+from .mssql_db import execute_sp
+from .etl import execute_admin_console_sp
 from .exceptions import DBException
 from .schemas.error_type_resolution import files_schema
 
@@ -8,8 +9,11 @@ def fetch_files():
     """
     Returns the list of files.
     """
-    sql = f'SELECT * FROM MWH.ERROR_RESOLUTIONS ORDER BY ID ASC'
-    return fetch_rows(sql=sql, schema=files_schema)
+    return execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+      'LIST_ERROR_RESOLUTIONS',
+      schema=files_schema
+    )
 
 
 def fetch_file_by_id(id_):
@@ -18,16 +22,23 @@ def fetch_file_by_id(id_):
     :param id_: File ID
     :type id_: int
     """
-    sql = f'SELECT * FROM MWH.ERROR_RESOLUTIONS WHERE ID = ?'
-    return fetch_row(sql=sql, in_args=[id_], schema=files_schema)
+    return execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+      'LIST_ERROR_RESOLUTIONS_BY_ID',
+      id_,
+      schema=files_schema
+    )[0]
 
 
 def fetch_last_inserted_file():
     """
     Returns the last inserted file record.
     """
-    sql = f'SELECT * FROM MWH.ERROR_RESOLUTIONS ORDER BY ID DESC'
-    return fetch_row(sql=sql, schema=files_schema)
+    return execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+      'LIST_LAST_ERROR_RESOLUTION',
+      schema=files_schema
+    )[0]
 
 
 def create_file(description, file_path_filename):

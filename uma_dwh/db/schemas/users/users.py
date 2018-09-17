@@ -10,5 +10,6 @@ schema = (
   'employee_email',
   'employee_phone',
   'employee_cell_phone',
-  'employee_password'
+  'employee_password',
+  'receives_alerts'
 )

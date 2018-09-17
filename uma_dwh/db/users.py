@@ -1,7 +1,6 @@
 from pydash.objects import pick, assign
 from pydash.predicates import is_empty
 from passlib.hash import pbkdf2_sha256 as sha256
-from .mssql_db import fetch_rows, fetch_row
 from .exceptions import DBException
 from .etl import execute_admin_console_sp
 from .schemas.users import users_schema
@@ -11,8 +10,11 @@ def fetch_users():
     """
     Returns the list of Admin Console users.
     """
-    sql = f'SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER ORDER BY ID ASC'
-    return fetch_rows(sql=sql, schema=users_schema)
+    return execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+      'LIST_ADMIN_CONSOLE_USERS',
+      schema=users_schema
+    )
 
 
 def fetch_user_by_id(id_):
@@ -21,8 +23,12 @@ def fetch_user_by_id(id_):
     :param id_: User ID
     :type id_: int
     """
-    sql = f'SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER WHERE ID = ?'
-    return fetch_row(sql=sql, in_args=[id_], schema=users_schema)
+    return execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+      'LIST_ADMIN_CONSOLE_USER_BY_ID',
+      id_,
+      schema=users_schema
+    )[0]
 
 
 def fetch_user_by_email(email):
@@ -31,8 +37,12 @@ def fetch_user_by_email(email):
     :param email: User email
     :type email: str
     """
-    sql = f'SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER WHERE EmployeeEMAIL = ?'
-    return fetch_row(sql=sql, in_args=[email], schema=users_schema)
+    return execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+      'LIST_ADMIN_CONSOLE_USER_BY_EMAIL',
+      email,
+      schema=users_schema
+    )[0]
 
 
 def create_user(data):
