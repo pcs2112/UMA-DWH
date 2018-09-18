@@ -44,6 +44,19 @@ def get_history(args):
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
 
 
+@blueprint.route('/api/etl/reports', methods=('GET',))
+@nocache
+@jwt_required
+def get_reports():
+    try:
+        return jsonify(etl.execute_admin_console_sp(
+          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+          'REPORT_SELECT_BY_DATE'
+        ))
+    except SPException as e:
+        raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
+
+
 @blueprint.route('/api/etl/report_history', methods=('GET',))
 @nocache
 @jwt_required
@@ -52,41 +65,9 @@ def get_report_history(args):
     try:
         return jsonify(etl.execute_admin_console_sp(
           'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-          'GET POWER BI REPORT HISTORY',
-          args['start_date'],
-          args['end_date']
-        ))
-    except SPException as e:
-        raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
-
-
-@blueprint.route('/api/etl/report_statistics', methods=('GET',))
-@nocache
-@jwt_required
-@use_args(report_statistics_args, locations=('query',))
-def get_report_statistics(args):
-    try:
-        return jsonify(etl.execute_admin_console_sp(
-          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-          'GET POWER BI REPORT STATISTICS',
-          args['report_name']
-        ))
-    except SPException as e:
-        raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
-
-
-@blueprint.route('/api/etl/report_runs', methods=('GET',))
-@nocache
-@jwt_required
-@use_args(report_runs_args, locations=('query',))
-def get_report_runs(args):
-    try:
-        return jsonify(etl.execute_admin_console_sp(
-          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-          'LIST REPORT RUNS',
+          'DISPLAY_REPORT_BY_DATE',
           args['report_name'],
-          args['from_num'],
-          args['to_num']
+          args['date']
         ))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))

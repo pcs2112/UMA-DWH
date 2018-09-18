@@ -1,15 +1,3 @@
-import History from './History';
-import Statistics from './Statistics';
+import Reports from './Reports';
 
-export default () => [
-  {
-    path: '/report/history',
-    component: History,
-    exact: true
-  },
-  {
-    path: '/report/statistics',
-    component: Statistics,
-    exact: true
-  }
-];
+export default Reports;

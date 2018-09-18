@@ -1,14 +1,18 @@
 import { createSelector } from 'reselect';
+import moment from 'moment';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
+import { DEFAULT_DATE_FORMAT, DEAULT_MONTHS_SIZE } from 'constants/index';
 import {
   createDataSelector,
   createFetchingErrorSelector,
   createGetItemsSelector
 } from 'helpers/selectors';
+import reportsReduxModule from 'redux/modules/reports';
 
 const emptyFilters = {
-  start_date: '',
-  end_date: ''
+  reportName: '',
+  date: moment().format(DEFAULT_DATE_FORMAT),
+  months: DEAULT_MONTHS_SIZE
 };
 
 /**
@@ -20,9 +24,10 @@ const _getData = createDataSelector('reportHistory');
  * Returns the filters from the state.
  * @param {Object} state
  */
-const _getFilters = state => (objectHasOwnProperty(state.reportHistory, 'startDate') ? {
-  start_date: state.reportHistory.startDate,
-  end_date: state.reportHistory.endDate
+const _getFilters = state => (objectHasOwnProperty(state.reportHistory, 'reportName') ? {
+  reportName: state.reportHistory.reportName,
+  date: state.reportHistory.date,
+  months: state.reportHistory.months
 } : emptyFilters);
 
 /**
@@ -40,6 +45,37 @@ export const getReportHistory = createGetItemsSelector(_getData);
  * Selector to get the report history filters.
  */
 export const getFilters = createSelector(
-  [_getFilters],
-  filtersFromState => filtersFromState
+  [reportsReduxModule.selectors.getReports, _getFilters],
+  (reports, filtersFromState) => {
+    if (reports.length < 1) {
+      return {
+        reportName: '',
+        date: moment().format(DEFAULT_DATE_FORMAT),
+        months: DEAULT_MONTHS_SIZE
+      };
+    }
+
+    let { reportName, date, months } = filtersFromState;
+
+    // Set the default report name
+    if (reportName === '') {
+      reportName = reports[0].report_name;
+    }
+
+    // Set the default date
+    if (date === '') {
+      date = moment().format(DEFAULT_DATE_FORMAT);
+    }
+
+    // Set the default months
+    if (months === '') {
+      months = DEAULT_MONTHS_SIZE;
+    }
+
+    return {
+      reportName,
+      date,
+      months
+    };
+  }
 );

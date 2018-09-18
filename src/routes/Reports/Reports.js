@@ -1,40 +1,34 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { reset, change } from 'redux-form';
 import { Segment } from 'semantic-ui-react';
 import config from 'config';
-import { sleep } from 'javascript-utils/lib/utils';
-import { FILTERS_EXEC_DELAY } from 'constants/index';
 import reportHistory from 'redux/modules/reportHistory';
+import reportRuntimeChart from 'redux/modules/reportRuntimeChart';
 import withMainLayout from 'components/WithMainLayout';
 import globalCss from 'css/global';
-import Filters from './Filters';
 import HistoryTable from './HistoryTable';
 
-const FILTERS_FORM_NAME = 'ReportHistoryFilters';
-
-class History extends Component {
+class Reports extends Component {
   static propTypes = {
     isReportHistoryFetching: PropTypes.bool.isRequired,
     reportHistoryDataLoaded: PropTypes.bool.isRequired,
     reportHistoryData: PropTypes.array.isRequired,
     reportHistoryFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     reportHistoryFilters: PropTypes.object.isRequired,
-    fetchReportHistory: PropTypes.func.isRequired,
-    resetReportHistory: PropTypes.func.isRequired,
-    setFilters: PropTypes.func.isRequired,
-    resetFilters: PropTypes.func.isRequired
+    fetchAllData: PropTypes.func.isRequired,
+    resetAllData: PropTypes.func.isRequired
   };
 
   componentDidMount() {
-    const { fetchReportHistory, reportHistoryFilters, setFilters } = this.props;
-    setFilters(reportHistoryFilters);
-    fetchReportHistory(reportHistoryFilters);
+    const { fetchAllData, reportHistoryFilters } = this.props;
+    const { reportName, date, months } = reportHistoryFilters;
+    fetchAllData(reportName, date, months);
   }
 
   componentWillUnmount() {
-    this.props.resetReportHistory();
+    const { resetAllData } = this.props;
+    resetAllData();
   }
 
   render() {
@@ -42,9 +36,7 @@ class History extends Component {
       isReportHistoryFetching,
       reportHistoryDataLoaded,
       reportHistoryData,
-      reportHistoryFetchingError,
-      fetchReportHistory,
-      resetFilters
+      reportHistoryFetchingError
     } = this.props;
     return (
       <div>
@@ -54,11 +46,7 @@ class History extends Component {
           </h1>
         </Segment>
         <Segment>
-          <Filters
-            form={FILTERS_FORM_NAME}
-            onSubmit={fetchReportHistory}
-            onCancel={resetFilters}
-          />
+          test filters
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
           <HistoryTable
@@ -82,28 +70,14 @@ export default withMainLayout(connect(
     reportHistoryFilters: reportHistory.selectors.getFilters(state)
   }),
   dispatch => ({
-    fetchReportHistory: data => sleep(FILTERS_EXEC_DELAY)
-      .then(() => {
-        if (data) {
-          return dispatch(reportHistory.actions.fetchReportHistory(
-            data.start_date,
-            data.end_date
-          ));
-        }
-
-        return dispatch(reportHistory.actions.fetchReportHistory());
-      }),
-    resetReportHistory: () => dispatch(reportHistory.actions.reset()),
-    setFilters: (data) => {
-      dispatch(change(FILTERS_FORM_NAME, 'start_date', data.start_date));
-      dispatch(change(FILTERS_FORM_NAME, 'end_date', data.end_date));
-    },
-    resetFilters: () => {
-      dispatch(reset(FILTERS_FORM_NAME));
-      sleep(FILTERS_EXEC_DELAY)
-        .then(() => {
-          dispatch(reportHistory.actions.fetchReportHistory());
-        });
+    fetchAllData: (reportName, date, months) =>
+      Promise.all([
+        dispatch(reportHistory.actions.fetchReportHistory(reportName, date, months)),
+        dispatch(reportRuntimeChart.actions.fetch(reportName, date, months))
+      ]),
+    resetAllData: () => {
+      dispatch(reportHistory.actions.reset());
+      dispatch(reportRuntimeChart.actions.reset());
     }
   })
-)(History));
+)(Reports));

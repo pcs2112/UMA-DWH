@@ -8,6 +8,7 @@ import etlProcedureHistory from './modules/etlProcedureHistory';
 import etlCycleHistory from './modules/etlCycleHistory';
 import etlRunCheck from './modules/etlRunCheck';
 import etlServers from './modules/etlServers';
+import reports from './modules/reports';
 import reportHistory from './modules/reportHistory';
 import reportRuns from './modules/reportRuns';
 import reportRuntimeChart from './modules/reportRuntimeChart';
@@ -26,6 +27,7 @@ export default combineReducers({
   etlProcedureHistory: etlProcedureHistory.reducer,
   etlRunCheck: etlRunCheck.reducer,
   etlServers: etlServers.reducer,
+  reports: reports.reducer,
   reportHistory: reportHistory.reducer,
   reportRuns: reportRuns.reducer,
   reportRuntimeChart: reportRuntimeChart.reducer,

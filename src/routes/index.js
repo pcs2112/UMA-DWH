@@ -1,12 +1,13 @@
 import etlControlManager from 'redux/modules/etlControlManager';
 import etlServers from 'redux/modules/etlServers';
+import reports from 'redux/modules/reports';
 import CycleHistory from './CycleHistory';
 import Error from './Error';
 import ForgotPassword from './ForgotPassword';
 import Login from './Login';
 import ProceduresHistory from './ProceduresHistory';
 import getErrorTypeManagementRoutes from './ErrorTypeManagement';
-import getReportRoutes from './Reports';
+import Reports from './Reports';
 import getUserRoutes from './Users';
 
 export default ({ dispatch }) => ([
@@ -21,10 +22,15 @@ export default ({ dispatch }) => ([
     component: ProceduresHistory,
     exact: true,
     fetch: () => dispatch(etlServers.actions.fetchServers())
+  },
+  {
+    path: '/reports/history',
+    component: Reports,
+    exact: true,
+    fetch: () => dispatch(reports.actions.fetch())
   }
 ]
   .concat(getErrorTypeManagementRoutes())
-  .concat(getReportRoutes())
   .concat(getUserRoutes(dispatch))
   .concat([
     {

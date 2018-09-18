@@ -3,11 +3,10 @@ from .current_cycle_status import schema as current_cycle_status_schema
 from .current_status import schema as current_status_schema
 from .cycle_history import schema as cycle_history_schema
 from .report_history import schema as report_history_schema
-from .report_statistics import schema as report_statistics_schema
-from .report_runs import schema as report_runs_schema
 from .procedure_history import schema as procedure_history_schema
 from .server_db_procedures import schema as server_db_procedures_schema
 from .server_dbs import schema as server_dbs_schema
 from .try_catch_error import schema as try_catch_error_schema
 from .procedure_runtime_chart_data import schema as procedure_runtime_chart_data_schema
 from .report_runtime_chart_data import schema as report_runtime_chart_data_schema
+from .reports import schema as reports_schema

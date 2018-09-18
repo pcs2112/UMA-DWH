@@ -2,13 +2,14 @@ export const actionTypes = {
   FETCH_BEGIN: 'reportHistory/FETCH_BEGIN',
   FETCH_SUCCESS: 'reportHistory/FETCH_SUCCESS',
   FETCH_FAIL: 'reportHistory/FETCH_FAIL',
-  RESET: 'reportHistory/RESET'
+  RESET: 'reportHistory/RESET',
+  SET_FILTERS: 'reportHistory/SET_FILTERS'
 };
 
 /**
  * Action to fetch the report history.
  */
-export const fetchReportHistory = (startDate = '', endDate = '') => ({
+export const fetchReportHistory = (reportName, date, months) => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,
@@ -16,13 +17,15 @@ export const fetchReportHistory = (startDate = '', endDate = '') => ({
   ],
   makeRequest: client => client.get('/api/etl/report_history', {
     params: {
-      start_date: startDate,
-      end_date: endDate
+      reportName,
+      date,
+      months
     }
   }),
   payload: {
-    startDate,
-    endDate
+    reportName,
+    date,
+    months
   }
 });
 
@@ -32,4 +35,14 @@ export const fetchReportHistory = (startDate = '', endDate = '') => ({
  */
 export const reset = () => ({
   type: actionTypes.RESET
+});
+
+/**
+ * Sets the filters.
+ */
+export const setFilters = (reportName, date, months) => ({
+  type: actionTypes.SET_FILTERS,
+  reportName,
+  date,
+  months
 });
