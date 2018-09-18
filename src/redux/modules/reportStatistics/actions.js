@@ -14,7 +14,7 @@ export const fetchReportStatistics = (reportName = 'ALL') => ({
     actionTypes.FETCH_SUCCESS,
     actionTypes.FETCH_FAIL
   ],
-  makeRequest: client => client.get('/api/etl/powerbi_report_statistics', {
+  makeRequest: client => client.get('/api/etl/report_statistics', {
     params: {
       report_name: reportName
     }
