@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import 'react-table/react-table.css';
 import ReactTable from 'react-table';
-import { createUrl } from 'javascript-utils/lib/url';
 import withResponsiveTable from 'components/WithResponsiveTable';
 import globalCss from 'css/global';
 
@@ -17,14 +15,6 @@ const columns = [
   {
     Header: 'REPORT_NAME',
     accessor: 'report_name',
-    Cell: row => (
-      <Link to={createUrl('/report/statistics', {
-        report: row.original.report_name
-      })}
-      >
-        {row.original.report_name}
-      </Link>
-    ),
     minWidth: 200
   },
   {
@@ -40,7 +30,7 @@ const columns = [
   {
     Header: 'STORED_PROCEDURE',
     accessor: 'stored_procedure',
-    minWidth: 250
+    width: 300
   },
   {
     Header: 'SOURCE_TABLE_NAME',
@@ -77,6 +67,22 @@ const columns = [
         paddingRight: '1rem'
       }
     })
+  },
+  {
+    Header: 'TRANS_SEC',
+    accessor: 'trans_per_sec',
+    width: 65,
+    getProps: () => ({
+      style: {
+        textAlign: 'right',
+        paddingRight: '1rem'
+      }
+    })
+  },
+  {
+    Header: 'ERROR_MESSAGE',
+    accessor: 'try_catch_err_message',
+    minWidth: 300
   }
 ];
 
@@ -102,18 +108,21 @@ class HistoryTable extends Component {
       return noTrProps;
     }
 
-    let color = 'none';
-    if (row.original.error_message) {
-      color = globalCss.colors.error;
+    let bgColor = 'none';
+    let textColor = '#000';
+    if (row.original.try_catch_err_id > 0) {
+      bgColor = globalCss.colors.error;
+      textColor = '#FFF';
     }
 
-    if (color === 'none') {
+    if (bgColor === 'none') {
       return noTrProps;
     }
 
     return {
       style: {
-        backgroundColor: color
+        backgroundColor: bgColor,
+        color: textColor
       }
     };
   };
