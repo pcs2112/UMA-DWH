@@ -8,7 +8,7 @@ schema = (
   'finished',
   'run_time',
   'rows_returned',
-  'rows_per_sec',
+  'trans_per_sec',
   'source_table_name',
   'report_name',
   'try_catch_err_id',
