@@ -6,15 +6,15 @@ import { Segment } from 'semantic-ui-react';
 import config from 'config';
 import { sleep } from 'javascript-utils/lib/utils';
 import { FILTERS_EXEC_DELAY } from 'constants/index';
-import reportHistory from 'redux/modules/ReportHistory';
+import reportHistory from 'redux/modules/reportHistory';
 import withMainLayout from 'components/WithMainLayout';
 import globalCss from 'css/global';
 import Filters from './Filters';
-import ReportHistoryTable from './ReportHistoryTable';
+import HistoryTable from './HistoryTable';
 
 const FILTERS_FORM_NAME = 'ReportHistoryFilters';
 
-class ReportHistory extends Component {
+class History extends Component {
   static propTypes = {
     isReportHistoryFetching: PropTypes.bool.isRequired,
     reportHistoryDataLoaded: PropTypes.bool.isRequired,
@@ -61,7 +61,7 @@ class ReportHistory extends Component {
           />
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
-          <ReportHistoryTable
+          <HistoryTable
             dataLoaded={reportHistoryDataLoaded}
             data={reportHistoryData}
             isFetching={isReportHistoryFetching}
@@ -106,4 +106,4 @@ export default withMainLayout(connect(
         });
     }
   })
-)(ReportHistory));
+)(History));

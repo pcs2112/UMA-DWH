@@ -78,7 +78,7 @@ const columns = [
   }
 ];
 
-class ReportRunsTable extends Component {
+class RunsTable extends Component {
   static propTypes = {
     tableHeight: PropTypes.number.isRequired,
     isFetching: PropTypes.bool.isRequired,
@@ -130,4 +130,4 @@ class ReportRunsTable extends Component {
   }
 }
 
-export default withResponsiveTable(ReportRunsTable, 320, 320);
+export default withResponsiveTable(RunsTable, 320, 320);

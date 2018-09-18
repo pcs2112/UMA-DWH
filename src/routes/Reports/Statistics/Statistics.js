@@ -11,10 +11,10 @@ import CycleArrowPagination from 'components/CycleArrowPagination';
 import globalCss from 'css/global';
 import reportStatistics from 'redux/modules/reportStatistics';
 import reportRuns from 'redux/modules/reportRuns';
-import ReportStatisticsTable from './ReportStatisticsTable';
-import ReportRunsTable from './ReportRunsTable';
+import StatisticsTable from './StatisticsTable';
+import RunsTable from './RunsTable';
 
-class ReportStatistics extends Component {
+class Statistics extends Component {
   static propTypes = {
     location: PropTypes.object.isRequired,
     isReportStatisticsFetching: PropTypes.bool.isRequired,
@@ -84,14 +84,14 @@ class ReportStatistics extends Component {
             Statistics
           </h1>
         </Segment>
-        <ReportStatisticsTable
+        <StatisticsTable
           dataLoaded={reportStatisticsDataLoaded}
           data={reportStatisticsData}
           isFetching={isReportStatisticsFetching}
           fetchingError={reportStatisticsFetchingError}
         />
         <Segment style={globalCss.pageHeaderSegment}>
-          <ReportRunsTable
+          <RunsTable
             dataLoaded={reportRunsDataLoaded}
             data={reportRunsData}
             isFetching={isReportRunsFetching}
@@ -141,4 +141,4 @@ export default withMainLayout(connect(
     fetchNextReportRuns: () => dispatch(reportRuns.actions.fetchNext()),
     resetReportRuns: () => dispatch(reportRuns.actions.reset())
   })
-)(ReportStatistics));
+)(Statistics));

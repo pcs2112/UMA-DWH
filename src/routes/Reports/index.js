@@ -1,15 +1,15 @@
-import ReportHistory from './ReportHistory';
-import ReportStatistics from './ReportStatistics';
+import History from './History';
+import Statistics from './Statistics';
 
 export default () => [
   {
     path: '/report/history',
-    component: ReportHistory,
+    component: History,
     exact: true
   },
   {
     path: '/report/statistics',
-    component: ReportStatistics,
+    component: Statistics,
     exact: true
   }
 ];

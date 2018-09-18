@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Segment, Dimmer } from 'semantic-ui-react';
 import { DetailsDiv, DetailsColDiv, DetailsLabel, DetailsRow } from './css';
 
-class ReportStatisticsTable extends Component {
+class StatisticsTable extends Component {
   static propTypes = {
     isFetching: PropTypes.bool.isRequired,
     dataLoaded: PropTypes.bool.isRequired,
@@ -46,4 +46,4 @@ class ReportStatisticsTable extends Component {
   }
 }
 
-export default ReportStatisticsTable;
+export default StatisticsTable;

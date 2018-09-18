@@ -80,7 +80,7 @@ const columns = [
   }
 ];
 
-class ReportHistoryTable extends Component {
+class HistoryTable extends Component {
   static propTypes = {
     tableHeight: PropTypes.number.isRequired,
     isFetching: PropTypes.bool.isRequired,
@@ -154,4 +154,4 @@ class ReportHistoryTable extends Component {
   }
 }
 
-export default withResponsiveTable(ReportHistoryTable, 530, 230);
+export default withResponsiveTable(HistoryTable, 530, 230);
