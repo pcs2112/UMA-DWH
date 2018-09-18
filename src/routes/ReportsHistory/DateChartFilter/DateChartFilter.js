@@ -11,6 +11,7 @@ class DateChartFilter extends Component {
     isFetching: PropTypes.bool.isRequired,
     dataLoaded: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
+    reportName: PropTypes.string.isRequired,
     months: PropTypes.number.isRequired,
     onClick: PropTypes.func.isRequired
   };
@@ -21,11 +22,11 @@ class DateChartFilter extends Component {
 
   onClick = (elems) => {
     const {
-      isFetching, data, months, onClick
+      isFetching, data, reportName, months, onClick
     } = this.props;
     if (!isFetching && elems.length > 0) {
       setTimeout(() => {
-        onClick(data[elems[0]._index].date, months);
+        onClick(reportName, data[elems[0]._index].date, months);
       }, 250);
     }
   };
@@ -82,7 +83,7 @@ class DateChartFilter extends Component {
   };
 
   render() {
-    const { isFetching, dataLoaded } = this.props;
+    const { isFetching, dataLoaded, reportName } = this.props;
     if (isFetching && !dataLoaded) {
       return (
         <div style={{ height: '200px', position: 'relative' }}>
@@ -102,7 +103,7 @@ class DateChartFilter extends Component {
           maintainAspectRatio: false,
           title: {
             display: true,
-            text: 'Reports History'
+            text: `${reportName} run history`
           },
           tooltips: {
             callbacks: {
