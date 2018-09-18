@@ -8,5 +8,7 @@ schema = (
   'week_avg_rows_returned',
   'last_30_day_count',
   'last_30_day_avg_run_time',
-  'last_30_day_avg_rows_returned'
+  'last_30_day_avg_rows_returned',
+  'try_catch_err_id',
+  'try_catch_err_message'
 )

@@ -9,5 +9,7 @@ schema = (
   'run_time',
   'rows_returned',
   'source_table_name',
-  'report_name'
+  'report_name',
+  'try_catch_err_id',
+  'try_catch_err_message'
 )

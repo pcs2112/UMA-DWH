@@ -21,16 +21,16 @@ server_db_procedures_args = {
   'db_name': fields.Str(required=True)
 }
 
-powerbi_report_history_args = {
+report_history_args = {
   'start_date': fields.Str(missing=''),
   'end_date': fields.Str(missing='')
 }
 
-powerbi_report_statistics_args = {
+report_statistics_args = {
   'report_name': fields.Str(missing='ALL')
 }
 
-powerbi_report_runs_args = {
+report_runs_args = {
   'report_name': fields.Str(required=True),
   'from_num': fields.Str(missing=''),
   'to_num': fields.Str(missing='')

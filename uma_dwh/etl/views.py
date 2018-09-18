@@ -44,11 +44,11 @@ def get_history(args):
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
 
 
-@blueprint.route('/api/etl/powerbi_report_history', methods=('GET',))
+@blueprint.route('/api/etl/report_history', methods=('GET',))
 @nocache
 @jwt_required
-@use_args(powerbi_report_history_args, locations=('query',))
-def get_powerbi_report_history(args):
+@use_args(report_history_args, locations=('query',))
+def get_report_history(args):
     try:
         return jsonify(etl.execute_admin_console_sp(
           'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
@@ -60,11 +60,11 @@ def get_powerbi_report_history(args):
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
 
 
-@blueprint.route('/api/etl/powerbi_report_statistics', methods=('GET',))
+@blueprint.route('/api/etl/report_statistics', methods=('GET',))
 @nocache
 @jwt_required
-@use_args(powerbi_report_statistics_args, locations=('query',))
-def get_powerbi_report_statistics(args):
+@use_args(report_statistics_args, locations=('query',))
+def get_report_statistics(args):
     try:
         return jsonify(etl.execute_admin_console_sp(
           'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
@@ -75,11 +75,11 @@ def get_powerbi_report_statistics(args):
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
 
 
-@blueprint.route('/api/etl/powerbi_report_runs', methods=('GET',))
+@blueprint.route('/api/etl/report_runs', methods=('GET',))
 @nocache
 @jwt_required
-@use_args(powerbi_report_runs_args, locations=('query',))
-def get_powerbi_report_runs(args):
+@use_args(report_runs_args, locations=('query',))
+def get_report_runs(args):
     try:
         return jsonify(etl.execute_admin_console_sp(
           'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',

@@ -12,9 +12,9 @@ message_schema_map = {
   'LOAD_ETL_HISTORY': etl_schemas.cycle_history_schema,
   'GET_ETL_PROCEDURE_HISTORY': etl_schemas.procedure_history_schema,
   'GET TABLES AND STORED PROCEDURES': etl_schemas.server_db_procedures_schema,
-  'GET POWER BI REPORT HISTORY': etl_schemas.powerbi_report_history_schema,
-  'GET POWER BI REPORT STATISTICS': etl_schemas.powerbi_report_statistics_schema,
-  'LIST REPORT RUNS': etl_schemas.powerbi_report_runs_schema,
+  'GET POWER BI REPORT HISTORY': etl_schemas.report_history_schema,
+  'GET POWER BI REPORT STATISTICS': etl_schemas.report_statistics_schema,
+  'LIST REPORT RUNS': etl_schemas.report_runs_schema,
   'LOAD_ETL_SEARCH_CHART': etl_schemas.procedure_runtime_chart_data_schema,
   'LOAD_REPORT_SEARCH_CHART': etl_schemas.report_runtime_chart_data_schema,
   'GET SERVER DB LIST': etl_schemas.server_dbs_schema
