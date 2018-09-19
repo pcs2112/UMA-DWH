@@ -103,7 +103,7 @@ class DateChartFilter extends Component {
           maintainAspectRatio: false,
           title: {
             display: true,
-            text: `${reportName} run history`
+            text: reportName
           },
           tooltips: {
             callbacks: {
