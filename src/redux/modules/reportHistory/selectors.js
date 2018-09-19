@@ -59,7 +59,7 @@ export const getFilters = createSelector(
 
     // Set the default report name
     if (reportName === '') {
-      reportName = reports[0].report_name;
+      reportName = reports[0].calling_proc;
     }
 
     // Set the default date
