@@ -47,11 +47,13 @@ def get_history(args):
 @blueprint.route('/api/etl/reports', methods=('GET',))
 @nocache
 @jwt_required
-def get_reports():
+@use_args(reports_args, locations=('query',))
+def get_reports(args):
     try:
         return jsonify(etl.execute_admin_console_sp(
           'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-          'REPORT_SELECT_BY_DATE'
+          'REPORT_SELECT_BY_DATE',
+          args['date']
         ))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))

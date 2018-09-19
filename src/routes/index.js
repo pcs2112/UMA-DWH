@@ -10,7 +10,7 @@ import getErrorTypeManagementRoutes from './ErrorTypeManagement';
 import ReportsHistory from './ReportsHistory';
 import getUserRoutes from './Users';
 
-export default ({ dispatch }) => ([
+export default ({ dispatch, getState }) => ([
   {
     path: '/',
     component: CycleHistory,
@@ -27,7 +27,7 @@ export default ({ dispatch }) => ([
     path: '/reports/history',
     component: ReportsHistory,
     exact: true,
-    fetch: () => dispatch(reports.actions.fetch())
+    fetch: () => dispatch(reports.actions.fetch(getState().reports.date))
   }
 ]
   .concat(getErrorTypeManagementRoutes())

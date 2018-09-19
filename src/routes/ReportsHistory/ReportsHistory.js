@@ -61,7 +61,8 @@ class Reports extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            {config.app.title} - Report History
+            {config.app.title} - Report History{' '}
+            ({current.format('MMM D, YYYY')})
           </h1>
         </Segment>
         <Segment>
@@ -117,6 +118,7 @@ export default withMainLayout(connect(
   dispatch => ({
     fetchAllData: (reportName, date, months) =>
       Promise.all([
+        dispatch(reportsReduxModule.actions.fetch(date)),
         dispatch(reportHistory.actions.fetchReportHistory(reportName, date, months)),
         dispatch(reportRuntimeChart.actions.fetch(reportName, date, months))
       ]),

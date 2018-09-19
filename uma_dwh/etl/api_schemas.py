@@ -21,6 +21,10 @@ server_db_procedures_args = {
   'db_name': fields.Str(required=True)
 }
 
+reports_args = {
+  'date': fields.Str(missing=''),
+}
+
 report_history_args = {
   'report_name': fields.Str(required=True),
   'date': fields.Str(missing=''),

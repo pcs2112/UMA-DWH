@@ -29,7 +29,6 @@ export const fetchReportHistory = (reportName, date, months) => ({
   }
 });
 
-
 /**
  * Resets the state.
  */
