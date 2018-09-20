@@ -57,6 +57,7 @@ class DropdownFilters extends Component {
 
   render() {
     const { reportName, months } = this.state;
+    const { date } = this.props;
     return (
       <Form size="small">
         <Form.Group inline>
@@ -67,6 +68,7 @@ class DropdownFilters extends Component {
           </Form.Field>
           <Form.Field width={13}>
             <Dropdown
+              key={date.replace(/-/g, '')}
               selectOnNavigation={false}
               selection
               name="false"
