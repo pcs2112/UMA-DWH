@@ -28,6 +28,11 @@ const columns = [
     width: 150
   },
   {
+    Header: 'REQUESTED_BY',
+    accessor: 'report_request_user',
+    width: 200
+  },
+  {
     Header: 'STORED_PROCEDURE',
     accessor: 'stored_procedure',
     width: 300

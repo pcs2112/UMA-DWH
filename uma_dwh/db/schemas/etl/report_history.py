@@ -11,6 +11,7 @@ schema = (
   'trans_per_sec',
   'source_table_name',
   'report_name',
+  'report_request_user',
   'try_catch_err_id',
   'try_catch_err_message'
 )
