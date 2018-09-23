@@ -41,3 +41,12 @@ report_runtime_chart_data_args = {
   'date': fields.Str(missing=''),
   'months': fields.Int(missing=6)
 }
+
+try_catch_errors_chart_data_args = {
+  'date': fields.Str(missing=''),
+  'months': fields.Int(missing=6)
+}
+
+try_catch_errors_args = {
+  'date': fields.Str(missing='')
+}

@@ -16,7 +16,9 @@ message_schema_map = {
   'LOAD_ETL_SEARCH_CHART': etl_schemas.procedure_runtime_chart_data_schema,
   'LOAD_REPORT_SEARCH_CHART': etl_schemas.report_runtime_chart_data_schema,
   'GET SERVER DB LIST': etl_schemas.server_dbs_schema,
-  'REPORT_SELECT_BY_DATE': etl_schemas.reports_schema
+  'REPORT_SELECT_BY_DATE': etl_schemas.reports_schema,
+  'LOAD_TryCatch_Search_Chart': etl_schemas.try_catch_errors_chart_data_schema,
+  'DISPLAY_TryCatch_Daily_Errors': etl_schemas.try_catch_errors_schema
 }
 
 

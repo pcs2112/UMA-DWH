@@ -160,3 +160,34 @@ def get_report_runtime_chart_data(args):
         ))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
+
+
+@blueprint.route('/api/etl/try_catch_errors_chart_data', methods=('GET',))
+@nocache
+@jwt_required
+@use_args(try_catch_errors_chart_data_args, locations=('query',))
+def get_try_catch_errors_chart_data(args):
+    try:
+        return jsonify(etl.execute_admin_console_sp(
+          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+          'LOAD_TryCatch_Search_Chart',
+          args['date'],
+          args['months']
+        ))
+    except SPException as e:
+        raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
+
+
+@blueprint.route('/api/etl/try_catch_errors', methods=('GET',))
+@nocache
+@jwt_required
+@use_args(try_catch_errors_args, locations=('query',))
+def get_try_catch_errors(args):
+    try:
+        return jsonify(etl.execute_admin_console_sp(
+          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+          'DISPLAY_TryCatch_Daily_Errors',
+          args['date']
+        ))
+    except SPException as e:
+        raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
