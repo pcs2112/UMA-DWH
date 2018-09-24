@@ -14,6 +14,8 @@ import reportRuntimeChart from './modules/reportRuntimeChart';
 import procedureRuntimeChart from './modules/procedureRuntimeChart';
 import user from './modules/user';
 import users from './modules/users';
+import tryCatchErrors from './modules/tryCatchErrors';
+import tryCatchErrorsChart from './modules/tryCatchErrorsChart';
 
 export default combineReducers({
   form,
@@ -30,5 +32,7 @@ export default combineReducers({
   reportRuntimeChart: reportRuntimeChart.reducer,
   procedureRuntimeChart: procedureRuntimeChart.reducer,
   user: user.reducer,
-  users: users.reducer
+  users: users.reducer,
+  tryCatchErrors: tryCatchErrors.reducer,
+  tryCatchErrorsChart: tryCatchErrorsChart.reducer
 });

@@ -40,6 +40,12 @@ class Reports extends Component {
     resetAllData();
   }
 
+  resetChart = () => {
+    const { fetchAllData } = this.props;
+    const { reportName, months } = this.props.reportHistoryFilters;
+    fetchAllData(reportName, moment().format(DEFAULT_DATE_FORMAT), months);
+  };
+
   render() {
     const {
       isReportHistoryFetching,

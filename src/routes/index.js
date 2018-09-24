@@ -2,6 +2,7 @@ import etlControlManager from 'redux/modules/etlControlManager';
 import etlServers from 'redux/modules/etlServers';
 import reports from 'redux/modules/reports';
 import CycleHistory from './CycleHistory';
+import DWHErrors from './DWHErrors';
 import Error from './Error';
 import ForgotPassword from './ForgotPassword';
 import Login from './Login';
@@ -28,6 +29,11 @@ export default ({ dispatch, getState }) => ([
     component: ReportsHistory,
     exact: true,
     fetch: () => dispatch(reports.actions.fetch(getState().reports.date))
+  },
+  {
+    path: '/errors/dwh',
+    component: DWHErrors,
+    exact: true
   }
 ]
   .concat(getErrorTypeManagementRoutes())

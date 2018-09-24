@@ -44,9 +44,9 @@ class ProceduresHistory extends Component {
   resetChart = () => {
     const { fetchAllData } = this.props;
     const {
-      serverName, dbName, procedureName
+      serverName, dbName, procedureName, months
     } = this.props.filters;
-    fetchAllData(serverName, dbName, procedureName, moment().format(DEFAULT_DATE_FORMAT));
+    fetchAllData(serverName, dbName, procedureName, moment().format(DEFAULT_DATE_FORMAT), months);
   };
 
   render() {
