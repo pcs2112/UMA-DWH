@@ -1,6 +1,7 @@
 import time
 import uma_dwh.utils.appcache as appcache
 import uma_dwh.utils.opsgenie as opsgenie
+from datetime import datetime, timedelta
 from .mssql_db import execute_sp, result_as_dict, result_set_as_dicts
 from .exceptions import SPException
 from .schemas import etl as etl_schemas
@@ -91,6 +92,28 @@ def fetch_error(error_id):
     )
 
     return result_as_dict(etl_schemas.try_catch_error_schema, result[0][0])
+
+
+def fetch_reports(date):
+    reports = execute_admin_console_sp(
+      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+      'REPORT_SELECT_BY_DATE',
+      date
+    )
+
+    if len(reports) < 1:
+        date_datetime = datetime.today() if date == '' else datetime.strptime(date, '%Y-%m-%d')
+        today_datetime = datetime.today()
+
+        if date_datetime.date() == today_datetime.date():
+            date = (today_datetime - timedelta(1)).strftime('%Y-%m-%d')
+            reports = execute_admin_console_sp(
+              'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+              'REPORT_SELECT_BY_DATE',
+              date
+            )
+
+    return reports
 
 
 def check_etl_status(status_data):

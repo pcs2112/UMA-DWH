@@ -50,11 +50,7 @@ def get_history(args):
 @use_args(reports_args, locations=('query',))
 def get_reports(args):
     try:
-        return jsonify(etl.execute_admin_console_sp(
-          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-          'REPORT_SELECT_BY_DATE',
-          args['date']
-        ))
+        return jsonify(etl.fetch_reports(args['date']))
     except SPException as e:
         raise InvalidUsage.etl_error(e.message, etl.fetch_error(e.error_id))
 

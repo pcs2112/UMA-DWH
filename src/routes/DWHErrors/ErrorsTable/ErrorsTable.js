@@ -13,7 +13,7 @@ const columns = [
   {
     Header: 'DATE',
     accessor: 'error_date',
-    minWidth: 200
+    width: 100
   },
   {
     Header: 'PROCEDURE',
@@ -63,12 +63,17 @@ const columns = [
   {
     Header: 'USER',
     accessor: 'error_user',
-    width: 150
+    width: 65,
+    getProps: () => ({
+      style: {
+        textAlign: 'center'
+      }
+    })
   },
   {
     Header: 'PROCEDURE_LOGGING_ERROR',
     accessor: 'procedure_logging_error',
-    width: 300
+    minWidth: 500
   },
   {
     Header: 'PROCEDURE_RUNTIME',
