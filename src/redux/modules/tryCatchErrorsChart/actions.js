@@ -9,7 +9,7 @@ export const actionTypes = {
 /**
  * Action to fetch the ETL procedure runtime chart data.
  */
-export const fetch = (procedureName, date, months) => ({
+export const fetch = (date, months) => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,
