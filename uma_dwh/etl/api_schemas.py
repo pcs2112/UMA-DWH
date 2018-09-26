@@ -38,17 +38,17 @@ path_sp_args_map = {
   'statistics': {
     'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
     'sp_message': 'DISPLAY_STATISTICS_DATA_BY_DATE',
-    'sp_in_args': ['schema', 'date']
+    'sp_in_args': ['date', 'schema']
   },
   'statistics/schemas': {
     'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
     'sp_message': 'REPORT_RUN_STATISTICS_SELECT_BY_DATE',
-    'sp_in_args': ['date']
+    'sp_in_args': ['date', 'schema']
   },
   'statistics/chart': {
     'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
     'sp_message': 'LOAD_STATISTICS_Search_Chart',
-    'sp_in_args': ['schema', 'date']
+    'sp_in_args': ['date', 'months', 'schema']
   },
   'try_catch_errors': {
     'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',

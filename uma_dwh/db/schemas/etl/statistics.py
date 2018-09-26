@@ -1,0 +1,19 @@
+schema = (
+  'id',
+  'start_dttm',
+  'status',
+  'runtime',
+  'schema_full',
+  'table_full',
+  'server',
+  'database',
+  'schema',
+  'table',
+  'statistics_method',
+  'try_catch_err_id',
+  'try_catch_err_number',
+  'try_catch_err_severity',
+  'try_catch_err_state',
+  'try_catch_err_message',
+  'try_catch_err_procedure'
+)

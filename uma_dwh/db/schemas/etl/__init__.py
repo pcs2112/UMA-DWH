@@ -6,9 +6,12 @@ from .report_history import schema as report_history_schema
 from .procedure_history import schema as procedure_history_schema
 from .server_db_procedures import schema as server_db_procedures_schema
 from .server_dbs import schema as server_dbs_schema
-from .try_catch_error import schema as try_catch_error_schema
 from .procedure_runtime_chart_data import schema as procedure_runtime_chart_data_schema
 from .report_runtime_chart_data import schema as report_runtime_chart_data_schema
 from .reports import schema as reports_schema
+from .statistics import schema as statistics_schema
+from .statistics_runtime_chart_data import schema as statistics_runtime_chart_data_schema
+from .statistics_schemas import schema as statistics_schemas_schema
+from .try_catch_error import schema as try_catch_error_schema
 from .try_catch_errors_chart_data import schema as try_catch_errors_chart_data_schema
 from .try_catch_errors import schema as try_catch_errors_schema
