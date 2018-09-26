@@ -19,7 +19,10 @@ message_schema_map = {
   'GET SERVER DB LIST': etl_schemas.server_dbs_schema,
   'REPORT_SELECT_BY_DATE': etl_schemas.reports_schema,
   'LOAD_TryCatch_Search_Chart': etl_schemas.try_catch_errors_chart_data_schema,
-  'DISPLAY_TryCatch_Daily_Errors': etl_schemas.try_catch_errors_schema
+  'DISPLAY_TryCatch_Daily_Errors': etl_schemas.try_catch_errors_schema,
+  'DISPLAY_STATISTICS_DATA_BY_DATE': etl_schemas.statistics,
+  'REPORT_RUN_STATISTICS_SELECT_BY_DATE': etl_schemas.statistics_schemas_schema,
+  'LOAD_STATISTICS_Search_Chart': etl_schemas.statistics_runtime_chart_data_schema,
 }
 
 
@@ -164,6 +167,39 @@ def fill_in_admin_console_sp_in_args(in_args):
             new_in_args[in_arg_name] = ''
 
     return new_in_args
+
+
+def execute_admin_console_sp_from_view(sp_name, sp_message, required_params, request_params):
+    """
+    Helper function to execute the MWH.UMA_WAREHOUSE_ADMIN_CONSOLE stored procedure from a view method.
+    :param sp_name: Stored procedure name
+    :type sp_name: str
+    :param sp_message: Stored procedure message
+    :type sp_message: str
+    :param required_params: List of required http query params
+    :type required_params: list
+    :param request_params: Http request parameters
+    :type request_params: dict
+    :return: Stored procedure result sets and out argument
+    :rtype: list
+    """
+    in_args = []
+
+    if len(required_params) > 0:
+        for required_param in required_params:
+            if required_param not in request_params:
+                raise SPException(
+                  f'Stored Procedure call to SP "{sp_name}" failed. Missing argument "{required_param}".',
+                  -1
+                )
+
+            in_args.append(request_params[required_param])
+
+    return execute_admin_console_sp(
+      sp_name,
+      sp_message,
+      *in_args
+    )
 
 
 def execute_admin_console_sp(*args, schema=None):
