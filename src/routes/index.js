@@ -31,7 +31,7 @@ export default ({ dispatch, getState }) => ([
     fetch: () => dispatch(reports.actions.fetch(getState().reports.date))
   },
   {
-    path: '/errors/dwh',
+    path: '/dwh/errors',
     component: DWHErrors,
     exact: true
   }

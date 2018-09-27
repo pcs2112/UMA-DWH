@@ -37,7 +37,10 @@ class MainMenu extends Component {
         <Menu.Item as={Link} to="/reports/history" active={isActive(pathname, '/reports/history')}>
           Report History
         </Menu.Item>
-        <Menu.Item as={Link} to="/errors/dwh" active={isActive(pathname, '/errors/dwh')}>
+        <Menu.Item as={Link} to="/dwh/errors" active={isActive(pathname, '/dwh/statistics')}>
+          DWH Statistics
+        </Menu.Item>
+        <Menu.Item as={Link} to="/dwh/errors" active={isActive(pathname, '/dwh/errors')}>
           DWH Errors
         </Menu.Item>
         <Menu.Item as={Link} to="/errors/management" active={isActive(pathname, '/errors/management')}>
