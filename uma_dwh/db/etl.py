@@ -97,28 +97,6 @@ def fetch_error(error_id):
     return result_as_dict(etl_schemas.try_catch_error_schema, result[0][0])
 
 
-def fetch_reports(date):
-    reports = execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-      'REPORT_SELECT_BY_DATE',
-      date
-    )
-
-    if len(reports) < 1:
-        date_datetime = datetime.today() if date == '' else datetime.strptime(date, '%Y-%m-%d')
-        today_datetime = datetime.today()
-
-        if date_datetime.date() == today_datetime.date():
-            date = (today_datetime - timedelta(1)).strftime('%Y-%m-%d')
-            reports = execute_admin_console_sp(
-              'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-              'REPORT_SELECT_BY_DATE',
-              date
-            )
-
-    return reports
-
-
 def check_etl_status(status_data):
     """
     Helper function to retrieve the current ETL status.
@@ -169,9 +147,34 @@ def fill_in_admin_console_sp_in_args(in_args):
     return new_in_args
 
 
-def execute_admin_console_sp_from_view(sp_name, sp_message, required_params, request_params):
+def get_admin_console_sp_in_args_from_dict(required_args, args):
     """
-    Helper function to execute the MWH.UMA_WAREHOUSE_ADMIN_CONSOLE stored procedure from a view method.
+    Returns the admin_console_sp in args from data in a dictionary.
+    :param required_args:
+    :type required_args: list
+    :param args:
+    :type args: dict
+    :return: List of in arguments for the admin_console_sp function
+    """
+    out_args = []
+
+    if len(required_args) > 0:
+        for required_arg in required_args:
+            if required_arg not in args:
+                raise SPException(
+                  f' Missing required argument "{required_arg}".',
+                  -1
+                )
+
+            out_args.append(args[required_arg])
+
+    return out_args
+
+
+def execute_admin_console_sp_from_date(sp_name, sp_message, required_params, request_params):
+    """
+    Helper function to execute the MWH.UMA_WAREHOUSE_ADMIN_CONSOLE stored procedure from a Flask route.
+    This function returns data from yesterday if no data is found today
     :param sp_name: Stored procedure name
     :type sp_name: str
     :param sp_message: Stored procedure message
@@ -183,17 +186,45 @@ def execute_admin_console_sp_from_view(sp_name, sp_message, required_params, req
     :return: Stored procedure result sets and out argument
     :rtype: list
     """
-    in_args = []
+    in_args = get_admin_console_sp_in_args_from_dict(required_params, request_params)
+    date = in_args[0]
 
-    if len(required_params) > 0:
-        for required_param in required_params:
-            if required_param not in request_params:
-                raise SPException(
-                  f'Stored Procedure call to SP "{sp_name}" failed. Missing argument "{required_param}".',
-                  -1
-                )
+    reports = execute_admin_console_sp(
+      sp_name,
+      sp_message,
+      date
+    )
 
-            in_args.append(request_params[required_param])
+    if len(reports) < 1:
+        date_datetime = datetime.today() if date == '' else datetime.strptime(date, '%Y-%m-%d')
+        today_datetime = datetime.today()
+
+        if date_datetime.date() == today_datetime.date():
+            date = (today_datetime - timedelta(1)).strftime('%Y-%m-%d')
+            reports = execute_admin_console_sp(
+              sp_name,
+              sp_message,
+              date
+            )
+
+    return reports
+
+
+def execute_admin_console_sp_from_route(sp_name, sp_message, required_params, request_params):
+    """
+    Helper function to execute the MWH.UMA_WAREHOUSE_ADMIN_CONSOLE stored procedure from a Flask route.
+    :param sp_name: Stored procedure name
+    :type sp_name: str
+    :param sp_message: Stored procedure message
+    :type sp_message: str
+    :param required_params: List of required http query params
+    :type required_params: list
+    :param request_params: Http request parameters
+    :type request_params: dict
+    :return: Stored procedure result sets and out argument
+    :rtype: list
+    """
+    in_args = get_admin_console_sp_in_args_from_dict(required_params, request_params)
 
     return execute_admin_console_sp(
       sp_name,
