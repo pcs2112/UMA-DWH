@@ -7,5 +7,6 @@ schema = (
   'total_runtime',
   'err_cnt',
   'avg_runtime',
-  'group_schema'
+  'group_schema',
+  'target_schema_name'
 )

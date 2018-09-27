@@ -25,7 +25,7 @@ class DropdownFilters extends Component {
   }
 
   getSchemaOptions = () => this.props.schemas.map((schema) => {
-    const schemaName = schema.group_schema;
+    const schemaName = schema.target_schema_name;
     return {
       key: schemaName,
       value: schemaName,
