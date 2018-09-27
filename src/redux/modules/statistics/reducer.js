@@ -12,6 +12,7 @@ const setFilters = (state, action) => {
   const newState = { ...state };
   newState.schema = action.schema;
   newState.date = action.date;
+  newState.months = action.months;
   return newState;
 };
 
