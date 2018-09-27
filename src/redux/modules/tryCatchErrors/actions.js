@@ -17,8 +17,7 @@ export const fetch = (date, months) => ({
   ],
   makeRequest: client => client.get('/api/etl/try_catch_errors', {
     params: {
-      date,
-      months
+      date
     }
   }),
   payload: {
@@ -37,7 +36,8 @@ export const reset = () => ({
 /**
  * Sets the filters.
  */
-export const setFilters = date => ({
+export const setFilters = (date, months) => ({
   type: actionTypes.SET_FILTERS,
-  date
+  date,
+  months
 });

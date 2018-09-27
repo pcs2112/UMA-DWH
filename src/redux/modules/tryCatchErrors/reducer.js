@@ -2,7 +2,10 @@ import itemListReducerFor, { initialState as itemListInitialState } from '../../
 import { actionTypes } from './actions';
 
 // Initial state
-const initialState = Object.assign({}, itemListInitialState);
+const initialState = Object.assign({
+  date: '',
+  months: ''
+}, itemListInitialState);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);

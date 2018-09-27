@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
 import moment from 'moment/moment';
-import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import { DEFAULT_DATE_FORMAT, DEAULT_MONTHS_SIZE } from 'constants/index';
 import {
   createDataSelector,
@@ -8,21 +7,16 @@ import {
   createFetchingErrorSelector
 } from 'helpers/selectors';
 
-const emptyFilters = {
-  date: moment().format(DEFAULT_DATE_FORMAT),
-  months: DEAULT_MONTHS_SIZE
-};
-
 const _getData = createDataSelector('tryCatchErrors');
 
 /**
  * Returns the filters from the state.
  * @param {Object} state
  */
-const _getFilters = state => (objectHasOwnProperty(state.tryCatchErrors, 'date') ? {
+const _getFilters = state => ({
   date: state.tryCatchErrors.date,
   months: state.tryCatchErrors.months
-} : emptyFilters);
+});
 
 /**
  * Returns the fetching error.
