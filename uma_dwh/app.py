@@ -2,7 +2,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
-from uma_dwh import error_type_resolution, etl, users
+from uma_dwh.routes import error_type_resolution, etl, users
 from uma_dwh.db.mssql_db import init_db
 from uma_dwh.extensions import cors
 from uma_dwh.exceptions import InvalidUsage, http_error_template
