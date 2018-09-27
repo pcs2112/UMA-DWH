@@ -18,7 +18,7 @@ const columns = [
   {
     Header: 'PROCEDURE',
     accessor: 'error_procedure',
-    width: 300
+    width: 520
   },
   {
     Header: 'RUNTIME',
