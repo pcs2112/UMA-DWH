@@ -67,7 +67,7 @@ class Reports extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            {config.app.title} - Report History{' '}
+            {config.app.title} - DWH Report History{' '}
             ({current.format('MMM D, YYYY')})
           </h1>
         </Segment>
