@@ -35,12 +35,12 @@ const columns = [
   {
     Header: 'SCHEMA_FULL',
     accessor: 'schema_full',
-    width: 250
+    width: 300
   },
   {
     Header: 'TABLE_FULL',
     accessor: 'table_full',
-    width: 250
+    width: 500
   },
   {
     Header: 'SERVER',
@@ -60,7 +60,7 @@ const columns = [
   {
     Header: 'TABLE',
     accessor: 'table',
-    width: 100
+    width: 150
   },
   {
     Header: 'STATISTICS_METHOD',
