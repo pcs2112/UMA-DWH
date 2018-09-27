@@ -3,6 +3,7 @@ import etlServers from 'redux/modules/etlServers';
 import reports from 'redux/modules/reports';
 import CycleHistory from './CycleHistory';
 import DWHErrors from './DWHErrors';
+import DWHStatistics from './DWHStatistics';
 import Error from './Error';
 import ForgotPassword from './ForgotPassword';
 import Login from './Login';
@@ -33,6 +34,11 @@ export default ({ dispatch, getState }) => ([
   {
     path: '/dwh/errors',
     component: DWHErrors,
+    exact: true
+  },
+  {
+    path: '/dwh/statistics',
+    component: DWHStatistics,
     exact: true
   }
 ]
