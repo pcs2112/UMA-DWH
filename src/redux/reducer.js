@@ -17,6 +17,7 @@ import users from './modules/users';
 import tryCatchErrors from './modules/tryCatchErrors';
 import tryCatchErrorsChart from './modules/tryCatchErrorsChart';
 import statistics from './modules/statistics';
+import statisticsChart from './modules/statisticsChart';
 import statisticsSchemas from './modules/statisticsSchemas';
 
 export default combineReducers({
@@ -38,5 +39,6 @@ export default combineReducers({
   tryCatchErrors: tryCatchErrors.reducer,
   tryCatchErrorsChart: tryCatchErrorsChart.reducer,
   statistics: statistics.reducer,
+  statisticsChart: statisticsChart.reducer,
   statisticsSchemas: statisticsSchemas.reducer
 });
