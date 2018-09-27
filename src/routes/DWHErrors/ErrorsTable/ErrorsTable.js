@@ -13,7 +13,7 @@ const columns = [
   {
     Header: 'DATE',
     accessor: 'error_date',
-    width: 100
+    width: 150
   },
   {
     Header: 'PROCEDURE',
@@ -63,7 +63,7 @@ const columns = [
   {
     Header: 'USER',
     accessor: 'error_user',
-    width: 65,
+    width: 100,
     getProps: () => ({
       style: {
         textAlign: 'center'
