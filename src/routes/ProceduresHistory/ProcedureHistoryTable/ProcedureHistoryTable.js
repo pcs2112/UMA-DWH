@@ -193,7 +193,6 @@ class ProcedureHistoryTable extends Component {
         noDataText={dataLoaded ? '0 ETL procedure history records found.' : ''}
         getTrProps={this.getTrProps}
         keyField={keyName}
-        resizable={false}
       />
     );
   }

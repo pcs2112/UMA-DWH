@@ -150,7 +150,6 @@ class StatisticsTable extends Component {
         noDataText={dataLoaded ? '0 Statistics records found.' : ''}
         getTrProps={this.getTrProps}
         keyField={keyName}
-        resizable={false}
       />
     );
   }

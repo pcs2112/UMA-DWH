@@ -139,7 +139,6 @@ class ErrorsTable extends Component {
         noDataText={dataLoaded ? '0 DWH error records found.' : ''}
         getTrProps={this.getTrProps}
         keyField={keyName}
-        resizable={false}
       />
     );
   }

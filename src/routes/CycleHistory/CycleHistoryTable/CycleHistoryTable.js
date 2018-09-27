@@ -261,7 +261,6 @@ class CycleHistoryTable extends Component {
           SubComponent={row => <RowDetails row={row} />}
           expanded={this.state.expanded}
           onExpandedChange={this.onExpanded}
-          resizable={false}
         />
       </div>
     );

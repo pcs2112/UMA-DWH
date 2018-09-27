@@ -162,7 +162,6 @@ class HistoryTable extends Component {
         noDataText={dataLoaded ? '0 Report history records found.' : ''}
         getTrProps={this.getTrProps}
         keyField={keyName}
-        resizable={false}
       />
     );
   }
