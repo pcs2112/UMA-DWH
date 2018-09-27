@@ -30,7 +30,7 @@ path_sp_args_map = {
   },
   'report_history': {
     'sp_func': 'execute_admin_console_sp_from_route',
-    'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+    'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
     'sp_message': 'DISPLAY_REPORT_BY_DATE',
     'sp_in_args': ['report_name', 'date']
   },
