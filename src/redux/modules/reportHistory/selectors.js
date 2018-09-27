@@ -11,8 +11,8 @@ import reportsReduxModule from 'redux/modules/reports';
 
 const emptyFilters = {
   reportName: '',
-  date: moment().format(DEFAULT_DATE_FORMAT),
-  months: DEAULT_MONTHS_SIZE
+  date: '',
+  months: ''
 };
 
 /**
@@ -45,22 +45,9 @@ export const getReportHistory = createGetItemsSelector(_getData);
  * Selector to get the report history filters.
  */
 export const getFilters = createSelector(
-  [reportsReduxModule.selectors.getReports, _getFilters],
-  (reports, filtersFromState) => {
-    if (reports.length < 1) {
-      return {
-        reportName: '',
-        date: moment().format(DEFAULT_DATE_FORMAT),
-        months: DEAULT_MONTHS_SIZE
-      };
-    }
-
+  [_getFilters, reportsReduxModule.selectors.getReports],
+  (filtersFromState, reports) => {
     let { reportName, date, months } = filtersFromState;
-
-    // Set the default report name
-    if (reportName === '') {
-      reportName = reports[0].calling_proc;
-    }
 
     // Set the default date
     if (date === '') {
@@ -70,6 +57,11 @@ export const getFilters = createSelector(
     // Set the default months
     if (months === '') {
       months = DEAULT_MONTHS_SIZE;
+    }
+
+    // Set the default report name
+    if (reportName === '' && reports.length > 0) {
+      reportName = reports[0].calling_proc;
     }
 
     return {

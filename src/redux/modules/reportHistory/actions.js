@@ -18,8 +18,7 @@ export const fetchReportHistory = (reportName, date, months) => ({
   makeRequest: client => client.get('/api/etl/report_history', {
     params: {
       report_name: reportName,
-      date,
-      months
+      date
     }
   }),
   payload: {

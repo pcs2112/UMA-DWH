@@ -53,8 +53,9 @@ export const reset = () => ({
 /**
  * Sets the filters.
  */
-export const setFilters = (schema, date) => ({
+export const setFilters = (schema, date, months) => ({
   type: actionTypes.SET_FILTERS,
   schema,
-  date
+  date,
+  months
 });
