@@ -9,7 +9,7 @@ export const actionTypes = {
 /**
  * Action to fetch the ETL reports.
  */
-export const fetch = date => ({
+export const fetch = (date = '') => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,

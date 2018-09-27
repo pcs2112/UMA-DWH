@@ -43,7 +43,7 @@ path_sp_args_map = {
   'statistics/schemas': {
     'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
     'sp_message': 'REPORT_RUN_STATISTICS_SELECT_BY_DATE',
-    'sp_in_args': ['date', 'schema']
+    'sp_in_args': ['date']
   },
   'statistics/chart': {
     'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',

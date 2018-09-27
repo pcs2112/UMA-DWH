@@ -1,5 +1,5 @@
 schema = (
-  'run_date',
+  'date',
   'group_start_time',
   'group_end_time',
   'group_status',
