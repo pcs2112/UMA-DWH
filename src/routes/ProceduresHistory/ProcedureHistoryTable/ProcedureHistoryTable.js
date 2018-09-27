@@ -44,7 +44,7 @@ const columns = [
   {
     Header: 'TARGET_SCHEMA_TABLE_NAME',
     Cell: row => `${row.original.target_schema}.${row.original.target_table}`,
-    width: 200
+    width: 300
   },
   {
     Header: 'STORED_PROCEDURE',

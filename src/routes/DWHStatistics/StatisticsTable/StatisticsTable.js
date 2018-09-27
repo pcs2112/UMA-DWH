@@ -60,7 +60,7 @@ const columns = [
   {
     Header: 'TABLE',
     accessor: 'table',
-    width: 150
+    width: 220
   },
   {
     Header: 'STATISTICS_METHOD',
