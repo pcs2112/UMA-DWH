@@ -21,6 +21,16 @@ const columns = [
     width: 300
   },
   {
+    Header: 'RUNTIME',
+    accessor: 'procedure_runtime',
+    width: 65,
+    getProps: () => ({
+      style: {
+        textAlign: 'right'
+      }
+    })
+  },
+  {
     Header: 'LINE',
     accessor: 'error_line',
     width: 65,
@@ -63,7 +73,7 @@ const columns = [
   {
     Header: 'USER',
     accessor: 'error_user',
-    width: 100,
+    width: 120,
     getProps: () => ({
       style: {
         textAlign: 'center'
@@ -74,16 +84,6 @@ const columns = [
     Header: 'PROCEDURE_LOGGING_ERROR',
     accessor: 'procedure_logging_error',
     minWidth: 500
-  },
-  {
-    Header: 'PROCEDURE_RUNTIME',
-    accessor: 'procedure_runtime',
-    width: 150,
-    getProps: () => ({
-      style: {
-        textAlign: 'right'
-      }
-    })
   },
   {
     Header: 'ERROR_MESSAGE',
