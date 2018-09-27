@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
 import moment from 'moment';
-import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import { DEAULT_MONTHS_SIZE, DEFAULT_DATE_FORMAT } from 'constants/index';
 import {
   createDataSelector,
@@ -8,12 +7,6 @@ import {
   createFetchingErrorSelector
 } from 'helpers/selectors';
 import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
-
-const emptyFilters = {
-  schema: '',
-  date: '',
-  months: ''
-};
 
 const _getData = createDataSelector('statistics');
 
@@ -27,11 +20,11 @@ export const getFetchingError = createFetchingErrorSelector('statistics');
  * Returns the filters from the state.
  * @param {Object} state
  */
-const _getFilters = state => (objectHasOwnProperty(state.statistics, 'schema') ? {
+const _getFilters = state => ({
   schema: state.statistics.schema,
   date: state.statistics.date,
   months: state.statistics.months
-} : emptyFilters);
+});
 
 /**
  * Returns the DWH statistics from the state.
