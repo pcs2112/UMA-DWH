@@ -35,17 +35,17 @@ const columns = [
   {
     Header: 'SCHEMA_FULL',
     accessor: 'schema_full',
-    width: 200
+    width: 250
   },
   {
     Header: 'TABLE_FULL',
     accessor: 'table_full',
-    width: 200
+    width: 250
   },
   {
     Header: 'SERVER',
     accessor: 'server',
-    width: 100
+    width: 120
   },
   {
     Header: 'DATABASE',

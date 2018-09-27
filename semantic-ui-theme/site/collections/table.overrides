@@ -13,7 +13,7 @@
 }
 
 .ReactTable.status-table .rt-td {
-  padding: 0px 2px !important;
+  padding: 0px 4px !important;
 }
 
 .ReactTable.status-table .rt-tfoot .rt-td {
@@ -26,7 +26,7 @@
 }
 
 .ReactTable .rt-tbody .rt-td {
-  padding: 2px 2px;
+  padding: 2px 4px;
 }
 
 .ReactTable .rt-td i.expander {
@@ -35,5 +35,5 @@
 
 .ui.internally.celled.grid .row .column {
   font-size: 10px;
-  padding: 2px 2px !important;
+  padding: 2px 4px !important;
 }
