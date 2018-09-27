@@ -10,6 +10,7 @@ from .procedure_runtime_chart_data import schema as procedure_runtime_chart_data
 from .report_runtime_chart_data import schema as report_runtime_chart_data_schema
 from .reports import schema as reports_schema
 from .statistics import schema as statistics_schema
+from .statistics_last_date import schema as statistics_last_date_schema
 from .statistics_runtime_chart_data import schema as statistics_runtime_chart_data_schema
 from .statistics_schemas import schema as statistics_schemas_schema
 from .try_catch_error import schema as try_catch_error_schema

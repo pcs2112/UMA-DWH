@@ -20,7 +20,8 @@ message_schema_map = {
   'REPORT_SELECT_BY_DATE': etl_schemas.reports_schema,
   'LOAD_TryCatch_Search_Chart': etl_schemas.try_catch_errors_chart_data_schema,
   'DISPLAY_TryCatch_Daily_Errors': etl_schemas.try_catch_errors_schema,
-  'DISPLAY_STATISTICS_DATA_BY_DATE': etl_schemas.statistics,
+  'DISPLAY_STATISTICS_DATA_BY_DATE': etl_schemas.statistics_schema,
+  'REPORT_RUN_STATISTICS_LAST_DATE': etl_schemas.statistics_last_date_schema,
   'REPORT_RUN_STATISTICS_SELECT_BY_DATE': etl_schemas.statistics_schemas_schema,
   'LOAD_STATISTICS_Search_Chart': etl_schemas.statistics_runtime_chart_data_schema,
 }

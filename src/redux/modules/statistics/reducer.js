@@ -30,6 +30,12 @@ export default (state = initialState, action) => {
       const newState = itemListReducer(state, action);
       return setFilters(newState, action);
     }
+    case actionTypes.FETCH_LAST_DATE_SUCCESS:
+      return {
+        ...state,
+        date: action.response[0].date,
+        staled_stats: action.response[0].staled_stats === 1
+      };
     case actionTypes.RESET:
       return itemListReducer(state, action);
     case actionTypes.SET_FILTERS:

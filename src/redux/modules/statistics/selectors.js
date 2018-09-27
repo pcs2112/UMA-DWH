@@ -11,8 +11,8 @@ import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
 
 const emptyFilters = {
   schema: '',
-  date: moment().format(DEFAULT_DATE_FORMAT),
-  months: DEAULT_MONTHS_SIZE
+  date: '',
+  months: ''
 };
 
 const _getData = createDataSelector('statistics');
@@ -42,20 +42,12 @@ export const getStatistics = createGetItemsSelector(_getData);
  * Selector to get the report history filters.
  */
 export const getFilters = createSelector(
-  [statisticsSchemasReduxModule.selectors.getSchemas, _getFilters],
-  (schemas, filtersFromState) => {
-    if (schemas.length < 1) {
-      return {
-        schema: '',
-        date: moment().format(DEFAULT_DATE_FORMAT),
-        months: DEAULT_MONTHS_SIZE
-      };
-    }
-
+  [_getFilters, statisticsSchemasReduxModule.selectors.getSchemas],
+  (filtersFromState, schemas) => {
     let { schema, date, months } = filtersFromState;
 
     // Set the default schema
-    if (schema === '') {
+    if (schema === '' && schemas.length > 0) {
       schema = schemas[0].group_schema;
     }
 

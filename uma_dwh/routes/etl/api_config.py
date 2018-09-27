@@ -64,6 +64,11 @@ path_sp_args_map = {
     'sp_message': 'LOAD_STATISTICS_Search_Chart',
     'sp_in_args': ['date', 'months', 'schema']
   },
+  'statistics/last_date': {
+    'sp_func': 'execute_admin_console_sp_from_route',
+    'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+    'sp_message': 'REPORT_RUN_STATISTICS_LAST_DATE'
+  },
   'try_catch_errors': {
     'sp_func': 'execute_admin_console_sp_from_route',
     'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',

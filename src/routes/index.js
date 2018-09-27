@@ -1,6 +1,7 @@
 import etlControlManager from 'redux/modules/etlControlManager';
 import etlServers from 'redux/modules/etlServers';
 import reports from 'redux/modules/reports';
+import statistics from 'redux/modules/statistics';
 import statisticsSchemas from 'redux/modules/statisticsSchemas';
 import CycleHistory from './CycleHistory';
 import DWHErrors from './DWHErrors';
@@ -41,7 +42,8 @@ export default ({ dispatch, getState }) => ([
     path: '/dwh/statistics',
     component: DWHStatistics,
     exact: true,
-    fetch: () => dispatch(statisticsSchemas.actions.fetch(getState().statisticsSchemas.date))
+    fetch: () => dispatch(statistics.actions.fetchLastDate())
+      .then(() => dispatch(statisticsSchemas.actions.fetch(getState().statistics.date)))
   }
 ]
   .concat(getErrorTypeManagementRoutes())
