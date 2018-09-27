@@ -16,6 +16,8 @@ import user from './modules/user';
 import users from './modules/users';
 import tryCatchErrors from './modules/tryCatchErrors';
 import tryCatchErrorsChart from './modules/tryCatchErrorsChart';
+import statistics from './modules/statistics';
+import statisticsSchemas from './modules/statisticsSchemas';
 
 export default combineReducers({
   form,
@@ -34,5 +36,7 @@ export default combineReducers({
   user: user.reducer,
   users: users.reducer,
   tryCatchErrors: tryCatchErrors.reducer,
-  tryCatchErrorsChart: tryCatchErrorsChart.reducer
+  tryCatchErrorsChart: tryCatchErrorsChart.reducer,
+  statistics: statistics.reducer,
+  statisticsSchemas: statisticsSchemas.reducer
 });
