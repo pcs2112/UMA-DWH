@@ -1,0 +1,179 @@
+--   C8_MWH.MNG_ETL_CONTROL_MANAGER_V5.sql  
+
+--    sqlcmd -S localhost -U sa -P 1F0rg0t1 -i  C8_MWH.MNG_ETL_CONTROL_MANAGER_V5.sql
+
+
+
+USE [UMA_DWH]
+
+GO
+
+
+
+SET ANSI_NULLS ON
+
+GO
+
+ 
+
+SET QUOTED_IDENTIFIER ON
+
+GO
+
+ 
+IF EXISTS (SELECT * FROM sys.objects so JOIN  sys.schemas ss on (so.schema_id = ss.schema_id) WHERE so.type = 'P' AND so.name = 'MNG_ETL_CONTROL_MANAGER' and ss.name = 'MWH')
+
+       DROP PROCEDURE MWH.MNG_ETL_CONTROL_MANAGER
+
+GO
+
+
+ 
+
+CREATE PROCEDURE [MWH].[MNG_ETL_CONTROL_MANAGER]
+
+  @message VARCHAR(20),   --  valid meaages :   ADD, RUN, REPORT,  RUN_ALL
+
+  @DATA_MART_NAME VARCHAR(80) ,
+
+  @PROCEDURE_NAME VARCHAR(80) ,
+
+  @MIN_CALL_DURATION_MINUTES INT  ,
+
+  @MAX_CALL_DURATION_MINUTES INT,
+
+  @PRIORITY SMALLINT,     --  the lower the number the sooner in the list of SP to get executed
+
+  @ACTIVE   SMALLINT,
+
+  @CHECK_ETL_FLOW_START_TIME TIME(3),
+
+  @CHECK_ETL_FLOW_END_TIME  TIME(3)
+
+ 
+
+ 
+
+
+ AS
+
+ 
+
+SET NOCOUNT ON;
+
+DECLARE @FND_ID                  INTEGER = -1;
+
+DECLARE @InsertedRows AS TABLE (Id int)
+
+DECLARE @ETL_CONTROL_MANAGER_HISTORY_Id INTEGER = -1;
+
+DECLARE @MY_ETL_CONTROL_MANAGER_ID INTEGER = -1;
+
+ 
+
+INSERT INTO MWH.ETL_CONTROL_MANAGER_HISTORY  (MESSAGE, PROCEDURE_NAME, DATA_MART_NAME, MIN_CALL_DURATION_MINUTES, MAX_CALL_DURATION_MINUTES, PRIORITY, ACTIVE, CHECK_ETL_FLOW_START_TIME, CHECK_ETL_FLOW_END_TIME  )  
+
+ VALUES (@message,  UPPER(@PROCEDURE_NAME),UPPER(@DATA_MART_NAME), @MIN_CALL_DURATION_MINUTES, @MAX_CALL_DURATION_MINUTES, @PRIORITY, @ACTIVE, @CHECK_ETL_FLOW_START_TIME, @CHECK_ETL_FLOW_END_TIME);
+
+SELECT @ETL_CONTROL_MANAGER_HISTORY_Id = @@IDENTITY ;
+
+ 
+
+ 
+
+IF  @message = 'ADD'
+
+       BEGIN
+
+ 
+
+              SELECT @MY_ETL_CONTROL_MANAGER_ID  =  ID
+
+              FROM MWH.ETL_CONTROL_MANAGER
+
+              WHERE DATA_MART_NAME = UPPER(@DATA_MART_NAME)
+
+              AND PROCEDURE_NAME = UPPER(@PROCEDURE_NAME);
+
+ 
+
+              IF (@MY_ETL_CONTROL_MANAGER_ID  =  -1)
+
+                     BEGIN
+
+                           INSERT INTO MWH.ETL_CONTROL_MANAGER (PROCEDURE_NAME, DATA_MART_NAME, MIN_CALL_DURATION_MINUTES, MAX_CALL_DURATION_MINUTES, PRIORITY, ACTIVE )
+
+                           VALUES ( UPPER(@PROCEDURE_NAME) , UPPER(@DATA_MART_NAME), @MIN_CALL_DURATION_MINUTES, @MAX_CALL_DURATION_MINUTES, @PRIORITY, @ACTIVE );
+
+                           SELECT @MY_ETL_CONTROL_MANAGER_ID = @@IDENTITY;
+
+                    END
+
+              ELSE
+
+                     BEGIN
+
+                           UPDATE MWH.ETL_CONTROL_MANAGER
+
+                                   SET MIN_CALL_DURATION_MINUTES =  @MIN_CALL_DURATION_MINUTES,
+
+                                        MAX_CALL_DURATION_MINUTES =  @MAX_CALL_DURATION_MINUTES,
+
+                                        PRIORITY  = @PRIORITY
+
+                                  WHERE ID = @MY_ETL_CONTROL_MANAGER_ID; 
+
+                     END
+
+ 
+
+              UPDATE MWH.ETL_CONTROL_MANAGER_HISTORY
+
+              SET ETL_CONTROL_MANAGER_ID = @MY_ETL_CONTROL_MANAGER_ID
+
+              WHERE ID = @ETL_CONTROL_MANAGER_HISTORY_Id;
+
+ 
+
+       END
+
+ 
+
+ELSE
+
+      BEGIN
+
+                     INSERT INTO  "S_MST"."UMA_DWH_ETL_ERRORS" ("ERROR_DESCRI", "ETL_JOB_TABLE", "ETL_JOB_TABLE_ID"  )
+
+                     VALUES (  ' MWH.MNG_ETL_CONTROL_MANAGER  message error, no RUNNING process for ID : ' , 'MWH.ETL_CONTROL_MANAGER_HISTORY', 0  );
+
+       END
+
+ 
+
+ 
+
+ 
+
+SELECT   @ETL_CONTROL_MANAGER_HISTORY_Id;
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+GO
+
+ 
+
+ 
+
+ 
+

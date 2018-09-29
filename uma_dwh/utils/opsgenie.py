@@ -1,7 +1,7 @@
-import uma_dwh.db.etl
 from opsgenie.swagger_client import AlertApi
 from opsgenie.swagger_client import configuration
 from opsgenie.swagger_client.models import CreateAlertRequest
+from uma_dwh.db.etl import fetch_error
 
 
 def init_opsgenie(app):
@@ -10,7 +10,7 @@ def init_opsgenie(app):
 
 
 def send_alert(error_id):
-    error = uma_dwh.db.etl.fetch_error(error_id)
+    error = fetch_error(error_id)
     response = AlertApi().create_alert(
         body=CreateAlertRequest(
             message='UMA DWH Error',
