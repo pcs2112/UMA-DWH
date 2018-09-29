@@ -2,7 +2,6 @@ import os
 from .mssql_db import execute_sp
 from .etl import execute_admin_console_sp
 from .exceptions import DBException
-from .schemas.error_type_resolution import files_schema
 
 
 def fetch_files():
@@ -11,8 +10,7 @@ def fetch_files():
     """
     return execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-      'LIST_ERROR_RESOLUTIONS',
-      schema=files_schema
+      'LIST_ERROR_RESOLUTIONS'
     )
 
 
@@ -25,8 +23,7 @@ def fetch_file_by_id(id_):
     return execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
       'LIST_ERROR_RESOLUTIONS_BY_ID',
-      id_,
-      schema=files_schema
+      id_
     )[0]
 
 
@@ -36,8 +33,7 @@ def fetch_last_inserted_file():
     """
     return execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-      'LIST_LAST_ERROR_RESOLUTION',
-      schema=files_schema
+      'LIST_LAST_ERROR_RESOLUTION'
     )[0]
 
 

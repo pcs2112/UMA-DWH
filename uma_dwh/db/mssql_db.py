@@ -1,6 +1,7 @@
 """ DB module used to interact with SQL server """
 import sys
 import pyodbc
+import re
 from flask import g
 
 this = sys.modules[__name__]
@@ -90,57 +91,70 @@ def result_set_as_dicts(schema, rows):
     return [dict(zip([field.lower() for field in schema], row)) for row in rows]
 
 
-def fetch_rows(sql, in_args=(), schema=()):
+def normalize_column_name(name):
+    """Function to convert column names to snake case"""
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
+
+def get_column_names(result_set_description):
+    """
+    Gets the columns names using cursor's description.
+    :param result_set_description: Cursor description
+    :type result_set_description: list
+    """
+    column_names = []
+    for description in result_set_description:
+        if description[0]:
+            column_names.append(normalize_column_name(description[0]))
+
+    return column_names
+
+
+def fetch_rows(sql, in_args=()):
     """
     Returns a list of records.
 
     :param sql: SQL command
     :param in_args: Parameters to bind into the query
-    :param schema: List of column names to map to each row value
     :type sql: str
     :type in_args: list
-    :type schema: list
     :return:
     :rtype: list
     """
     cursor = get_db().cursor()
     cursor.execute(sql, in_args)
     rows = cursor.fetchall()
+    column_names = get_column_names(cursor.description)
     cursor.close()
+
     if len(rows) < 1:
         return ()
 
-    if len(schema) > 1:
-        return result_set_as_dicts(schema, rows)
-
-    return rows
+    return result_set_as_dicts(column_names, rows)
 
 
-def fetch_row(sql, in_args=(), schema=()):
+def fetch_row(sql, in_args=()):
     """
     Returns one record.
 
     :param sql: SQL command
     :param in_args: Parameters to bind into the query
-    :param schema: List of column names to map to each row value
     :type sql: str
     :type in_args: list
-    :type schema: list
     :return:
     :rtype: dict or list or None
     """
     cursor = get_db().cursor()
     cursor.execute(sql, in_args)
     row = cursor.fetchone()
+    column_names = get_column_names(cursor.description)
     cursor.close()
 
     if row is None:
         return None
 
-    if len(schema) > 1:
-        return result_as_dict(schema, row)
-
-    return row
+    return result_as_dict(column_names, row)
 
 
 def execute_sp(sp_name, in_args, out_arg=None):
@@ -183,7 +197,12 @@ def execute_sp(sp_name, in_args, out_arg=None):
 
     while 1:
         try:
-            result.append(cursor.fetchall())
+            result_set = cursor.fetchall()
+            column_names = get_column_names(cursor.description)
+            if len(column_names) > 0:
+                result.append(result_set_as_dicts(column_names, result_set))
+            else:
+                result.append(result_set)
         except pyodbc.ProgrammingError:
             pass
 

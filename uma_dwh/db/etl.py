@@ -2,29 +2,10 @@ import time
 import uma_dwh.utils.appcache as appcache
 import uma_dwh.utils.opsgenie as opsgenie
 from datetime import datetime, timedelta
-from .mssql_db import execute_sp, result_as_dict, result_set_as_dicts
+from .mssql_db import execute_sp
 from .exceptions import SPException
-from .schemas import etl as etl_schemas
 
 ADMIN_CONSOLE_SP_IN_ARGS_LENGTH = 10
-
-message_schema_map = {
-  'LIST_CONTROL_MANAGER_DETAILS': etl_schemas.control_manager_schema,
-  'LOAD_ETL_HISTORY': etl_schemas.cycle_history_schema,
-  'GET_ETL_PROCEDURE_HISTORY': etl_schemas.procedure_history_schema,
-  'GET TABLES AND STORED PROCEDURES': etl_schemas.server_db_procedures_schema,
-  'DISPLAY_REPORT_BY_DATE': etl_schemas.report_history_schema,
-  'LOAD_ETL_SEARCH_CHART': etl_schemas.procedure_runtime_chart_data_schema,
-  'LOAD_REPORT_SEARCH_CHART': etl_schemas.report_runtime_chart_data_schema,
-  'GET SERVER DB LIST': etl_schemas.server_dbs_schema,
-  'REPORT_SELECT_BY_DATE': etl_schemas.reports_schema,
-  'LOAD_TryCatch_Search_Chart': etl_schemas.try_catch_errors_chart_data_schema,
-  'DISPLAY_TryCatch_Daily_Errors': etl_schemas.try_catch_errors_schema,
-  'DISPLAY_STATISTICS_DATA_BY_DATE': etl_schemas.statistics_schema,
-  'REPORT_RUN_STATISTICS_LAST_DATE': etl_schemas.statistics_last_date_schema,
-  'REPORT_RUN_STATISTICS_SELECT_BY_DATE': etl_schemas.statistics_schemas_schema,
-  'LOAD_STATISTICS_Search_Chart': etl_schemas.statistics_runtime_chart_data_schema,
-}
 
 
 def fetch_current_status():
@@ -38,7 +19,7 @@ def fetch_current_status():
       }
     )
 
-    status_data = result_set_as_dicts(etl_schemas.current_cycle_status_schema, result[0])
+    status_data = result[0]
     # check_etl_status(status_data)
 
     return status_data
@@ -95,7 +76,7 @@ def fetch_error(error_id):
       })
     )
 
-    return result_as_dict(etl_schemas.try_catch_error_schema, result[0][0])
+    return result[0][0]
 
 
 def check_etl_status(status_data):
@@ -234,7 +215,7 @@ def execute_admin_console_sp_from_route(sp_name, sp_message, required_params, re
     )
 
 
-def execute_admin_console_sp(*args, schema=None):
+def execute_admin_console_sp(*args):
     """
     Helper function to execute the MWH.UMA_WAREHOUSE_ADMIN_CONSOLE stored procedure.
     :return: Stored procedure result sets and out argument
@@ -243,11 +224,6 @@ def execute_admin_console_sp(*args, schema=None):
     sp_name = args[0]
     sp_message = args[1]
     out_arg = 'TryCatchError_ID'
-
-    if schema is None:
-        schema = []
-        if sp_message in message_schema_map:
-            schema = message_schema_map[sp_message]
 
     in_args = {
       'message': sp_message
@@ -269,11 +245,4 @@ def execute_admin_console_sp(*args, schema=None):
     if result_count == 1:
         return []
 
-    if len(schema) > 1:
-        data = result_set_as_dicts(schema, result[0])
-    else:
-        data = []
-        for row in result[0]:
-            data.append([x for x in row])
-
-    return data
+    return result[0]

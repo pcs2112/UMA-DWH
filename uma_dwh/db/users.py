@@ -3,7 +3,6 @@ from pydash.predicates import is_empty
 from passlib.hash import pbkdf2_sha256 as sha256
 from .exceptions import DBException
 from .etl import execute_admin_console_sp
-from .schemas.users import users_schema
 
 
 def fetch_users():
@@ -12,8 +11,7 @@ def fetch_users():
     """
     return execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-      'LIST_ADMIN_CONSOLE_USERS',
-      schema=users_schema
+      'LIST_ADMIN_CONSOLE_USERS'
     )
 
 
@@ -26,8 +24,7 @@ def fetch_user_by_id(id_):
     return execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
       'LIST_ADMIN_CONSOLE_USER_BY_ID',
-      id_,
-      schema=users_schema
+      id_
     )[0]
 
 
@@ -40,8 +37,7 @@ def fetch_user_by_email(email):
     return execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
       'LIST_ADMIN_CONSOLE_USER_BY_EMAIL',
-      email,
-      schema=users_schema
+      email
     )[0]
 
 
