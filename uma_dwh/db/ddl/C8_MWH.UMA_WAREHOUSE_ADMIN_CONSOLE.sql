@@ -1,13 +1,177 @@
-
-
-
 -- C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE.sql
 
 -- sqlcmd -S localhost -U [srv_mlkpythdap01_DB] -P 1F0rg0t1 -i  C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE.sql
 --[srv_mlkpythdap01_DB]
 
 
---     exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'GET POWER BI REPORT HISTORY'  , '' , '', '' , '', '' , '', '' , '', ''
+
+
+
+/*    MESSAGE SUPPORTED BY THIS SP
+USE [UMA_DWH]
+GO
+
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE LOGIN 'test_login' WITH PASSWORD '1F0rg0t1'
+
+ALTER USER [ULTIMATEMEDICAL\srv_mlkpythdap01_DB] with LOGIN = srv_mlkpythdap01_DB
+
+grant connect to [ULTIMATEMEDICAL\srv_mlkpythdap01_DB]
+
+grant exec on MWH.UMA_WAREHOUSE_ADMIN_CONSOLE to [ULTIMATEMEDICAL\srv_mlkpythdap01_DB]
+
+revoke exec on MWH.UMA_WAREHOUSE_ADMIN_CONSOLE from public
+
+
+
+
+  exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'CHECK_ETL_STATUS' , '0', '9', '' , '', '' , '', '' , '', ''
+
+  exec MWH.GET_CURRENT_ETL_CYCLE_STATUS 'I3_MCS'
+
+  exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE  'RUN_CHECK' , 'S_LION.MERGE_MCS_DATA_POINT_SUMMARY', '1';
+
+
+  exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'GET_ERROR_TEXT' , '24991', '';
+
+
+  exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'GET_ETL_PROCEDURE_HISTORY' , 'S_I3.MERGE_MCS_INTERACTIVE_SUMMARY', '' , '', '' , '', '' , '', '', '';
+
+
+  exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'LOGIN' , 'cmatula@ultimatemedical.edu' , 'resetasap' , '8454718505', '8453372852';
+
+  exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'PASSWORD RESET' , 'cmatula@ultimatemedical.edu' , 'resetasap' , 'newpass123';
+
+  exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'GET POWER BI REPORT HISTORY'  , '' , '', '' , '', '' , '', '' , '', ''
+
+
+    exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE  'GET POWER BI REPORT HISTORY'  , '2018-06-14 00:00' , '2018-06-30 23:00', '' , '', '' , '', '' , '', ''
+
+    exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'GET POWER BI REPORT STATISTICS' , 'MWH.F_I3_CALLS_V3_SP', '' , '', '' , '', '' , '', '' , ''
+
+       exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE     'GET POWER BI REPORT STATISTICS' , 'all', '' , '', '' , '', '' , '', '' , ''
+
+
+       exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE     'LIST REPORT RUNS' , 'MWH.REPORT_MCS_STAGE_SUMMARY_HR_V2', '0', '100' , '', '' , '', '' , '', ''
+
+
+
+
+   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'CHECK_ETL_STATUS', '' ,''  ,'','','','','','',''
+
+
+
+
+       exec   MWH.GET_CURRENT_ETL_CYCLE_STATUS  'I3_NON-MCS';
+
+       exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'LIST REPORT RUNS' , '' ,''  ,'','','','','','',''
+
+       exec mwh.get_current_etl_cycle_status  'I3_MCS'
+
+
+       grant execute on MWH.UMA_WAREHOUSE_ADMIN_CONSOLE to public
+       go
+
+
+       revoke execute on MWH.UMA_WAREHOUSE_ADMIN_CONSOLE from public
+       go
+
+
+SELECT * FROM MWH.ETL_CONTROL_MANAGER_view ORDER BY DATA_MART_NAME ASC, PRIORITY DESC
+
+
+grant select on MWH.ETL_CONTROL_MANAGER_view to public
+go
+
+
+
+select * from  [MWH].[ETL_HISTORY] eh with(nolock)   where   [CALLING_PROC] = @My_SP_NAME
+
+
+MLK-TEL-P-SQ02       MCS_LDS
+MLK-TEL-P-SQ02       I3_IC_FLM
+MLK-TEL-P-SQ01       I3_IC_40
+MLK-SQL-P-sq03       i3Leads
+MLK-INF-P-SQ02       LION
+MLK-EDM-D-SQ02       UMA_DWH
+MLK-EDM-D-SQ02       IMPORT
+MLK-DWH-P-SQ02       FREEDOM
+MLK-DWH-P-SQ02       CV_Prod
+
+
+  exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'GET TABLES AND STORED PROCEDURES' , 'MLK-TEL-P-SQ02' , 'I3_IC_FLM';
+
+  exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'GET TABLES AND STORED PROCEDURES' , 'MLK-TEL-P-SQ02' , 'I3_IC_FLM';
+
+  exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'GET TABLES AND STORED PROCEDURES' , 'MLK-TEL-P-SQ01' , 'I3_IC_40';
+
+  exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'GET TABLES AND STORED PROCEDURES' , 'MLK-TEL-P-SQ01' , 'I3_IC_40';
+
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE  'SAVE ADMIN CONSOLE USER' , '' , '';
+
+
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE  'SAVE ADMIN CONSOLE USER' , '',  'matula' , 'april' , 'amatula@ultimatemedical.edu', '8454718505', '8453372852', 'resetasap' ,''  ;
+
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'GET_ETL_PROCEDURE_HISTORY' , 'UMA_DWH', 'S_I3.MERGE_MCS_INTERACTIVE_SUMMARY', '' , '', '' , '', '' , '', '';
+
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'GET_ETL_PROCEDURE_HISTORY' , 'UMA_DWH', 'S_I3.MERGE_QUEUE_NAME_LOOKUP', '' , '', '' , '', '' , '', '';
+
+
+   see the data saved from SP call
+select top 100 * from [MWH].[ETL_HISTORY] with(nolock) where [CALLING_PROC]  =  @My_SP_NAME  order by ID desc
+
+delete from  [MWH].[ETL_HISTORY]   where  [TARGET_SCHEMA_NAME] = 'BROWSER'  and ID >= 1858000
+
+select count(*) from [MWH].[ETL_HISTORY] with(nolock)
+
+
+UPDATE STATISTICS [MWH].[ETL_HISTORY]  with FULLSCAN
+
+
+DBCC show_statistics ( "MWH.ETL_HISTORY", PK_ETL_HISTORY ) WITH STAT_HEADER
+
+DBCC show_statistics ( "MWH.ETL_HISTORY", PK_ETL_HISTORY )  WITH HISTOGRAM
+
+DBCC show_statistics ( "MWH.ETL_HISTORY", PK_ETL_HISTORY )  WITH DENSITY_VECTOR
+
+DBCC show_statistics ( "MWH.ETL_HISTORY", PK_ETL_HISTORY )  WITH STATS_STREAM
+
+
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'LOAD_ETL_HISTORY', '0' ,'9'  ,'','','','','','','';
+
+NOTE : if the 4th argument is NULL, I use the current date, otherwise is use the VALID date as the starting point
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'LOAD_ETL_HISTORY', 0 ,9  ,'2018-04-14','','','','','','';
+
+
+exec   MWH.GET_CURRENT_ETL_CYCLE_STATUS  'I3_NON-MCS';
+
+
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'DISPLAY_CURRENT_STATUS' , '0', '0', '' , '', '' , '', '' , '', '';
+
+
+exec   MWH.GET_CURRENT_ETL_CYCLE_STATUS  'I3_NON-MCS';
+
+user does not exists
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'LOGIN' , 'cmatula@ultimateme', '$pbkdf2-sha256$29000$03ovqX5FKUp77KoITbqx96ADofJRSK5XxA4VNQPzvaBeqQ', '' , '', '' , '', '' , '', '';
+
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'LOGIN' , 'cmatula@ultimatemedical.edu', '$pbkdf2-sha256$29000$03ovqX5FKUp77KoITbqx96ADo', '' , '', '' , '', '' , '', '';
+
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'LOGIN' , 'cmatula@ultimatemedical.edu', '$pbkdf2-sha256$29000$03ovqX5FKUp77KoITbqx96ADofJRSK5XxA4VNQPzvaBeqQ', '' , '', '' , '', '' , '', '';
+
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE 'LOGIN' , 'cmatula@ultimatemedical.edu', '$pbkdf2-sha256$29000$03ovqX5FKUp77KoITbqx96ADofJRSK5XxA4VNQPzvaBeqQ', '' , '', '' , '', '' , '', '';
+
+
+select * from [MWH_DIM].[D_ADMIN_CONSOLE_USER] where [EmployeeEMAIL] = 'cmatula@ultimatemedical.edu'
+
+
+*/
+
 
 
 
@@ -476,13 +640,13 @@ BEGIN
                      START_DTTM                        ,
                      END_DTTM                          ,
                      TABLE_STATUS               ,
-                     upper(SOURCE_SERVER_NAME) AS 'SOURCE_SERVER_NAME',
-                     upper(SOURCE_DB_NAME) AS 'SOURCE_DB_NAME',
-                     upper(SOURCE_SCHEMA_NAME) AS 'SOURCE_SCHEMA_NAME',
-                     upper(SOURCE_TABLE_NAME) AS 'SOURCE_TABLE_NAME',
-                     upper(TARGET_SCHEMA_NAME) AS 'TARGET_SCHEMA_NAME',
-                     upper(TARGET_TABLE_NAME) AS 'TARGET_TABLE_NAME',
-                     upper(CALLING_PROC) AS 'CALLING_PROC',
+                     upper(SOURCE_SERVER_NAME)  as  'SOURCE_SERVER_NAME',
+                     upper(SOURCE_DB_NAME)  as  'SOURCE_DB_NAME',
+                     upper(SOURCE_SCHEMA_NAME)  as  'SOURCE_SCHEMA_NAME',
+                     upper(SOURCE_TABLE_NAME)  as  'SOURCE_TABLE_NAME',
+                     upper(TARGET_SCHEMA_NAME)  as  'TARGET_SCHEMA_NAME',
+                     upper(TARGET_TABLE_NAME)  as  'TARGET_TABLE_NAME',
+                     upper(CALLING_PROC),
                      SP_PARM_1                         ,
                      SP_PARM_2                         ,
                      INSERT_CNT                        ,
@@ -497,8 +661,8 @@ BEGIN
                      DELETE_CNT                        ,
                      EXEC_BY_CONTROL_ENGINE  ,
                      ACTIVE                            ,
-                     TryCatchError_ID AS 'TRY_CATCH_ERR_ID',
-                     ErrorMessage AS 'TRY_CATCH_ERR_MESSAGE'
+                     TryCatchError_ID     as 'TRY_CATCH_ERR_ID'      ,
+                     ErrorMessage                      as 'TRY_CATCH_ERR_MESSAGE'
                      FROM #CURRENT_ETL_WINDOW_DATA
                      ORDER BY CYCLE_GROUP ASC    ,
                      DATA_MART_GROUP  DESC ;
@@ -581,12 +745,13 @@ BEGIN
 --     and eh.[INSERT_DTTM] between '2018-08-14 11:00:00.000'  and   '2018-08-14 11:14:59.997'
               group by DATA_MART_NAME
        )
+
               select
               t.DATA_MART_NAME,
               eh.ENGINE_STATUS,
               eh.INSERT_DTTM  START_DTTM,
               eh.UPDATE_DTTM END_DTTM,
-              [MWH].[ConvertTimeToHHMMSS] (datediff(SECOND, eh.INSERT_DTTM, eh.UPDATE_DTTM)) FULL_DATA_MART_RUNTIME
+              [MWH].[ConvertTimeToHHMMSS] (datediff(SECOND, eh.INSERT_DTTM, eh.UPDATE_DTTM))  FULL_DATA_MART_RUNTIME
               from ETL_ENGINE_HISTORY_TOP t
               JOIN [UMA_DWH].[MWH].[ETL_ENGINE_HISTORY] eh with(nolock) on (eh.ID = t.MAX_ID)
               order by t.MAX_ID desc;
@@ -667,15 +832,15 @@ BEGIN
        IF( @ERR = 0) BEGIN
               select
               ID,
-              cast([INSERT_DTTM] as varchar(20)) INSERT_DTTM,
+              cast([INSERT_DTTM] as varchar(20))  as  'INSERT_DTTM',
               [LST_MOD_USER],
-              cast([ERR] as varchar(20)) ERR,
-              cast([ErrorSeverity] as varchar(20)) Error_Severity,
-              cast([ErrorState] as varchar(20)) Error_State,
-              [ErrorProcedure] as Error_Procedure,
-              cast([ErrorLine] as varchar(20)) Error_Line,
-              [ErrorMessage] as Error_Message,
-              [ETLProcedureName] as ETL_PROCEDURE_NAME
+              cast([ERR] as varchar(20))  as 'ERR',
+              cast([ErrorSeverity] as varchar(20))  as 'Error_Severity',
+              cast([ErrorState] as varchar(20))  as 'Error_State',
+              [ErrorProcedure] as 'Error_Procedure',
+              cast([ErrorLine] as varchar(20))  as 'Error_Line',
+              [ErrorMessage]  as  'Error_Message',
+              [ETLProcedureName]  as 'ETL_PROCEDURE_NAME'
               from [MWH].[ETL_TryCatchError] with(nolock)
               where ID = @ERROR_ID;
 
@@ -738,8 +903,8 @@ BEGIN
                      ,eh.[LST_MOD_USER] as 'USER'
                      ,eh.[engine_message] as 'engine_message'
                      ,eh.[ERR_NUM] as 'ERROR_NUMBER'
-                     ,coalesce(TR.ID, 0) as 'TRY_CATCH_ERR_ID'
-                     ,TR.ErrorMessage as 'TRY_CATCH_ERR_MESSAGE'
+                     ,coalesce(TR.ID, 0)  as 'TRY_CATCH_ERR_ID'
+                     ,TR.ErrorMessage   as 'Try_Catch_Err_Message'
                      FROM [UMA_DWH].[MWH].[ETL_HISTORY] eh  with(nolock)
                      left join [MWH].[ETL_TryCatchError] TR with(nolock) on (eh.TryCatchError_ID = TR.ID)
                      where eh.[SOURCE_DB_NAME] = @VARCHAR_01
@@ -768,8 +933,8 @@ BEGIN
                      ,eh.[LST_MOD_USER] as 'USER'
                      ,eh.[engine_message] as 'engine_message'
                      ,eh.[ERR_NUM] as 'ERROR_NUMBER'
-                     ,coalesce(TR.ID, 0) as 'TRY_CATCH_ERR_ID'
-                     ,TR.ErrorMessage  as 'TRY_CATCH_ERR_MESSAGE'
+                     ,coalesce(TR.ID, 0)  as 'TRY_CATCH_ERR_ID'
+                     ,TR.ErrorMessage   as 'TRY_CATCH_ERR_MESSAGE'
                      FROM [UMA_DWH].[MWH].[ETL_HISTORY] eh  with(nolock)
                      left join [MWH].[ETL_TryCatchError] TR with(nolock) on (eh.TryCatchError_ID = TR.ID)
                      where eh.[SOURCE_DB_NAME] = @VARCHAR_01
@@ -789,9 +954,8 @@ IF  @message = 'GET SERVER DB LIST'
 BEGIN
 
 
-       select
-       distinct upper([SOURCE_SERVER_NAME]) AS 'SOURCE_SERVER_NAME',
-       upper([SOURCE_DB_NAME]) AS 'SOURCE_DB_NAME'
+       select   distinct   upper([SOURCE_SERVER_NAME])  as  'SOURCE_SERVER_NAME',
+        upper([SOURCE_DB_NAME]) as  'SOURCE_DB_NAME'
        FROM [UMA_DWH].[MWH].[ETL_HISTORY]   with(nolock)
         where [START_DTTM]  > dateadd(day,-30, getdate())
        order by upper([SOURCE_SERVER_NAME])  desc,  upper([SOURCE_DB_NAME])  desc;
@@ -1344,6 +1508,7 @@ BEGIN
               and START_DTTM between  @REPORT_DATE   and   dateadd( minute, 59, dateadd( hour, 23, @REPORT_DATE))
               and eh.END_DTTM is not null
               )
+
               SELECT eh.[ID]
               ,DENSE_RANK() OVER  (PARTITION BY eh.[CALLING_PROC] ORDER BY eh.[START_DTTM]  DESC) AS Rank
               ,eh.[CALLING_PROC]  as 'STORED_PROCEDURE'

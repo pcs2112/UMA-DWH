@@ -1,5 +1,156 @@
-
 -- C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS.sql
+
+-- sqlcmd -S localhost -U [srv_mlkpythdap01_DB] -P 1F0rg0t1 -i  C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS.sql
+--[srv_mlkpythdap01_DB]
+
+
+
+-- sqlcmd -S localhost -U [srv_mlkpythdap01_DB] -P 1F0rg0t1 -i  C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS.sql
+--[srv_mlkpythdap01_DB]
+
+
+
+
+
+
+/*    MESSAGE SUPPORTED BY THIS SP
+use uma_dwh
+go
+
+
+select * from  [MWH].[ETL_HISTORY] eh with(nolock)   where   [CALLING_PROC] = 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS'
+
+
+MLK-TEL-P-SQ02       MCS_LDS
+MLK-TEL-P-SQ02       I3_IC_FLM
+MLK-TEL-P-SQ01       I3_IC_40
+MLK-SQL-P-sq03       i3Leads
+MLK-INF-P-SQ02       LION
+MLK-EDM-D-SQ02       UMA_DWH
+MLK-EDM-D-SQ02       IMPORT
+MLK-DWH-P-SQ02       FREEDOM
+MLK-DWH-P-SQ02       CV_Prod
+
+
+select * from  [MWH].[ETL_HISTORY]  where  [TARGET_SCHEMA_NAME] = 'BROWSER'
+
+delete from [MWH].[ETL_HISTORY]  where  [TARGET_SCHEMA_NAME] = 'BROWSER'
+
+update statistics [MWH].[ETL_HISTORY]
+
+sql for REPORT average runtime per day
+
+select top 100 [INSERT_DTTM], [RUN_TIME_SEC]
+from [MWH].[ETL_HISTORY] eh with(nolock)
+
+
+
+List of of procedures in the ETL_CONTROL_MANAGER view   'LIST_CONTROL_MANAGER_DETAILS'
+SELECT * FROM MWH.ETL_CONTROL_MANAGER_view ORDER BY DATA_MART_NAME ASC, PRIORITY DESC
+
+List of all admin console users      'LIST_ADMIN_CONSOLE_USERS'
+SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER ORDER BY ID ASC
+
+Get admin console user by ID             'LIST_ADMIN_CONSOLE_USER_BY_ID'
+SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER WHERE ID = ?
+
+
+Get admin console user by Email address         'LIST_ADMIN_CONSOLE_USER_BY_EMAIL'
+SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER WHERE EmployeeEMAIL = ?
+
+List of all error resolution records            'LIST_ERROR_RESOLUTIONS'
+SELECT * FROM MWH.ERROR_RESOLUTIONS ORDER BY ID ASC
+
+Get error resolution record by ID        'LIST_ERROR_RESOLUTIONS_BY_ID'
+SELECT * FROM MWH.ERROR_RESOLUTIONS WHERE ID = ?
+
+Get last inserted error resolution record       'GET_LAST_ERROR_RESOLUTION'
+SELECT TOP 1 * FROM MWH.ERROR_RESOLUTIONS ORDER BY ID DESC
+
+
+
+
+
+
+
+*****  ONE DAY TEST  *****
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_REPORT_RUNS_BY_DAY' , '08-01-2018', '08-01-2018', '' , '', '' , '', '' , '', '';
+
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_REPORTS_BY_DAY_AVG' , '08-01-2018', '08-01-2018', '' , '', '' , '', '' , '', '';
+
+
+*****  NULL or EMPTY STRING TEST  *****
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_REPORT_RUNS_BY_DAY' , '', '', '' , '', '' , '', '' , '', '';
+
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_REPORTS_BY_DAY_AVG' , '', '', '' , '', '' , '', '' , '', '';
+
+*****  7 day test  *****
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_REPORT_RUNS_BY_DAY' , '07-01-2018', '07-07-2018', '' , '', '' , '', '' , '', '';
+
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_REPORTS_BY_DAY_AVG' , '07-01-2018', '07-07-2018', '' , '', '' , '', '' , '', '';
+
+
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'INVALID_MESSAGE_TEST' , '07-01-2018', '07-07-2018', '' , '', '' , '', '' , '', '';
+
+
+
+
+
+
+List of of procedures in the ETL_CONTROL_MANAGER view   'LIST_CONTROL_MANAGER_DETAILS'
+SELECT * FROM MWH.ETL_CONTROL_MANAGER_view ORDER BY DATA_MART_NAME ASC, PRIORITY DESC
+
+
+
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_CONTROL_MANAGER_DETAILS' , '', '', '' , '', '' , '', '' , '', '';
+
+
+List of all admin console users      'LIST_ADMIN_CONSOLE_USERS'
+SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER ORDER BY ID ASC
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_ADMIN_CONSOLE_USERS' , '', '', '' , '', '' , '', '' , '', '';
+
+
+
+Get admin console user by ID             'LIST_ADMIN_CONSOLE_USER_BY_ID'
+SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER WHERE ID = ?
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_ADMIN_CONSOLE_USER_BY_ID' , '1', '', '' , '', '' , '', '' , '', '';
+
+
+Get admin console user by Email address         'LIST_ADMIN_CONSOLE_USER_BY_EMAIL'
+SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER WHERE EmployeeEMAIL = ?
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_ADMIN_CONSOLE_USER_BY_EMAIL' , 'cmatula@ultimatemedical.edu', '', '' , '', '' , '', '' , '', '';
+
+
+List of all error resolution records            'LIST_ERROR_RESOLUTIONS'
+SELECT * FROM MWH.ERROR_RESOLUTIONS ORDER BY ID ASC
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_ERROR_RESOLUTIONS' , '', '', '' , '', '' , '', '' , '', '';
+
+
+Get error resolution record by ID        'LIST_ERROR_RESOLUTIONS_BY_ID'
+SELECT * FROM MWH.ERROR_RESOLUTIONS WHERE ID = ?
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_ERROR_RESOLUTIONS_BY_ID' , '1', '', '' , '', '' , '', '' , '', '';
+
+
+
+Get last inserted error resolution record       'LIST_LAST_ERROR_RESOLUTION'
+SELECT TOP 1 * FROM MWH.ERROR_RESOLUTIONS ORDER BY ID DESC
+exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_LAST_ERROR_RESOLUTION' , '', '', '' , '', '' , '', '' , '', '';
+
+
+select top 10000 * from [MWH].[ETL_HISTORY] with(nolock)     order by ID desc
+
+
+select * from [MWH].[ETL_TryCatchError] with(nolock)     where [ETLProcedureName] = 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS' order by ID desc
+
+delete from [MWH].[ETL_TryCatchError]      where [ETLProcedureName] = 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS'
+
+
+
+
+
+
+*/
+
 
 
 USE [UMA_DWH]
@@ -271,8 +422,8 @@ BEGIN
 
               select
               cm.[ID]
-              ,upper(cm.[PROCEDURE_NAME]) AS 'PROCEDURE_NAME'
-              ,upper(cm.[DATA_MART_NAME]) AS 'DATA_MART_NAME'
+              ,upper(cm.[PROCEDURE_NAME]) as 'PROCEDURE_NAME'
+              ,upper(cm.[DATA_MART_NAME])  as 'DATA_MART_NAME'
               ,cm.[PRIORITY]
               , max( eh.SOURCE_SERVER_NAME) as SOURCE_SERVER_NAME
               , max(eh.SOURCE_DB_NAME) as  SOURCE_DB_NAME
@@ -1054,13 +1205,14 @@ BEGIN
        END CATCH;
 
        IF (@VALID_INPUT_DATA = 1) begin
+
               select cast([START_DTTM] as date) as 'DATE',
-              MIN([START_DTTM]) GROUP_START_TIME,
-              MAX([END_DTTM]) as GROUP_END_TIME,
-              MAX([STATUS]) as GROUP_STATUS,
-              COUNT(*) as TABLE_CNT,
-              SUM([RUN_TIME_MS] * 1.0) as TOTAL_RUNTIME,
-              cast( SUM([RUN_TIME_MS] * 1.0)/ (COUNT(*) * 1.0) as DECIMAL(10,2)) AVG_RUNTIME
+              MIN([START_DTTM]) 'GROUP_START_TIME',
+              MAX([END_DTTM]) as 'GROUP_END_TIME',
+              MAX([STATUS]) as 'GROUP_STATUS',
+              COUNT(*) as 'TABLE_CNT',
+              SUM([RUN_TIME_MS] / 1000.0) as 'TOTAL_RUNTIME',
+              cast( SUM([RUN_TIME_MS] / 1000.0)/ (COUNT(*) * 1.0) as DECIMAL(10,2)) 'AVG_RUNTIME'
 
               from [MWH].[TABLE_STATISTICS_MANUAL_RUNS] with(nolock)
               where  [START_DTTM] between @mySTARTDate  and  @myENDDate
@@ -1143,14 +1295,15 @@ BEGIN
               EXEC MWH.MERGE_ETL_TryCatchError_wRtn 'save error' , @ERR, @ErrorSeverity, @ErrorState, @ErrorProcedure, @ErrorLine, @ErrorMessage, @My_SP_NAME,   @TryCatchError_ID  OUTPUT ;
               PRINT 'ERROR : (' + cast(@TryCatchError_ID as varchar(12))  + ')   ' + @ErrorMessage
        END CATCH;
+
               select cast([START_DTTM] as date) as RUN_DATE,
               MIN([START_DTTM]) GROUP_START_TIME,
               MAX([END_DTTM]) as GROUP_END_TIME,
               MAX([STATUS]) as GROUP_STATUS,
               COUNT(*) as TABLE_CNT,
-              SUM([RUN_TIME_MS] * 1.0) as TOTAL_RUNTIME,
+              SUM([RUN_TIME_MS] / 1000.0) as TOTAL_RUNTIME,
               sum(case when [TryCatchError_ID] > 1 then 1 else 0 end) ERR_CNT,
-              cast( SUM([RUN_TIME_MS] * 1.0)/ (COUNT(*) * 1.0) as DECIMAL(10,2)) AVG_RUNTIME,
+              cast( SUM([RUN_TIME_MS] / 1000.0)/ (COUNT(*) * 1.0) as DECIMAL(10,2)) AVG_RUNTIME,
               '[' +[TARGET_SERVER_NAME]+'].['+[TARGET_DB_NAME]+'].['+[TARGET_SCHEMA_NAME]+']' as GROUP_SCHEMA,
               [TARGET_SCHEMA_NAME]
               from [MWH].[TABLE_STATISTICS_MANUAL_RUNS] with(nolock)
@@ -1218,24 +1371,24 @@ BEGIN
        END CATCH;
 
          IF(@MessageValid = 1 ) begin
-              select
-              sm.ID,
-              cast(sm.[START_DTTM] as date) AS 'START_DTTM',
+
+              select sm.ID,
+              cast(sm.[START_DTTM] as date),
               sm.[STATUS],
-              [MWH].[ConvertMillisecondsToHHMMSS]( sm.[RUN_TIME_MS]) as RUNTIME,
-              '[' +sm.[TARGET_SERVER_NAME]+'].['+sm.[TARGET_DB_NAME]+'].['+sm.[TARGET_SCHEMA_NAME]+']' as SCHEMA_FULL,
-              '[' +sm.[TARGET_SERVER_NAME]+'].['+sm.[TARGET_DB_NAME]+'].['+sm.[TARGET_SCHEMA_NAME]+'].['+sm.[TARGET_TABLE_NAME]+']' as TABLE_FULL,
+              [MWH].[ConvertMillisecondsToHHMMSS]( sm.[RUN_TIME_MS]) as RUN_TIME_HH_MM_SS_MS,
+              '[' +sm.[TARGET_SERVER_NAME]+'].['+sm.[TARGET_DB_NAME]+'].['+sm.[TARGET_SCHEMA_NAME]+']'  as SCHEMA_FULL,
+              '[' +sm.[TARGET_SERVER_NAME]+'].['+sm.[TARGET_DB_NAME]+'].['+sm.[TARGET_SCHEMA_NAME]+'].['+sm.[TARGET_TABLE_NAME]+']'  as TABLE_FULL,
                sm.[TARGET_SERVER_NAME] as SERVER,
                sm.[TARGET_DB_NAME] as 'DATABASE',
                sm.[TARGET_SCHEMA_NAME] as 'SCHEMA',
-               sm.[TARGET_TABLE_NAME] as 'TABLE',
+               sm.[TARGET_TABLE_NAME]  as 'TABLE',
                sm.[STATISTICS_METHOD],
-               sm.[TryCatchError_ID] as 'TRY_CATCH_ERR_ID',
-              tc.[ERR] as 'TRY_CATCH_ERR_NUMBER',
-              tc.[ErrorSeverity] as 'TRY_CATCH_ERR_SEVERITY',
-              tc.[ErrorState] as 'TRY_CATCH_ERR_STATE',
-              tc.[ErrorMessage] as 'TRY_CATCH_ERR_MESSAGE',
-              tc.[ErrorProcedure] as 'TRY_CATCH_ERR_PROCEDURE'
+               sm.[TryCatchError_ID],
+              tc.[ERR]  ,
+              tc.[ErrorSeverity]  ,
+              tc.[ErrorState]  ,
+              tc.[ErrorMessage],
+              tc.[ErrorProcedure]
 
               from [MWH].[TABLE_STATISTICS_MANUAL_RUNS] sm with(nolock)
               left join [MWH].[ETL_TryCatchError] tc with(nolock) on (tc.ID  =  sm.[TryCatchError_ID])
@@ -1249,20 +1402,12 @@ BEGIN
 END;
 
 
-
-
-
-
-
-
-
 IF  @message = 'REPORT_RUN_STATISTICS_LAST_DATE'
 --  This is used to pupulate a pulldown list of the report page, so we can get a list of report SP run on that date, it sorts on longest running report to the fastest report on the date selected
 
 --   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'REPORT_RUN_STATISTICS_LAST_DATE' ,'',  '', '', '' , '', '' , '', '' , '';
 
 --    use   RUN_DATE on the X axis, and AVG_RUNTIME on the Y axis
-
 
 --  Please fix ‘REPORT_RUN_STATISTICS_SELECT_BY_DATE’
 --  The code is checking VARCHAR_02  for a schema name but this is wrong because the call to ‘REPORT_RUN_STATISTICS_SELECT_BY_DATE’ should return a list of schemas for a particular date.
@@ -1275,10 +1420,6 @@ BEGIN
 
        BEGIN TRY
                      SET @DaysSinceLastStats = -1;
-
-
-
-
 
 
 /*
@@ -1312,15 +1453,9 @@ BEGIN
               PRINT 'ERROR : (' + cast(@TryCatchError_ID as varchar(12))  + ')   ' + @ErrorMessage
        END CATCH;
 
-              select
-                @LAST_DATE AS 'LAST_DATE',
-                case when @DaysSinceLastStats > 20 then -1 else 0 end AS 'STALED_STATS'
+              select @LAST_DATE as 'LAST_DATE',
+              case when @DaysSinceLastStats > 20 then -1 else 0 end as 'STALED_STATS'
 END;
-
-
-
-
-
 
 
 
