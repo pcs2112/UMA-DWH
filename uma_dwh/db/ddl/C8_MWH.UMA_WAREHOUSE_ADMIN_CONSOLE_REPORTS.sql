@@ -955,9 +955,9 @@ BEGIN
                      tc.[ErrorProcedure] as 'ERROR_PROCEDURE',
                      tc.[ErrorLine] as 'ERROR_LINE',
                      tc.[ErrorMessage] as 'ERROR_MESSAGE',
-                     tc.[ETLProcedureName] as 'Procedure_Logging_Error',
-                     eh.RUN_TIME_SEC  as 'Procedure_Runtime',
-                     eh.[engine_message] as 'Engine_Message',
+                     tc.[ETLProcedureName] as 'PROCEDURE_LOGGING_ERROR',
+                     eh.RUN_TIME_SEC  as 'PROCEDURE_RUNTIME',
+                     eh.[engine_message] as 'ENGINE_MESSAGE',
                      eh.[EXEC_BY_CONTROL_ENGINE] as 'EXEC_BY_ETL_CONTROL_ENGINE'
 
               from  [MWH].[ETL_TryCatchError]  tc with(nolock)
@@ -1373,7 +1373,7 @@ BEGIN
          IF(@MessageValid = 1 ) begin
 
               select sm.ID,
-              cast(sm.[START_DTTM] as date),
+              cast(sm.[START_DTTM] as date) as 'START_DTTM',
               sm.[STATUS],
               [MWH].[ConvertMillisecondsToHHMMSS]( sm.[RUN_TIME_MS]) as RUN_TIME_HH_MM_SS_MS,
               '[' +sm.[TARGET_SERVER_NAME]+'].['+sm.[TARGET_DB_NAME]+'].['+sm.[TARGET_SCHEMA_NAME]+']'  as SCHEMA_FULL,

@@ -646,7 +646,7 @@ BEGIN
                      upper(SOURCE_TABLE_NAME)  as  'SOURCE_TABLE_NAME',
                      upper(TARGET_SCHEMA_NAME)  as  'TARGET_SCHEMA_NAME',
                      upper(TARGET_TABLE_NAME)  as  'TARGET_TABLE_NAME',
-                     upper(CALLING_PROC),
+                     upper(CALLING_PROC) as 'CALLING_PROC',
                      SP_PARM_1                         ,
                      SP_PARM_2                         ,
                      INSERT_CNT                        ,
