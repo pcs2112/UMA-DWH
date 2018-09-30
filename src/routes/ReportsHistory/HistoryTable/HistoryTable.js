@@ -76,7 +76,7 @@ const columns = [
   {
     Header: 'TRANS_SEC',
     accessor: 'trans_per_sec',
-    width: 65,
+    width: 75,
     getProps: () => ({
       style: {
         textAlign: 'right',

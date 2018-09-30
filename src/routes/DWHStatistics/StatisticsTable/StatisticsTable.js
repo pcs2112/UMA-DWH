@@ -24,7 +24,7 @@ const columns = [
   },
   {
     Header: 'RUN_TIME',
-    accessor: 'runtime',
+    accessor: 'run_time_hh_mm_ss_ms',
     width: 65,
     getProps: () => ({
       style: {
@@ -69,12 +69,12 @@ const columns = [
   },
   {
     Header: 'ERROR_PROCEDURE',
-    accessor: 'try_catch_err_procedure',
+    accessor: 'error_procedure',
     width: 300
   },
   {
     Header: 'ERROR_MESSAGE',
-    accessor: 'try_catch_err_message',
+    accessor: 'error_message',
     minWidth: 300
   }
 ];
@@ -103,7 +103,7 @@ class StatisticsTable extends Component {
 
     let bgColor = 'none';
     let textColor = '#000';
-    if (row.original.try_catch_err_number > 0 || row.original.try_catch_err_id > 0) {
+    if (row.original.err > 0 || row.original.try_catch_err_id > 0) {
       bgColor = globalCss.colors.error;
       textColor = '#FFF';
     }
