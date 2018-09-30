@@ -42,8 +42,15 @@ export default ({ dispatch, getState }) => ([
     path: '/dwh/statistics',
     component: DWHStatistics,
     exact: true,
-    fetch: () => dispatch(statistics.actions.fetchLastDate())
-      .then(() => dispatch(statisticsSchemas.actions.fetch(getState().statistics.date)))
+    fetch: () => {
+      const { date } = getState().statistics;
+      if (date) {
+        return dispatch(statisticsSchemas.actions.fetch(date));
+      }
+
+      return dispatch(statistics.actions.fetchLastDate())
+        .then(() => dispatch(statisticsSchemas.actions.fetch(getState().statistics.date)));
+    }
   }
 ]
   .concat(getErrorTypeManagementRoutes())
