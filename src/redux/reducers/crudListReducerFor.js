@@ -1,4 +1,4 @@
-import { replaceObjByValue } from '../../helpers/array';
+import { replaceObjByValue } from 'javascript-utils/lib/array';
 
 export const initialState = {
   data: false

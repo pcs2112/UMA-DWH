@@ -5,9 +5,9 @@ import {
   createGetItemsSelector,
   createGetItemByIdSelector,
   createGetPropertySelector
-} from 'helpers/selectors';
+} from 'javascript-utils/lib/selectors';
 
-const _getData = createDataSelector('errorTypeResolution');
+const _getData = createDataSelector('errorTypeResolution', 'dataLoaded', 'data');
 
 /**
  * Returns the updating file id.
@@ -18,7 +18,7 @@ const _getUpdatingFileId = createGetPropertySelector('errorTypeResolution', 'upd
  * Returns the error from the state.
  * @param {Object} state
  */
-export const getFetchingError = createFetchingErrorSelector('errorTypeResolution');
+export const getFetchingError = createFetchingErrorSelector('errorTypeResolution', 'fetchingError', 'payload');
 
 /**
  * Returns the Error type resolution data.

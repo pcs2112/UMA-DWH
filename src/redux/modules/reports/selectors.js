@@ -1,9 +1,9 @@
 import {
   createDataSelector,
   createGetItemsSelector
-} from 'helpers/selectors';
+} from 'javascript-utils/lib/selectors';
 
-const _getData = createDataSelector('reports');
+const _getData = createDataSelector('reports', 'dataLoaded', 'data');
 
 /**
  * Returns the ETL reports from the state.

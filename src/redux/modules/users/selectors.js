@@ -5,12 +5,12 @@ import {
   createGetItemsSelector,
   createGetPropertySelector,
   createGetItemByIdSelector
-} from 'helpers/selectors';
+} from 'javascript-utils/lib/selectors';
 
 /**
  * Returns the item list from the state.
  */
-const _getData = createDataSelector('users');
+const _getData = createDataSelector('users', 'dataLoaded', 'data');
 
 /**
  * Returns the updating user id.
@@ -21,7 +21,7 @@ const _getUpdatingUserId = createGetPropertySelector('users', 'updating');
  * Returns the fetching error.
  * @param {Object} state
  */
-export const getFetchingError = createFetchingErrorSelector('users');
+export const getFetchingError = createFetchingErrorSelector('users', 'fetchingError', 'payload');
 
 /**
  * Selector to get the users.

@@ -1,9 +1,9 @@
 import { createSelector } from 'reselect';
-import { createDataSelector } from 'helpers/selectors';
+import { createDataSelector } from 'javascript-utils/lib/selectors';
 
 const emptyDataTotals = {};
 
-const _getData = createDataSelector('etlCurrentStatus');
+const _getData = createDataSelector('etlCurrentStatus', 'dataLoaded', 'data');
 
 /**
  * Returns the ETL current status from the state.

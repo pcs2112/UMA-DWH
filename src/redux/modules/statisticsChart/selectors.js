@@ -1,9 +1,9 @@
 import {
   createDataSelector,
   createGetItemsSelector
-} from 'helpers/selectors';
+} from 'javascript-utils/lib/selectors';
 
-const _getData = createDataSelector('statisticsChart');
+const _getData = createDataSelector('statisticsChart', 'dataLoaded', 'data');
 
 /**
  * Returns the DWH statistics chart data from the state.

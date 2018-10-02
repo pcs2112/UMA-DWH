@@ -5,14 +5,15 @@ import {
   createFetchingErrorSelector,
   createGetItemsSelector,
   createGetPropertySelector
-} from 'helpers/selectors';
+} from 'javascript-utils/lib/selectors';
+import { createGetCurrentCycleGroup, createGetCurrentCycleGroupStartDttm } from 'helpers/selectors';
 import etlControlManager from 'redux/modules/etlControlManager';
 
 /**
  * Returns the history data from the state.
  * @param {Object} state
  */
-const _getData = createDataSelector('etlCycleHistory');
+const _getData = createDataSelector('etlCycleHistory', 'dataLoaded', 'data');
 
 /**
  * Return the selected order from the state.
@@ -28,7 +29,7 @@ export const getHistory = createGetItemsSelector(_getData);
  * Returns the error from the state.
  * @param {Object} state
  */
-export const getFetchingError = createFetchingErrorSelector('etlCycleHistory');
+export const getFetchingError = createFetchingErrorSelector('etlCycleHistory', 'fetchingError', 'payload');
 
 /**
  * Returns the cycle history list filters.
@@ -39,12 +40,12 @@ export const getFilters = createGetPropertySelector('etlCycleHistory', 'filters'
  * Returns the selected items.
  * @param {Object} state
  */
-export const getSelected = state => state.etlCycleHistory.selected;
+export const getSelected = createGetPropertySelector('etlCycleHistory', 'selected');
 
 /**
  * Returns the current cycle group.
  */
-export const getCurrentCycleGroup = state => state.etlCycleHistory.currentCycleGroup || 0;
+export const getCurrentCycleGroup = createGetCurrentCycleGroup('etlCycleHistory', 'currentCycleGroup');
 
 /**
  * Selector to get the total count of procedures and data marts selected.
@@ -218,10 +219,7 @@ export const getHistoryByCycleGroup = createSelector(
 /**
  * Returns the current cycle group's start dttm.
  */
-export const getCurrentCycleGroupStartDttm = createSelector(
-  [_getData],
-  data => (data.length > 0 ? data[0].start_dttm : 'N/A')
-);
+export const getCurrentCycleGroupStartDttm = createGetCurrentCycleGroupStartDttm(_getData, 'start_dttm');
 
 /**
  * Returns the interval duration from the state.

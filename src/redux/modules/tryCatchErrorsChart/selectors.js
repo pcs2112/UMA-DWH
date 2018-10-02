@@ -1,9 +1,9 @@
 import {
   createDataSelector,
   createGetItemsSelector
-} from 'helpers/selectors';
+} from 'javascript-utils/lib/selectors';
 
-const _getData = createDataSelector('tryCatchErrorsChart');
+const _getData = createDataSelector('tryCatchErrorsChart', 'dataLoaded', 'data');
 
 /**
  * Returns the try catch errors chart data from the state.

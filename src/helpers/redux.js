@@ -2,32 +2,6 @@ import { SubmissionError } from 'redux-form';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 
 /**
- * Action creator for Redux aciton
- *
- * @param {String|Array} type - Action types
- * @param {Array} argNames - Argument names used by the action
- */
-export const createAction = (type, ...argNames) => (...args) => {
-  const action = Array.isArray(type) ? { types: [...type] } : { type };
-  argNames.forEach((arg, index) => {
-    action[argNames[index]] = args[index];
-  });
-
-  return action;
-};
-
-/**
- * Reducer factory.
- *
- * @param {Object} initialState
- * @param {Object} handlers
- * @returns {Function}
- */
-export const createReducer = (initialState, handlers) => (state = initialState, action) => (
-  objectHasOwnProperty(handlers, action.type) ? handlers[action.type](state, action) : state
-);
-
-/**
  * Catch redux-form validation errors.
  * @param {Object} error
  * @returns {Promise}

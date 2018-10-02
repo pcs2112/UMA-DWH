@@ -5,16 +5,16 @@ import {
   createDataSelector,
   createGetItemsSelector,
   createFetchingErrorSelector
-} from 'helpers/selectors';
+} from 'javascript-utils/lib/selectors';
 import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
 
-const _getData = createDataSelector('statistics');
+const _getData = createDataSelector('statistics', 'dataLoaded', 'data');
 
 /**
  * Returns the fetching error.
  * @param {Object} state
  */
-export const getFetchingError = createFetchingErrorSelector('statistics');
+export const getFetchingError = createFetchingErrorSelector('statistics', 'fetchingError', 'payload');
 
 /**
  * Returns the filters from the state.

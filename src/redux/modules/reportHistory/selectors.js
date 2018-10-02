@@ -1,17 +1,17 @@
 import { createSelector } from 'reselect';
 import moment from 'moment';
-import { DEFAULT_DATE_FORMAT, DEAULT_MONTHS_SIZE } from 'constants/index';
 import {
   createDataSelector,
   createFetchingErrorSelector,
   createGetItemsSelector
-} from 'helpers/selectors';
+} from 'javascript-utils/lib/selectors';
+import { DEFAULT_DATE_FORMAT, DEAULT_MONTHS_SIZE } from 'constants/index';
 import reportsReduxModule from 'redux/modules/reports';
 
 /**
  * Returns the item list from the state.
  */
-const _getData = createDataSelector('reportHistory');
+const _getData = createDataSelector('reportHistory', 'dataLoaded', 'data');
 
 /**
  * Returns the filters from the state.
@@ -27,7 +27,7 @@ const _getFilters = state => ({
  * Returns the fetching error.
  * @param {Object} state
  */
-export const getFetchingError = createFetchingErrorSelector('reportHistory');
+export const getFetchingError = createFetchingErrorSelector('reportHistory', 'fetchingError', 'payload');
 
 /**
  * Selector to get the report history.

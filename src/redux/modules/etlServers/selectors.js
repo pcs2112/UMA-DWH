@@ -1,9 +1,9 @@
 import {
   createDataSelector,
   createGetItemsSelector
-} from 'helpers/selectors';
+} from 'javascript-utils/lib/selectors';
 
-const _getData = createDataSelector('etlServers');
+const _getData = createDataSelector('etlServers', 'dataLoaded', 'data');
 
 /**
  * Returns the ETL servers from the state.

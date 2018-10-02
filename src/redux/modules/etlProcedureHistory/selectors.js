@@ -1,12 +1,12 @@
 import { createSelector } from 'reselect';
 import moment from 'moment';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
-import { DEFAULT_DATE_FORMAT, DEAULT_MONTHS_SIZE } from 'constants/index';
 import {
   createDataSelector,
   createFetchingErrorSelector,
   createGetItemsSelector
-} from 'helpers/selectors';
+} from 'javascript-utils/lib/selectors';
+import { DEFAULT_DATE_FORMAT, DEAULT_MONTHS_SIZE } from 'constants/index';
 import etlServers from 'redux/modules/etlServers';
 
 const emptyFilters = {
@@ -21,7 +21,7 @@ const emptyFilters = {
  * Returns the procedure history data from the state.
  * @param {Object} state
  */
-const _getData = createDataSelector('etlProcedureHistory');
+const _getData = createDataSelector('etlProcedureHistory', 'dataLoaded', 'data');
 
 /**
  * Returns the filters from the state.
@@ -39,7 +39,7 @@ const _getFilters = state => (objectHasOwnProperty(state.etlProcedureHistory, 's
  * Returns the error from the state.
  * @param {Object} state
  */
-export const getFetchingError = createFetchingErrorSelector('etlProcedureHistory');
+export const getFetchingError = createFetchingErrorSelector('etlProcedureHistory', 'fetchingError', 'payload');
 
 /**
  * Returns the ETL procedure history data from the state.

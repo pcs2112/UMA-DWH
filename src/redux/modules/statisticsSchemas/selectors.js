@@ -1,9 +1,9 @@
 import {
   createDataSelector,
   createGetItemsSelector
-} from 'helpers/selectors';
+} from 'javascript-utils/lib/selectors';
 
-const _getData = createDataSelector('statisticsSchemas');
+const _getData = createDataSelector('statisticsSchemas', 'dataLoaded', 'data');
 
 /**
  * Returns the DWH statistics schemas from the state.
