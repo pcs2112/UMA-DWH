@@ -165,9 +165,10 @@ class CycleHistoryTable extends Component {
   }
 
   onExpanded = (newExpanded, index) => {
+    const { expanded } = this.state;
     this.setState({
       expanded: {
-        [index[0]]: !this.state.expanded[index[0]]
+        [index[0]]: !expanded[index[0]]
       }
     });
   };

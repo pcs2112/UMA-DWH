@@ -89,4 +89,3 @@ export default withMainLayout(connect(
     }
   })
 )(List));
-

@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { Segment, Grid, Dropdown, Button, Form, Input } from 'semantic-ui-react';
+import {
+  Segment, Grid, Dropdown, Button, Form, Input
+} from 'semantic-ui-react';
 import { objectHasOwnProperty, isEmpty } from 'javascript-utils/lib/utils';
 import { DEFAULT_DATE_FORMAT, DEAULT_MONTHS_SIZE } from 'constants/index';
 import intervalDurations from 'constants/cycleHistoryIntervalDurations';

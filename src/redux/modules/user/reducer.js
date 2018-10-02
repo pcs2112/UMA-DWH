@@ -1,4 +1,6 @@
-import { getAccessToken, getRefreshToken, setAccessToken, setRefreshToken } from 'helpers/user';
+import {
+  getAccessToken, getRefreshToken, setAccessToken, setRefreshToken
+} from 'helpers/user';
 import { actionTypes } from './actions';
 
 // Initial tokens

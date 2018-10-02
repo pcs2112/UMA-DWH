@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, Label } from 'semantic-ui-react';
 import withCyclePagination from 'components/WithCyclePagination';
-import { NavDiv, NavLeftColDiv, NavCenterColDiv, NavRightColDiv } from './css';
+import {
+  NavDiv, NavLeftColDiv, NavCenterColDiv, NavRightColDiv
+} from './css';
 
 class CycleArrowPagination extends Component {
   static propTypes = {

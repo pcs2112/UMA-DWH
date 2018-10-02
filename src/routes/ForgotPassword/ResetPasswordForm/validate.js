@@ -1,5 +1,7 @@
 import memoize from 'lru-memoize';
-import { createValidator, required, match, validPassword } from 'javascript-utils/lib/validation';
+import {
+  createValidator, required, match, validPassword
+} from 'javascript-utils/lib/validation';
 
 const validation = createValidator({
   new_password: [required(), validPassword(1, 1, 8)],

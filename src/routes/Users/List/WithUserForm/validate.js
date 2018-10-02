@@ -1,5 +1,7 @@
 import memoize from 'lru-memoize';
-import { createValidator, required, email, validPassword, numericLength } from 'javascript-utils/lib/validation';
+import {
+  createValidator, required, email, validPassword, numericLength
+} from 'javascript-utils/lib/validation';
 
 const phoneNumberValidator = numericLength(10, 'Please enter a valid phone number.', true);
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { DetailsDiv, DetailsColDiv, DetailsLabel, DetailsRow } from '../../css';
+import {
+  DetailsDiv, DetailsColDiv, DetailsLabel, DetailsRow
+} from '../../css';
 
 const RowDetails = ({ row }) => {
   const keys = Object.keys(row.original);
