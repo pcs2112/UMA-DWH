@@ -312,7 +312,7 @@ DECLARE             @MyInputDateTIME                  DATETIME;
 
 DECLARE             @LAST_DATE                               DATE;
 DECLARE             @DaysSinceLastStats               INTEGER;
-
+DECLARE             @DaysSinceLastReport       INTEGER;
 
 
 IF (@LOG_HISTORY = 1) begin
@@ -914,9 +914,9 @@ END;
 
 
 
-IF  @message = 'DISPLAY_TryCatch_Daily_Errors'
+IF  @message = 'DISPLAY_TRYCATCH_DAILY_ERRORS'
 
---   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'DISPLAY_TryCatch_Daily_Errors' ,  '2018-06-22', '', '' , '', '' , '', '' , '', '';
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'DISPLAY_TRYCATCH_Daily_ERRORS' ,  '2018-06-22', '', '' , '', '' , '', '' , '', '';
 
 BEGIN
        SET @MessageValid = 1;
@@ -1456,6 +1456,57 @@ BEGIN
               select @LAST_DATE as 'LAST_DATE',
               case when @DaysSinceLastStats > 20 then -1 else 0 end as 'STALED_STATS'
 END;
+
+
+
+IF  @message = 'REPORT_RUN_LAST_DATE'
+--  This is used to pupulate a pulldown list of the report page, so we can get a list of report SP run on that date, it sorts on longest running report to the fastest report on the date selected
+
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'REPORT_RUN_LAST_DATE' ,'',  '', '', '' , '', '' , '', '' , '';
+
+--    use   RUN_DATE on the X axis, and AVG_RUNTIME on the Y axis
+
+--  Please fix ‘REPORT_RUN_STATISTICS_SELECT_BY_DATE’
+--  The code is checking VARCHAR_02  for a schema name but this is wrong because the call to ‘REPORT_RUN_STATISTICS_SELECT_BY_DATE’ should return a list of schemas for a particular date.
+
+
+
+
+BEGIN
+       SET @MessageValid = 1;
+
+       BEGIN TRY
+                     SET @DaysSinceLastStats = -1;
+
+
+       select  @LAST_DATE = max(END_DTTM)
+       from [MWH].[ETL_HISTORY] eh with(nolock)
+       where [TARGET_SCHEMA_NAME] = 'POWERBI'
+       and RUN_TIME_SEC is not null
+
+
+       SET @DaysSinceLastReport = datediff(day, @LAST_DATE, getdate());
+
+
+       END TRY
+       BEGIN CATCH
+              SELECT
+         @ERR = ERROR_NUMBER()
+        ,@ErrorSeverity = ERROR_SEVERITY()
+        ,@ErrorState = ERROR_STATE()
+        ,@ErrorProcedure = ERROR_PROCEDURE()  + ' message : '  + @message
+        ,@ErrorLine = ERROR_LINE()
+        ,@ErrorMessage = ERROR_MESSAGE() + ' input error - ' +@MyInputError ;
+
+              EXEC MWH.MERGE_ETL_TryCatchError_wRtn 'save error' , @ERR, @ErrorSeverity, @ErrorState, @ErrorProcedure, @ErrorLine, @ErrorMessage, @My_SP_NAME,   @TryCatchError_ID  OUTPUT ;
+              PRINT 'ERROR : (' + cast(@TryCatchError_ID as varchar(12))  + ')   ' + @ErrorMessage
+       END CATCH;
+
+              select @LAST_DATE as 'LAST_RUN_DATE',
+              case when @DaysSinceLastReport > 20 then -1 else 0 end as 'REPORT_NOT_VIEWED'
+END;
+
+
 
 
 

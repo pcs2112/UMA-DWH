@@ -1,7 +1,6 @@
 import time
 import uma_dwh.utils.appcache as appcache
 import uma_dwh.utils.opsgenie as opsgenie
-from datetime import datetime, timedelta
 from .mssql_db import execute_sp
 from .exceptions import SPException
 
@@ -49,7 +48,10 @@ def fetch_servers():
 
         for db_name in tmp_servers_dict[server_name]:
             procedures = execute_admin_console_sp(
-              'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE', 'GET TABLES AND STORED PROCEDURES', server_name, db_name
+              'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+              'GET TABLES AND STORED PROCEDURES',
+              server_name,
+              db_name
             )
 
             server['dbs'].append({
@@ -127,92 +129,6 @@ def fill_in_admin_console_sp_in_args(in_args):
             new_in_args[in_arg_name] = ''
 
     return new_in_args
-
-
-def get_admin_console_sp_in_args_from_dict(required_args, args):
-    """
-    Returns the admin_console_sp in args from data in a dictionary.
-    :param required_args:
-    :type required_args: list
-    :param args:
-    :type args: dict
-    :return: List of in arguments for the admin_console_sp function
-    """
-    out_args = []
-
-    if len(required_args) > 0:
-        for required_arg in required_args:
-            if required_arg not in args:
-                raise SPException(
-                  f' Missing required argument "{required_arg}".',
-                  -1
-                )
-
-            out_args.append(args[required_arg])
-
-    return out_args
-
-
-def execute_admin_console_sp_from_date(sp_name, sp_message, required_params, request_params):
-    """
-    Helper function to execute the MWH.UMA_WAREHOUSE_ADMIN_CONSOLE stored procedure from a Flask route.
-    This function returns data from yesterday if no data is found today
-    :param sp_name: Stored procedure name
-    :type sp_name: str
-    :param sp_message: Stored procedure message
-    :type sp_message: str
-    :param required_params: List of required http query params
-    :type required_params: list
-    :param request_params: Http request parameters
-    :type request_params: dict
-    :return: Stored procedure result sets and out argument
-    :rtype: list
-    """
-    in_args = get_admin_console_sp_in_args_from_dict(required_params, request_params)
-    date = in_args[0]
-
-    reports = execute_admin_console_sp(
-      sp_name,
-      sp_message,
-      date
-    )
-
-    if len(reports) < 1:
-        date_datetime = datetime.today() if date == '' else datetime.strptime(date, '%Y-%m-%d')
-        today_datetime = datetime.today()
-
-        if date_datetime.date() == today_datetime.date():
-            date = (today_datetime - timedelta(1)).strftime('%Y-%m-%d')
-            reports = execute_admin_console_sp(
-              sp_name,
-              sp_message,
-              date
-            )
-
-    return reports
-
-
-def execute_admin_console_sp_from_route(sp_name, sp_message, required_params, request_params):
-    """
-    Helper function to execute the MWH.UMA_WAREHOUSE_ADMIN_CONSOLE stored procedure from a Flask route.
-    :param sp_name: Stored procedure name
-    :type sp_name: str
-    :param sp_message: Stored procedure message
-    :type sp_message: str
-    :param required_params: List of required http query params
-    :type required_params: list
-    :param request_params: Http request parameters
-    :type request_params: dict
-    :return: Stored procedure result sets and out argument
-    :rtype: list
-    """
-    in_args = get_admin_console_sp_in_args_from_dict(required_params, request_params)
-
-    return execute_admin_console_sp(
-      sp_name,
-      sp_message,
-      *in_args
-    )
 
 
 def execute_admin_console_sp(*args):
