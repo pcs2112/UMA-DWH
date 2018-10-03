@@ -7,7 +7,7 @@ from .exceptions import SPException
 ADMIN_CONSOLE_SP_IN_ARGS_LENGTH = 10
 
 
-def fetch_current_status():
+def fetch_current_status(send_alert=True):
     result = execute_sp(
       'MWH.GET_CURRENT_ETL_CYCLE_STATUS',
       {
@@ -16,6 +16,16 @@ def fetch_current_status():
     )
 
     data_marts = []
+
+    # Alert not required, just return the data marts
+    if send_alert is False:
+        for data_mart_data in result[0]:
+            data_mart = get_data_mart(data_mart_data)
+            data_marts.append(data_mart)
+
+        return data_marts
+
+    # Alert required
     cached_data_marts = appcache.get_item('DATA_MARTS') or {}
 
     for data_mart_data in result[0]:
@@ -37,7 +47,8 @@ def fetch_current_status():
 
     appcache.set_item('DATA_MARTS', new_cached_data_marts)
 
-    opsgenie.send_etl_status_alert(data_marts[0:len(data_marts)-1])
+    if send_alert:
+        opsgenie.send_etl_status_alert(data_marts[0:len(data_marts)-1])
 
     return data_marts
 
