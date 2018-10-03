@@ -128,7 +128,7 @@ def get_data_mart(raw_data_mart, cached_data_mart=None):
     last_alert_sent_datetime = datetime.strptime(cached_data_mart['data_mart_alert_sent'], '%Y-%m-%d %H:%M:%S')
     now_datetime = datetime.now()
 
-    if now_datetime.hour < 9 or now_datetime.hour >= 20:
+    if now_datetime.hour < 8 or now_datetime.hour >= 20:
         current_status = 'PAUSED'
     elif current_status == 'STOPPED!':
         current_status = 'FAILED'

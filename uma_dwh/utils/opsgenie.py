@@ -1,5 +1,7 @@
 import sys
+import json
 import uma_dwh.db.etl
+from flask import current_app as app
 from opsgenie.swagger_client import AlertApi
 from opsgenie.swagger_client import configuration
 from opsgenie.swagger_client.models import CreateAlertRequest
@@ -38,7 +40,7 @@ def send_etl_status_alert(data_marts):
     failed_data_marts_ct = len(failed_data_marts)
 
     if failed_data_marts_ct > 0:
-        error_details = 'ALL Data marts failed.'
+        error_details = 'ALL'
         if failed_data_marts_ct < data_marts_ct:
             error_details = ', '.join(str(failed_data_mart) for failed_data_mart in failed_data_marts)
 
@@ -47,7 +49,8 @@ def send_etl_status_alert(data_marts):
         })
 
 
-def _send_alert(message, priority, details):
+def _send_alert(message, priority, details=None):
+    app.logger.debug(f'message={message} priority={priority} details={json.dumps(details)}')
     if this.is_enabled:
         response = AlertApi().create_alert(
           body=CreateAlertRequest(
