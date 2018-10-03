@@ -9,7 +9,8 @@ def _get_contents():
         return '{}'
 
     f = open(filename, 'r')
-    return f.read()
+    contents = f.read()
+    return '' if contents == '' else contents
 
 
 def _set_contents(data):

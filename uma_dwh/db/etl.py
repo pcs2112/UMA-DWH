@@ -1,6 +1,6 @@
-import time
 import uma_dwh.utils.appcache as appcache
 import uma_dwh.utils.opsgenie as opsgenie
+from datetime import datetime
 from .mssql_db import execute_sp
 from .exceptions import SPException
 
@@ -8,9 +8,6 @@ ADMIN_CONSOLE_SP_IN_ARGS_LENGTH = 10
 
 
 def fetch_current_status():
-    """
-    Returns the current status for the ETL data marts.
-    """
     result = execute_sp(
       'MWH.GET_CURRENT_ETL_CYCLE_STATUS',
       {
@@ -18,10 +15,31 @@ def fetch_current_status():
       }
     )
 
-    status_data = result[0]
-    # check_etl_status(status_data)
+    data_marts = []
+    cached_data_marts = appcache.get_item('DATA_MARTS') or {}
 
-    return status_data
+    for data_mart_data in result[0]:
+        cached_data_mart = None
+        if data_mart_data['data_mart_name'] in cached_data_marts:
+            cached_data_mart = cached_data_marts[data_mart_data['data_mart_name']]
+
+        data_mart = get_data_mart(data_mart_data, cached_data_mart)
+        data_marts.append(data_mart)
+
+    # Save data marts data into storage
+    new_cached_data_marts = {}
+    for data_mart in data_marts:
+        new_cached_data_marts[data_mart['data_mart_name']] = {
+          'data_mart_status': data_mart['data_mart_status'],
+          'data_mart_status_updated': data_mart['data_mart_status_updated'],
+          'data_mart_alert_sent': data_mart['data_mart_alert_sent']
+        }
+
+    appcache.set_item('DATA_MARTS', new_cached_data_marts)
+
+    opsgenie.send_etl_status_alert(data_marts[0:len(data_marts)-1])
+
+    return data_marts
 
 
 def fetch_servers():
@@ -81,34 +99,60 @@ def fetch_error(error_id):
     return result[0][0]
 
 
-def check_etl_status(status_data):
+def get_data_mart(raw_data_mart, cached_data_mart=None):
     """
-    Helper function to retrieve the current ETL status.
-    :param status_data: SP in arguments
-    :type status_data: list
-    :return: str
+    Helper function to return a data mart data from its raw data.
+    :param raw_data_mart: Data mart data
+    :type raw_data_mart: dict
+    :param cached_data_mart: Cached Data mart data
+    :type cached_data_mart: dict
+    :return: dict
      """
-    new_etl_status = status_data[-1]['data_mart_status']
+    data_mart = raw_data_mart.copy()
+    past_date = '1970-01-01 00:00:00'
 
-    if 'STOPPED' not in new_etl_status:
-        new_etl_status = 'RUNNING'
-    elif new_etl_status == 'STOPPED!':
-        new_etl_status = 'FAILED'
-    elif new_etl_status == 'STOPPED':
-        new_etl_status = 'PAUSED'
+    if cached_data_mart is None:
+        cached_data_mart = {
+          'data_mart_status': 'RUNNING',
+          'data_mart_status_updated': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+          'data_mart_alert_sent': past_date
+        }
 
-    current_etl_status = appcache.get_item('ETL_STATUS') or 'RUNNING'
+    data_mart['data_mart_status_updated'] = cached_data_mart['data_mart_status_updated']
+    data_mart['data_mart_alert_sent'] = cached_data_mart['data_mart_alert_sent']
+    data_mart['data_mart_send_alert'] = False
 
-    if current_etl_status != 'FAILED' and new_etl_status == 'FAILED':
-        opsgenie.send_etl_status_alert()
+    current_status = data_mart['data_mart_status']
+    last_status = cached_data_mart['data_mart_status']
+    last_status_updated_datetime = datetime.strptime(cached_data_mart['data_mart_status_updated'], '%Y-%m-%d %H:%M:%S')
+    last_alert_sent_datetime = datetime.strptime(cached_data_mart['data_mart_alert_sent'], '%Y-%m-%d %H:%M:%S')
+    now_datetime = datetime.now()
 
-    if new_etl_status != current_etl_status:
-        appcache.set_item('ETL_STATUS', new_etl_status)
-        appcache.set_item('ETL_STATUS_UPDATED', time.time())
+    if now_datetime.hour < 9 or now_datetime.hour >= 20:
+        current_status = 'PAUSED'
+    elif current_status == 'STOPPED!':
+        current_status = 'FAILED'
+    elif current_status == 'STOPPED':
+        current_status = 'PAUSED'
+    else:
+        current_status = 'RUNNING'
 
-    status_data[-1]['data_mart_status'] = new_etl_status
+    if current_status == 'FAILED':
+        if last_status == 'FAILED' \
+          and (now_datetime - last_status_updated_datetime).total_seconds() >= 3600 \
+          and (now_datetime - last_alert_sent_datetime).total_seconds() >= 86400:
+            data_mart['data_mart_alert_sent'] = now_datetime.strftime('%Y-%m-%d %H:%M:%S')
+            data_mart['data_mart_send_alert'] = True
 
-    return new_etl_status
+    # Reset the status last updated and alert sent date times
+    if current_status != last_status:
+        data_mart['data_mart_status_updated'] = now_datetime.strftime('%Y-%m-%d %H:%M:%S')
+        data_mart['data_mart_alert_sent'] = past_date
+
+    # Set the status
+    data_mart['data_mart_status'] = current_status
+
+    return data_mart
 
 
 def fill_in_admin_console_sp_in_args(in_args):
