@@ -19,7 +19,7 @@ const columns = [
   },
   {
     Header: 'STATUS',
-    accessor: 'data_mart_status',
+    accessor: 'data_mart_status_display',
     width: 80
   },
   {

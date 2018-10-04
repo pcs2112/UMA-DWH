@@ -139,18 +139,16 @@ def get_data_mart(raw_data_mart, cached_data_mart=None):
     last_alert_sent_datetime = datetime.strptime(cached_data_mart['data_mart_alert_sent'], '%Y-%m-%d %H:%M:%S')
     now_datetime = datetime.now()
 
-    if now_datetime.hour < 8 or now_datetime.hour >= 20:
-        current_status = 'PAUSED'
-    elif current_status == 'STOPPED!':
+    if current_status == 'STOPPED!':
+        current_status = 'FAILED'
+    elif current_status == 'NOT STARTED':
         current_status = 'FAILED'
     elif current_status == 'STOPPED':
         current_status = 'PAUSED'
-    else:
-        current_status = 'RUNNING'
 
     if current_status == 'FAILED':
         if last_status == 'FAILED' \
-          and (now_datetime - last_status_updated_datetime).total_seconds() >= 3600 \
+          and (now_datetime - last_status_updated_datetime).total_seconds() >= 1800 \
           and (now_datetime - last_alert_sent_datetime).total_seconds() >= 86400:
             data_mart['data_mart_alert_sent'] = now_datetime.strftime('%Y-%m-%d %H:%M:%S')
             data_mart['data_mart_send_alert'] = True
@@ -161,6 +159,7 @@ def get_data_mart(raw_data_mart, cached_data_mart=None):
         data_mart['data_mart_alert_sent'] = past_date
 
     # Set the status
+    data_mart['data_mart_status_display'] = data_mart['data_mart_status']
     data_mart['data_mart_status'] = current_status
 
     return data_mart
