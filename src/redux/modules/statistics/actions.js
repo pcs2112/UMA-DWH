@@ -6,7 +6,10 @@ export const actionTypes = {
   FETCH_LAST_DATE_SUCCESS: 'statistics/FETCH_LAST_DATE_SUCCESS',
   FETCH_LAST_DATE_FAIL: 'statistics/FETCH_LAST_DATE_FAIL',
   RESET: 'statistics/RESET',
-  SET_FILTERS: 'statistics/SET_FILTERS'
+  SET_FILTERS: 'statistics/SET_FILTERS',
+  SELECT: 'statistics/SELECT',
+  UNSELECT: 'statistics/UNSELECT',
+  UNSELECT_ALL: 'statistics/UNSELECT_ALL',
 };
 
 /**
@@ -58,4 +61,28 @@ export const setFilters = (schema, date, months) => ({
   schema,
   date,
   months
+});
+
+/**
+ * Action to select a statistics item.
+ */
+export const select = (id, data) => ({
+  type: actionTypes.SELECT,
+  id,
+  data
+});
+
+/**
+ * Action to unselect a statistics item.
+ */
+export const unselect = id => ({
+  type: actionTypes.UNSELECT,
+  id
+});
+
+/**
+ * Action to unselect all statistics items.
+ */
+export const unselectAll = () => ({
+  type: actionTypes.UNSELECT_ALL
 });

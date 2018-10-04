@@ -1,4 +1,6 @@
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
+import itemListSelectReducerFor, { initialState as itemListSelectInitialState }
+  from '../../reducers/itemListSelectReducerFor';
 import { actionTypes } from './actions';
 
 // Initial state
@@ -6,10 +8,11 @@ const initialState = Object.assign({
   schema: '',
   date: '',
   months: ''
-}, itemListInitialState);
+}, itemListInitialState, itemListSelectInitialState);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
+const itemListSelectReducer = itemListSelectReducerFor(actionTypes);
 
 // Set the filters data
 const setFilters = (state, action) => {
@@ -45,6 +48,10 @@ export default (state = initialState, action) => {
       return itemListReducer(state, action);
     case actionTypes.SET_FILTERS:
       return setFilters(state, action);
+    case actionTypes.SELECT:
+    case actionTypes.UNSELECT:
+    case actionTypes.UNSELECT_ALL:
+      return itemListSelectReducer(state, action);
     default:
       return state;
   }
