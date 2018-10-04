@@ -67,3 +67,11 @@ export const getFilters = createSelector(
  * @param {Object} state
  */
 export const getSelected = createGetPropertySelector('statistics', 'selected');
+
+/**
+ * Selector to get the total count of selected statistics items.
+ */
+export const getSelectedCount = createSelector(
+  [getSelected],
+  selected => Object.keys(selected).length
+);

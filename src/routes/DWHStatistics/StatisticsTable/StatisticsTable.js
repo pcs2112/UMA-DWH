@@ -205,4 +205,4 @@ class StatisticsTable extends Component {
   }
 }
 
-export default withResponsiveTable(StatisticsTable, 300, 360);
+export default withResponsiveTable(StatisticsTable, 230, 430);

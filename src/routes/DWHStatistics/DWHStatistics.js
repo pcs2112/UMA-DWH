@@ -22,6 +22,7 @@ class DWHStatistics extends Component {
     statisticsFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     statisticsFilters: PropTypes.object.isRequired,
     statisticsSelectedData: PropTypes.object.isRequired,
+    statisticsSelectedCount: PropTypes.number.isRequired,
     schemas: PropTypes.array.isRequired,
     isStatisticsChartFetching: PropTypes.bool.isRequired,
     statisticsChartDataLoaded: PropTypes.bool.isRequired,
@@ -57,6 +58,7 @@ class DWHStatistics extends Component {
       statisticsFetchingError,
       statisticsFilters,
       statisticsSelectedData,
+      statisticsSelectedCount,
       schemas,
       isStatisticsChartFetching,
       statisticsChartDataLoaded,
@@ -113,6 +115,20 @@ class DWHStatistics extends Component {
             unselectData={unselectData}
           />
         </Segment>
+        <Segment>
+          <Button
+            size="small"
+            disabled={statisticsSelectedCount < 1}
+          >
+            Run stats on tables
+          </Button>
+          <Button
+            size="small"
+            disabled={false}
+          >
+            Run stats on schemas
+          </Button>
+        </Segment>
       </div>
     );
   }
@@ -126,6 +142,7 @@ export default withMainLayout(connect(
     statisticsFetchingError: statisticsReduxModule.selectors.getFetchingError(state),
     statisticsFilters: statisticsReduxModule.selectors.getFilters(state),
     statisticsSelectedData: statisticsReduxModule.selectors.getSelected(state),
+    statisticsSelectedCount: statisticsReduxModule.selectors.getSelectedCount(state),
     schemas: statisticsSchemasReduxModule.selectors.getSchemas(state),
     isStatisticsChartFetching: state.statisticsChart.isFetching,
     statisticsChartDataLoaded: state.statisticsChart.dataLoaded,
