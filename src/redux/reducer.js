@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { reduxPollingNamespace, reduxPollingReducer } from 'redux-polling';
 import { reducer as form } from 'redux-form';
 import { reducer as modal } from 'redux-modal';
 import errorTypeResolution from './modules/errorTypeResolution';
@@ -21,6 +22,7 @@ import statisticsChart from './modules/statisticsChart';
 import statisticsSchemas from './modules/statisticsSchemas';
 
 export default combineReducers({
+  [reduxPollingNamespace]: reduxPollingReducer,
   form,
   modal,
   errorTypeResolution: errorTypeResolution.reducer,

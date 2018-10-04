@@ -1,10 +1,11 @@
 import { createStore as _createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+import { reduxPollingMiddleware } from 'redux-polling';
 import clientMiddleware from './middleware/apiClient';
 import appErrorMiddleware from './middleware/appError';
 
 export default (client, data) => {
-  const middleware = [clientMiddleware(client), appErrorMiddleware, thunk];
+  const middleware = [clientMiddleware(client), appErrorMiddleware, thunk, reduxPollingMiddleware];
 
   let finalCreateStore;
   if (__DEVELOPMENT__ && __DEVTOOLS__) {
