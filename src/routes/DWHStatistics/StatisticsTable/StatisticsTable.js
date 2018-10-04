@@ -2,11 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import ReactTable from 'react-table';
+import checkboxHOC from 'react-table/lib/hoc/selectTable';
 import withResponsiveTable from 'components/WithResponsiveTable';
 import globalCss from 'css/global';
+import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 
+const CheckboxTable = checkboxHOC(ReactTable);
 const keyName = 'id';
 const noTrProps = {};
+const defaultExpanded = {};
 
 /**
  * Table columns
@@ -79,22 +83,60 @@ const columns = [
   }
 ];
 
+const SelectAllInputComponent = () => (<span />);
+
 class StatisticsTable extends Component {
   static propTypes = {
     tableHeight: PropTypes.number.isRequired,
     isFetching: PropTypes.bool.isRequired,
     dataLoaded: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
-    fetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired
+    fetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
+    selectedData: PropTypes.object.isRequired,
+    selectData: PropTypes.func.isRequired,
+    unselectData: PropTypes.func.isRequired,
   };
 
-  shouldComponentUpdate(nextProps) {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      expanded: defaultExpanded
+    };
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
     return nextProps.tableHeight !== this.props.tableHeight
       || nextProps.isFetching !== this.props.isFetching
       || nextProps.dataLoaded !== this.props.dataLoaded
       || nextProps.data !== this.props.data
-      || nextProps.fetchingError !== this.props.fetchingError;
+      || nextProps.fetchingError !== this.props.fetchingError
+      || nextProps.selectedData !== this.props.selectedData
+      || nextState.expanded !== this.state.expanded;
   }
+
+  onExpanded = (newExpanded, index) => {
+    const { expanded } = this.state;
+    this.setState({
+      expanded: {
+        [index[0]]: !expanded[index[0]]
+      }
+    });
+  };
+
+  toggleSelection = (key, shift, row) => {
+    const { selectedData, selectData, unselectData } = this.props;
+
+    // Check to see if the key exists
+    if (objectHasOwnProperty(selectedData, key)) {
+      unselectData(key);
+    } else {
+      // It does not exist so add it
+      selectData(key, row);
+    }
+  };
+
+  isSelected = key => objectHasOwnProperty(this.props.selectedData, key);
 
   getTrProps = (state, row) => {
     if (!row) {
@@ -134,7 +176,7 @@ class StatisticsTable extends Component {
       tableHeight, isFetching, dataLoaded, data, fetchingError
     } = this.props;
     return (
-      <ReactTable
+      <CheckboxTable
         data={data}
         columns={columns}
         style={{
@@ -150,6 +192,14 @@ class StatisticsTable extends Component {
         noDataText={dataLoaded ? '0 Statistics records found.' : ''}
         getTrProps={this.getTrProps}
         keyField={keyName}
+        toggleSelection={this.toggleSelection}
+        toggleAll={false}
+        selectAll={false}
+        selectType="checkbox"
+        SelectAllInputComponent={SelectAllInputComponent}
+        isSelected={this.isSelected}
+        expanded={this.state.expanded}
+        onExpandedChange={this.onExpanded}
       />
     );
   }

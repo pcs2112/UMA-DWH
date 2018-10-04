@@ -21,12 +21,15 @@ class DWHStatistics extends Component {
     statisticsData: PropTypes.array.isRequired,
     statisticsFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     statisticsFilters: PropTypes.object.isRequired,
+    statisticsSelectedData: PropTypes.object.isRequired,
     schemas: PropTypes.array.isRequired,
     isStatisticsChartFetching: PropTypes.bool.isRequired,
     statisticsChartDataLoaded: PropTypes.bool.isRequired,
     statisticsChartData: PropTypes.array.isRequired,
     fetchAllData: PropTypes.func.isRequired,
-    resetAllData: PropTypes.func.isRequired
+    resetAllData: PropTypes.func.isRequired,
+    selectData: PropTypes.func.isRequired,
+    unselectData: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -53,11 +56,14 @@ class DWHStatistics extends Component {
       statisticsData,
       statisticsFetchingError,
       statisticsFilters,
+      statisticsSelectedData,
       schemas,
       isStatisticsChartFetching,
       statisticsChartDataLoaded,
       statisticsChartData,
-      fetchAllData
+      fetchAllData,
+      selectData,
+      unselectData
     } = this.props;
 
     const current = moment(statisticsFilters.date, DEFAULT_DATE_FORMAT);
@@ -102,6 +108,9 @@ class DWHStatistics extends Component {
             data={statisticsData}
             isFetching={isStatisticsFetching}
             fetchingError={statisticsFetchingError}
+            selectedData={statisticsSelectedData}
+            selectData={selectData}
+            unselectData={unselectData}
           />
         </Segment>
       </div>
@@ -116,6 +125,7 @@ export default withMainLayout(connect(
     statisticsData: statisticsReduxModule.selectors.getStatistics(state),
     statisticsFetchingError: statisticsReduxModule.selectors.getFetchingError(state),
     statisticsFilters: statisticsReduxModule.selectors.getFilters(state),
+    statisticsSelectedData: statisticsReduxModule.selectors.getSelected(state),
     schemas: statisticsSchemasReduxModule.selectors.getSchemas(state),
     isStatisticsChartFetching: state.statisticsChart.isFetching,
     statisticsChartDataLoaded: state.statisticsChart.dataLoaded,
@@ -131,6 +141,8 @@ export default withMainLayout(connect(
     resetAllData: () => {
       dispatch(statisticsReduxModule.actions.reset());
       dispatch(statisticsChartReduxModule.actions.reset());
-    }
+    },
+    selectData: (id, data) => dispatch(statisticsReduxModule.actions.select(id, data)),
+    unselectData: id => dispatch(statisticsReduxModule.actions.unselect(id))
   })
 )(DWHStatistics));
