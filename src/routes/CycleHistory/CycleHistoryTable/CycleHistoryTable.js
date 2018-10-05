@@ -6,7 +6,6 @@ import checkboxHOC from 'react-table/lib/hoc/selectTable';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import globalCss from 'css/global';
 import withResponsiveTable from 'components/WithResponsiveTable';
-import withAsyncPolling from 'components/WithAsyncPolling';
 import RowDetails from './RowDetails';
 import RowExpander from './RowExpander';
 
@@ -268,4 +267,4 @@ class CycleHistoryTable extends Component {
   }
 }
 
-export default withAsyncPolling(withResponsiveTable(CycleHistoryTable, 320, 440));
+export default withResponsiveTable(CycleHistoryTable, 320, 440);

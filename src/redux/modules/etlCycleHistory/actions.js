@@ -1,3 +1,4 @@
+import { createPollingActions } from 'redux-polling';
 import { sleep, isEmpty } from 'javascript-utils/lib/utils';
 import { MAX_FETCH_CYCLE_GROUPS, CURRENT_STATUS_INTERAL_DURATION } from 'constants/index';
 import { shouldFetchCycle, getNewStartCycleGroup } from 'helpers/utils';
@@ -16,7 +17,7 @@ export const actionTypes = {
   SET_INTERVAL_DURATION: 'etlCycleHistory/SET_INTERVAL_DURATION'
 };
 
-export const pollFirstCycleGroup = () => (dispatch, getState) => {
+const polling = () => (dispatch, getState) => {
   const { etlCycleHistory } = getState();
   const {
     dataLoaded, currentCycleGroup, startCycleGroup, cycleDate
@@ -58,8 +59,8 @@ export const pollFirstCycleGroup = () => (dispatch, getState) => {
 
   return new Promise((resolve, reject) => {
     Promise.all(promises)
-      .then(() => {
-        resolve();
+      .then((res) => {
+        resolve(res);
       })
       .catch((err) => {
         reject(err);
@@ -157,13 +158,6 @@ export const reset = () => ({
 });
 
 /**
- * Removes the fetching error from the state.
- */
-export const clearFetchingError = () => ({
-  type: actionTypes.CLEAR_FETCH_FAIL
-});
-
-/**
  * Action to select a history item.
  */
 export const select = (id, data) => ({
@@ -206,3 +200,10 @@ export const setIntervalDuration = (intervalDuration = CURRENT_STATUS_INTERAL_DU
   type: actionTypes.SET_INTERVAL_DURATION,
   intervalDuration
 });
+
+/**
+ * Returns the polling actions.
+ * @param {Number} interval
+ */
+export const getPollingActions = interval =>
+  createPollingActions(`etlCycleHistoryPolling_${interval}`, polling(), interval, 0);

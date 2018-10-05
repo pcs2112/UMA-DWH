@@ -23,6 +23,7 @@ class Home extends Component {
   static propTypes = {
     history: PropTypes.object.isRequired,
     // Cycle history props
+    dispatchPollingAction: PropTypes.func.isRequired,
     isCycleHistoryFetching: PropTypes.bool.isRequired,
     cycleHistoryDataLoaded: PropTypes.bool.isRequired,
     cycleHistoryData: PropTypes.array.isRequired,
@@ -37,7 +38,6 @@ class Home extends Component {
     proceduresSelectedCount: PropTypes.number.isRequired,
     lastProcedureSelected: PropTypes.object,
     dataMartsSelectedCount: PropTypes.number.isRequired,
-    pollFirstCycleGroup: PropTypes.func.isRequired,
     fetchCycleHistory: PropTypes.func.isRequired,
     fetchPrevCycleHistory: PropTypes.func.isRequired,
     fetchNextCycleHistory: PropTypes.func.isRequired,
@@ -52,16 +52,31 @@ class Home extends Component {
     currentStatusData: PropTypes.array.isRequired,
     currentStatusDataTotals: PropTypes.object.isRequired,
     currentEtlStatus: PropTypes.string.isRequired,
-    fetchCurrentStatus: PropTypes.func.isRequired,
     // Procedure history props
     setProcedureHistoryFilters: PropTypes.func.isRequired
   };
 
+  componentWillMount() {
+    const { cycleHistoryIntervalDuration } = this.props;
+    this.startPolling(cycleHistoryIntervalDuration);
+  }
+
   componentWillUnmount() {
+    this.stopPolling();
     this.props.resetCycleHistory();
   }
 
-  handleCycleHistoryIntervalOnChange = (e, { value }) => this.props.setCycleHistoryIntervalDuration(value);
+  handleCycleHistoryIntervalOnChange = (e, { value }) => {
+    const { cycleHistoryIntervalDuration } = this.props;
+    const newValue = parseInt(value, 10);
+    if (cycleHistoryIntervalDuration !== newValue) {
+      this.props.setCycleHistoryIntervalDuration(value);
+      this.stopPolling();
+      if (newValue > 0) {
+        this.startPolling(parseInt(value, 10));
+      }
+    }
+  };
 
   handleViewHistoryOnClick = () => {
     const { setProcedureHistoryFilters, lastProcedureSelected } = this.props;
@@ -89,6 +104,17 @@ class Home extends Component {
     fetchCycleHistory(0, value);
   };
 
+  startPolling = (interval) => {
+    const { dispatchPollingAction } = this.props;
+    this.pollingActions = etlCycleHistory.actions.getPollingActions(interval);
+    dispatchPollingAction(this.pollingActions.start(dispatchPollingAction));
+  };
+
+  stopPolling = () => {
+    const { dispatchPollingAction } = this.props;
+    dispatchPollingAction(this.pollingActions.reset());
+  };
+
   render() {
     const {
       isCycleHistoryFetching,
@@ -104,7 +130,6 @@ class Home extends Component {
       cycleHistorySelectedData,
       proceduresSelectedCount,
       dataMartsSelectedCount,
-      pollFirstCycleGroup,
       fetchPrevCycleHistory,
       fetchNextCycleHistory,
       selectCycleHistoryData,
@@ -113,8 +138,7 @@ class Home extends Component {
       isCurrentStatusFetching,
       currentStatusData,
       currentStatusDataTotals,
-      currentEtlStatus,
-      fetchCurrentStatus
+      currentEtlStatus
     } = this.props;
     return (
       <div>
@@ -134,8 +158,6 @@ class Home extends Component {
             selectedData={cycleHistorySelectedData}
             selectData={selectCycleHistoryData}
             unselectData={unselectCycleHistoryData}
-            intervalDuration={cycleHistoryIntervalDuration}
-            onInterval={pollFirstCycleGroup}
             dataMartsSelectedCount={dataMartsSelectedCount}
             filters={cycleHistoryFilters}
           />
@@ -148,8 +170,6 @@ class Home extends Component {
                 data={currentStatusData}
                 dataTotals={currentStatusDataTotals}
                 fetchingError={false}
-                intervalDuration={cycleHistoryIntervalDuration}
-                onInterval={fetchCurrentStatus}
                 selectedData={cycleHistorySelectedData}
                 selectData={selectCycleHistoryData}
                 unselectData={unselectCycleHistoryData}
@@ -258,7 +278,7 @@ export default withMainLayout(connect(
     currentEtlStatus: etlCurrentStatus.selectors.getCurrentEtlStatus(state)
   }),
   dispatch => ({
-    pollFirstCycleGroup: () => dispatch(etlCycleHistory.actions.pollFirstCycleGroup()),
+    dispatchPollingAction: dispatch,
     fetchCycleHistory: (cycleGroup, cycleDate) => dispatch(etlCycleHistory.actions.fetchHistory(cycleGroup, cycleDate)),
     fetchPrevCycleHistory: () => dispatch(etlCycleHistory.actions.fetchPrev()),
     fetchNextCycleHistory: () => dispatch(etlCycleHistory.actions.fetchNext()),
@@ -269,7 +289,6 @@ export default withMainLayout(connect(
     setCycleHistoryIntervalDuration: intervalDuration =>
       dispatch(etlCycleHistory.actions.setIntervalDuration(intervalDuration)),
     setCycleHistoryFilters: (key, value) => dispatch(etlCycleHistory.actions.setFilters(key, value)),
-    fetchCurrentStatus: () => dispatch(etlCurrentStatus.actions.fetchCurrentStatus()),
     setProcedureHistoryFilters: (serverName, dbName, procedureName, date, months) =>
       dispatch(etlProcedureHistory.actions.setFilters(serverName, dbName, procedureName, date, months))
   })
