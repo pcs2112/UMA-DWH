@@ -4,7 +4,7 @@ import uma_dwh.db.etl
 from flask import current_app as app
 from opsgenie.swagger_client import AlertApi
 from opsgenie.swagger_client import configuration
-from opsgenie.swagger_client.models import CreateAlertRequest
+from opsgenie.swagger_client.models import *
 
 this = sys.modules[__name__]
 this.is_enabled = True
@@ -14,6 +14,7 @@ def init_opsgenie(app):
     configuration.api_key['Authorization'] = app.config['OPSGENIE_API_KEY']
     configuration.api_key_prefix['Authorization'] = app.config['OPSGENIE_GENIE_KEY']
     this.is_enabled = app.config['OPSGENIE_ENABLED']
+    this.admins = app.config['ADMINS']
 
 
 def send_alert(error_id):
@@ -31,31 +32,26 @@ def send_alert(error_id):
 
 
 def send_etl_status_alert(data_marts):
-    data_marts_ct = len(data_marts)
-    failed_data_marts = []
     for data_mart in data_marts:
         if 'data_mart_send_alert' in data_mart and data_mart['data_mart_send_alert']:
-            failed_data_marts.append(data_mart['data_mart_name'])
-
-    failed_data_marts_ct = len(failed_data_marts)
-
-    if failed_data_marts_ct > 0:
-        error_details = 'ALL'
-        if failed_data_marts_ct < data_marts_ct:
-            error_details = ', '.join(str(failed_data_mart) for failed_data_mart in failed_data_marts)
-
-        return _send_alert('DWH ETL FAILED RUNNING', 'P3', {
-          'error_data_marts': error_details
-        })
+            _send_alert(f"DWH ETL {data_mart['data_mart_status']}", 'P3', {
+              'error_data_marts': data_mart['data_mart_name']
+            })
 
 
 def _send_alert(message, priority, details=None):
     app.logger.debug(f'message={message} priority={priority} details={json.dumps(details)}')
+
+    recipients = []
+    for admin in this.admins:
+        recipients.append(TeamRecipient(name=admin, type='user'))
+
     if this.is_enabled:
         response = AlertApi().create_alert(
           body=CreateAlertRequest(
             message=message,
             priority=priority,
-            details=details
+            details=details,
+            visible_to=recipients
           )
         )

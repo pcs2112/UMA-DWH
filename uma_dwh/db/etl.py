@@ -1,5 +1,6 @@
 import uma_dwh.utils.appcache as appcache
 import uma_dwh.utils.opsgenie as opsgenie
+from uma_dwh.utils import date_diff_in_seconds
 from datetime import datetime
 from .mssql_db import execute_sp
 from .exceptions import SPException
@@ -148,8 +149,8 @@ def get_data_mart(raw_data_mart, cached_data_mart=None):
 
     if current_status == 'FAILED':
         if last_status == 'FAILED' \
-          and (now_datetime - last_status_updated_datetime).total_seconds() >= 1800 \
-          and (now_datetime - last_alert_sent_datetime).total_seconds() >= 86400:
+          and date_diff_in_seconds(now_datetime, last_status_updated_datetime) >= 1800 \
+          and date_diff_in_seconds(now_datetime, last_alert_sent_datetime) >= 86400:
             data_mart['data_mart_alert_sent'] = now_datetime.strftime('%Y-%m-%d %H:%M:%S')
             data_mart['data_mart_send_alert'] = True
 

@@ -40,3 +40,6 @@ class Settings(object):
     OPSGENIE_API_KEY = '602e1fed-1cee-496a-8454-5d63520bfba4'
     OPSGENIE_GENIE_KEY = 'GenieKey'
     OPSGENIE_ENABLED = os.getenv('OPSGENIE_ENABLED') == 1
+    ADMINS = [
+      'cmatula@ultimatemedical.edu'
+    ]
