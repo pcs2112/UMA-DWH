@@ -1,6 +1,4 @@
 
-
-
 -- C8_MWH.GET_CURRENT_ETL_CYCLE_STATUS.sql
 
 USE [UMA_DWH]
@@ -12,6 +10,15 @@ GO
 --   exec   MWH.GET_CURRENT_ETL_CYCLE_STATUS  'I3_NON-MCS';
 
 -- select sysdatetime()
+
+/*
+select TARGET_SCHEMA_NAME, count(*)
+FROM   [UMA_DWH].[MWH].[ETL_HISTORY]  H  with(nolock)
+WHERE  h.TARGET_SCHEMA_NAME NOT IN ('BROWSER' , 'POWERBI')
+and h.END_DTTM >= dateadd(hour, -24, getdate())
+group by TARGET_SCHEMA_NAME
+*/
+
 
 --  grant execute on MWH.GET_CURRENT_ETL_CYCLE_STATUS to public
 
@@ -68,7 +75,7 @@ DECLARE             @SELECT_CNT                              INTEGER;
 DECLARE             @START_WINDOW_DTTM DATETIME;
 DECLARE             @END_WINDOW_DTTM DATETIME;
 DECLARE             @MIN_CYCLE_EH_ID                         INTEGER;
-DECLARE             @MAX_CYCLE_EH_ID                          INTEGER;
+DECLARE             @MAX_CYCLE_EH_ID                         INTEGER;
 DECLARE             @IN_8AM_TO_8PM                                  INTEGER = 0;
 
 
@@ -96,6 +103,28 @@ end;
 --   FLAG in workday  (  8am to 8pm ), to 1, else 0 ...  This will be used to check if any jobs are running, if not 'STOPPED!'  and if not in work day and not running  'STOPPED'
 --   the webapp will show the error and send back
 SELECT @IN_8AM_TO_8PM =   case when  CONVERT(VARCHAR(8),@WORK_DAY_START,108) between '08:00:00'  and '20:00:00' then 1 else 0  end;
+
+              IF OBJECT_ID('tempdb..#DATA_MART_LAST_RUN') IS NOT NULL
+              DROP TABLE #DATA_MART_LAST_RUN;
+
+              CREATE TABLE #DATA_MART_LAST_RUN
+              (
+              DATA_MART_NAME                           varchar(80),
+              LAST_ETL_HISTORY_DTTM             DATETIME
+              );
+
+              INSERT INTO #DATA_MART_LAST_RUN (DATA_MART_NAME, LAST_ETL_HISTORY_DTTM)
+              select cm.DATA_MART_NAME, max(eh.END_DTTM)
+              FROM [MWH].[ETL_HISTORY] eh   WITH(NOLOCK)
+              JOIN [MWH].[ETL_CONTROL_MANAGER] CM WITH(NOLOCK) on(EH.CALLING_PROC = cm.PROCEDURE_NAME)
+              where eh.END_DTTM >= dateadd(hour, -24, getdate())
+              and eh.TARGET_SCHEMA_NAME NOT IN ('BROWSER' , 'POWERBI')
+              group by cm.DATA_MART_NAME
+
+
+
+
+
 
               IF OBJECT_ID('tempdb..#CURRENT_ETL_WINDOW') IS NOT NULL
               DROP TABLE #CURRENT_ETL_WINDOW;
@@ -258,7 +287,7 @@ case when  sum( datediff(second, H.[INSERT_DTTM],H.[UPDATE_DTTM])) > 0  then cas
 FROM   [UMA_DWH].[MWH].[ETL_HISTORY]  H  with(nolock)
 JOIN [UMA_DWH].[MWH].[ETL_CONTROL_MANAGER]  CM with(nolock) on (CM.PROCEDURE_NAME = H.CALLING_PROC)
 WHERE  h.ID between @MIN_CYCLE_EH_ID  and @MAX_CYCLE_EH_ID
-and h.TARGET_SCHEMA_NAME != 'BROWSER'
+and h.TARGET_SCHEMA_NAME NOT IN ('BROWSER' , 'POWERBI')
 --where H.[ID] >=  (select MAX(h2.ID) from [UMA_DWH].[MWH].[ETL_HISTORY]  H2  with(nolock) where H2.[CALLING_PROC] = @FirstPROCInCycle and H2.[END_DTTM] is NOT null and H2.[STATUS] = 'FINISHED')
 group by CM.DATA_MART_NAME ;
 SET @SELECT_CNT = @@ROWCOUNT;
@@ -287,7 +316,6 @@ SET @SELECT_CNT = @@ROWCOUNT;
        FROM #DATA_MART_NAME t1
        JOIN  #CDATA_MART_NAME t2 on (t1.DATA_MART_NAME = t2.DATA_MART_NAME)
 
-
        UPDATE  t1
        SET t1.RUN_TIME_TO_CURRENT_DATAMART_STATUS = t2.RUN_TIME_TO_CURRENT_DATAMART_STATUS
        FROM #DATA_MART_NAME t1
@@ -301,11 +329,24 @@ SET @SELECT_CNT = @@ROWCOUNT;
        SELECT @JOBS_RUNNING_OR_DONE = count(*) from #DATA_MART_NAME where DATAMART_START_DTTM is NOT NULL;
 
 
-       IF ( @CHECK_ALL = 1 and @JOBS_RUNNING_OR_DONE = 0) BEGIN
+
+       IF ( @CHECK_ALL = 1 and @JOBS_RUNNING_OR_DONE != 0) BEGIN
               IF ( @IN_8AM_TO_8PM = 1 ) begin
-                     SET @CURRENT_WINDOW_JOBS_STATUS = 'STOPPED!';
+                     --SET @CURRENT_WINDOW_JOBS_STATUS = 'STOPPED!';
+
+                     UPDATE t1
+                     SET DATAMART_STATUS = 'STOPPED!'
+                     FROM #DATA_MART_NAME t1
+                     WHERE [DATA_MART_NAME] NOT IN (select DATA_MART_NAME from #DATA_MART_LAST_RUN )
+
               END ELSE BEGIN
-                     SET @CURRENT_WINDOW_JOBS_STATUS = 'STOPPED';
+                     --SET @CURRENT_WINDOW_JOBS_STATUS = 'STOPPED';
+
+                     UPDATE t1
+                     SET DATAMART_STATUS = 'STOPPED'
+                     FROM #DATA_MART_NAME t1
+                     WHERE [DATA_MART_NAME] NOT IN (select DATA_MART_NAME from #DATA_MART_LAST_RUN )
+
               END
        END
 
@@ -327,9 +368,6 @@ having count(*) > 0
 OPTION (RECOMPILE);
 
 
-
-
-
 INSERT INTO #DATA_MART_NAME ( DATA_MART_NAME, JOB_COUNT, DATAMART_STATUS, JOBS_FINISHED, DATAMART_START_DTTM, DATAMART_END_DTTM, RUN_TIME_TO_CURRENT_DATAMART_STATUS, DATAMART_trans_rate )
 VALUES (
        'UMA_DWH TOTAL',
@@ -345,7 +383,7 @@ VALUES (
 
 
 select [DATA_MART_NAME]    ,
-coalesce(  @CURRENT_WINDOW_JOBS_STATUS , case when JOB_COUNT = JOBS_FINISHED then DATAMART_STATUS else(case when JOBS_FINISHED = 0 then 'NOT STARTED' else 'RUNNING' end) end) as DATA_MART_STATUS,
+coalesce( DATAMART_STATUS, coalesce(  @CURRENT_WINDOW_JOBS_STATUS , case when JOB_COUNT = JOBS_FINISHED then DATAMART_STATUS else(case when JOBS_FINISHED = 0 then 'NOT STARTED' else 'RUNNING' end) end)) as DATA_MART_STATUS,
 JOB_COUNT,
 JOBS_FINISHED,
 DATAMART_START_DTTM    as  'DATA_MART_START_DTTM',
