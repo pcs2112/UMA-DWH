@@ -5,6 +5,9 @@ export const actionTypes = {
   FETCH_LAST_DATE_BEGIN: 'statistics/FETCH_LAST_DATE_BEGIN',
   FETCH_LAST_DATE_SUCCESS: 'statistics/FETCH_LAST_DATE_SUCCESS',
   FETCH_LAST_DATE_FAIL: 'statistics/FETCH_LAST_DATE_FAIL',
+  UPDATE_TABLE_STATS_BEGIN: 'statistics/UPDATE_TABLE_STATS_BEGIN',
+  UPDATE_TABLE_STATS_SUCCESS: 'statistics/UPDATE_TABLE_STATS_SUCCESS',
+  UPDATE_TABLE_STATS_FAIL: 'statistics/UPDATE_TABLE_STATS_FAIL',
   RESET: 'statistics/RESET',
   SET_FILTERS: 'statistics/SET_FILTERS',
   SELECT: 'statistics/SELECT',
@@ -85,4 +88,21 @@ export const unselect = id => ({
  */
 export const unselectAll = () => ({
   type: actionTypes.UNSELECT_ALL
+});
+
+/**
+ * Action to update the table stats.
+ */
+export const updateTableStats = (schema, tables) => ({
+  types: [
+    actionTypes.UPDATE_TABLE_STATS_BEGIN,
+    actionTypes.UPDATE_TABLE_STATS_SUCCESS,
+    actionTypes.UPDATE_TABLE_STATS_FAIL
+  ],
+  makeRequest: client => client.post('/api/etl/statistics/tables', {
+    params: {
+      schema,
+      tables: tables.join(',')
+    }
+  })
 });
