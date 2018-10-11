@@ -14,5 +14,5 @@ export const fetchCurrentStatus = () => ({
     actionTypes.FETCH_SUCCESS,
     actionTypes.FETCH_FAIL
   ],
-  makeRequest: client => client.get('/api/etl/status')
+  makeRequest: client => client.get('/api/etl/data_marts_status')
 });

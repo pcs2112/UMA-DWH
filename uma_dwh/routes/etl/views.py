@@ -2,7 +2,6 @@ import uma_dwh.db.etl as etl
 from flask import Blueprint
 from flask_jwt_extended import jwt_required
 from uma_dwh.exceptions import InvalidUsage
-from uma_dwh.utils.opsgenie import send_alert
 from uma_dwh.utils.nocache import nocache
 from uma_dwh.utils.views import execute_sp_func_from_view
 from .api_config import path_sp_args_map
@@ -11,10 +10,10 @@ from .api_config import path_sp_args_map
 blueprint = Blueprint('etl', __name__)
 
 
-@blueprint.route('/api/etl/errors/<error_id>/alert', methods=('GET',))
+@blueprint.route('/api/etl/status', methods=('GET',))
 @nocache
-def post_error_alert(error_id):
-    send_alert(error_id)
+def get_data_marts_status():
+    etl.fetch_current_status(True)
 
 
 @blueprint.route('/api/etl/errors/<error_id>', methods=('GET',))

@@ -8,7 +8,7 @@ from .exceptions import SPException
 ADMIN_CONSOLE_SP_IN_ARGS_LENGTH = 10
 
 
-def fetch_current_status(send_alert=True):
+def fetch_current_status(send_alert=False):
     result = execute_sp(
       'MWH.GET_CURRENT_ETL_CYCLE_STATUS',
       {
