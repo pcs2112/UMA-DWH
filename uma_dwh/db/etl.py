@@ -158,6 +158,7 @@ def get_data_mart(raw_data_mart, cached_data_mart=None):
     if current_status != last_status:
         data_mart['data_mart_status_updated'] = now_datetime.strftime('%Y-%m-%d %H:%M:%S')
         data_mart['data_mart_alert_sent'] = past_date
+        data_mart['data_mart_last_status'] = last_status
 
     # Set the status
     data_mart['data_mart_status_display'] = data_mart['data_mart_status']

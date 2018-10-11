@@ -34,7 +34,12 @@ def send_etl_status_alert(data_marts):
     for data_mart in data_marts:
         if 'data_mart_send_alert' in data_mart and data_mart['data_mart_send_alert'] is True:
             _send_alert(f"DWH ETL {data_mart['data_mart_status']}", 'P3', {
-              'error_data_marts': data_mart['data_mart_name']
+              'data_mart_name': data_mart['data_mart_name'],
+              'data_mart_status': data_mart['data_mart_status_display'],
+              'data_mart_status_internal': data_mart['data_mart_status'],
+              'data_mart_previous_status': data_mart['data_mart_last_status'],
+              'data_mart_previous_status_updated': data_mart['data_mart_status_updated'],
+              'data_mart_alert_sent': data_mart['data_mart_alert_sent']
             })
 
 
