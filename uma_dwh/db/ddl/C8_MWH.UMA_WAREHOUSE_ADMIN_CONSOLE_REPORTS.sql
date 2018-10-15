@@ -1171,7 +1171,7 @@ BEGIN
 
                      IF (@VALID_INPUT_DATA = 1) begin
                            IF (len(@VARCHAR_03) >= 1 ) begin
-                                  select @rtn_Insert_Cnt = count(*) from [MWH].[TABLE_STATISTICS_MANUAL_RUNS] with(nolock)
+                                  select @rtn_Insert_Cnt = count(*) from [MWH].[TABLE_STATISTICS_RUNS] with(nolock)
                                   where  [START_DTTM] between @mySTARTDate  and  @myENDDate
                                   and [TARGET_SCHEMA_NAME] = @VARCHAR_03
                                   option(recompile);
@@ -1214,7 +1214,7 @@ BEGIN
               SUM([RUN_TIME_MS] / 1000.0) as 'TOTAL_RUNTIME',
               cast( SUM([RUN_TIME_MS] / 1000.0)/ (COUNT(*) * 1.0) as DECIMAL(10,2)) 'AVG_RUNTIME'
 
-              from [MWH].[TABLE_STATISTICS_MANUAL_RUNS] with(nolock)
+              from [MWH].[TABLE_STATISTICS_RUNS] with(nolock)
               where  [START_DTTM] between @mySTARTDate  and  @myENDDate
               and [TARGET_SCHEMA_NAME] = @VARCHAR_03
               group by cast([START_DTTM] as date)
@@ -1262,7 +1262,7 @@ BEGIN
                            IF (len(@VARCHAR_02) >= 1 ) begin
                                   SET @rtn_Insert_Cnt = 0;
 
-                                  select @rtn_Insert_Cnt = coalesce(count(*),0) from [MWH].[TABLE_STATISTICS_MANUAL_RUNS] with(nolock)
+                                  select @rtn_Insert_Cnt = coalesce(count(*),0) from [MWH].[TABLE_STATISTICS_RUNS] with(nolock)
                                   where  [START_DTTM] between @mySTARTDate  and  @myENDDate
                                   --and [TARGET_SCHEMA_NAME] = @VARCHAR_02
                                   option(recompile);
@@ -1306,7 +1306,7 @@ BEGIN
               cast( SUM([RUN_TIME_MS] / 1000.0)/ (COUNT(*) * 1.0) as DECIMAL(10,2)) AVG_RUNTIME,
               '[' +[TARGET_SERVER_NAME]+'].['+[TARGET_DB_NAME]+'].['+[TARGET_SCHEMA_NAME]+']' as GROUP_SCHEMA,
               [TARGET_SCHEMA_NAME]
-              from [MWH].[TABLE_STATISTICS_MANUAL_RUNS] with(nolock)
+              from [MWH].[TABLE_STATISTICS_RUNS] with(nolock)
               where [START_DTTM] between @MyInputDateTIME  and  dateadd( minute, 59, dateadd(hour, 23, @MyInputDateTIME))
               --and  [TARGET_SCHEMA_NAME] = @VARCHAR_02
               group by cast([START_DTTM] as date),  '[' +[TARGET_SERVER_NAME]+'].['+[TARGET_DB_NAME]+'].['+[TARGET_SCHEMA_NAME]+']', [TARGET_SCHEMA_NAME]
@@ -1335,7 +1335,7 @@ BEGIN
 
               IF (@MessageValid = 1) begin
                      IF (len(@VARCHAR_02) >= 1 ) begin
-                                  select @rtn_Insert_Cnt = count(*) from [MWH].[TABLE_STATISTICS_MANUAL_RUNS] sm with(nolock)
+                                  select @rtn_Insert_Cnt = count(*) from [MWH].[TABLE_STATISTICS_RUNS] sm with(nolock)
                                   where  sm.[START_DTTM] between cast(@MyInputDate as datetime)  and  dateadd(hour, 23, dateadd(minute, 59, cast(@MyInputDate as datetime)))
                                   and [TARGET_SCHEMA_NAME] = @VARCHAR_02
                                   option(recompile);
@@ -1390,7 +1390,7 @@ BEGIN
               tc.[ErrorMessage],
               tc.[ErrorProcedure]
 
-              from [MWH].[TABLE_STATISTICS_MANUAL_RUNS] sm with(nolock)
+              from [MWH].[TABLE_STATISTICS_RUNS] sm with(nolock)
               left join [MWH].[ETL_TryCatchError] tc with(nolock) on (tc.ID  =  sm.[TryCatchError_ID])
               where sm.[START_DTTM] between cast(@MyInputDate as datetime)  and  dateadd(hour, 23, dateadd(minute, 59, cast(@MyInputDate as datetime)))
               and    sm.[TARGET_SCHEMA_NAME] = @VARCHAR_02
@@ -1433,7 +1433,7 @@ BEGIN
 */
 
        select  @LAST_DATE = max(END_DTTM)
-       from [MWH].[TABLE_STATISTICS_MANUAL_RUNS] with(nolock)
+       from [MWH].[TABLE_STATISTICS_RUNS] with(nolock)
        where TryCatchError_ID = 0;
 
        SET @DaysSinceLastStats = datediff(day, @LAST_DATE, getdate());
