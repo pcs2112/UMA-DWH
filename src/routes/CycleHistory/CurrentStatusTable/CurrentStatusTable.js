@@ -19,8 +19,8 @@ const columns = [
   },
   {
     Header: 'STATUS',
-    accessor: 'data_mart_status_display',
-    width: 80
+    accessor: 'data_mart_status_internal',
+    width: 100
   },
   {
     Header: 'JOBS',

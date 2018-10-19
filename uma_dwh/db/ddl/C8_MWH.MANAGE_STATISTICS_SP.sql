@@ -316,7 +316,7 @@ DECLARE             @MY_STATUS  [varchar](100) = NULL;
 
 IF( @message = 'UPDATE STATISTICS')  BEGIN
 
-SELECT '[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']' FROM information_schema.tables  where TABLE_TYPE = 'BASE TABLE'  and ( TABLE_SCHEMA = @SCHEMA  or  @SCHEMA is NULL or @SCHEMA = '') and  ( TABLE_NAME = @TABLE  or  @TABLE is NULL or @TABLE = ''  );
+-- SELECT '[' + TABLE_SCHEMA + '].[' + TABLE_NAME + ']' FROM information_schema.tables  where TABLE_TYPE = 'BASE TABLE'  and ( TABLE_SCHEMA = @SCHEMA  or  @SCHEMA is NULL or @SCHEMA = '') and  ( TABLE_NAME = @TABLE  or  @TABLE is NULL or @TABLE = ''  );
 
 
        DECLARE db_cursor_run_stats CURSOR FOR

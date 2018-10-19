@@ -1,156 +1,7 @@
+
+
+
 -- C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS.sql
-
--- sqlcmd -S localhost -U [srv_mlkpythdap01_DB] -P 1F0rg0t1 -i  C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS.sql
---[srv_mlkpythdap01_DB]
-
-
-
--- sqlcmd -S localhost -U [srv_mlkpythdap01_DB] -P 1F0rg0t1 -i  C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS.sql
---[srv_mlkpythdap01_DB]
-
-
-
-
-
-
-/*    MESSAGE SUPPORTED BY THIS SP
-use uma_dwh
-go
-
-
-select * from  [MWH].[ETL_HISTORY] eh with(nolock)   where   [CALLING_PROC] = 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS'
-
-
-MLK-TEL-P-SQ02       MCS_LDS
-MLK-TEL-P-SQ02       I3_IC_FLM
-MLK-TEL-P-SQ01       I3_IC_40
-MLK-SQL-P-sq03       i3Leads
-MLK-INF-P-SQ02       LION
-MLK-EDM-D-SQ02       UMA_DWH
-MLK-EDM-D-SQ02       IMPORT
-MLK-DWH-P-SQ02       FREEDOM
-MLK-DWH-P-SQ02       CV_Prod
-
-
-select * from  [MWH].[ETL_HISTORY]  where  [TARGET_SCHEMA_NAME] = 'BROWSER'
-
-delete from [MWH].[ETL_HISTORY]  where  [TARGET_SCHEMA_NAME] = 'BROWSER'
-
-update statistics [MWH].[ETL_HISTORY]
-
-sql for REPORT average runtime per day
-
-select top 100 [INSERT_DTTM], [RUN_TIME_SEC]
-from [MWH].[ETL_HISTORY] eh with(nolock)
-
-
-
-List of of procedures in the ETL_CONTROL_MANAGER view   'LIST_CONTROL_MANAGER_DETAILS'
-SELECT * FROM MWH.ETL_CONTROL_MANAGER_view ORDER BY DATA_MART_NAME ASC, PRIORITY DESC
-
-List of all admin console users      'LIST_ADMIN_CONSOLE_USERS'
-SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER ORDER BY ID ASC
-
-Get admin console user by ID             'LIST_ADMIN_CONSOLE_USER_BY_ID'
-SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER WHERE ID = ?
-
-
-Get admin console user by Email address         'LIST_ADMIN_CONSOLE_USER_BY_EMAIL'
-SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER WHERE EmployeeEMAIL = ?
-
-List of all error resolution records            'LIST_ERROR_RESOLUTIONS'
-SELECT * FROM MWH.ERROR_RESOLUTIONS ORDER BY ID ASC
-
-Get error resolution record by ID        'LIST_ERROR_RESOLUTIONS_BY_ID'
-SELECT * FROM MWH.ERROR_RESOLUTIONS WHERE ID = ?
-
-Get last inserted error resolution record       'GET_LAST_ERROR_RESOLUTION'
-SELECT TOP 1 * FROM MWH.ERROR_RESOLUTIONS ORDER BY ID DESC
-
-
-
-
-
-
-
-*****  ONE DAY TEST  *****
-exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_REPORT_RUNS_BY_DAY' , '08-01-2018', '08-01-2018', '' , '', '' , '', '' , '', '';
-
-exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_REPORTS_BY_DAY_AVG' , '08-01-2018', '08-01-2018', '' , '', '' , '', '' , '', '';
-
-
-*****  NULL or EMPTY STRING TEST  *****
-exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_REPORT_RUNS_BY_DAY' , '', '', '' , '', '' , '', '' , '', '';
-
-exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_REPORTS_BY_DAY_AVG' , '', '', '' , '', '' , '', '' , '', '';
-
-*****  7 day test  *****
-exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_REPORT_RUNS_BY_DAY' , '07-01-2018', '07-07-2018', '' , '', '' , '', '' , '', '';
-
-exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_REPORTS_BY_DAY_AVG' , '07-01-2018', '07-07-2018', '' , '', '' , '', '' , '', '';
-
-
-exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'INVALID_MESSAGE_TEST' , '07-01-2018', '07-07-2018', '' , '', '' , '', '' , '', '';
-
-
-
-
-
-
-List of of procedures in the ETL_CONTROL_MANAGER view   'LIST_CONTROL_MANAGER_DETAILS'
-SELECT * FROM MWH.ETL_CONTROL_MANAGER_view ORDER BY DATA_MART_NAME ASC, PRIORITY DESC
-
-
-
-exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_CONTROL_MANAGER_DETAILS' , '', '', '' , '', '' , '', '' , '', '';
-
-
-List of all admin console users      'LIST_ADMIN_CONSOLE_USERS'
-SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER ORDER BY ID ASC
-exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_ADMIN_CONSOLE_USERS' , '', '', '' , '', '' , '', '' , '', '';
-
-
-
-Get admin console user by ID             'LIST_ADMIN_CONSOLE_USER_BY_ID'
-SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER WHERE ID = ?
-exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_ADMIN_CONSOLE_USER_BY_ID' , '1', '', '' , '', '' , '', '' , '', '';
-
-
-Get admin console user by Email address         'LIST_ADMIN_CONSOLE_USER_BY_EMAIL'
-SELECT * FROM MWH_DIM.D_ADMIN_CONSOLE_USER WHERE EmployeeEMAIL = ?
-exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_ADMIN_CONSOLE_USER_BY_EMAIL' , 'cmatula@ultimatemedical.edu', '', '' , '', '' , '', '' , '', '';
-
-
-List of all error resolution records            'LIST_ERROR_RESOLUTIONS'
-SELECT * FROM MWH.ERROR_RESOLUTIONS ORDER BY ID ASC
-exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_ERROR_RESOLUTIONS' , '', '', '' , '', '' , '', '' , '', '';
-
-
-Get error resolution record by ID        'LIST_ERROR_RESOLUTIONS_BY_ID'
-SELECT * FROM MWH.ERROR_RESOLUTIONS WHERE ID = ?
-exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_ERROR_RESOLUTIONS_BY_ID' , '1', '', '' , '', '' , '', '' , '', '';
-
-
-
-Get last inserted error resolution record       'LIST_LAST_ERROR_RESOLUTION'
-SELECT TOP 1 * FROM MWH.ERROR_RESOLUTIONS ORDER BY ID DESC
-exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LIST_LAST_ERROR_RESOLUTION' , '', '', '' , '', '' , '', '' , '', '';
-
-
-select top 10000 * from [MWH].[ETL_HISTORY] with(nolock)     order by ID desc
-
-
-select * from [MWH].[ETL_TryCatchError] with(nolock)     where [ETLProcedureName] = 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS' order by ID desc
-
-delete from [MWH].[ETL_TryCatchError]      where [ETLProcedureName] = 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS'
-
-
-
-
-
-
-*/
-
 
 
 USE [UMA_DWH]
@@ -306,7 +157,7 @@ DECLARE             @ROW_CNT                                 integer;
 DECLARE             @myENDDate                               DATETIME;
 DECLARE             @mySTARTDate                      DATE;
 DECLARE             @CurrentDate                      DATE   =  getdate();
-DECLARE             @MIDPOINT_DATE                           DATE;
+DECLARE             @MIDPOINT_DATE                            DATE;
 DECLARE             @MyInputDate                      DATE;
 DECLARE             @MyInputDateTIME                  DATETIME;
 
@@ -318,6 +169,47 @@ DECLARE             @DaysSinceLastReport       INTEGER;
 IF (@LOG_HISTORY = 1) begin
        EXEC  MWH.MNG_LOAD_HISTORY   'START', @START_DTTMTIME, 0 ,@Source_Server_Name,  @Source_DB_Name,  @Source_Schema_Name,  @Source_Table_Name, @Target_Schema_Name, @Target_Table_Name, @My_SP_NAME, '', '', 0 , 0 , 0, 0 , 0, '',   @LOAD_HIST_PKID  OUTPUT;
 END;
+
+
+
+
+
+
+
+
+IF  @message = 'GET_LAST_DATAMART_RUN'
+BEGIN
+       SET @MessageValid = 1;
+       BEGIN TRY
+
+              select DATA_MART_NAME, max(DONE_DTTM) as 'DONE_DTTM'
+              from MWH.ETL_ENGINE_HISTORY  with(nolock)
+              where DONE_DTTM > dateadd(day, -600, getdate())
+              group by DATA_MART_NAME
+              option(recompile);
+
+
+
+       END TRY
+       BEGIN CATCH
+              SELECT
+         @ERR = ERROR_NUMBER()
+        ,@ErrorSeverity = ERROR_SEVERITY()
+        ,@ErrorState = ERROR_STATE()
+        ,@ErrorProcedure = ERROR_PROCEDURE()
+        ,@ErrorLine = ERROR_LINE()
+        ,@ErrorMessage = ERROR_MESSAGE() ;
+
+              EXEC MWH.MERGE_ETL_TryCatchError_wRtn 'save error' , @ERR, @ErrorSeverity, @ErrorState, @ErrorProcedure, @ErrorLine, @ErrorMessage, @My_SP_NAME,   @TryCatchError_ID  OUTPUT ;
+              PRINT 'ERROR : (' + cast(@TryCatchError_ID as varchar(12))  + ')   ' + @ErrorMessage
+       END CATCH;
+
+
+END;
+
+
+
+
 
 
 IF  @message = 'LIST_REPORT_RUNS_BY_DAY'
@@ -334,7 +226,7 @@ BEGIN
               END else BEGIN
                      SELECT @END_DTTM = MAX(START_DTTM)  from [MWH].[ETL_HISTORY] with(nolock);
                      IF(@END_DTTM is NOT null) begin
-                           SET           @START_DTTM   =     DATEADD(day, -30,  @END_DTTM);
+                           SET           @START_DTTM   =     DATEADD(day, -600,  @END_DTTM);
                      END
               END
 
@@ -380,7 +272,7 @@ BEGIN
               END else BEGIN
                      SELECT @END_DTTM = MAX(START_DTTM)  from [MWH].[ETL_HISTORY] with(nolock);
                      IF(@END_DTTM is NOT null) begin
-                           SET           @START_DTTM   =     DATEADD(day, -30,  @END_DTTM);
+                           SET           @START_DTTM   =     DATEADD(day, -600,  @END_DTTM);
                      END
               END
 
@@ -434,7 +326,7 @@ BEGIN
 
               FROM MWH.ETL_CONTROL_MANAGER  cm  with(nolock)
               join [MWH].[ETL_HISTORY]  eh with(nolock)   on (cm.PROCEDURE_NAME = eh.CALLING_PROC )
-              where eh.INSERT_DTTM > dateadd(day, -30, getdate())
+              where eh.INSERT_DTTM > dateadd(day, -600, getdate())
               and cm.[PROCEDURE_NAME] not like '%CHECK_MERGE%'
               and cm.ACTIVE = 1
               group by
@@ -558,7 +450,7 @@ BEGIN
                            ,[D_STAFF_ID]
                            ,[EmployeeLastName]
                            ,[EmployeeFirstName]
-                           ,[EmployeeEMAIL]
+                            ,[EmployeeEMAIL]
                            ,[EmployeePHONE]
                            ,[EmployeeCELLPHONE]
                            ,[EmployeePassword]
