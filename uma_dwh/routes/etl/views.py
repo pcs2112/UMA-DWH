@@ -13,7 +13,7 @@ blueprint = Blueprint('etl', __name__)
 @blueprint.route('/api/etl/status', methods=('GET',))
 @nocache
 def get_data_marts_status():
-    return jsonify(etl.fetch_current_status(True))
+    return jsonify(etl.check_current_status())
 
 
 @blueprint.route('/api/etl/errors/<error_id>', methods=('GET',))
