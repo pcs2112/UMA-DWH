@@ -1,6 +1,4 @@
 
-
-
 -- C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS.sql
 
 
@@ -39,18 +37,21 @@ CREATE PROCEDURE [MWH].[UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS]
 
 
 
---   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'DISPLAY_STATISTICS_DATA_BY_DATE' ,  '2018-09-25', 'MWH', '' , '', '' , '', '' , '', '';
+
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'DISPLAY_STATISTICS_DATA_BY_DATE' ,  '2018-10-22', 'MWH', '' , '', '' , '', '' , '', '';
 
 --   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LOAD_STATISTICS_Search_Chart' ,'2018-09-25',  '3', 'MWH_DIM', '' , '', '' , '', '' , '';
 
 --   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'REPORT_SELECT_BY_DATE' ,'2018-09-19',  '', '', '' , '', '' , '', '' , '';
 
+--  'LOAD_REPORT_SEARCH_CHART'  -- 'MWH.MCS_LEAD_CALLCOUNT_ANALYSIS_REPORT_SP',  '2018-10-18', '6'
+
 
 /*
 DECLARE               @message VARCHAR(256)  = 'DISPLAY_STATISTICS_DATA_BY_DATE';
-DECLARE               @VARCHAR_01 varchar(256) = '2018-09-25';
-DECLARE               @VARCHAR_02 varchar(256) = 'MWHcc';
-DECLARE               @VARCHAR_03 varchar(256) = 'MWH';
+DECLARE               @VARCHAR_01 varchar(256) = '2018-10-22';
+DECLARE               @VARCHAR_02 varchar(256) = 'MWH';
+DECLARE               @VARCHAR_03 varchar(256) = '';
 DECLARE               @VARCHAR_04 varchar(256) = '';
 DECLARE               @VARCHAR_05 varchar(256) = '';
 DECLARE               @VARCHAR_06 varchar(256) = '';
@@ -59,35 +60,9 @@ DECLARE               @VARCHAR_08 varchar(256) = '';
 DECLARE               @VARCHAR_09 varchar(256) = '';
 */
 
-
 --exec sp_who2
 
 
-DECLARE              @My_SP_NAME varchar(50);
-SET @My_SP_NAME =  OBJECT_SCHEMA_NAME (@@PROCID) +'.'+ OBJECT_NAME(@@PROCID);
-
---  The Source Names are either LOCAL or REMOTE,  when REMOTE, manually enter the nameed automatically
---  Using the FUNCTION below for LOCAL, and when we move to NEW server, these will be updat
-DECLARE              @Source_Server_Name varchar(60);
-SET @Source_Server_Name = @@SERVERNAME;
-
-DECLARE              @Source_DB_Name varchar(40);
-SET  @Source_DB_Name = DB_NAME();
-
-DECLARE              @Source_Schema_Name varchar(40);
-SET  @Source_Schema_Name  =  'MWH';
-
-DECLARE              @Source_Table_Name varchar(60);
-SET  @Source_Table_Name  =  'ETL_HISTORY ETC...';
----------------------------------------------------------------------------------------------------------
-
---  This is defaulted to 'BROWSER'  or  'POWERBI', depending on the target ( Caller )
---  ETL procedure will be manually entered
-DECLARE              @Target_Schema_Name varchar(40);
-SET    @Target_Schema_Name = 'BROWSER';
-
-DECLARE              @Target_Table_Name varchar(60);
-SET   @Target_Table_Name  =  @message;
 
 
 
@@ -149,7 +124,7 @@ DECLARE             @LOAD_HIST_PKID                          INTEGER;
 DECLARE             @MessageValid                     INTEGER = 0;
  DECLARE             @LOG_HISTORY                      INTEGER = 0;
 
-DECLARE             @MyStoredProcedureName            varchar(80) ;
+DECLARE             @MyStoredProcedureName            varchar(120) ;
 DECLARE             @myLastDate                              DATE;
 DECLARE             @myDateWindowMonths               INTEGER;
 DECLARE             @VALID_INPUT_DATA                 INTEGER = 1;
@@ -157,7 +132,7 @@ DECLARE             @ROW_CNT                                 integer;
 DECLARE             @myENDDate                               DATETIME;
 DECLARE             @mySTARTDate                      DATE;
 DECLARE             @CurrentDate                      DATE   =  getdate();
-DECLARE             @MIDPOINT_DATE                            DATE;
+DECLARE             @MIDPOINT_DATE                           DATE;
 DECLARE             @MyInputDate                      DATE;
 DECLARE             @MyInputDateTIME                  DATETIME;
 
@@ -166,15 +141,40 @@ DECLARE             @DaysSinceLastStats               INTEGER;
 DECLARE             @DaysSinceLastReport       INTEGER;
 
 
+
+
+
+
+DECLARE              @My_SP_NAME varchar(50);
+SET @My_SP_NAME =  OBJECT_SCHEMA_NAME (@@PROCID) +'.'+ OBJECT_NAME(@@PROCID);
+
+--  The Source Names are either LOCAL or REMOTE,  when REMOTE, manually enter the nameed automatically
+--  Using the FUNCTION below for LOCAL, and when we move to NEW server, these will be updat
+DECLARE              @Source_Server_Name varchar(60);
+SET @Source_Server_Name = @@SERVERNAME;
+
+DECLARE              @Source_DB_Name varchar(40);
+SET  @Source_DB_Name = DB_NAME();
+
+DECLARE              @Source_Schema_Name varchar(40);
+SET  @Source_Schema_Name  =  'MWH';
+
+DECLARE              @Source_Table_Name varchar(60);
+SET  @Source_Table_Name  =  'ETL_HISTORY ETC...';
+---------------------------------------------------------------------------------------------------------
+
+--  This is defaulted to 'BROWSER'  or  'POWERBI', depending on the target ( Caller )
+--  ETL procedure will be manually entered
+DECLARE              @Target_Schema_Name varchar(40);
+SET    @Target_Schema_Name = 'BROWSER';
+
+DECLARE              @Target_Table_Name varchar(60);
+SET   @Target_Table_Name  =  @message;
+
+
 IF (@LOG_HISTORY = 1) begin
        EXEC  MWH.MNG_LOAD_HISTORY   'START', @START_DTTMTIME, 0 ,@Source_Server_Name,  @Source_DB_Name,  @Source_Schema_Name,  @Source_Table_Name, @Target_Schema_Name, @Target_Table_Name, @My_SP_NAME, '', '', 0 , 0 , 0, 0 , 0, '',   @LOAD_HIST_PKID  OUTPUT;
 END;
-
-
-
-
-
-
 
 
 IF  @message = 'GET_LAST_DATAMART_RUN'
@@ -182,9 +182,9 @@ BEGIN
        SET @MessageValid = 1;
        BEGIN TRY
 
-              select DATA_MART_NAME, max(DONE_DTTM) as 'DONE_DTTM'
+              select DATA_MART_NAME, max(DONE_DTTM)
               from MWH.ETL_ENGINE_HISTORY  with(nolock)
-              where DONE_DTTM > dateadd(day, -600, getdate())
+              where DONE_DTTM > dateadd(day, -90, getdate())
               group by DATA_MART_NAME
               option(recompile);
 
@@ -450,7 +450,7 @@ BEGIN
                            ,[D_STAFF_ID]
                            ,[EmployeeLastName]
                            ,[EmployeeFirstName]
-                            ,[EmployeeEMAIL]
+                           ,[EmployeeEMAIL]
                            ,[EmployeePHONE]
                            ,[EmployeeCELLPHONE]
                            ,[EmployeePassword]
@@ -697,12 +697,12 @@ END;
 
 
 
-IF  @message = 'LOAD_REPORT_SEARCH_CHART'
+IF  @message = 'LOAD_REPORT_SEARCH_CHART'  -- 'MWH.MCS_LEAD_CALLCOUNT_ANALYSIS_REPORT_SP',  '2018-10-18', '6'
 
 --   select * from   MWH.REPORT_CONTROL_MANAGER with(nolock) where [PROCEDURE_NAME] =
 
 
---   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LOAD_REPORT_SEARCH_CHART' ,'',  '2018-09-26', '6', '' , '', '' , '', '' , '';
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LOAD_REPORT_SEARCH_CHART' ,'MWH.MCS_LEAD_CALLCOUNT_ANALYSIS_REPORT_SP',  '2018-10-18', '6', '' , '', '' , '', '' , '';
 
 /*
 report_name: MWH.MCS_CALL_TEAM_REP_SUMMARY_SP
@@ -713,6 +713,8 @@ months: 6
 --   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LOAD_REPORT_SEARCH_CHART' ,'MWH.MERGE_S_MCS_LDS_CAMPAIGN_AFTERHOURS',  '2018-09-10', '6', '' , '', '' , '', '' , '';
 
 --   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LOAD_REPORT_SEARCH_CHART' ,'MWH_FACT.MERGE_F_STUDENT_LEAD',  '2018-09-01', '12', '' , '', '' , '', '' , '';
+
+--  SELECT * from MWH.REPORT_CONTROL_MANAGER with(nolock) where [PROCEDURE_NAME]    = 'MWH.MCS_LEAD_CALLCOUNT_ANALYSIS_REPORT_SP'
 
 --  select [CALLING_PROC], case when  count(eh.ID) > 0   then  cast( sum([RUN_TIME_SEC]) * 1.0 / count(eh.ID) * 1.0 as numeric(15,1)) else  cast( 0 as numeric(15,1))   end  AVG_RT  , count(*) RUNS from [MWH].[ETL_HISTORY] eh with(nolock) where [TARGET_SCHEMA_NAME] in  ( 'POWERBI' , 'SSRS')  group by CALLING_PROC
 
@@ -1061,11 +1063,15 @@ BEGIN
                            end;
                      end;
 
+
+
+
+
                      IF (@VALID_INPUT_DATA = 1) begin
                            IF (len(@VARCHAR_03) >= 1 ) begin
-                                  select @rtn_Insert_Cnt = count(*) from [MWH].[TABLE_STATISTICS_RUNS] with(nolock)
+                                  select @rtn_Insert_Cnt = count(*) from  [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] with(nolock)
                                   where  [START_DTTM] between @mySTARTDate  and  @myENDDate
-                                  and [TARGET_SCHEMA_NAME] = @VARCHAR_03
+                                  and [SCHEMA_NAME] = @VARCHAR_03
                                   option(recompile);
 
                                   if(@rtn_Insert_Cnt <= 0) begin
@@ -1100,15 +1106,15 @@ BEGIN
 
               select cast([START_DTTM] as date) as 'DATE',
               MIN([START_DTTM]) 'GROUP_START_TIME',
-              MAX([END_DTTM]) as 'GROUP_END_TIME',
-              MAX([STATUS]) as 'GROUP_STATUS',
+              MAX([FINISHED_DTTM]) as 'GROUP_END_TIME',
+              MAX([CURRENT_STATUS]) as 'GROUP_STATUS',
               COUNT(*) as 'TABLE_CNT',
-              SUM([RUN_TIME_MS] / 1000.0) as 'TOTAL_RUNTIME',
-              cast( SUM([RUN_TIME_MS] / 1000.0)/ (COUNT(*) * 1.0) as DECIMAL(10,2)) 'AVG_RUNTIME'
+              SUM(STATISTICS_RUNTIME_SEC / 1000.0) as 'TOTAL_RUNTIME',
+              cast( SUM(STATISTICS_RUNTIME_SEC / 1.0 )/ (COUNT(*) * 1.0) as DECIMAL(10,2)) 'AVG_RUNTIME'
 
-              from [MWH].[TABLE_STATISTICS_RUNS] with(nolock)
+              from  [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] with(nolock)
               where  [START_DTTM] between @mySTARTDate  and  @myENDDate
-              and [TARGET_SCHEMA_NAME] = @VARCHAR_03
+              and [SCHEMA_NAME] = @VARCHAR_03
               group by cast([START_DTTM] as date)
               option(recompile);
 
@@ -1120,10 +1126,16 @@ END;
 
 
 
+
+
+
+
+
+
 IF  @message = 'REPORT_RUN_STATISTICS_SELECT_BY_DATE'
 --  This is used to pupulate a pulldown list of the report page, so we can get a list of report SP run on that date, it sorts on longest running report to the fastest report on the date selected
 
---   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'REPORT_RUN_STATISTICS_SELECT_BY_DATE' ,'2018-09-25',  '', '', '' , '', '' , '', '' , '';
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'REPORT_RUN_STATISTICS_SELECT_BY_DATE' ,'2018-10-22',  '', '', '' , '', '' , '', '' , '';
 
 --    use   RUN_DATE on the X axis, and AVG_RUNTIME on the Y axis
 
@@ -1154,9 +1166,9 @@ BEGIN
                            IF (len(@VARCHAR_02) >= 1 ) begin
                                   SET @rtn_Insert_Cnt = 0;
 
-                                  select @rtn_Insert_Cnt = coalesce(count(*),0) from [MWH].[TABLE_STATISTICS_RUNS] with(nolock)
+                                  select @rtn_Insert_Cnt = coalesce(count(*),0) from  [MWH].[STATISTICS_ENGINE_TABLE_HISTORY]  with(nolock)
                                   where  [START_DTTM] between @mySTARTDate  and  @myENDDate
-                                  --and [TARGET_SCHEMA_NAME] = @VARCHAR_02
+                                   --and [TARGET_SCHEMA_NAME] = @VARCHAR_02
                                   option(recompile);
 
                                   if(@rtn_Insert_Cnt = 0) begin
@@ -1188,21 +1200,22 @@ BEGIN
               PRINT 'ERROR : (' + cast(@TryCatchError_ID as varchar(12))  + ')   ' + @ErrorMessage
        END CATCH;
 
-              select cast([START_DTTM] as date) as RUN_DATE,
-              MIN([START_DTTM]) GROUP_START_TIME,
-              MAX([END_DTTM]) as GROUP_END_TIME,
-              MAX([STATUS]) as GROUP_STATUS,
+              select cast(eth.[START_DTTM] as date) as RUN_DATE,
+              MIN(eth.[START_DTTM]) GROUP_START_TIME,
+              MAX( eth.[FINISHED_DTTM]) as GROUP_END_TIME,
+              MAX(eth.[CURRENT_STATUS] ) as GROUP_STATUS,
               COUNT(*) as TABLE_CNT,
-              SUM([RUN_TIME_MS] / 1000.0) as TOTAL_RUNTIME,
-              sum(case when [TryCatchError_ID] > 1 then 1 else 0 end) ERR_CNT,
-              cast( SUM([RUN_TIME_MS] / 1000.0)/ (COUNT(*) * 1.0) as DECIMAL(10,2)) AVG_RUNTIME,
-              '[' +[TARGET_SERVER_NAME]+'].['+[TARGET_DB_NAME]+'].['+[TARGET_SCHEMA_NAME]+']' as GROUP_SCHEMA,
-              [TARGET_SCHEMA_NAME]
-              from [MWH].[TABLE_STATISTICS_RUNS] with(nolock)
+              SUM( eth.[STATISTICS_RUNTIME_SEC] / 1.0) as TOTAL_RUNTIME,
+              sum(case when eh.[TryCatchError_ID] > 1 then 1 else 0 end) ERR_CNT,
+              cast( SUM(eth.[STATISTICS_RUNTIME_SEC] / 1.0)/ (COUNT(*) * 1.0) as DECIMAL(10,2)) AVG_RUNTIME,
+              '[' +[TARGET_SERVER_NAME]+'].['+[TARGET_DB_NAME]+'].['+[SCHEMA_NAME]+']' as GROUP_SCHEMA,
+              [SCHEMA_NAME]
+              from     [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] eth  with(nolock)
+              left join [MWH].[STATISTICS_ENGINE_HISTORY] eh  with(nolock)  on (eth.STATISTICS_ENGINE_HISTORY_ID = eh.ID)
               where [START_DTTM] between @MyInputDateTIME  and  dateadd( minute, 59, dateadd(hour, 23, @MyInputDateTIME))
               --and  [TARGET_SCHEMA_NAME] = @VARCHAR_02
-              group by cast([START_DTTM] as date),  '[' +[TARGET_SERVER_NAME]+'].['+[TARGET_DB_NAME]+'].['+[TARGET_SCHEMA_NAME]+']', [TARGET_SCHEMA_NAME]
-              order by sum(case when [TryCatchError_ID] > 1 then 1 else 0 end) desc, cast( SUM([RUN_TIME_MS] * 1.0)/ (COUNT(*) * 1.0) as DECIMAL(10,2)) desc
+              group by cast([START_DTTM] as date),  '[' +[TARGET_SERVER_NAME]+'].['+[TARGET_DB_NAME]+'].['+ [SCHEMA_NAME] +']', [SCHEMA_NAME]
+              order by sum(case when [TryCatchError_ID] > 1 then 1 else 0 end) desc, cast( SUM([STATISTICS_RUNTIME_SEC] * 1.0)/ (COUNT(*) * 1.0) as DECIMAL(10,2)) desc
               OPTION(RECOMPILE);
 END;
 
@@ -1212,7 +1225,8 @@ END;
 IF  @message = 'DISPLAY_STATISTICS_DATA_BY_DATE'
 --     'DISPLAY_STATISTICS_DATA_BY_DATE'  send  SCHEMA and DATE
 
---   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'DISPLAY_STATISTICS_DATA_BY_DATE' ,  '2018-09-25', '', '' , '', '' , '', '' , '', '';
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'DISPLAY_STATISTICS_DATA_BY_DATE' ,  '2018-10-23', 'MWH', '' , '', '' , '', '' , '', '';
+
 
 BEGIN
        SET @MessageValid = 1;
@@ -1226,10 +1240,10 @@ BEGIN
               end;
 
               IF (@MessageValid = 1) begin
-                     IF (len(@VARCHAR_02) >= 1 ) begin
-                                  select @rtn_Insert_Cnt = count(*) from [MWH].[TABLE_STATISTICS_RUNS] sm with(nolock)
+                     IF (len(@VARCHAR_02) is not null ) begin
+                                  select @rtn_Insert_Cnt = count(*) from [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] sm with(nolock)
                                   where  sm.[START_DTTM] between cast(@MyInputDate as datetime)  and  dateadd(hour, 23, dateadd(minute, 59, cast(@MyInputDate as datetime)))
-                                  and [TARGET_SCHEMA_NAME] = @VARCHAR_02
+                                  and ([SCHEMA_NAME] = @VARCHAR_02  or @VARCHAR_02 = '')
                                   option(recompile);
 
                                   if(@rtn_Insert_Cnt <= 0) begin
@@ -1243,7 +1257,7 @@ BEGIN
 
               IF(@MessageValid = 0) begin
               -- force error, so we LOG IT
-                     SET  @MyInputDate = CAST(  @VARCHAR_02 as DATE);
+              --     SET  @MyInputDate = CAST(  @VARCHAR_02 as DATE);
                      SET @MyInputError = 'Invalid Schema in Date Range ( ' + @VARCHAR_02  + ')';
               END
 
@@ -1266,28 +1280,31 @@ BEGIN
 
               select sm.ID,
               cast(sm.[START_DTTM] as date) as 'START_DTTM',
-              sm.[STATUS],
-              [MWH].[ConvertMillisecondsToHHMMSS]( sm.[RUN_TIME_MS]) as RUN_TIME_HH_MM_SS_MS,
-              '[' +sm.[TARGET_SERVER_NAME]+'].['+sm.[TARGET_DB_NAME]+'].['+sm.[TARGET_SCHEMA_NAME]+']'  as SCHEMA_FULL,
-              '[' +sm.[TARGET_SERVER_NAME]+'].['+sm.[TARGET_DB_NAME]+'].['+sm.[TARGET_SCHEMA_NAME]+'].['+sm.[TARGET_TABLE_NAME]+']'  as TABLE_FULL,
-               sm.[TARGET_SERVER_NAME] as SERVER,
-               sm.[TARGET_DB_NAME] as 'DATABASE',
-               sm.[TARGET_SCHEMA_NAME] as 'SCHEMA',
-               sm.[TARGET_TABLE_NAME]  as 'TABLE',
-               sm.[STATISTICS_METHOD],
-               sm.[TryCatchError_ID],
+              sm.[CURRENT_STATUS],
+              [MWH].[ConvertTimeToHHMMSS]( sm.STATISTICS_RUNTIME_SEC) as RUN_TIME_HH_MM_SS_MS,
+              '[' +sh.[TARGET_SERVER_NAME]+'].['+sh.[TARGET_DB_NAME]+'].['+sm.[SCHEMA_NAME]+']'  as SCHEMA_FULL,
+              '[' +sh.[TARGET_SERVER_NAME]+'].['+sh.[TARGET_DB_NAME]+'].['+sm.[SCHEMA_NAME]+'].['+sm.[TABLE_NAME]+']'  as TABLE_FULL,
+               sh.[TARGET_SERVER_NAME] as SERVER,
+               sh.[TARGET_DB_NAME] as 'DATABASE',
+               sm.[SCHEMA_NAME] as 'SCHEMA',
+               sm.[TABLE_NAME]  as 'TABLE',
+              -- sm.[STATISTICS_METHOD],
+               sh.[TryCatchError_ID],
               tc.[ERR]  ,
               tc.[ErrorSeverity]  ,
               tc.[ErrorState]  ,
               tc.[ErrorMessage],
               tc.[ErrorProcedure]
 
-              from [MWH].[TABLE_STATISTICS_RUNS] sm with(nolock)
-              left join [MWH].[ETL_TryCatchError] tc with(nolock) on (tc.ID  =  sm.[TryCatchError_ID])
+              from [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] sm with(nolock)
+              left join [MWH].[STATISTICS_ENGINE_HISTORY] sh with(nolock) on (sm.STATISTICS_ENGINE_HISTORY_ID = sh.ID)
+              left join [MWH].[ETL_TryCatchError] tc with(nolock) on (tc.ID  =  sh.[TryCatchError_ID])
               where sm.[START_DTTM] between cast(@MyInputDate as datetime)  and  dateadd(hour, 23, dateadd(minute, 59, cast(@MyInputDate as datetime)))
-              and    sm.[TARGET_SCHEMA_NAME] = @VARCHAR_02
-              order by  sm.[TryCatchError_ID]  desc, sm.[TARGET_SERVER_NAME] asc, sm.[TARGET_DB_NAME] asc, sm.[TARGET_SCHEMA_NAME] asc, sm.[TARGET_TABLE_NAME] asc
+              and     ([SCHEMA_NAME] = @VARCHAR_02  or @VARCHAR_02 = '')
+              order by  sh.[TryCatchError_ID]  desc, sh.[TARGET_SERVER_NAME] asc, sh.[TARGET_DB_NAME] asc, sm.[SCHEMA_NAME] asc, sm.[TABLE_NAME] asc
               OPTION(RECOMPILE);
+
+
 
        END;
               --set @rtn_Insert_Cnt = @@ROWCOUNT;
@@ -1324,9 +1341,10 @@ BEGIN
                      and stats_date (id,indid) is NOT null;
 */
 
-       select  @LAST_DATE = max(END_DTTM)
-       from [MWH].[TABLE_STATISTICS_RUNS] with(nolock)
-       where TryCatchError_ID = 0;
+       select  @LAST_DATE = max(sm.[FINISHED_DTTM])
+       from [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] sm with(nolock)
+       left join [MWH].[STATISTICS_ENGINE_HISTORY] sh with(nolock) on (sm.STATISTICS_ENGINE_HISTORY_ID = sh.ID)
+       where sh.[TryCatchError_ID] = 0;
 
        SET @DaysSinceLastStats = datediff(day, @LAST_DATE, getdate());
 
@@ -1346,7 +1364,7 @@ BEGIN
        END CATCH;
 
               select @LAST_DATE as 'LAST_DATE',
-              case when @DaysSinceLastStats > 20 then -1 else 0 end as 'STALED_STATS'
+              case when @DaysSinceLastStats > 20 then -1 else 0 end as 'STALE_STATISTICS'
 END;
 
 

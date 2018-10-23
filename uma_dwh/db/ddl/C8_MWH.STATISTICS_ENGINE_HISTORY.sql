@@ -1,0 +1,108 @@
+--  C8_MWH.STATISTICS_ENGINE_HISTORY.sql
+
+USE [UMA_DWH]
+GO
+
+/****** Object:  Table [MWH].[STATISTICS_ENGINE_HISTORY]    Script Date: 10/17/2018 9:44:36 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+IF EXISTS (SELECT * FROM sys.objects so JOIN  sys.schemas ss on (so.schema_id = ss.schema_id) WHERE so.type = 'U' AND so.name = 'STATISTICS_ENGINE_HISTORY' and ss.name = 'MWH')
+       DROP TABLE [MWH].[STATISTICS_ENGINE_HISTORY]
+GO
+
+
+
+CREATE TABLE [MWH].[STATISTICS_ENGINE_HISTORY](
+       [ID] [int] IDENTITY(1,1) NOT NULL,
+       [INSERT_DTTM] [datetime] NOT NULL,
+       [UPDATE_DTTM] [datetime] NOT NULL,
+       [DONE_DTTM] [datetime] NULL,
+       [LST_MOD_USER] [varchar](80) NOT NULL,
+       [ENGINE_STATUS] [varchar](200) NULL,
+       [ENGINE_MESSAGE] [varchar](80) NULL,
+CONSTRAINT [PK_STATISTICS_ENGINE_HISTORY] PRIMARY KEY NONCLUSTERED
+(
+       [ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = OFF, ALLOW_PAGE_LOCKS = OFF, FILLFACTOR = 80) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [MWH].STATISTICS_ENGINE_HISTORY ADD  CONSTRAINT [STATISTICS_ENGINE_HISTORY_INSERT_DTTM_DF]  DEFAULT (getdate()) FOR [INSERT_DTTM]
+GO
+
+ALTER TABLE [MWH].STATISTICS_ENGINE_HISTORY ADD  CONSTRAINT [STATISTICS_ENGINE_HISTORY_UPDATE_DTTM_DF]  DEFAULT (getdate()) FOR [UPDATE_DTTM]
+GO
+
+ALTER TABLE [MWH].STATISTICS_ENGINE_HISTORY ADD  CONSTRAINT [STATISTICS_ENGINE_HISTORY_LST_MOD_USER_DF]  DEFAULT (user_name()) FOR [LST_MOD_USER]
+GO
+
+
+
+CREATE TRIGGER [MWH].[STATISTICS_ENGINE_HISTORY_UD_TRIG]
+ON [MWH].STATISTICS_ENGINE_HISTORY
+AFTER UPDATE
+AS  BEGIN
+    UPDATE MWH.STATISTICS_ENGINE_HISTORY
+    SET UPDATE_DTTM = GETDATE()
+    WHERE ID IN (SELECT DISTINCT ID FROM INSERTED)
+END
+
+GO
+
+ALTER TABLE [MWH].STATISTICS_ENGINE_HISTORY ENABLE TRIGGER [STATISTICS_ENGINE_HISTORY_UD_TRIG]
+GO
+
+
+
+
+
+
+
+drop view [MWH].[STATISTICS_ENGINE_HISTORY_V];
+go
+
+CREATE VIEW [MWH].[STATISTICS_ENGINE_HISTORY_V](
+          [ENGINE CYCLE DATE],
+          [ENGINE START DTTM],
+          [ENGINE STATUS],
+          [Last Table Started DTTM],
+          [Last Table Runtime],
+          [ENGINE Cycle Runtime],
+          [Tables Completed],
+          [ENGINE CYCLE FINISED]
+
+
+
+
+          )  as
+SELECT
+              CAST( eh.[INSERT_DTTM] as date),
+              eh.[INSERT_DTTM],
+              eh.ENGINE_STATUS,
+              max(eth.INSERT_DTTM),
+              [MWH].[ConvertTimeToHHMMSS](datediff(second, max(eth.[INSERT_DTTM]), getdate() )),
+
+              [MWH].[ConvertTimeToHHMMSS](datediff(second, eh.[INSERT_DTTM], max(eth.[INSERT_DTTM]))),
+
+              sum(case when eth.DONE_DTTM is not null then 1 else 0 end),
+              case when max(eh.DONE_DTTM) is NULL then 'Still Running' else 'Finished' end
+
+
+  FROM [MWH].[STATISTICS_ENGINE_HISTORY] eh
+  join [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] eth  on (eth.[STATISTICS_ENGINE_HISTORY_ID] = eh.id)
+  where eh.[INSERT_DTTM] >  dateadd(day, -30, getdate())
+  group by CAST( eh.[INSERT_DTTM] as date), eh.[INSERT_DTTM], eh.ENGINE_STATUS
+;
+GO
+
+/*   TESTING RESULTS
+  select * from [MWH].[STATISTICS_ENGINE_HISTORY] with(nolock) order by ID desc;
+  select * from [MWH].[STATISTICS_ENGINE_HISTORY_V] with(nolock) order by [ENGINE START DTTM] desc;
+  select * from [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] with(nolock) order by ID desc;
+*/
