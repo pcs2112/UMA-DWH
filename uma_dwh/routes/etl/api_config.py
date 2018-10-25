@@ -79,8 +79,7 @@ path_sp_args_map = {
     'module_name': 'uma_dwh.db.etl',
     'module_func': 'execute_admin_console_sp',
     'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-    'sp_message': 'REPORT_RUN_STATISTICS_SELECT_BY_DATE',
-    'sp_in_args': ['date']
+    'sp_message': 'GET_SCHEMA_NAMES'
   },
   'statistics/chart': {
     'module_name': 'uma_dwh.db.etl',

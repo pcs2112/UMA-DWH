@@ -151,7 +151,6 @@ export default withMainLayout(connect(
   dispatch => ({
     fetchAllData: (schema, date, months) =>
       Promise.all([
-        dispatch(statisticsSchemasReduxModule.actions.fetch(date)),
         dispatch(statisticsReduxModule.actions.fetch(schema, date, months)),
         dispatch(statisticsChartReduxModule.actions.fetch(schema, date, months))
       ]),

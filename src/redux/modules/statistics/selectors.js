@@ -41,7 +41,7 @@ export const getFilters = createSelector(
 
     // Set the default schema
     if (schema === '' && schemas.length > 0) {
-      schema = schemas[0].schema_name;
+      schema = schemas[0].name;
     }
 
     // Set the default date

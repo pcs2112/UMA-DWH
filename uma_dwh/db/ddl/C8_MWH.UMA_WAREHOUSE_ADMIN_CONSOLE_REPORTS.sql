@@ -1,4 +1,3 @@
-
 -- C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS.sql
 
 
@@ -61,9 +60,6 @@ DECLARE               @VARCHAR_09 varchar(256) = '';
 */
 
 --exec sp_who2
-
-
-
 
 
 DECLARE             @ERR                 INTEGER  = 0 ;
@@ -177,6 +173,44 @@ IF (@LOG_HISTORY = 1) begin
 END;
 
 
+IF  @message = 'GET_SCHEMA_NAMES'
+BEGIN
+       SET @MessageValid = 1;
+       BEGIN TRY
+
+       with schemas (name) as (
+              SELECT  name
+              FROM    sys.schemas    with(nolock)
+              where name not in ( 'cfm', 'QUAD', 'LOAD','IMPORT','guest','sys','S_FREEDOM_TeamMgmt','dbo','TEST_DATA','I3_dbo')
+              and name not like '%IMPORT%'
+              and schema_id < 1000),
+       MY_ALL (name)  as ( select 'ALL' ),
+       FULL_LIST ( NAME ) as (
+       select name from schemas
+       union all
+       select name from MY_ALL )
+       select name from FULL_LIST
+       order by name asc;
+
+
+       END TRY
+       BEGIN CATCH
+              SELECT
+         @ERR = ERROR_NUMBER()
+        ,@ErrorSeverity = ERROR_SEVERITY()
+        ,@ErrorState = ERROR_STATE()
+        ,@ErrorProcedure = ERROR_PROCEDURE()
+        ,@ErrorLine = ERROR_LINE()
+        ,@ErrorMessage = ERROR_MESSAGE() ;
+
+              EXEC MWH.MERGE_ETL_TryCatchError_wRtn 'save error' , @ERR, @ErrorSeverity, @ErrorState, @ErrorProcedure, @ErrorLine, @ErrorMessage, @My_SP_NAME,   @TryCatchError_ID  OUTPUT ;
+              PRINT 'ERROR : (' + cast(@TryCatchError_ID as varchar(12))  + ')   ' + @ErrorMessage
+       END CATCH;
+END;
+
+
+
+
 IF  @message = 'GET_LAST_DATAMART_RUN'
 BEGIN
        SET @MessageValid = 1;
@@ -226,7 +260,7 @@ BEGIN
               END else BEGIN
                      SELECT @END_DTTM = MAX(START_DTTM)  from [MWH].[ETL_HISTORY] with(nolock);
                      IF(@END_DTTM is NOT null) begin
-                           SET           @START_DTTM   =     DATEADD(day, -600,  @END_DTTM);
+                           SET           @START_DTTM   =     DATEADD(day, -30,  @END_DTTM);
                      END
               END
 
@@ -272,7 +306,7 @@ BEGIN
               END else BEGIN
                      SELECT @END_DTTM = MAX(START_DTTM)  from [MWH].[ETL_HISTORY] with(nolock);
                      IF(@END_DTTM is NOT null) begin
-                           SET           @START_DTTM   =     DATEADD(day, -600,  @END_DTTM);
+                           SET           @START_DTTM   =     DATEADD(day, -30,  @END_DTTM);
                      END
               END
 
@@ -326,7 +360,7 @@ BEGIN
 
               FROM MWH.ETL_CONTROL_MANAGER  cm  with(nolock)
               join [MWH].[ETL_HISTORY]  eh with(nolock)   on (cm.PROCEDURE_NAME = eh.CALLING_PROC )
-              where eh.INSERT_DTTM > dateadd(day, -600, getdate())
+              where eh.INSERT_DTTM > dateadd(day, -30, getdate())
               and cm.[PROCEDURE_NAME] not like '%CHECK_MERGE%'
               and cm.ACTIVE = 1
               group by
@@ -1018,7 +1052,7 @@ END;
 IF  @message = 'LOAD_STATISTICS_Search_Chart'
 --  This is used to POPULATE the Srach Chart for STATISTICS,  ONE row per DATE,  with X months of data, via ARG 3
 
---   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LOAD_STATISTICS_Search_Chart' ,'2018-09-25',  '3', 'MWH_DIM', '' , '', '' , '', '' , '';
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LOAD_STATISTICS_Search_Chart' ,'2018-09-25',  '3', '', '' , '', '' , '', '' , '';
 
 BEGIN
        SET @MessageValid = 1;
@@ -1114,7 +1148,7 @@ BEGIN
 
               from  [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] with(nolock)
               where  [START_DTTM] between @mySTARTDate  and  @myENDDate
-              and [SCHEMA_NAME] = @VARCHAR_03
+              and  ( [SCHEMA_NAME] = @VARCHAR_03  or @VARCHAR_03 = '')
               group by cast([START_DTTM] as date)
               option(recompile);
 
@@ -1168,7 +1202,7 @@ BEGIN
 
                                   select @rtn_Insert_Cnt = coalesce(count(*),0) from  [MWH].[STATISTICS_ENGINE_TABLE_HISTORY]  with(nolock)
                                   where  [START_DTTM] between @mySTARTDate  and  @myENDDate
-                                   --and [TARGET_SCHEMA_NAME] = @VARCHAR_02
+                                  --and [TARGET_SCHEMA_NAME] = @VARCHAR_02
                                   option(recompile);
 
                                   if(@rtn_Insert_Cnt = 0) begin
@@ -1225,7 +1259,7 @@ END;
 IF  @message = 'DISPLAY_STATISTICS_DATA_BY_DATE'
 --     'DISPLAY_STATISTICS_DATA_BY_DATE'  send  SCHEMA and DATE
 
---   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'DISPLAY_STATISTICS_DATA_BY_DATE' ,  '2018-10-23', 'MWH', '' , '', '' , '', '' , '', '';
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'DISPLAY_STATISTICS_DATA_BY_DATE' ,  '2018-10-23', '', '' , '', '' , '', '' , '', '';
 
 
 BEGIN
@@ -1288,6 +1322,7 @@ BEGIN
                sh.[TARGET_DB_NAME] as 'DATABASE',
                sm.[SCHEMA_NAME] as 'SCHEMA',
                sm.[TABLE_NAME]  as 'TABLE',
+               'FULLSCAN' as STATISTICS_METHOD,
               -- sm.[STATISTICS_METHOD],
                sh.[TryCatchError_ID],
               tc.[ERR]  ,

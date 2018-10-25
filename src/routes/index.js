@@ -45,7 +45,7 @@ export default ({ dispatch, getState }) => ([
     component: DWHStatistics,
     exact: true,
     fetch: () => dispatch(statistics.actions.fetchLastDate())
-      .then(() => dispatch(statisticsSchemas.actions.fetch(getState().statistics.date)))
+      .then(() => dispatch(statisticsSchemas.actions.fetch()))
   }
 ]
   .concat(getErrorTypeManagementRoutes())
