@@ -22,11 +22,6 @@ const columns = [
     width: 110
   },
   {
-    Header: 'STATUS',
-    accessor: 'status',
-    width: 80
-  },
-  {
     Header: 'RUN_TIME',
     accessor: 'run_time_hh_mm_ss_ms',
     width: 65,
@@ -35,11 +30,6 @@ const columns = [
         textAlign: 'right'
       }
     })
-  },
-  {
-    Header: 'SCHEMA_FULL',
-    accessor: 'schema_full',
-    width: 300
   },
   {
     Header: 'TABLE_FULL',
