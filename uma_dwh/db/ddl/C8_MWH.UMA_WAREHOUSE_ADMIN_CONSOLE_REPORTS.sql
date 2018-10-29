@@ -45,6 +45,7 @@ CREATE PROCEDURE [MWH].[UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS]
 
 --  'LOAD_REPORT_SEARCH_CHART'  -- 'MWH.MCS_LEAD_CALLCOUNT_ANALYSIS_REPORT_SP',  '2018-10-18', '6'
 
+--  exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'GET_SCHEMA_NAMES' ,  '', '', '' , '', '' , '', '' , '', '';
 
 /*
 DECLARE               @message VARCHAR(256)  = 'DISPLAY_STATISTICS_DATA_BY_DATE';
@@ -260,7 +261,7 @@ BEGIN
               END else BEGIN
                      SELECT @END_DTTM = MAX(START_DTTM)  from [MWH].[ETL_HISTORY] with(nolock);
                      IF(@END_DTTM is NOT null) begin
-                           SET           @START_DTTM   =     DATEADD(day, -30,  @END_DTTM);
+                           SET           @START_DTTM   =     DATEADD(day, -600,  @END_DTTM);
                      END
               END
 
@@ -306,7 +307,7 @@ BEGIN
               END else BEGIN
                      SELECT @END_DTTM = MAX(START_DTTM)  from [MWH].[ETL_HISTORY] with(nolock);
                      IF(@END_DTTM is NOT null) begin
-                           SET           @START_DTTM   =     DATEADD(day, -30,  @END_DTTM);
+                           SET           @START_DTTM   =     DATEADD(day, -600,  @END_DTTM);
                      END
               END
 
@@ -360,7 +361,7 @@ BEGIN
 
               FROM MWH.ETL_CONTROL_MANAGER  cm  with(nolock)
               join [MWH].[ETL_HISTORY]  eh with(nolock)   on (cm.PROCEDURE_NAME = eh.CALLING_PROC )
-              where eh.INSERT_DTTM > dateadd(day, -30, getdate())
+              where eh.INSERT_DTTM > dateadd(day, -600, getdate())
               and cm.[PROCEDURE_NAME] not like '%CHECK_MERGE%'
               and cm.ACTIVE = 1
               group by
@@ -1052,7 +1053,7 @@ END;
 IF  @message = 'LOAD_STATISTICS_Search_Chart'
 --  This is used to POPULATE the Srach Chart for STATISTICS,  ONE row per DATE,  with X months of data, via ARG 3
 
---   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LOAD_STATISTICS_Search_Chart' ,'2018-09-25',  '3', '', '' , '', '' , '', '' , '';
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LOAD_STATISTICS_Search_Chart' ,'2018-10-22',  '3', '', '' , '', '' , '', '' , '';
 
 BEGIN
        SET @MessageValid = 1;
@@ -1102,10 +1103,10 @@ BEGIN
 
 
                      IF (@VALID_INPUT_DATA = 1) begin
-                           IF (len(@VARCHAR_03) >= 1 ) begin
+                           IF (len(@VARCHAR_03) >= 2 ) begin
                                   select @rtn_Insert_Cnt = count(*) from  [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] with(nolock)
                                   where  [START_DTTM] between @mySTARTDate  and  @myENDDate
-                                  and [SCHEMA_NAME] = @VARCHAR_03
+                                  and ( [SCHEMA_NAME] = @VARCHAR_03 or @VARCHAR_03 = 'ALL')
                                   option(recompile);
 
                                   if(@rtn_Insert_Cnt <= 0) begin
@@ -1144,11 +1145,12 @@ BEGIN
               MAX([CURRENT_STATUS]) as 'GROUP_STATUS',
               COUNT(*) as 'TABLE_CNT',
               SUM(STATISTICS_RUNTIME_SEC / 1000.0) as 'TOTAL_RUNTIME',
-              cast( SUM(STATISTICS_RUNTIME_SEC / 1.0 )/ (COUNT(*) * 1.0) as DECIMAL(10,2)) 'AVG_RUNTIME'
+              cast( SUM(STATISTICS_RUNTIME_SEC / 1.0 )/ (COUNT(*) * 1.0) as DECIMAL(10,2)) 'AVG_RUNTIME',
+              SUM([CUR_MIN_ROWS]) as 'TOTAL_ROWS'
 
               from  [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] with(nolock)
               where  [START_DTTM] between @mySTARTDate  and  @myENDDate
-              and  ( [SCHEMA_NAME] = @VARCHAR_03  or @VARCHAR_03 = '')
+              and  ( [SCHEMA_NAME] = @VARCHAR_03  or @VARCHAR_03 = 'ALL')
               group by cast([START_DTTM] as date)
               option(recompile);
 
@@ -1166,10 +1168,10 @@ END;
 
 
 
-IF  @message = 'REPORT_RUN_STATISTICS_SELECT_BY_DATE'
+IF  @message = 'REPORT_HISTORY_STATISTICS_SELECT_BY_DATE'
 --  This is used to pupulate a pulldown list of the report page, so we can get a list of report SP run on that date, it sorts on longest running report to the fastest report on the date selected
 
---   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'REPORT_RUN_STATISTICS_SELECT_BY_DATE' ,'2018-10-22',  '', '', '' , '', '' , '', '' , '';
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'REPORT_HISTORY_STATISTICS_SELECT_BY_DATE' ,'2018-10-22',  '', '', '' , '', '' , '', '' , '';
 
 --    use   RUN_DATE on the X axis, and AVG_RUNTIME on the Y axis
 
@@ -1243,7 +1245,10 @@ BEGIN
               sum(case when eh.[TryCatchError_ID] > 1 then 1 else 0 end) ERR_CNT,
               cast( SUM(eth.[STATISTICS_RUNTIME_SEC] / 1.0)/ (COUNT(*) * 1.0) as DECIMAL(10,2)) AVG_RUNTIME,
               '[' +[TARGET_SERVER_NAME]+'].['+[TARGET_DB_NAME]+'].['+[SCHEMA_NAME]+']' as GROUP_SCHEMA,
-              [SCHEMA_NAME]
+              [SCHEMA_NAME],
+              MAX([CUR_MIN_ROWS]) as 'ROW COUNT',
+              MAX([CUR_MAX_SAMPLED]) as 'SAMPLED COUNT',
+              MAX([CUR_MAX_MODIFIED_CNT]) as 'MODIFIED COUNT'
               from     [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] eth  with(nolock)
               left join [MWH].[STATISTICS_ENGINE_HISTORY] eh  with(nolock)  on (eth.STATISTICS_ENGINE_HISTORY_ID = eh.ID)
               where [START_DTTM] between @MyInputDateTIME  and  dateadd( minute, 59, dateadd(hour, 23, @MyInputDateTIME))
@@ -1259,7 +1264,7 @@ END;
 IF  @message = 'DISPLAY_STATISTICS_DATA_BY_DATE'
 --     'DISPLAY_STATISTICS_DATA_BY_DATE'  send  SCHEMA and DATE
 
---   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'DISPLAY_STATISTICS_DATA_BY_DATE' ,  '2018-10-23', '', '' , '', '' , '', '' , '', '';
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'DISPLAY_STATISTICS_DATA_BY_DATE' ,  '2018-10-27', '', '' , '', '' , '', '' , '', '';
 
 
 BEGIN
@@ -1277,7 +1282,7 @@ BEGIN
                      IF (len(@VARCHAR_02) is not null ) begin
                                   select @rtn_Insert_Cnt = count(*) from [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] sm with(nolock)
                                   where  sm.[START_DTTM] between cast(@MyInputDate as datetime)  and  dateadd(hour, 23, dateadd(minute, 59, cast(@MyInputDate as datetime)))
-                                  and ([SCHEMA_NAME] = @VARCHAR_02  or @VARCHAR_02 = '')
+                                  and ([SCHEMA_NAME] = @VARCHAR_02  or @VARCHAR_02 = 'ALL' or @VARCHAR_02 = '')
                                   option(recompile);
 
                                   if(@rtn_Insert_Cnt <= 0) begin
@@ -1335,7 +1340,7 @@ BEGIN
               left join [MWH].[STATISTICS_ENGINE_HISTORY] sh with(nolock) on (sm.STATISTICS_ENGINE_HISTORY_ID = sh.ID)
               left join [MWH].[ETL_TryCatchError] tc with(nolock) on (tc.ID  =  sh.[TryCatchError_ID])
               where sm.[START_DTTM] between cast(@MyInputDate as datetime)  and  dateadd(hour, 23, dateadd(minute, 59, cast(@MyInputDate as datetime)))
-              and     ([SCHEMA_NAME] = @VARCHAR_02  or @VARCHAR_02 = '')
+              and     ([SCHEMA_NAME] = @VARCHAR_02  or @VARCHAR_02 = 'ALL' or @VARCHAR_02 = '' )
               order by  sh.[TryCatchError_ID]  desc, sh.[TARGET_SERVER_NAME] asc, sh.[TARGET_DB_NAME] asc, sm.[SCHEMA_NAME] asc, sm.[TABLE_NAME] asc
               OPTION(RECOMPILE);
 
@@ -1344,6 +1349,45 @@ BEGIN
        END;
               --set @rtn_Insert_Cnt = @@ROWCOUNT;
 END;
+
+
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'MANAGE_TABLE_STATISTICS' ,  '2018-10-23', '', '' , '', '' , '', '' , '', '';
+
+IF  @message = 'MANAGE_TABLE_STATISTICS'
+
+BEGIN
+       SET @MessageValid = 1;
+
+       BEGIN TRY
+              with UMA_DWH_TABLES ( schema_name,  table_name, SCH_TAB_TXT, queued_dttm) as (
+              SELECT st.table_schema, st.table_name, concat('[' , st.table_schema , '].[' , st.table_name , ']'), qt.INSERT_DTTM
+              FROM information_schema.tables st  with(nolock)
+              left join [MWH].[TABLE_STATISTICS_QUEUE] qt with(nolock) on (qt.TARGET_SCHEMA_NAME = st.table_schema and qt.TARGET_TABLE_NAME = st.table_name and qt.STATUS = 'QUEUED')
+              WHERE st.table_type = 'base table'  )
+
+              select   udt.schema_name,  udt.table_name as 'TABLE', udt.SCH_TAB_TXT as 'SCHEMA.TABLE',   max(last_updated) as LAST_UPDATE_DTTM, coalesce(min(rows),0) as MIN_ROWS, coalesce(min(rows_sampled),0) as MIN_SAMPLED, coalesce(max(rows_sampled),0) as MAX_SAMPLED,   coalesce(min(modification_counter),0) as MIN_MODIFIED_CNT,   coalesce(max(modification_counter),0) as MAX_MODIFIED_CNT, min(queued_dttm) as QUEUED_DTTM
+              from UMA_DWH_TABLES udt
+              left join sys.stats AS stat  with(nolock) on (stat.object_id = object_id(udt.SCH_TAB_TXT))
+              CROSS APPLY sys.dm_db_stats_properties(stat.object_id, stat.stats_id) AS sp
+              group by udt.schema_name,  udt.table_name, udt.SCH_TAB_TXT
+              order by min(queued_dttm) desc, max(last_updated) asc;
+
+
+       END TRY
+       BEGIN CATCH
+              SELECT
+         @ERR = ERROR_NUMBER()
+        ,@ErrorSeverity = ERROR_SEVERITY()
+        ,@ErrorState = ERROR_STATE()
+        ,@ErrorProcedure = ERROR_PROCEDURE()  + ' message : '  + @message
+        ,@ErrorLine = ERROR_LINE()
+        ,@ErrorMessage = ERROR_MESSAGE() + ' input error - ' +@MyInputError ;
+
+              EXEC MWH.MERGE_ETL_TryCatchError_wRtn 'save error' , @ERR, @ErrorSeverity, @ErrorState, @ErrorProcedure, @ErrorLine, @ErrorMessage, @My_SP_NAME,   @TryCatchError_ID  OUTPUT ;
+              PRINT 'ERROR : (' + cast(@TryCatchError_ID as varchar(12))  + ')   ' + @ErrorMessage
+       END CATCH;
+END;
+
 
 
 IF  @message = 'REPORT_RUN_STATISTICS_LAST_DATE'
@@ -1413,9 +1457,6 @@ IF  @message = 'REPORT_RUN_LAST_DATE'
 
 --  Please fix ‘REPORT_RUN_STATISTICS_SELECT_BY_DATE’
 --  The code is checking VARCHAR_02  for a schema name but this is wrong because the call to ‘REPORT_RUN_STATISTICS_SELECT_BY_DATE’ should return a list of schemas for a particular date.
-
-
-
 
 BEGIN
        SET @MessageValid = 1;
