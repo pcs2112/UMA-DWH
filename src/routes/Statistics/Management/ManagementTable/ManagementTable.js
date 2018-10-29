@@ -15,29 +15,29 @@ const defaultExpanded = {};
  */
 const columns = [
   {
-    Header: 'UPDATE_DTTM',
+    Header: 'UPDATE DTTM',
     accessor: 'last_update_dttm',
-    width: 110
+    width: 130
   },
   {
-    Header: 'QUEUED_DTTM',
-    accessor: '"queued_dttm',
-    width: 110
+    Header: 'QUEUED DTTM',
+    accessor: 'queued_dttm',
+    width: 130
   },
   {
-    Header: 'SCHEMA_FULL',
+    Header: 'SCHEMA.TABLE',
     accessor: 'schema_table',
     minWidth: 500
   },
   {
     Header: 'SCHEMA',
-    accessor: 'schema_name',
-    width: 100
+    accessor: 'schema',
+    width: 150
   },
   {
     Header: 'TABLE',
     accessor: 'table',
-    width: 220
+    width: 350
   },
   {
     Header: 'STARTED',
@@ -50,9 +50,9 @@ const columns = [
     width: 140
   },
   {
-    Header: 'MAX_MODIFIED_CNT',
+    Header: 'MAX MODIFIED CNT',
     accessor: 'max_modified_cnt',
-    width: 110,
+    width: 140,
     getProps: () => ({
       style: {
         textAlign: 'right'
@@ -60,7 +60,7 @@ const columns = [
     })
   },
   {
-    Header: 'MAX_SAMPLED',
+    Header: 'MAX SAMPLED',
     accessor: 'max_sampled',
     width: 110,
     getProps: () => ({
@@ -71,7 +71,7 @@ const columns = [
     })
   },
   {
-    Header: 'MIN_MODIFIED_CNT',
+    Header: 'MIN MODIFIED CNT',
     accessor: 'min_modified_cnt',
     width: 110,
     getProps: () => ({
@@ -82,7 +82,7 @@ const columns = [
     })
   },
   {
-    Header: 'MIN_ROWS',
+    Header: 'MIN ROWS',
     accessor: 'min_rows',
     width: 110,
     getProps: () => ({
@@ -93,7 +93,7 @@ const columns = [
     })
   },
   {
-    Header: 'MAX_SAMPLED',
+    Header: 'MAX SAMPLED',
     accessor: 'max_sampled',
     width: 110,
     getProps: () => ({
