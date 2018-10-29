@@ -11,26 +11,22 @@ import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
 import withMainLayout from 'components/WithMainLayout';
 import globalCss from 'css/global';
 import HistoryTable from './HistoryTable';
-import DateChartFilter from './DateChartFilter';
-import DropdownFilters from './DropdownFilters';
+import DateChartFilter from '../DateChartFilter';
+import DropdownFilters from '../DropdownFilters';
 
-class StatisticsHistory extends Component {
+class History extends Component {
   static propTypes = {
     isStatisticsHistoryFetching: PropTypes.bool.isRequired,
     statisticsHistoryDataLoaded: PropTypes.bool.isRequired,
     statisticsHistoryData: PropTypes.array.isRequired,
     statisticsHistoryFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     statisticsHistoryFilters: PropTypes.object.isRequired,
-    statisticsHistorySelectedData: PropTypes.object.isRequired,
-    statisticsHistorySelectedCount: PropTypes.number.isRequired,
     schemas: PropTypes.array.isRequired,
     isStatisticsChartFetching: PropTypes.bool.isRequired,
     statisticsChartDataLoaded: PropTypes.bool.isRequired,
     statisticsChartData: PropTypes.array.isRequired,
     fetchAllData: PropTypes.func.isRequired,
-    resetAllData: PropTypes.func.isRequired,
-    selectData: PropTypes.func.isRequired,
-    unselectData: PropTypes.func.isRequired
+    resetAllData: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -45,8 +41,8 @@ class StatisticsHistory extends Component {
   }
 
   resetChart = () => {
-    const { fetchAllData } = this.props;
-    const { schema, months } = this.props.statisticsFilters;
+    const { fetchAllData, statisticsHistoryFilters } = this.props;
+    const { schema, months } = statisticsHistoryFilters;
     fetchAllData(schema, moment().format(DEFAULT_DATE_FORMAT), months);
   };
 
@@ -57,15 +53,11 @@ class StatisticsHistory extends Component {
       statisticsHistoryData,
       statisticsHistoryFetchingError,
       statisticsHistoryFilters,
-      statisticsHistorySelectedData,
-      statisticsHistorySelectedCount,
       schemas,
       isStatisticsChartFetching,
       statisticsChartDataLoaded,
       statisticsChartData,
-      fetchAllData,
-      selectData,
-      unselectData
+      fetchAllData
     } = this.props;
 
     const current = moment(statisticsHistoryFilters.date, DEFAULT_DATE_FORMAT);
@@ -75,7 +67,7 @@ class StatisticsHistory extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            {config.app.title} - DWH Statistics{' '}
+            {config.app.title} - Statistics History{' '}
             ({current.format('MMM D, YYYY')})
           </h1>
         </Segment>
@@ -110,24 +102,7 @@ class StatisticsHistory extends Component {
             data={statisticsHistoryData}
             isFetching={isStatisticsHistoryFetching}
             fetchingError={statisticsHistoryFetchingError}
-            selectedData={statisticsHistorySelectedData}
-            selectData={selectData}
-            unselectData={unselectData}
           />
-        </Segment>
-        <Segment>
-          <Button
-            size="small"
-            disabled={statisticsHistorySelectedCount < 1}
-          >
-            Run stats on tables
-          </Button>
-          <Button
-            size="small"
-            disabled={false}
-          >
-            Run stats on schemas
-          </Button>
         </Segment>
       </div>
     );
@@ -141,8 +116,6 @@ export default withMainLayout(connect(
     statisticsHistoryData: statisticsHistoryReduxModule.selectors.getStatisticsHistory(state),
     statisticsHistoryFetchingError: statisticsHistoryReduxModule.selectors.getFetchingError(state),
     statisticsHistoryFilters: statisticsHistoryReduxModule.selectors.getFilters(state),
-    statisticsHistorySelectedData: statisticsHistoryReduxModule.selectors.getSelected(state),
-    statisticsHistorySelectedCount: statisticsHistoryReduxModule.selectors.getSelectedCount(state),
     schemas: statisticsSchemasReduxModule.selectors.getSchemas(state),
     isStatisticsChartFetching: state.statisticsChart.isFetching,
     statisticsChartDataLoaded: state.statisticsChart.dataLoaded,
@@ -157,8 +130,6 @@ export default withMainLayout(connect(
     resetAllData: () => {
       dispatch(statisticsHistoryReduxModule.actions.reset());
       dispatch(statisticsChartReduxModule.actions.reset());
-    },
-    selectData: (id, data) => dispatch(statisticsHistoryReduxModule.actions.select(id, data)),
-    unselectData: id => dispatch(statisticsHistoryReduxModule.actions.unselect(id))
+    }
   })
-)(StatisticsHistory));
+)(History));

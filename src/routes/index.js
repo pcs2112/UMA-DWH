@@ -2,17 +2,15 @@ import etlControlManager from 'redux/modules/etlControlManager';
 import etlServers from 'redux/modules/etlServers';
 import reports from 'redux/modules/reports';
 import reportHistory from 'redux/modules/reportHistory';
-import statistics from 'redux/modules/statistics';
-import statisticsSchemas from 'redux/modules/statisticsSchemas';
 import CycleHistory from './CycleHistory';
 import DWHErrors from './DWHErrors';
-import StatisticsHistory from './StatisticsHistory';
 import Error from './Error';
 import ForgotPassword from './ForgotPassword';
 import Login from './Login';
 import ProceduresHistory from './ProceduresHistory';
 import getErrorTypeManagementRoutes from './ErrorTypeManagement';
 import ReportsHistory from './ReportsHistory';
+import getStatisticsRoutes from './Statistics';
 import getUserRoutes from './Users';
 
 export default ({ dispatch, getState }) => ([
@@ -39,16 +37,10 @@ export default ({ dispatch, getState }) => ([
     path: '/dwh/errors',
     component: DWHErrors,
     exact: true
-  },
-  {
-    path: '/statistics/history',
-    component: StatisticsHistory,
-    exact: true,
-    fetch: () => dispatch(statistics.actions.fetchLastDate())
-      .then(() => dispatch(statisticsSchemas.actions.fetch()))
   }
 ]
   .concat(getErrorTypeManagementRoutes())
+  .concat(getStatisticsRoutes(dispatch))
   .concat(getUserRoutes(dispatch))
   .concat([
     {

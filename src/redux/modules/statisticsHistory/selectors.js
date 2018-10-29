@@ -4,7 +4,7 @@ import { DEAULT_MONTHS_SIZE, DEFAULT_DATE_FORMAT } from 'constants/index';
 import {
   createDataSelector,
   createGetItemsSelector,
-  createFetchingErrorSelector, createGetPropertySelector
+  createFetchingErrorSelector
 } from 'javascript-utils/lib/selectors';
 import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
 
@@ -60,18 +60,4 @@ export const getFilters = createSelector(
       months
     };
   }
-);
-
-/**
- * Returns the selected items.
- * @param {Object} state
- */
-export const getSelected = createGetPropertySelector('statisticsHistory', 'selected');
-
-/**
- * Selector to get the total count of selected statistics items.
- */
-export const getSelectedCount = createSelector(
-  [getSelected],
-  selected => Object.keys(selected).length
 );

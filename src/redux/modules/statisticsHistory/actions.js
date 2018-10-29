@@ -5,17 +5,8 @@ export const actionTypes = {
   FETCH_LAST_DATE_BEGIN: 'statisticsHistory/FETCH_LAST_DATE_BEGIN',
   FETCH_LAST_DATE_SUCCESS: 'statisticsHistory/FETCH_LAST_DATE_SUCCESS',
   FETCH_LAST_DATE_FAIL: 'statisticsHistory/FETCH_LAST_DATE_FAIL',
-  UPDATE_SCHEMA_STATS_BEGIN: 'statisticsHistory/UPDATE_SCHEMA_STATS_BEGIN',
-  UPDATE_SCHEMA_STATS_SUCCESS: 'statisticsHistory/UPDATE_SCHEMA_STATS_SUCCESS',
-  UPDATE_SCHEMA_STATS_FAIL: 'statisticsHistory/UPDATE_SCHEMA_STATS_FAIL',
-  UPDATE_TABLE_STATS_BEGIN: 'statisticsHistory/UPDATE_TABLE_STATS_BEGIN',
-  UPDATE_TABLE_STATS_SUCCESS: 'statisticsHistory/UPDATE_TABLE_STATS_SUCCESS',
-  UPDATE_TABLE_STATS_FAIL: 'statisticsHistory/UPDATE_TABLE_STATS_FAIL',
   RESET: 'statisticsHistory/RESET',
-  SET_FILTERS: 'statisticsHistory/SET_FILTERS',
-  SELECT: 'statisticsHistory/SELECT',
-  UNSELECT: 'statisticsHistory/UNSELECT',
-  UNSELECT_ALL: 'statisticsHistory/UNSELECT_ALL',
+  SET_FILTERS: 'statisticsHistory/SET_FILTERS'
 };
 
 /**
@@ -53,39 +44,6 @@ export const fetchLastDate = () => ({
 });
 
 /**
- * Action to update a schema stats.
- */
-export const updateSchemaStats = schema => ({
-  types: [
-    actionTypes.UPDATE_SCHEMA_STATS_BEGIN,
-    actionTypes.UPDATE_SCHEMA_STATS_SUCCESS,
-    actionTypes.UPDATE_SCHEMA_STATS_FAIL
-  ],
-  makeRequest: client => client.post('/api/etl/statistics/schemas', {
-    params: {
-      schema
-    }
-  })
-});
-
-/**
- * Action to update the table stats.
- */
-export const updateTableStats = (schema, tables) => ({
-  types: [
-    actionTypes.UPDATE_TABLE_STATS_BEGIN,
-    actionTypes.UPDATE_TABLE_STATS_SUCCESS,
-    actionTypes.UPDATE_TABLE_STATS_FAIL
-  ],
-  makeRequest: client => client.post('/api/etl/statistics/tables', {
-    params: {
-      schema,
-      tables: tables.join(',')
-    }
-  })
-});
-
-/**
  * Resets the state.
  */
 export const reset = () => ({
@@ -100,28 +58,4 @@ export const setFilters = (schema, date, months) => ({
   schema,
   date,
   months
-});
-
-/**
- * Action to select a statistics item.
- */
-export const select = (id, data) => ({
-  type: actionTypes.SELECT,
-  id,
-  data
-});
-
-/**
- * Action to unselect a statistics item.
- */
-export const unselect = id => ({
-  type: actionTypes.UNSELECT,
-  id
-});
-
-/**
- * Action to unselect all statistics items.
- */
-export const unselectAll = () => ({
-  type: actionTypes.UNSELECT_ALL
 });
