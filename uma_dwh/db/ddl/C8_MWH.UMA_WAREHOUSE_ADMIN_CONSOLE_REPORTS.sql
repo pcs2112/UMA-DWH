@@ -1,15 +1,4 @@
-
 -- C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS.sql
-
--- sqlcmd -S localhost -U [srv_mlkpythdap01_DB] -P 1F0rg0t1 -i  C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS.sql
---[srv_mlkpythdap01_DB]
-
-
-
--- sqlcmd -S localhost -U [srv_mlkpythdap01_DB] -P 1F0rg0t1 -i  C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS.sql
---[srv_mlkpythdap01_DB]
-
-
 
 
 
@@ -273,7 +262,7 @@ BEGIN
               END else BEGIN
                      SELECT @END_DTTM = MAX(START_DTTM)  from [MWH].[ETL_HISTORY] with(nolock);
                      IF(@END_DTTM is NOT null) begin
-                           SET           @START_DTTM   =     DATEADD(day, -30,  @END_DTTM);
+                           SET           @START_DTTM   =     DATEADD(day, -0,  @END_DTTM);
                      END
               END
 
@@ -547,7 +536,7 @@ BEGIN
                            [LST_MOD_USER],
                            [ACTIVE_FLAG],
                            [DESCRIPTION],
-                           [FILE_PATH_FILENAME]
+                            [FILE_PATH_FILENAME]
                      FROM MWH.ERROR_RESOLUTIONS   with(nolock)
                      ORDER BY ID DESC
 
@@ -1164,10 +1153,11 @@ BEGIN
               where  [START_DTTM] between @mySTARTDate  and  @myENDDate
               and  ( [SCHEMA_NAME] = @VARCHAR_03  or @VARCHAR_03 = 'ALL')
               group by cast([START_DTTM] as date)
+              order by cast([START_DTTM] as date)
               option(recompile);
 
        END
-;
+
 END;
 
 
@@ -1222,7 +1212,7 @@ BEGIN
                                   if(@rtn_Insert_Cnt = 0) begin
                                          SET @VALID_INPUT_DATA = 0;
                                   END
-                            END
+                           END
                      END
                      ELSE BEGIN
                                   SET @VALID_INPUT_DATA = 0;
@@ -1377,7 +1367,7 @@ BEGIN
               left join [MWH].[TABLE_STATISTICS_QUEUE] qt with(nolock) on (qt.TARGET_SCHEMA_NAME = st.table_schema and qt.TARGET_TABLE_NAME = st.table_name and qt.STATUS = 'QUEUED')
               WHERE st.table_type = 'base table'  )
 
-              select   udt.schema_name,  udt.table_name as 'TABLE', udt.SCH_TAB_TXT as 'SCHEMA.TABLE',   max(last_updated) as LAST_UPDATE_DTTM, coalesce(min(rows),0) as MIN_ROWS, coalesce(min(rows_sampled),0) as MIN_SAMPLED, coalesce(max(rows_sampled),0) as MAX_SAMPLED,   coalesce(min(modification_counter),0) as MIN_MODIFIED_CNT,   coalesce(max(modification_counter),0) as MAX_MODIFIED_CNT, min(queued_dttm) as QUEUED_DTTM
+              select   udt.schema_name,  udt.table_name as 'TABLE', udt.SCH_TAB_TXT as 'SCHEMA_TABLE',   max(last_updated) as LAST_UPDATE_DTTM, coalesce(min(rows),0) as MIN_ROWS, coalesce(min(rows_sampled),0) as MIN_SAMPLED, coalesce(max(rows_sampled),0) as MAX_SAMPLED,   coalesce(min(modification_counter),0) as MIN_MODIFIED_CNT,   coalesce(max(modification_counter),0) as MAX_MODIFIED_CNT, min(queued_dttm) as QUEUED_DTTM
               from UMA_DWH_TABLES udt
               left join sys.stats AS stat  with(nolock) on (stat.object_id = object_id(udt.SCH_TAB_TXT))
               CROSS APPLY sys.dm_db_stats_properties(stat.object_id, stat.stats_id) AS sp

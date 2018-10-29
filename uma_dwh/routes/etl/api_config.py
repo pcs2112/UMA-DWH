@@ -94,6 +94,12 @@ path_sp_args_map = {
     'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
     'sp_message': 'REPORT_RUN_STATISTICS_LAST_DATE'
   },
+  'statistics/management': {
+    'module_name': 'uma_dwh.db.etl',
+    'module_func': 'execute_admin_console_sp',
+    'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+    'sp_message': 'MANAGE_TABLE_STATISTICS'
+  },
   'try_catch_errors': {
     'module_name': 'uma_dwh.db.etl',
     'module_func': 'execute_admin_console_sp',
