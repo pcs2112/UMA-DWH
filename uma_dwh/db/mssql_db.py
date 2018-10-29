@@ -94,7 +94,7 @@ def result_set_as_dicts(schema, rows):
 def normalize_column_name(name):
     """Function to convert column names to snake case"""
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).replace(' ', '_').lower()
 
 
 def get_column_names(result_set_description):

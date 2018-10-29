@@ -89,6 +89,9 @@ class History extends Component {
                 {...statisticsHistoryFilters}
               />
               <div className="right-aligned">
+                <Button>
+                  Manage
+                </Button>
                 <Button primary onClick={this.resetChart} disabled={today.isSame(current, 'day')}>
                   Reset Chart
                 </Button>

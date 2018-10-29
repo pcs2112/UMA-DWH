@@ -35,6 +35,7 @@ class DateChartFilter extends Component {
     const { data } = this.props;
     const labels = data.map(item => moment(item.date, DEFAULT_DATE_FORMAT).toDate());
     const runTimesData = data.map(item => item.total_runtime);
+    const tableCountsData = data.map(item => item.table_cnt);
 
     return {
       labels,
@@ -48,7 +49,20 @@ class DateChartFilter extends Component {
           borderWidth: 1.5,
           pointBorderWidth: 1.5,
           pointRadius: 1.5,
-          pointHoverRadius: 1.5
+          pointHoverRadius: 1.5,
+          yAxisID: 'y-axis-1'
+        },
+        {
+          label: 'Table count',
+          data: tableCountsData,
+          fill: false,
+          backgroundColor: globalCss.colors.red,
+          borderColor: globalCss.colors.red,
+          borderWidth: 1.5,
+          pointBorderWidth: 1.5,
+          pointRadius: 1.5,
+          pointHoverRadius: 1.5,
+          yAxisID: 'y-axis-2'
         }
       ]
     };
@@ -63,7 +77,7 @@ class DateChartFilter extends Component {
       `Avg. runtime: ${item.avg_runtime}s`,
       `Start time: ${item.group_start_time}`,
       `End time: ${item.group_end_time}`,
-      `Status: ${item.group_status}`,
+      `Totals tables/rows: ${item.table_cnt} / ${item.total_rows}`,
       `Total Runtime: ${item.total_runtime}s`
     ];
   };
@@ -113,7 +127,17 @@ class DateChartFilter extends Component {
               {
                 display: true,
                 type: 'linear',
-                position: 'left'
+                position: 'left',
+                id: 'y-axis-1'
+              },
+              {
+                type: 'linear',
+                display: true,
+                position: 'right',
+                gridLines: {
+                  drawOnChartArea: false
+                },
+                id: 'y-axis-2'
               }
             ]
           }
