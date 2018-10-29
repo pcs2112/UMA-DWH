@@ -164,7 +164,7 @@ class Home extends Component {
         </Segment>
         <Segment>
           <Grid>
-            <Grid.Column width={10}>
+            <Grid.Column width={11}>
               <CurrentStatusTable
                 isFetching={isCurrentStatusFetching}
                 data={currentStatusData}
@@ -205,7 +205,7 @@ class Home extends Component {
                 Uncheck All
               </Button>
             </Grid.Column>
-            <Grid.Column width={2} />
+            <Grid.Column width={1} />
             <Grid.Column width={4}>
               <Form size="small">
                 <Form.Field>

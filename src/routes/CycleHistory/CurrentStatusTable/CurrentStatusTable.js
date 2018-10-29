@@ -15,12 +15,13 @@ const keyName = 'data_mart_name';
 const columns = [
   {
     Header: 'DATA_MART_NAME',
-    accessor: 'data_mart_name'
+    accessor: 'data_mart_name',
+    minWidth: 140
   },
   {
     Header: 'STATUS',
     accessor: 'data_mart_status_internal',
-    width: 100
+    width: 140
   },
   {
     Header: 'JOBS',
