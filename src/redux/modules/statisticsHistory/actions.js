@@ -1,21 +1,21 @@
 export const actionTypes = {
-  FETCH_BEGIN: 'statistics/FETCH_BEGIN',
-  FETCH_SUCCESS: 'statistics/FETCH_SUCCESS',
-  FETCH_FAIL: 'statistics/FETCH_FAIL',
-  FETCH_LAST_DATE_BEGIN: 'statistics/FETCH_LAST_DATE_BEGIN',
-  FETCH_LAST_DATE_SUCCESS: 'statistics/FETCH_LAST_DATE_SUCCESS',
-  FETCH_LAST_DATE_FAIL: 'statistics/FETCH_LAST_DATE_FAIL',
-  UPDATE_SCHEMA_STATS_BEGIN: 'statistics/UPDATE_SCHEMA_STATS_BEGIN',
-  UPDATE_SCHEMA_STATS_SUCCESS: 'statistics/UPDATE_SCHEMA_STATS_SUCCESS',
-  UPDATE_SCHEMA_STATS_FAIL: 'statistics/UPDATE_SCHEMA_STATS_FAIL',
-  UPDATE_TABLE_STATS_BEGIN: 'statistics/UPDATE_TABLE_STATS_BEGIN',
-  UPDATE_TABLE_STATS_SUCCESS: 'statistics/UPDATE_TABLE_STATS_SUCCESS',
-  UPDATE_TABLE_STATS_FAIL: 'statistics/UPDATE_TABLE_STATS_FAIL',
-  RESET: 'statistics/RESET',
-  SET_FILTERS: 'statistics/SET_FILTERS',
-  SELECT: 'statistics/SELECT',
-  UNSELECT: 'statistics/UNSELECT',
-  UNSELECT_ALL: 'statistics/UNSELECT_ALL',
+  FETCH_BEGIN: 'statisticsHistory/FETCH_BEGIN',
+  FETCH_SUCCESS: 'statisticsHistory/FETCH_SUCCESS',
+  FETCH_FAIL: 'statisticsHistory/FETCH_FAIL',
+  FETCH_LAST_DATE_BEGIN: 'statisticsHistory/FETCH_LAST_DATE_BEGIN',
+  FETCH_LAST_DATE_SUCCESS: 'statisticsHistory/FETCH_LAST_DATE_SUCCESS',
+  FETCH_LAST_DATE_FAIL: 'statisticsHistory/FETCH_LAST_DATE_FAIL',
+  UPDATE_SCHEMA_STATS_BEGIN: 'statisticsHistory/UPDATE_SCHEMA_STATS_BEGIN',
+  UPDATE_SCHEMA_STATS_SUCCESS: 'statisticsHistory/UPDATE_SCHEMA_STATS_SUCCESS',
+  UPDATE_SCHEMA_STATS_FAIL: 'statisticsHistory/UPDATE_SCHEMA_STATS_FAIL',
+  UPDATE_TABLE_STATS_BEGIN: 'statisticsHistory/UPDATE_TABLE_STATS_BEGIN',
+  UPDATE_TABLE_STATS_SUCCESS: 'statisticsHistory/UPDATE_TABLE_STATS_SUCCESS',
+  UPDATE_TABLE_STATS_FAIL: 'statisticsHistory/UPDATE_TABLE_STATS_FAIL',
+  RESET: 'statisticsHistory/RESET',
+  SET_FILTERS: 'statisticsHistory/SET_FILTERS',
+  SELECT: 'statisticsHistory/SELECT',
+  UNSELECT: 'statisticsHistory/UNSELECT',
+  UNSELECT_ALL: 'statisticsHistory/UNSELECT_ALL',
 };
 
 /**
@@ -27,7 +27,7 @@ export const fetch = (schema, date, months) => ({
     actionTypes.FETCH_SUCCESS,
     actionTypes.FETCH_FAIL
   ],
-  makeRequest: client => client.get('/api/etl/statistics', {
+  makeRequest: client => client.get('/api/etl/statistics/history', {
     params: {
       schema,
       date

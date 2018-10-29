@@ -68,7 +68,7 @@ path_sp_args_map = {
     'sp_message': 'RUN_CHECK',
     'sp_in_args': ['run_check_name']
   },
-  'statistics': {
+  'statistics/history': {
     'module_name': 'uma_dwh.db.etl',
     'module_func': 'execute_admin_console_sp',
     'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',

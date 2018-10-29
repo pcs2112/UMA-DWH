@@ -8,31 +8,31 @@ import {
 } from 'javascript-utils/lib/selectors';
 import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
 
-const _getData = createDataSelector('statistics', 'dataLoaded', 'data');
+const _getData = createDataSelector('statisticsHistory', 'dataLoaded', 'data');
 
 /**
  * Returns the fetching error.
  * @param {Object} state
  */
-export const getFetchingError = createFetchingErrorSelector('statistics', 'fetchingError', 'payload');
+export const getFetchingError = createFetchingErrorSelector('statisticsHistory', 'fetchingError', 'payload');
 
 /**
  * Returns the filters from the state.
  * @param {Object} state
  */
 const _getFilters = state => ({
-  schema: state.statistics.schema,
-  date: state.statistics.date,
-  months: state.statistics.months
+  schema: state.statisticsHistory.schema,
+  date: state.statisticsHistory.date,
+  months: state.statisticsHistory.months
 });
 
 /**
- * Returns the DWH statistics from the state.
+ * Returns the DWH statistics history from the state.
  */
-export const getStatistics = createGetItemsSelector(_getData);
+export const getStatisticsHistory = createGetItemsSelector(_getData);
 
 /**
- * Selector to get the report history filters.
+ * Selector to get the statistics history filters.
  */
 export const getFilters = createSelector(
   [_getFilters, statisticsSchemasReduxModule.selectors.getSchemas],
@@ -66,7 +66,7 @@ export const getFilters = createSelector(
  * Returns the selected items.
  * @param {Object} state
  */
-export const getSelected = createGetPropertySelector('statistics', 'selected');
+export const getSelected = createGetPropertySelector('statisticsHistory', 'selected');
 
 /**
  * Selector to get the total count of selected statistics items.

@@ -24,7 +24,7 @@ const setFilters = (state, action) => {
 };
 
 /**
- * DWH statistics reducer.
+ * DWH statistics history reducer.
  *
  * @param {Object} state
  * @param {Object} action
