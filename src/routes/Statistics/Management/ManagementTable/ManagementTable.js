@@ -16,7 +16,7 @@ const defaultExpanded = {};
 const columns = [
   {
     Header: 'UPDATE_DTTM',
-    accessor: '"last_update_dttm',
+    accessor: 'last_update_dttm',
     width: 110
   },
   {
