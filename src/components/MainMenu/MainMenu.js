@@ -38,7 +38,7 @@ class MainMenu extends Component {
           DWH Report History
         </Menu.Item>
         <Menu.Item as={Link} to="/dwh/statistics" active={isActive(pathname, '/dwh/statistics')}>
-          DWH Statistics
+          DWH Statistics History
         </Menu.Item>
         <Menu.Item as={Link} to="/dwh/errors" active={isActive(pathname, '/dwh/errors')}>
           DWH Errors
