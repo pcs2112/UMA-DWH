@@ -10,11 +10,11 @@ import statisticsChartReduxModule from 'redux/modules/statisticsChart';
 import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
 import withMainLayout from 'components/WithMainLayout';
 import globalCss from 'css/global';
-import StatisticsTable from './StatisticsTable';
+import HistoryTable from './HistoryTable';
 import DateChartFilter from './DateChartFilter';
 import DropdownFilters from './DropdownFilters';
 
-class DWHStatistics extends Component {
+class StatisticsHistory extends Component {
   static propTypes = {
     isStatisticsFetching: PropTypes.bool.isRequired,
     statisticsDataLoaded: PropTypes.bool.isRequired,
@@ -105,7 +105,7 @@ class DWHStatistics extends Component {
           </Grid>
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
-          <StatisticsTable
+          <HistoryTable
             dataLoaded={statisticsDataLoaded}
             data={statisticsData}
             isFetching={isStatisticsFetching}
@@ -161,4 +161,4 @@ export default withMainLayout(connect(
     selectData: (id, data) => dispatch(statisticsReduxModule.actions.select(id, data)),
     unselectData: id => dispatch(statisticsReduxModule.actions.unselect(id))
   })
-)(DWHStatistics));
+)(StatisticsHistory));

@@ -85,7 +85,7 @@ const columns = [
 
 const SelectAllInputComponent = () => (<span />);
 
-class StatisticsTable extends Component {
+class HistoryTable extends Component {
   static propTypes = {
     tableHeight: PropTypes.number.isRequired,
     isFetching: PropTypes.bool.isRequired,
@@ -205,4 +205,4 @@ class StatisticsTable extends Component {
   }
 }
 
-export default withResponsiveTable(StatisticsTable, 230, 430);
+export default withResponsiveTable(HistoryTable, 230, 430);

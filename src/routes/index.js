@@ -6,7 +6,7 @@ import statistics from 'redux/modules/statistics';
 import statisticsSchemas from 'redux/modules/statisticsSchemas';
 import CycleHistory from './CycleHistory';
 import DWHErrors from './DWHErrors';
-import DWHStatistics from './DWHStatistics';
+import StatisticsHistory from './StatisticsHistory';
 import Error from './Error';
 import ForgotPassword from './ForgotPassword';
 import Login from './Login';
@@ -41,8 +41,8 @@ export default ({ dispatch, getState }) => ([
     exact: true
   },
   {
-    path: '/dwh/statistics',
-    component: DWHStatistics,
+    path: '/statistics/history',
+    component: StatisticsHistory,
     exact: true,
     fetch: () => dispatch(statistics.actions.fetchLastDate())
       .then(() => dispatch(statisticsSchemas.actions.fetch()))

@@ -34,7 +34,7 @@ class DateChartFilter extends Component {
   getChartData = () => {
     const { data } = this.props;
     const labels = data.map(item => moment(item.date, DEFAULT_DATE_FORMAT).toDate());
-    const runTimesData = data.map(item => item.avg_runtime);
+    const runTimesData = data.map(item => item.total_runtime);
 
     return {
       labels,
