@@ -17,8 +17,9 @@ import user from './modules/user';
 import users from './modules/users';
 import tryCatchErrors from './modules/tryCatchErrors';
 import tryCatchErrorsChart from './modules/tryCatchErrorsChart';
-import statisticsHistory from './modules/statisticsHistory';
 import statisticsChart from './modules/statisticsChart';
+import statisticsHistory from './modules/statisticsHistory';
+import statisticsManagement from './modules/statisticsManagement';
 import statisticsSchemas from './modules/statisticsSchemas';
 
 export default combineReducers({
@@ -40,7 +41,8 @@ export default combineReducers({
   users: users.reducer,
   tryCatchErrors: tryCatchErrors.reducer,
   tryCatchErrorsChart: tryCatchErrorsChart.reducer,
-  statisticsHistory: statisticsHistory.reducer,
   statisticsChart: statisticsChart.reducer,
+  statisticsHistory: statisticsHistory.reducer,
+  statisticsManagement: statisticsManagement.reducer,
   statisticsSchemas: statisticsSchemas.reducer
 });

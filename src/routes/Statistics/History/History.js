@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { Segment, Grid, Button } from 'semantic-ui-react';
 import { DEFAULT_DATE_FORMAT } from 'constants/index';
@@ -89,8 +90,8 @@ class History extends Component {
                 {...statisticsHistoryFilters}
               />
               <div className="right-aligned">
-                <Button>
-                  Manage
+                <Button as={Link} to="/statistics/management">
+                  View Management
                 </Button>
                 <Button primary onClick={this.resetChart} disabled={today.isSame(current, 'day')}>
                   Reset Chart
