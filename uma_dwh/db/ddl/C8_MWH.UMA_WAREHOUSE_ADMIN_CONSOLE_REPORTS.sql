@@ -1,4 +1,16 @@
+
 -- C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS.sql
+
+-- sqlcmd -S localhost -U [srv_mlkpythdap01_DB] -P 1F0rg0t1 -i  C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS.sql
+--[srv_mlkpythdap01_DB]
+
+
+
+-- sqlcmd -S localhost -U [srv_mlkpythdap01_DB] -P 1F0rg0t1 -i  C8_MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS.sql
+--[srv_mlkpythdap01_DB]
+
+
+
 
 
 USE [UMA_DWH]
@@ -261,7 +273,7 @@ BEGIN
               END else BEGIN
                      SELECT @END_DTTM = MAX(START_DTTM)  from [MWH].[ETL_HISTORY] with(nolock);
                      IF(@END_DTTM is NOT null) begin
-                           SET           @START_DTTM   =     DATEADD(day, -600,  @END_DTTM);
+                           SET           @START_DTTM   =     DATEADD(day, -30,  @END_DTTM);
                      END
               END
 
@@ -307,7 +319,7 @@ BEGIN
               END else BEGIN
                      SELECT @END_DTTM = MAX(START_DTTM)  from [MWH].[ETL_HISTORY] with(nolock);
                      IF(@END_DTTM is NOT null) begin
-                           SET           @START_DTTM   =     DATEADD(day, -600,  @END_DTTM);
+                           SET           @START_DTTM   =     DATEADD(day, -30,  @END_DTTM);
                      END
               END
 
@@ -361,7 +373,7 @@ BEGIN
 
               FROM MWH.ETL_CONTROL_MANAGER  cm  with(nolock)
               join [MWH].[ETL_HISTORY]  eh with(nolock)   on (cm.PROCEDURE_NAME = eh.CALLING_PROC )
-              where eh.INSERT_DTTM > dateadd(day, -600, getdate())
+              where eh.INSERT_DTTM > dateadd(day, -30, getdate())
               and cm.[PROCEDURE_NAME] not like '%CHECK_MERGE%'
               and cm.ACTIVE = 1
               group by
@@ -1053,7 +1065,7 @@ END;
 IF  @message = 'LOAD_STATISTICS_Search_Chart'
 --  This is used to POPULATE the Srach Chart for STATISTICS,  ONE row per DATE,  with X months of data, via ARG 3
 
---   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LOAD_STATISTICS_Search_Chart' ,'2018-10-22',  '3', '', '' , '', '' , '', '' , '';
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'LOAD_STATISTICS_Search_Chart' ,'2018-10-22',  '3', 'ALL', '' , '', '' , '', '' , '';
 
 BEGIN
        SET @MessageValid = 1;
@@ -1106,7 +1118,7 @@ BEGIN
                            IF (len(@VARCHAR_03) >= 2 ) begin
                                   select @rtn_Insert_Cnt = count(*) from  [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] with(nolock)
                                   where  [START_DTTM] between @mySTARTDate  and  @myENDDate
-                                  and ( [SCHEMA_NAME] = @VARCHAR_03 or @VARCHAR_03 = 'ALL')
+                                  and ( [SCHEMA_NAME] = @VARCHAR_03 or @VARCHAR_03 = 'ALL' or @VARCHAR_03 = '')
                                   option(recompile);
 
                                   if(@rtn_Insert_Cnt <= 0) begin
@@ -1171,7 +1183,7 @@ END;
 IF  @message = 'REPORT_HISTORY_STATISTICS_SELECT_BY_DATE'
 --  This is used to pupulate a pulldown list of the report page, so we can get a list of report SP run on that date, it sorts on longest running report to the fastest report on the date selected
 
---   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'REPORT_HISTORY_STATISTICS_SELECT_BY_DATE' ,'2018-10-22',  '', '', '' , '', '' , '', '' , '';
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'REPORT_HISTORY_STATISTICS_SELECT_BY_DATE' ,'2018-10-22',  'S_CVPROD', '', '' , '', '' , '', '' , '';
 
 --    use   RUN_DATE on the X axis, and AVG_RUNTIME on the Y axis
 
@@ -1204,13 +1216,13 @@ BEGIN
 
                                   select @rtn_Insert_Cnt = coalesce(count(*),0) from  [MWH].[STATISTICS_ENGINE_TABLE_HISTORY]  with(nolock)
                                   where  [START_DTTM] between @mySTARTDate  and  @myENDDate
-                                  --and [TARGET_SCHEMA_NAME] = @VARCHAR_02
+                                  and [SCHEMA_NAME] = @VARCHAR_02
                                   option(recompile);
 
                                   if(@rtn_Insert_Cnt = 0) begin
                                          SET @VALID_INPUT_DATA = 0;
                                   END
-                           END
+                            END
                      END
                      ELSE BEGIN
                                   SET @VALID_INPUT_DATA = 0;
@@ -1252,7 +1264,7 @@ BEGIN
               from     [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] eth  with(nolock)
               left join [MWH].[STATISTICS_ENGINE_HISTORY] eh  with(nolock)  on (eth.STATISTICS_ENGINE_HISTORY_ID = eh.ID)
               where [START_DTTM] between @MyInputDateTIME  and  dateadd( minute, 59, dateadd(hour, 23, @MyInputDateTIME))
-              --and  [TARGET_SCHEMA_NAME] = @VARCHAR_02
+              and [SCHEMA_NAME]  = @VARCHAR_02
               group by cast([START_DTTM] as date),  '[' +[TARGET_SERVER_NAME]+'].['+[TARGET_DB_NAME]+'].['+ [SCHEMA_NAME] +']', [SCHEMA_NAME]
               order by sum(case when [TryCatchError_ID] > 1 then 1 else 0 end) desc, cast( SUM([STATISTICS_RUNTIME_SEC] * 1.0)/ (COUNT(*) * 1.0) as DECIMAL(10,2)) desc
               OPTION(RECOMPILE);
@@ -1264,7 +1276,7 @@ END;
 IF  @message = 'DISPLAY_STATISTICS_DATA_BY_DATE'
 --     'DISPLAY_STATISTICS_DATA_BY_DATE'  send  SCHEMA and DATE
 
---   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'DISPLAY_STATISTICS_DATA_BY_DATE' ,  '2018-10-27', '', '' , '', '' , '', '' , '', '';
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'DISPLAY_STATISTICS_DATA_BY_DATE' ,  '2018-10-27', 'S_CVPROD', '' , '', '' , '', '' , '', '';
 
 
 BEGIN
@@ -1351,7 +1363,7 @@ BEGIN
 END;
 
 
---   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'MANAGE_TABLE_STATISTICS' ,  '2018-10-23', '', '' , '', '' , '', '' , '', '';
+--   exec MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS 'MANAGE_TABLE_STATISTICS' ,  '', '', '' , '', '' , '', '' , '', '';
 
 IF  @message = 'MANAGE_TABLE_STATISTICS'
 
