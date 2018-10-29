@@ -41,7 +41,7 @@ class DateChartFilter extends Component {
       labels,
       datasets: [
         {
-          label: 'Run time (secs)',
+          label: 'Run time (hours)',
           data: runTimesData,
           fill: false,
           backgroundColor: globalCss.colors.darkTurquoise,
