@@ -1,3 +1,5 @@
+import { createPollingActions } from 'redux-polling';
+
 export const actionTypes = {
   FETCH_BEGIN: 'statisticsManagement/FETCH_BEGIN',
   FETCH_SUCCESS: 'statisticsManagement/FETCH_SUCCESS',
@@ -19,6 +21,22 @@ export const fetch = () => ({
   ],
   makeRequest: client => client.get('/api/etl/statistics/management')
 });
+
+/**
+ * Polling action used to fetch the ETL statistics management.
+ */
+const polling = () => (dispatch) => {
+  const promises = [dispatch(fetch())];
+  return new Promise((resolve, reject) => {
+    Promise.all(promises)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
 
 /**
  * Resets the state.
@@ -50,3 +68,8 @@ export const unselect = id => ({
 export const unselectAll = () => ({
   type: actionTypes.UNSELECT_ALL
 });
+
+/**
+ * Create the polling actions
+ */
+export const pollingActions = createPollingActions('statisticsManagementPolling', polling(), 30000, 0);

@@ -56,7 +56,7 @@ class Home extends Component {
     setProcedureHistoryFilters: PropTypes.func.isRequired
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const { cycleHistoryIntervalDuration } = this.props;
     this.startPolling(cycleHistoryIntervalDuration);
   }

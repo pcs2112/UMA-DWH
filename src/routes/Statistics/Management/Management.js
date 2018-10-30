@@ -15,6 +15,8 @@ import ManagementTable from './ManagementTable';
 import DateChartFilter from '../DateChartFilter';
 import DropdownFilters from '../DropdownFilters';
 
+let initialTimeout = null;
+
 class Management extends Component {
   static propTypes = {
     isStatisticsManagementFetching: PropTypes.bool.isRequired,
@@ -28,6 +30,7 @@ class Management extends Component {
     isStatisticsChartFetching: PropTypes.bool.isRequired,
     statisticsChartDataLoaded: PropTypes.bool.isRequired,
     statisticsChartData: PropTypes.array.isRequired,
+    dispatchPollingAction: PropTypes.func.isRequired,
     fetchAllData: PropTypes.func.isRequired,
     fetchStatisticsManagementData: PropTypes.func.isRequired,
     fetchStatisticsChartData: PropTypes.func.isRequired,
@@ -39,11 +42,24 @@ class Management extends Component {
   componentDidMount() {
     const { fetchAllData, statisticsManagementFilters } = this.props;
     const { schema, date, months } = statisticsManagementFilters;
-    fetchAllData(schema, date, months);
+    fetchAllData(schema, date, months)
+      .then(() => {
+        if (initialTimeout) {
+          clearTimeout(initialTimeout);
+        }
+
+        initialTimeout = setTimeout(() => {
+          this.startPolling();
+        }, 30000);
+      });
   }
 
   componentWillUnmount() {
     const { resetAllData } = this.props;
+    if (initialTimeout) {
+      clearTimeout(initialTimeout);
+    }
+    this.stopPolling();
     resetAllData();
   }
 
@@ -51,6 +67,16 @@ class Management extends Component {
     const { fetchStatisticsChartData, statisticsManagementFilters } = this.props;
     const { schema, months } = statisticsManagementFilters;
     fetchStatisticsChartData(schema, moment().format(DEFAULT_DATE_FORMAT), months);
+  };
+
+  startPolling = () => {
+    const { dispatchPollingAction } = this.props;
+    dispatchPollingAction(statisticsManagementReduxModule.actions.pollingActions.start(dispatchPollingAction));
+  };
+
+  stopPolling = () => {
+    const { dispatchPollingAction } = this.props;
+    dispatchPollingAction(statisticsManagementReduxModule.actions.pollingActions.reset());
   };
 
   render() {
@@ -149,6 +175,7 @@ export default withMainLayout(connect(
     statisticsChartData: statisticsChartReduxModule.selectors.getStatisticsChartData(state)
   }),
   dispatch => ({
+    dispatchPollingAction: dispatch,
     fetchAllData: (schema, date, months) =>
       Promise.all([
         dispatch(statisticsManagementReduxModule.actions.fetch()),
