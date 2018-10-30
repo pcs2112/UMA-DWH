@@ -93,7 +93,7 @@ export const pollingActions = createPollingActions(
 /**
  * Action to queue the stats.
  */
-export const queueStats = tables => ({
+export const queueStats = data => ({
   types: [
     actionTypes.QUEUE_STATS_BEGIN,
     actionTypes.QUEUE_STATS_SUCCESS,
@@ -101,7 +101,7 @@ export const queueStats = tables => ({
   ],
   makeRequest: client => client.post('/api/etl/statistics/queue_stats', {
     data: {
-      tables
+      tables: data
     }
   })
 });

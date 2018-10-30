@@ -241,6 +241,9 @@ export default withMainLayout(connect(
     unselectData: id => dispatch(statisticsManagementReduxModule.actions.unselect(id)),
     selectAllData: data => dispatch(statisticsManagementReduxModule.actions.selectAll('schema_table', data)),
     unselectAllData: () => dispatch(statisticsManagementReduxModule.actions.unselectAll()),
-    queueStats: tables => dispatch(statisticsManagementReduxModule.actions.queueStats(tables))
+    queueStats: tables =>
+      dispatch(statisticsManagementReduxModule.actions.queueStats(tables))
+        .then(() => dispatch(statisticsManagementReduxModule.actions.fetch()))
+        .then(() => dispatch(statisticsManagementReduxModule.actions.unselectAll()))
   })
 )(Management));
