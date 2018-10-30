@@ -2,7 +2,11 @@ import itemListReducerFor, { initialState as itemListInitialState } from 'redux/
 import { actionTypes } from './actions';
 
 // Initial state
-const initialState = Object.assign({}, itemListInitialState);
+const initialState = Object.assign({
+  schema: '',
+  date: '',
+  months: ''
+}, itemListInitialState);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);

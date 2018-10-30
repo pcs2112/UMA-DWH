@@ -6,7 +6,6 @@ import moment from 'moment';
 import { Segment, Grid, Button } from 'semantic-ui-react';
 import { DEFAULT_DATE_FORMAT } from 'constants/index';
 import config from 'config';
-import statisticsHistoryReduxModule from 'redux/modules/statisticsHistory';
 import statisticsManagementReduxModule from 'redux/modules/statisticsManagement';
 import statisticsChartReduxModule from 'redux/modules/statisticsChart';
 import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
@@ -30,6 +29,8 @@ class Management extends Component {
     statisticsChartDataLoaded: PropTypes.bool.isRequired,
     statisticsChartData: PropTypes.array.isRequired,
     fetchAllData: PropTypes.func.isRequired,
+    fetchStatisticsManagementData: PropTypes.func.isRequired,
+    fetchStatisticsChartData: PropTypes.func.isRequired,
     resetAllData: PropTypes.func.isRequired,
     selectData: PropTypes.func.isRequired,
     unselectData: PropTypes.func.isRequired
@@ -47,9 +48,9 @@ class Management extends Component {
   }
 
   resetChart = () => {
-    const { fetchAllData, statisticsManagementFilters } = this.props;
+    const { fetchStatisticsChartData, statisticsManagementFilters } = this.props;
     const { schema, months } = statisticsManagementFilters;
-    fetchAllData(schema, moment().format(DEFAULT_DATE_FORMAT), months);
+    fetchStatisticsChartData(schema, moment().format(DEFAULT_DATE_FORMAT), months);
   };
 
   render() {
@@ -65,7 +66,7 @@ class Management extends Component {
       isStatisticsChartFetching,
       statisticsChartDataLoaded,
       statisticsChartData,
-      fetchAllData,
+      fetchStatisticsChartData,
       selectData,
       unselectData
     } = this.props;
@@ -88,14 +89,14 @@ class Management extends Component {
                 isFetching={isStatisticsChartFetching}
                 dataLoaded={statisticsChartDataLoaded}
                 data={statisticsChartData}
-                onClick={fetchAllData}
+                onClick={fetchStatisticsChartData}
                 {...statisticsManagementFilters}
               />
             </Grid.Column>
             <Grid.Column width={5}>
               <DropdownFilters
                 schemas={schemas}
-                onChange={fetchAllData}
+                onChange={fetchStatisticsChartData}
                 {...statisticsManagementFilters}
               />
               <div className="right-aligned">
@@ -139,7 +140,7 @@ export default withMainLayout(connect(
     statisticsManagementDataLoaded: state.statisticsManagement.dataLoaded,
     statisticsManagementData: statisticsManagementReduxModule.selectors.getStatisticsManagement(state),
     statisticsManagementFetchingError: statisticsManagementReduxModule.selectors.getFetchingError(state),
-    statisticsManagementFilters: statisticsHistoryReduxModule.selectors.getFilters(state),
+    statisticsManagementFilters: statisticsChartReduxModule.selectors.getFilters(state),
     statisticsManagementSelectedData: statisticsManagementReduxModule.selectors.getSelected(state),
     statisticsManagementSelectedCount: statisticsManagementReduxModule.selectors.getSelectedCount(state),
     schemas: statisticsSchemasReduxModule.selectors.getSchemas(state),
@@ -153,9 +154,13 @@ export default withMainLayout(connect(
         dispatch(statisticsManagementReduxModule.actions.fetch()),
         dispatch(statisticsChartReduxModule.actions.fetch(schema, date, months))
       ]),
+    fetchStatisticsManagementData: () =>
+      dispatch(statisticsManagementReduxModule.actions.fetch()),
+    fetchStatisticsChartData: (schema, date, months) =>
+      dispatch(statisticsChartReduxModule.actions.fetch(schema, date, months)),
     resetAllData: () => {
       dispatch(statisticsManagementReduxModule.actions.reset());
-      dispatch(statisticsManagementReduxModule.actions.reset());
+      dispatch(statisticsChartReduxModule.actions.reset());
     },
     selectData: (id, data) => dispatch(statisticsManagementReduxModule.actions.select(id, data)),
     unselectData: id => dispatch(statisticsManagementReduxModule.actions.unselect(id))
