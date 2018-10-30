@@ -15,14 +15,14 @@ const defaultExpanded = {};
  */
 const columns = [
   {
-    Header: 'UPDATE DTTM',
+    Header: 'LAST UPDATE DTTM',
     accessor: 'last_update_dttm',
-    width: 130
+    width: 140
   },
   {
     Header: 'QUEUED DTTM',
     accessor: 'queued_dttm',
-    width: 130
+    width: 140
   },
   {
     Header: 'SCHEMA.TABLE',
@@ -38,16 +38,6 @@ const columns = [
     Header: 'TABLE',
     accessor: 'table',
     width: 350
-  },
-  {
-    Header: 'STARTED',
-    accessor: 'started',
-    width: 140
-  },
-  {
-    Header: 'FINISHED',
-    accessor: 'finished',
-    width: 140
   },
   {
     Header: 'MAX MODIFIED CNT',
