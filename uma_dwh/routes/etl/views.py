@@ -1,5 +1,5 @@
 import uma_dwh.db.etl as etl
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from flask_jwt_extended import jwt_required
 from uma_dwh.exceptions import InvalidUsage
 from uma_dwh.utils.nocache import nocache
@@ -14,6 +14,14 @@ blueprint = Blueprint('etl', __name__)
 @nocache
 def get_data_marts_status():
     return jsonify(etl.check_current_status())
+
+
+@blueprint.route('/api/statistics/tables', methods=('POST',))
+@nocache
+def post_run_stats():
+    body = request.get_json(silent=True)
+    etl.run_stats(body['tables'])
+    return jsonify(body['tables'])
 
 
 @blueprint.route('/api/etl/errors/<error_id>', methods=('GET',))

@@ -1,4 +1,5 @@
 import { createPollingActions } from 'redux-polling';
+import { STATISTICS_MANAGEMENT_REFRESH_TIMEOUT } from 'constants/index';
 
 export const actionTypes = {
   FETCH_BEGIN: 'statisticsManagement/FETCH_BEGIN',
@@ -8,6 +9,9 @@ export const actionTypes = {
   SELECT: 'statisticsManagement/SELECT',
   UNSELECT: 'statisticsManagement/UNSELECT',
   UNSELECT_ALL: 'statisticsManagement/UNSELECT_ALL',
+  UPDATE_TABLE_STATS_BEGIN: 'statisticsManagement/UPDATE_TABLE_STATS_BEGIN',
+  UPDATE_TABLE_STATS_SUCCESS: 'statisticsManagement/UPDATE_TABLE_STATS_SUCCESS',
+  UPDATE_TABLE_STATS_FAIL: 'statisticsManagement/UPDATE_TABLE_STATS_FAIL'
 };
 
 /**
@@ -72,4 +76,22 @@ export const unselectAll = () => ({
 /**
  * Create the polling actions
  */
-export const pollingActions = createPollingActions('statisticsManagementPolling', polling(), 30000, 0);
+export const pollingActions = createPollingActions(
+  'statisticsManagementPolling', polling(), STATISTICS_MANAGEMENT_REFRESH_TIMEOUT, 0
+);
+
+/**
+ * Action to update the table stats.
+ */
+export const updateTableStats = tables => ({
+  types: [
+    actionTypes.UPDATE_TABLE_STATS_BEGIN,
+    actionTypes.UPDATE_TABLE_STATS_SUCCESS,
+    actionTypes.UPDATE_TABLE_STATS_FAIL
+  ],
+  makeRequest: client => client.post('/api/etl/statistics/tables', {
+    params: {
+      tables
+    }
+  })
+});

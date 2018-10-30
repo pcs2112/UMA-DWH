@@ -115,6 +115,26 @@ def fetch_servers():
     return servers
 
 
+def run_stats(tables):
+    """
+    Runs stats on the specified tables
+    :param tables: List of schemas and tables
+    :type tables: list
+    """
+    for table in tables:
+        execute_sp(
+          'MWH.MANAGE_STATISTICS_SP',
+          {
+            'VARCHAR_01': 'QUEUE',
+            'VARCHAR_02': 'MLK-EDM-D-SQ02',
+            'VARCHAR_03': 'UMA_DWH',
+            'VARCHAR_04': table['schema'],
+            'VARCHAR_05': table['table'],
+            'VARCHAR_06': 'FULL SCAN'
+          }
+        )
+
+
 def fetch_error(error_id):
     """
     Returns the ETL error record.

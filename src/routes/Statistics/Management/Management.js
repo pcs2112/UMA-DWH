@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { Segment, Grid, Button } from 'semantic-ui-react';
-import { DEFAULT_DATE_FORMAT } from 'constants/index';
+import { DEFAULT_DATE_FORMAT, STATISTICS_MANAGEMENT_REFRESH_TIMEOUT } from 'constants/index';
 import config from 'config';
 import statisticsManagementReduxModule from 'redux/modules/statisticsManagement';
 import statisticsChartReduxModule from 'redux/modules/statisticsChart';
@@ -36,29 +36,18 @@ class Management extends Component {
     fetchStatisticsChartData: PropTypes.func.isRequired,
     resetAllData: PropTypes.func.isRequired,
     selectData: PropTypes.func.isRequired,
-    unselectData: PropTypes.func.isRequired
+    unselectData: PropTypes.func.isRequired,
+    runStats: PropTypes.func.isRequired
   };
 
   componentDidMount() {
     const { fetchAllData, statisticsManagementFilters } = this.props;
     const { schema, date, months } = statisticsManagementFilters;
-    fetchAllData(schema, date, months)
-      .then(() => {
-        if (initialTimeout) {
-          clearTimeout(initialTimeout);
-        }
-
-        initialTimeout = setTimeout(() => {
-          this.startPolling();
-        }, 30000);
-      });
+    fetchAllData(schema, date, months);
   }
 
   componentWillUnmount() {
     const { resetAllData } = this.props;
-    if (initialTimeout) {
-      clearTimeout(initialTimeout);
-    }
     this.stopPolling();
     resetAllData();
   }
@@ -71,12 +60,35 @@ class Management extends Component {
 
   startPolling = () => {
     const { dispatchPollingAction } = this.props;
-    dispatchPollingAction(statisticsManagementReduxModule.actions.pollingActions.start(dispatchPollingAction));
+    if (initialTimeout) {
+      clearTimeout(initialTimeout);
+    }
+
+    initialTimeout = setTimeout(() => {
+      dispatchPollingAction(statisticsManagementReduxModule.actions.pollingActions.start(dispatchPollingAction));
+    }, STATISTICS_MANAGEMENT_REFRESH_TIMEOUT);
   };
 
   stopPolling = () => {
     const { dispatchPollingAction } = this.props;
+    if (initialTimeout) {
+      clearTimeout(initialTimeout);
+    }
+
     dispatchPollingAction(statisticsManagementReduxModule.actions.pollingActions.reset());
+  };
+
+  runStats = () => {
+    const { statisticsManagementSelectedData, runStats } = this.props;
+    if (statisticsManagementSelectedData.length > 0) {
+      const tables = statisticsManagementSelectedData.map(table => ({
+        database: table.database,
+        schema: table.schema,
+        table: table.schema_table
+      }));
+
+      runStats(tables);
+    }
   };
 
   render() {
@@ -151,6 +163,7 @@ class Management extends Component {
           <Button
             size="small"
             disabled={statisticsManagementSelectedCount < 1}
+            onClick={this.runStats}
           >
             Run stats
           </Button>
