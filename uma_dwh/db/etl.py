@@ -127,7 +127,7 @@ def run_stats(tables):
           {
             'VARCHAR_01': 'QUEUE',
             'VARCHAR_02': 'MLK-EDM-D-SQ02',
-            'VARCHAR_03': 'UMA_DWH',
+            'VARCHAR_03': table['database'],
             'VARCHAR_04': table['schema'],
             'VARCHAR_05': table['table'],
             'VARCHAR_06': 'FULL SCAN'
