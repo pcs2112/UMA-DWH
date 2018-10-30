@@ -10,7 +10,7 @@ export const initialState = {
  * @returns {Function}
  */
 const itemListSelectReducerFor = ({
-  SELECT, UNSELECT, UNSELECT_ALL
+  SELECT, UNSELECT, SELECT_ALL, UNSELECT_ALL
 }) => (state = initialState, action) => {
   switch (action.type) {
     case SELECT: {
@@ -40,6 +40,24 @@ const itemListSelectReducerFor = ({
 
       // Remove the unselected items from the selected order
       const selectedOrder = state.selectedOrder.filter(item => item !== action.id);
+
+      return {
+        ...state,
+        selected,
+        selectedOrder
+      };
+    }
+    case SELECT_ALL: {
+      const { key, data } = action;
+      const selected = {};
+      const selectedOrder = [];
+
+      if (data.length > 0) {
+        data.forEach((item) => {
+          selected[item[key]] = item;
+          selectedOrder.push(item[key]);
+        });
+      }
 
       return {
         ...state,
