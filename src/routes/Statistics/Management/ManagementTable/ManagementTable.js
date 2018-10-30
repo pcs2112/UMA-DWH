@@ -5,10 +5,12 @@ import ReactTable from 'react-table';
 import checkboxHOC from 'react-table/lib/hoc/selectTable';
 import withResponsiveTable from 'components/WithResponsiveTable';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
+import globalCss from '../../../../css/global';
 
 const CheckboxTable = checkboxHOC(ReactTable);
 const keyName = 'schema_table';
 const defaultExpanded = {};
+const noTrProps = {};
 
 /**
  * Table columns
@@ -159,6 +161,31 @@ class ManagementTable extends Component {
     return dataLoaded ? '' : 'Loading...';
   };
 
+  getTrProps = (state, row) => {
+    if (!row) {
+      return noTrProps;
+    }
+
+    let bgColor = 'none';
+    const textColor = '#000';
+    if (row.original.queued_dttm) {
+      bgColor = globalCss.colors.paleGreen;
+    } else if (this.isSelected(row.original[keyName])) {
+      bgColor = globalCss.colors.rowHighLight;
+    }
+
+    if (bgColor === 'none') {
+      return noTrProps;
+    }
+
+    return {
+      style: {
+        backgroundColor: bgColor,
+        color: textColor
+      }
+    };
+  };
+
   render() {
     const {
       tableHeight, isFetching, dataLoaded, data, fetchingError
@@ -184,6 +211,7 @@ class ManagementTable extends Component {
         selectAll={false}
         selectType="checkbox"
         SelectAllInputComponent={SelectAllInputComponent}
+        getTrProps={this.getTrProps}
         isSelected={this.isSelected}
         expanded={this.state.expanded}
         onExpandedChange={this.onExpanded}

@@ -37,13 +37,18 @@ class Management extends Component {
     resetAllData: PropTypes.func.isRequired,
     selectData: PropTypes.func.isRequired,
     unselectData: PropTypes.func.isRequired,
+    selectAllData: PropTypes.func.isRequired,
+    unselectAllData: PropTypes.func.isRequired,
     runStats: PropTypes.func.isRequired
   };
 
   componentDidMount() {
     const { fetchAllData, statisticsManagementFilters } = this.props;
     const { schema, date, months } = statisticsManagementFilters;
-    fetchAllData(schema, date, months);
+    fetchAllData(schema, date, months)
+      .then(() => {
+        this.startPolling();
+      });
   }
 
   componentWillUnmount() {
@@ -80,15 +85,24 @@ class Management extends Component {
 
   runStats = () => {
     const { statisticsManagementSelectedData, runStats } = this.props;
-    if (statisticsManagementSelectedData.length > 0) {
-      const tables = statisticsManagementSelectedData.map(table => ({
-        database: table.database,
-        schema: table.schema,
-        table: table.schema_table
-      }));
+    const keys = Object.keys(statisticsManagementSelectedData);
+    if (keys.length > 0) {
+      const tables = keys.map((key) => {
+        const table = statisticsManagementSelectedData[key];
+        return {
+          database: table.database,
+          schema: table.schema,
+          table: table.table
+        };
+      });
 
       runStats(tables);
     }
+  };
+
+  selectAll = () => {
+    const { statisticsManagementData, selectAllData } = this.props;
+    selectAllData(statisticsManagementData);
   };
 
   render() {
@@ -106,7 +120,8 @@ class Management extends Component {
       statisticsChartData,
       fetchStatisticsChartData,
       selectData,
-      unselectData
+      unselectData,
+      unselectAllData
     } = this.props;
 
     const current = moment(statisticsManagementFilters.date, DEFAULT_DATE_FORMAT);
@@ -167,6 +182,22 @@ class Management extends Component {
           >
             Run stats
           </Button>
+          {statisticsManagementSelectedCount > 0 && (
+            <Button
+              size="small"
+              onClick={unselectAllData}
+            >
+              Uncheck All
+            </Button>
+          )}
+          {statisticsManagementSelectedCount < 1 && (
+            <Button
+              size="small"
+              onClick={this.selectAll}
+            >
+              Check All
+            </Button>
+          )}
         </Segment>
       </div>
     );
@@ -203,6 +234,9 @@ export default withMainLayout(connect(
       dispatch(statisticsChartReduxModule.actions.reset());
     },
     selectData: (id, data) => dispatch(statisticsManagementReduxModule.actions.select(id, data)),
-    unselectData: id => dispatch(statisticsManagementReduxModule.actions.unselect(id))
+    unselectData: id => dispatch(statisticsManagementReduxModule.actions.unselect(id)),
+    selectAllData: data => dispatch(statisticsManagementReduxModule.actions.selectAll('schema_table', data)),
+    unselectAllData: () => dispatch(statisticsManagementReduxModule.actions.unselectAll()),
+    runStats: tables => dispatch(statisticsManagementReduxModule.actions.runStats(tables))
   })
 )(Management));

@@ -26,6 +26,7 @@ export default (state = initialState, action) => {
       return itemListReducer(state, action);
     case actionTypes.SELECT:
     case actionTypes.UNSELECT:
+    case actionTypes.SELECT_ALL:
     case actionTypes.UNSELECT_ALL:
       return itemListSelectReducer(state, action);
     default:

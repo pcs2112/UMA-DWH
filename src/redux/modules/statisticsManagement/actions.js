@@ -8,6 +8,7 @@ export const actionTypes = {
   RESET: 'statisticsManagement/RESET',
   SELECT: 'statisticsManagement/SELECT',
   UNSELECT: 'statisticsManagement/UNSELECT',
+  SELECT_ALL: 'statisticsManagement/SELECT_ALL',
   UNSELECT_ALL: 'statisticsManagement/UNSELECT_ALL',
   UPDATE_TABLE_STATS_BEGIN: 'statisticsManagement/UPDATE_TABLE_STATS_BEGIN',
   UPDATE_TABLE_STATS_SUCCESS: 'statisticsManagement/UPDATE_TABLE_STATS_SUCCESS',
@@ -67,6 +68,15 @@ export const unselect = id => ({
 });
 
 /**
+ * Action to select all statistics management items.
+ */
+export const selectAll = (key, data) => ({
+  type: actionTypes.SELECT_ALL,
+  key,
+  data
+});
+
+/**
  * Action to unselect all statistics management items.
  */
 export const unselectAll = () => ({
@@ -74,23 +84,23 @@ export const unselectAll = () => ({
 });
 
 /**
- * Create the polling actions
+ * Create the polling actions.
  */
 export const pollingActions = createPollingActions(
   'statisticsManagementPolling', polling(), STATISTICS_MANAGEMENT_REFRESH_TIMEOUT, 0
 );
 
 /**
- * Action to update the table stats.
+ * Action to run the stats.
  */
-export const updateTableStats = tables => ({
+export const runStats = tables => ({
   types: [
     actionTypes.UPDATE_TABLE_STATS_BEGIN,
     actionTypes.UPDATE_TABLE_STATS_SUCCESS,
     actionTypes.UPDATE_TABLE_STATS_FAIL
   ],
-  makeRequest: client => client.post('/api/etl/statistics/tables', {
-    params: {
+  makeRequest: client => client.post('/api/etl/statistics/run_stats', {
+    data: {
       tables
     }
   })

@@ -16,7 +16,7 @@ def get_data_marts_status():
     return jsonify(etl.check_current_status())
 
 
-@blueprint.route('/api/statistics/tables', methods=('POST',))
+@blueprint.route('/api/etl/statistics/run_stats', methods=('POST',))
 @nocache
 def post_run_stats():
     body = request.get_json(silent=True)
