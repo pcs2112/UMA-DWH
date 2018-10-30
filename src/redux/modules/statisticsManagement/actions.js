@@ -10,9 +10,9 @@ export const actionTypes = {
   UNSELECT: 'statisticsManagement/UNSELECT',
   SELECT_ALL: 'statisticsManagement/SELECT_ALL',
   UNSELECT_ALL: 'statisticsManagement/UNSELECT_ALL',
-  UPDATE_TABLE_STATS_BEGIN: 'statisticsManagement/UPDATE_TABLE_STATS_BEGIN',
-  UPDATE_TABLE_STATS_SUCCESS: 'statisticsManagement/UPDATE_TABLE_STATS_SUCCESS',
-  UPDATE_TABLE_STATS_FAIL: 'statisticsManagement/UPDATE_TABLE_STATS_FAIL'
+  QUEUE_STATS_BEGIN: 'statisticsManagement/QUEUE_STATS_BEGIN',
+  QUEUE_STATS_SUCCESS: 'statisticsManagement/QUEUE_STATS_SUCCESS',
+  QUEUE_STATS_FAIL: 'statisticsManagement/QUEUE_STATS_FAIL'
 };
 
 /**
@@ -91,15 +91,15 @@ export const pollingActions = createPollingActions(
 );
 
 /**
- * Action to run the stats.
+ * Action to queue the stats.
  */
-export const runStats = tables => ({
+export const queueStats = tables => ({
   types: [
-    actionTypes.UPDATE_TABLE_STATS_BEGIN,
-    actionTypes.UPDATE_TABLE_STATS_SUCCESS,
-    actionTypes.UPDATE_TABLE_STATS_FAIL
+    actionTypes.QUEUE_STATS_BEGIN,
+    actionTypes.QUEUE_STATS_SUCCESS,
+    actionTypes.QUEUE_STATS_FAIL
   ],
-  makeRequest: client => client.post('/api/etl/statistics/run_stats', {
+  makeRequest: client => client.post('/api/etl/statistics/queue_stats', {
     data: {
       tables
     }

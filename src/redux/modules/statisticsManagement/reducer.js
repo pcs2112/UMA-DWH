@@ -31,13 +31,13 @@ export default (state = initialState, action) => {
     case actionTypes.SELECT_ALL:
     case actionTypes.UNSELECT_ALL:
       return itemListSelectReducer(state, action);
-    case actionTypes.UPDATE_TABLE_STATS_BEGIN:
+    case actionTypes.QUEUE_STATS_BEGIN:
       return {
         ...state,
         isRunningStats: true
       };
-    case actionTypes.UPDATE_TABLE_STATS_SUCCESS:
-    case actionTypes.UPDATE_TABLE_STATS_FAIL:
+    case actionTypes.QUEUE_STATS_SUCCESS:
+    case actionTypes.QUEUE_STATS_FAIL:
       return {
         ...state,
         isRunningStats: false

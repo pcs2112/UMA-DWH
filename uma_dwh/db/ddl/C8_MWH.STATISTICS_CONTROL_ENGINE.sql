@@ -170,14 +170,14 @@ declare  @Mycurrent_DTTM  datetime;
 set    @Mycurrent_DTTM = getdate();
 
 
-IF  ( case when datepart(hour, @Mycurrent_DTTM) between 6 and 16 then 0 else 1 end ) = 0 begin
+IF  ( case when datepart(hour, @Mycurrent_DTTM) between 6 and 10 then 0 else 1 end ) = 0 begin
 --  stop run stats from running in automatic mode, because its IN the WORKDAY
        set @End_DTTM = null;
 end else begin
 
 IF (@End_DTTM is null) or ( datediff(hour, @Mycurrent_DTTM, @End_DTTM) > 12 ) begin
 --  set to 5am the next day, if the current time is after 8PM
- IF( datepart(hour, @Mycurrent_DTTM) >= 16 ) begin
+ IF( datepart(hour, @Mycurrent_DTTM) >= 10 ) begin
        select @End_DTTM =  DATEADD(HOUR,5,CONVERT(VARCHAR(10), @Mycurrent_DTTM+1,110))
 end else if (datepart(hour, @Mycurrent_DTTM) < 4) begin
        select @End_DTTM =  DATEADD(HOUR,5,CONVERT(VARCHAR(10), @Mycurrent_DTTM,110))
@@ -190,9 +190,7 @@ end;
 
 
 
-INSERT INTO MWH.STATISTICS_ENGINE_HISTORY  (ENGINE_STATUS, ENGINE_MESSAGE, TARGET_SERVER_NAME, TARGET_DB_NAME,  SCHEDULED_END_DTTM  )
- VALUES ('STARTED',   UPPER(@message), @Target_Server_Name, @Target_DB_Name,  @End_DTTM );
-SELECT @STATISTICS_ENGINE_HISTORY_Id = @@IDENTITY ;
+
 
 DECLARE                    @CUR_schema_name           varchar(80);
 DECLARE                    @CUR_table_name                   varchar(80);
@@ -210,6 +208,12 @@ DECLARE                    @QUEUED_DTTM               DATETIME;
 
 IF  @message = 'RUN'  and  @End_DTTM is NOT null
        BEGIN
+
+
+       INSERT INTO MWH.STATISTICS_ENGINE_HISTORY  (ENGINE_STATUS, ENGINE_MESSAGE, TARGET_SERVER_NAME, TARGET_DB_NAME,  SCHEDULED_END_DTTM  )
+       VALUES ('STARTED',   UPPER(@message), @Target_Server_Name, @Target_DB_Name,  @End_DTTM );
+       SELECT @STATISTICS_ENGINE_HISTORY_Id = @@IDENTITY ;
+
 
        SET @SP_START_DTTM = sysdatetime();
 

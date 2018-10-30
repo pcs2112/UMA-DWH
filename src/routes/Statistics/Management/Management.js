@@ -84,8 +84,8 @@ class Management extends Component {
     dispatchPollingAction(statisticsManagementReduxModule.actions.pollingActions.reset());
   };
 
-  runStats = () => {
-    const { statisticsManagementSelectedData, runStats } = this.props;
+  queueStats = () => {
+    const { statisticsManagementSelectedData, queueStats } = this.props;
     const keys = Object.keys(statisticsManagementSelectedData);
     if (keys.length > 0) {
       const tables = keys.map((key) => {
@@ -97,7 +97,7 @@ class Management extends Component {
         };
       });
 
-      runStats(tables);
+      queueStats(tables);
     }
   };
 
@@ -181,9 +181,9 @@ class Management extends Component {
             size="small"
             disabled={statisticsManagementSelectedCount < 1 || isRunningStats}
             loading={isRunningStats}
-            onClick={this.runStats}
+            onClick={this.queueStats}
           >
-            Run stats
+            Queue stats
           </Button>
           {statisticsManagementSelectedCount > 0 && (
             <Button
@@ -241,6 +241,6 @@ export default withMainLayout(connect(
     unselectData: id => dispatch(statisticsManagementReduxModule.actions.unselect(id)),
     selectAllData: data => dispatch(statisticsManagementReduxModule.actions.selectAll('schema_table', data)),
     unselectAllData: () => dispatch(statisticsManagementReduxModule.actions.unselectAll()),
-    runStats: tables => dispatch(statisticsManagementReduxModule.actions.runStats(tables))
+    queueStats: tables => dispatch(statisticsManagementReduxModule.actions.queueStats(tables))
   })
 )(Management));

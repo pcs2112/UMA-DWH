@@ -115,9 +115,9 @@ def fetch_servers():
     return servers
 
 
-def run_stats(tables):
+def queue_stats(tables):
     """
-    Runs stats on the specified tables
+    Queue stats on the specified tables
     :param tables: List of schemas and tables
     :type tables: list
     """
@@ -130,7 +130,7 @@ def run_stats(tables):
             'VARCHAR_03': table['database'],
             'VARCHAR_04': table['schema'],
             'VARCHAR_05': table['table'],
-            'VARCHAR_06': 'FULL SCAN'
+            'VARCHAR_06': 'FULLSCAN'
           }
         )
 
