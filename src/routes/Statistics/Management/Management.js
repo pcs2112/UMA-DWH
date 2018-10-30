@@ -30,6 +30,7 @@ class Management extends Component {
     isStatisticsChartFetching: PropTypes.bool.isRequired,
     statisticsChartDataLoaded: PropTypes.bool.isRequired,
     statisticsChartData: PropTypes.array.isRequired,
+    isRunningStats: PropTypes.bool.isRequired,
     dispatchPollingAction: PropTypes.func.isRequired,
     fetchAllData: PropTypes.func.isRequired,
     fetchStatisticsManagementData: PropTypes.func.isRequired,
@@ -119,6 +120,7 @@ class Management extends Component {
       statisticsChartDataLoaded,
       statisticsChartData,
       fetchStatisticsChartData,
+      isRunningStats,
       selectData,
       unselectData,
       unselectAllData
@@ -177,7 +179,8 @@ class Management extends Component {
         <Segment>
           <Button
             size="small"
-            disabled={statisticsManagementSelectedCount < 1}
+            disabled={statisticsManagementSelectedCount < 1 || isRunningStats}
+            loading={isRunningStats}
             onClick={this.runStats}
           >
             Run stats
@@ -216,7 +219,8 @@ export default withMainLayout(connect(
     schemas: statisticsSchemasReduxModule.selectors.getSchemas(state),
     isStatisticsChartFetching: state.statisticsChart.isFetching,
     statisticsChartDataLoaded: state.statisticsChart.dataLoaded,
-    statisticsChartData: statisticsChartReduxModule.selectors.getStatisticsChartData(state)
+    statisticsChartData: statisticsChartReduxModule.selectors.getStatisticsChartData(state),
+    isRunningStats: state.statisticsManagement.isRunningStats
   }),
   dispatch => ({
     dispatchPollingAction: dispatch,

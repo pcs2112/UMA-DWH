@@ -4,7 +4,9 @@ import itemListSelectReducerFor, { initialState as itemListSelectInitialState }
 import { actionTypes } from './actions';
 
 // Initial state
-const initialState = Object.assign({}, itemListInitialState, itemListSelectInitialState);
+const initialState = Object.assign({
+  isRunningStats: false
+}, itemListInitialState, itemListSelectInitialState);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
@@ -29,6 +31,17 @@ export default (state = initialState, action) => {
     case actionTypes.SELECT_ALL:
     case actionTypes.UNSELECT_ALL:
       return itemListSelectReducer(state, action);
+    case actionTypes.UPDATE_TABLE_STATS_BEGIN:
+      return {
+        ...state,
+        isRunningStats: true
+      };
+    case actionTypes.UPDATE_TABLE_STATS_SUCCESS:
+    case actionTypes.UPDATE_TABLE_STATS_FAIL:
+      return {
+        ...state,
+        isRunningStats: false
+      };
     default:
       return state;
   }
