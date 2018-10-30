@@ -77,8 +77,19 @@ exec  MWH.STATISTICS_CONTROL_ENGINE 'RUN', '2018-10-23 11:55'
 
 select * from  [MWH].[TABLE_STATISTICS_QUEUE]
 
+
 */
 
+/*   TESTING RESULTS
+  select * from [MWH].[STATISTICS_ENGINE_HISTORY] with(nolock) order by ID desc;
+  select * from [MWH].[STATISTICS_ENGINE_HISTORY_V] with(nolock) order by [ENGINE START DTTM] desc;
+  select * from [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] with(nolock) order by ID desc;
+*/
+
+
+
+--   TEST RUN
+--   exec  MWH.STATISTICS_CONTROL_ENGINE 'RUN', '2018-10-25 13:00'
 
 
 
@@ -148,18 +159,39 @@ DECLARE             @ETL_FINISH                              DATETIME;
 DECLARE             @table_schema                            varchar(80);
 DECLARE             @table_name                                     varchar(80);
 
+
 DECLARE             @Target_Server_Name varchar(60);
 SET @Target_Server_Name = @@SERVERNAME;
 
 DECLARE             @Target_DB_Name varchar(40);
 SET  @Target_DB_Name = DB_NAME();
 
+declare  @Mycurrent_DTTM  datetime;
+set    @Mycurrent_DTTM = getdate();
+
+
+IF  ( case when datepart(hour, @Mycurrent_DTTM) between 6 and 16 then 0 else 1 end ) = 0 begin
+--  stop run stats from running in automatic mode, because its IN the WORKDAY
+       set @End_DTTM = null;
+end else begin
+
+IF (@End_DTTM is null) or ( datediff(hour, @Mycurrent_DTTM, @End_DTTM) > 12 ) begin
+--  set to 5am the next day, if the current time is after 8PM
+ IF( datepart(hour, @Mycurrent_DTTM) >= 16 ) begin
+       select @End_DTTM =  DATEADD(HOUR,5,CONVERT(VARCHAR(10), @Mycurrent_DTTM+1,110))
+end else if (datepart(hour, @Mycurrent_DTTM) < 4) begin
+       select @End_DTTM =  DATEADD(HOUR,5,CONVERT(VARCHAR(10), @Mycurrent_DTTM,110))
+end else begin
+       set @End_DTTM = null;
+end
+end;
+end;
 
 
 
 
-INSERT INTO MWH.STATISTICS_ENGINE_HISTORY  (ENGINE_STATUS, ENGINE_MESSAGE, TARGET_SERVER_NAME, TARGET_DB_NAME  )
- VALUES ('STARTED',   UPPER(@message), @Target_Server_Name, @Target_DB_Name );
+INSERT INTO MWH.STATISTICS_ENGINE_HISTORY  (ENGINE_STATUS, ENGINE_MESSAGE, TARGET_SERVER_NAME, TARGET_DB_NAME,  SCHEDULED_END_DTTM  )
+ VALUES ('STARTED',   UPPER(@message), @Target_Server_Name, @Target_DB_Name,  @End_DTTM );
 SELECT @STATISTICS_ENGINE_HISTORY_Id = @@IDENTITY ;
 
 DECLARE                    @CUR_schema_name           varchar(80);
@@ -176,7 +208,7 @@ DECLARE                    @Current_DTTM              DATETIME;
 DECLARE                    @QUEUED_DTTM               DATETIME;
 
 
-IF  @message = 'RUN'
+IF  @message = 'RUN'  and  @End_DTTM is NOT null
        BEGIN
 
        SET @SP_START_DTTM = sysdatetime();
@@ -189,7 +221,7 @@ IF  @message = 'RUN'
        left join [MWH].[TABLE_STATISTICS_QUEUE] qt with(nolock) on (qt.TARGET_SCHEMA_NAME = st.table_schema and qt.TARGET_TABLE_NAME = st.table_name and qt.STATUS = 'QUEUED')
        WHERE st.table_type = 'base table'  )
 
-       select   udt.schema_name,  udt.table_name, udt.SCH_TAB_TXT,   max(last_updated) as LAST_DTTM, min(rows) as MIN_ROWS, min(rows_sampled) as MIN_SAMPLED, max(rows_sampled)as MAX_SAMPLED,   min(modification_counter) as MIN_MODIFIED_CNT,   max(modification_counter) as MAX_MODIFIED_CNT, min(queued_dttm) as QUEUED_DTTM
+       select   udt.schema_name,  udt.table_name, udt.SCH_TAB_TXT,   max(last_updated) as LAST_DTTM, coalesce(min(rows),0) as MIN_ROWS, coalesce(min(rows_sampled),0) as MIN_SAMPLED, coalesce(max(rows_sampled),0) as MAX_SAMPLED,   coalesce(min(modification_counter),0) as MIN_MODIFIED_CNT,   coalesce(max(modification_counter),0) as MAX_MODIFIED_CNT, coalesce(min(queued_dttm),'2100-10-21') as QUEUED_DTTM
        from UMA_DWH_TABLES udt
        left join sys.stats AS stat  with(nolock) on (stat.object_id = object_id(udt.SCH_TAB_TXT))
        CROSS APPLY sys.dm_db_stats_properties(stat.object_id, stat.stats_id) AS sp

@@ -125,13 +125,7 @@ class Management extends Component {
             size="small"
             disabled={statisticsManagementSelectedCount < 1}
           >
-            Run stats on tables
-          </Button>
-          <Button
-            size="small"
-            disabled={false}
-          >
-            Run stats on schemas
+            Run stats
           </Button>
         </Segment>
       </div>
