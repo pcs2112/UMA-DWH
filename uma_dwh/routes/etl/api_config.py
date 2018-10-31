@@ -100,6 +100,16 @@ path_sp_args_map = {
     'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
     'sp_message': 'MANAGE_TABLE_STATISTICS'
   },
+  'statistics/queue_stats': {
+    'module_name': 'uma_dwh.db.etl',
+    'module_func': 'queue_stats',
+    'sp_in_args': ['tables']
+  },
+  'statistics/dequeue_stats': {
+    'module_name': 'uma_dwh.db.etl',
+    'module_func': 'dequeue_stats',
+    'sp_in_args': ['tables']
+  },
   'try_catch_errors': {
     'module_name': 'uma_dwh.db.etl',
     'module_func': 'execute_admin_console_sp',

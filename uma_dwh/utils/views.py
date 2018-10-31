@@ -29,11 +29,13 @@ def get_sp_func_in_args_from_dict(required_args, args):
     return out_args
 
 
-def execute_sp_func_from_view(path, path_sp_args_map):
+def execute_sp_func_from_view(path, http_method, path_sp_args_map):
     """
     Executes a SP function helper from a Flask view.
     :param path:
     :type path: str
+    :param http_method: HTTP method name
+    :type http_method: str
     :param path_sp_args_map:
     :type path_sp_args_map: dict
     :return: List of in arguments for the SP function helper call
@@ -50,9 +52,11 @@ def execute_sp_func_from_view(path, path_sp_args_map):
         #  Get the SP in arguments from the request
         in_args = []
         if 'sp_in_args' in path_data:
+            req_args = request.args if http_method == 'GET' else request.get_json(silent=True)
+
             in_args = get_sp_func_in_args_from_dict(
               path_data['sp_in_args'],
-              request.args
+              req_args
             )
 
         if 'sp_name' in path_data:
@@ -62,7 +66,7 @@ def execute_sp_func_from_view(path, path_sp_args_map):
               *in_args
             ))
 
-        return jsonify(func())
+        return jsonify(func(*in_args))
     except SPException as e:
         if e.error_id == -1:
             raise InvalidUsage.etl_error(message=e.message)

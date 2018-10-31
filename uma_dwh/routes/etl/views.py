@@ -16,22 +16,6 @@ def get_data_marts_status():
     return jsonify(etl.check_current_status())
 
 
-@blueprint.route('/api/etl/statistics/queue_stats', methods=('POST',))
-@nocache
-def post_queue_stats():
-    body = request.get_json(silent=True)
-    etl.queue_stats(body['tables'])
-    return jsonify(body['tables'])
-
-
-@blueprint.route('/api/etl/statistics/dequeue_stats', methods=('POST',))
-@nocache
-def post_dequeue_stats():
-    body = request.get_json(silent=True)
-    etl.dequeue_stats(body['tables'])
-    return jsonify(body['tables'])
-
-
 @blueprint.route('/api/etl/errors/<error_id>', methods=('GET',))
 @nocache
 def get_error(error_id):
@@ -39,8 +23,8 @@ def get_error(error_id):
     raise InvalidUsage.etl_error(f'get_error({error_id})', error)
 
 
-@blueprint.route('/api/etl/<path:path>', methods=('GET',))
+@blueprint.route('/api/etl/<path:path>', methods=('GET', 'POST'))
 @nocache
 @jwt_required
 def get_sp_data(path):
-    return execute_sp_func_from_view(path, path_sp_args_map)
+    return execute_sp_func_from_view(path, request.method, path_sp_args_map)
