@@ -49,28 +49,9 @@ export default (state = initialState, action) => {
     case actionTypes.FETCH_SUCCESS:
     case actionTypes.RESET:
       return itemListReducer(state, action);
-    case actionTypes.SELECT_ALL: {
-      const { key, data } = action;
-      const selected = {};
-      const selectedOrder = [];
-
-      if (data.length > 0) {
-        data.forEach((item) => {
-          if (isEmpty(item.queued_dttm)) {
-            selected[item[key]] = item;
-            selectedOrder.push(item[key]);
-          }
-        });
-      }
-
-      return {
-        ...state,
-        selected,
-        selectedOrder
-      };
-    }
     case actionTypes.SELECT:
     case actionTypes.UNSELECT:
+    case actionTypes.SELECT_ALL:
     case actionTypes.UNSELECT_ALL:
       return itemListSelectReducer(state, action);
     case actionTypes.QUEUE_STATS_BEGIN:
