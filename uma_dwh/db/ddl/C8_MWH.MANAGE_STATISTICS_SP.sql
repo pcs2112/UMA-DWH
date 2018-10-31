@@ -1,66 +1,7 @@
 -- C8_MWH.MANAGE_STATISTICS_SP.sql
 
 
-/*
 
-DECLARE @MYDATE   DATETIME;
-DECLARE @MYDATETO   DATETIME;
-
-SET @MYDATE = '2018-09-22'
-
---WHILE @MYDATE < '2018-09-23' begin
-       --select  @MYDATE , dateadd(day,1,@MYDATE);
-       SET  @MYDATETO =  dateadd(day,1,@MYDATE);
-
-       exec S_I3.MERGE_MCS_INTX_PARTICIPANT @MYDATE , @MYDATETO;
-
-       exec S_I3.MERGE_MCS_INTXSEGMENT @MYDATE , @MYDATETO;
-
-       exec S_I3.MERGE_MCS_INTX_PARTICIPANT @MYDATE , @MYDATETO;
-
-       exec S_I3.MERGE_MCS_UMALEADCALLDETAIL @MYDATE , @MYDATETO;
-
-       exec S_I3.MERGE_MCS_AGENTACTIVITYLOG @MYDATE , @MYDATETO;
-
-       exec S_I3.MERGE_MCS_EE_TRANSFEREVENTS @MYDATE , @MYDATETO;
-
-       exec S_I3.MERGE_MCS_INTERACTIONCUSTOMATTRIBUTES @MYDATE , @MYDATETO;
-
-
-
-       set @MYDATE = dateadd(day,1,@MYDATE);
-end;
-
-
-
-
-
-
-DBCC SHOW_STATISTICS ("[MWH].[F_MCS_CALLS]",[FINAL_DIAL_DTTM]) ;
-GO
-
-DBCC SHOW_STATISTICS ("[MWH].[F_MCS_CALLS]",[FINAL_DIAL_DTTM]) WITH HISTOGRAM;
-GO
-Daily.Rebuld Indexes UMA_DWH
-
-*/
-
-
-
---  exec  MWH.MANAGE_STATISTICS_SP  'UPDATE STATISTICS',  'S_I3', '', 'FULL SCAN', '', '', '', '', ''
-
---  exec  MWH.MANAGE_STATISTICS_SP  'UPDATE STATISTICS',  'S_LION', '', 'FULL SCAN', '', '', '', '', ''
-
-
---  exec  MWH.MANAGE_STATISTICS_SP  'UPDATE STATISTICS',  'MLK-EDM-D-SQ02', 'MWH_FACT', '', 'FULL SCAN', '', '', '', ''
-
---  exec  MWH.MANAGE_STATISTICS_SP  'UPDATE STATISTICS',  'MLK-EDM-D-SQ02','MWH_XREF', '', 'FULL SCAN', '', '', '', ''
-
-
-
-
-
---  SELECT * from [MWH].[TABLE_STATISTICS_RUNS] with(nolock) order by ID desc
 
 
 
@@ -89,8 +30,8 @@ CREATE PROCEDURE MWH.MANAGE_STATISTICS_SP
        @VARCHAR_12                varchar(256) = '',   --  @CUR_MIN_SAMPLED
        @VARCHAR_13                varchar(256) = '',   --  @CUR_MAX_SAMPLED
        @VARCHAR_14                varchar(256) = '',   --  @CUR_MIN_MODIFIED_CNT
-       @VARCHAR_15                varchar(256) = '',    --  @CUR_MAX_MODIFIED_CNT
-       @VARCHAR_16                varchar(256) = ''     --  @QUEUED_DTTM
+       @VARCHAR_15                varchar(256) = '',   --  @CUR_MAX_MODIFIED_CNT
+       @VARCHAR_16                varchar(256) = ''    --  @QUEUED_DTTM
 
 
        with recompile
@@ -100,9 +41,6 @@ AS
 
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 SET NOCOUNT ON;
-
-
-
 
 
 
@@ -131,9 +69,11 @@ SET NOCOUNT ON;
 */
 
 
--- exec  MWH.MANAGE_STATISTICS_SP  'QUEUE', 'MLK-EDM-D-SQ02',  'UMA_DWH', 'MWH', 'F_Future_Campaign_Calls', 'FULL SCAN',  '', '', '', '', '', '', '', '', ''
+-- exec  MWH.MANAGE_STATISTICS_SP  'QUEUE', 'MLK-EDM-D-SQ02',  'UMA_DWH', 'S_I3', 'LOG_CALL_DATA', 'FULLSCAN',  '', '', '', '', '', '', '', '', ''
+-- exec  MWH.MANAGE_STATISTICS_SP  'QUEUE', 'MLK-EDM-D-SQ02',  'UMA_DWH', 'MWH_DIM', 'D_AmApplicantType', 'FULLSCAN',  '', '', '', '', '', '', '', '', ''
 
---  select * from [MWH].[TABLE_STATISTICS_QUEUE] with(nolock)
+-- exec  MWH.MANAGE_STATISTICS_SP  'QUEUE', 'MLK-EDM-D-SQ02',  'UMA_DWH', 'MWH_DIM', 'D_AmMarital', 'FULLSCAN',  '', '', '', '', '', '', '', '', ''
+
 
 
 
@@ -143,7 +83,7 @@ SET NOCOUNT ON;
     DECLARE          @VARCHAR_03                varchar(256) = 'UMA_DWH';
     DECLARE          @VARCHAR_04                varchar(256) = 'S_I3';
     DECLARE          @VARCHAR_05                varchar(256) = 'InteractionSummary';
-    DECLARE          @VARCHAR_06                varchar(256) = 'FULL SCAN';
+    DECLARE          @VARCHAR_06                varchar(256) = 'FULLSCAN';
     DECLARE          @VARCHAR_07                varchar(256) = '';
     DECLARE          @VARCHAR_08                varchar(256) = '';
     DECLARE          @VARCHAR_09                varchar(256) = '';
@@ -153,12 +93,31 @@ SET NOCOUNT ON;
     DECLARE          @VARCHAR_13                varchar(256) = '';
     DECLARE          @VARCHAR_14                varchar(256) = '';
     DECLARE          @VARCHAR_15                varchar(256) = '';
-
-
-
+       DECLARE              @VARCHAR_16                varchar(256) = '';
 */
 
+--  [S_LION].[MCS_TEST_DATA_SUMMARY]
 
+--  SELECT * from [MWH].[TABLE_STATISTICS_QUEUE]  with(nolock) order by ID desc
+
+/*
+    DECLARE          @VARCHAR_01                varchar(256) = 'DEQUEUE';
+    DECLARE          @VARCHAR_02                varchar(256) = 'MLK-EDM-D-SQ02';
+    DECLARE          @VARCHAR_03                varchar(256) = 'UMA_DWH';
+    DECLARE          @VARCHAR_04                varchar(256) = 'S_I3';
+    DECLARE          @VARCHAR_05                varchar(256) = 'MCS_UMALeadCallDetail';
+    DECLARE          @VARCHAR_06                varchar(256) = 'FULLSCAN';
+    DECLARE          @VARCHAR_07                varchar(256) = '';
+    DECLARE          @VARCHAR_08                varchar(256) = '';
+    DECLARE          @VARCHAR_09                varchar(256) = '';
+       DECLARE              @VARCHAR_10                varchar(256) = '';
+    DECLARE          @VARCHAR_11                varchar(256) = '';
+    DECLARE          @VARCHAR_12                varchar(256) = '';
+    DECLARE          @VARCHAR_13                varchar(256) = '';
+    DECLARE          @VARCHAR_14                varchar(256) = '';
+    DECLARE          @VARCHAR_15                varchar(256) = '';
+       DECLARE              @VARCHAR_16                varchar(256) = '';
+*/
 
 
 DECLARE             @INPUT_ERROR               INTEGER = 0;
@@ -191,7 +150,7 @@ DECLARE             @START_STATISTICS_DTTM                                      
 DECLARE             @END_STATISTICS_DTTM                                          DATETIME;
 
 DECLARE             @TABLE_STATISTICS_QUEUE_Id                             INTEGER;
-
+DECLARE             @MySelectCnt                                                  INTEGER;
 
 
 DECLARE             @My_SP_NAME varchar(50);
@@ -375,11 +334,35 @@ IF( @message = 'QUEUE')  BEGIN
               BEGIN TRY
                      -- use  @Source_Server_Name and @Source_DB_Name for now
                      SET           @MY_STATUS  = 'QUEUED';
+                     SET    @TABLE_STATISTICS_QUEUE_Id = -1;
 
-                     INSERT INTO [MWH].[TABLE_STATISTICS_QUEUE] (  [STATUS], [TARGET_SERVER_NAME], [TARGET_DB_NAME], [TARGET_SCHEMA_NAME], [TARGET_TABLE_NAME], [STATISTICS_METHOD])
-                     VALUES ( @MY_STATUS, @SERVER,  @Database, @SCHEMA, @TABLE, @STATISTICS_METHOD );
+                     SELECT  @TABLE_STATISTICS_QUEUE_Id = coalesce(MAX(ID), -1)
+                     FROM [MWH].[TABLE_STATISTICS_QUEUE]
+                     where  [STATUS] = 'QUEUE'
+                     and [TARGET_SERVER_NAME] = @SERVER
+                     and [TARGET_DB_NAME] = @Database
+                     and [TARGET_SCHEMA_NAME] = @SCHEMA
+                     and [TARGET_TABLE_NAME] = @TABLE;
 
-                     SELECT @TABLE_STATISTICS_QUEUE_Id = @@IDENTITY ;
+                     IF(@TABLE_STATISTICS_QUEUE_Id IS NULL  or @TABLE_STATISTICS_QUEUE_Id = -1) begin
+                           INSERT INTO [MWH].[TABLE_STATISTICS_QUEUE] (  [STATUS], [TARGET_SERVER_NAME], [TARGET_DB_NAME], [TARGET_SCHEMA_NAME], [TARGET_TABLE_NAME], [STATISTICS_METHOD])
+                           VALUES ( @MY_STATUS, @SERVER,  @Database, @SCHEMA, @TABLE, @STATISTICS_METHOD );
+
+                           SELECT @TABLE_STATISTICS_QUEUE_Id = @@IDENTITY ;
+                     END ELSE BEGIN
+                           SET  @ERR = 911;
+                           SET  @ErrorSeverity =  911;
+                           SET  @ErrorState = 911;
+                           SET  @ErrorProcedure = @My_SP_NAME;
+                           SET  @ErrorLine = 477;
+                           SET  @ErrorMessage =  @message + ' :  NOTHING TO DEQUEUE' ;
+
+
+                           SET @My_SP_NAME = @My_SP_NAME + ' : ' +  @message;
+                           EXEC MWH.MERGE_ETL_TryCatchError_wRtn 'save error' , @ERR, @ErrorSeverity, @ErrorState, @ErrorProcedure, @ErrorLine, @ErrorMessage,  @My_SP_NAME  , @TryCatchError_ID    OUTPUT;
+
+                     END
+
 
 
               END TRY
@@ -398,6 +381,84 @@ IF( @message = 'QUEUE')  BEGIN
               END CATCH
        END ELSE BEGIN
 
+                     SET  @ERR = 911;
+                     SET  @ErrorSeverity =  911;
+                     SET  @ErrorState = 911;
+                     SET  @ErrorProcedure = @My_SP_NAME;
+                     SET  @ErrorLine = 477;
+                     SET  @ErrorMessage =  @message;
+                     SET  @ErrorMessage =  @SCHEMA  + ' is  NULL or  len(' + len(@SCHEMA) + ') < 3';
+
+              SET @My_SP_NAME = @My_SP_NAME + ' : ' +  @message;
+              EXEC MWH.MERGE_ETL_TryCatchError_wRtn 'save error' , @ERR, @ErrorSeverity, @ErrorState, @ErrorProcedure, @ErrorLine, @ErrorMessage,  @My_SP_NAME  , @TryCatchError_ID     OUTPUT;
+
+       end
+END  --  message  'QUEUE'
+
+
+IF( @message = 'DEQUEUE')  BEGIN
+
+       IF ( @SCHEMA  is NOT NULL and  len(@SCHEMA) >= 3 )  begin
+
+              BEGIN TRY
+                     -- use  @Source_Server_Name and @Source_DB_Name for now
+                     SET           @MY_STATUS  = 'DEQUEUED';
+                     set @STATISTICS_METHOD = '';
+                     SET    @TABLE_STATISTICS_QUEUE_Id = -1;
+
+
+                     SELECT  @TABLE_STATISTICS_QUEUE_Id = coalesce(MAX(ID), -1)
+                     FROM [MWH].[TABLE_STATISTICS_QUEUE]
+                     where  [STATUS] = 'QUEUED'
+                     and [TARGET_SERVER_NAME] = @SERVER
+                     and [TARGET_DB_NAME] = @Database
+                     and [TARGET_SCHEMA_NAME] = @SCHEMA
+                     and [TARGET_TABLE_NAME] = @TABLE
+                     and [STATISTICS_ENGINE_TABLE_HISTORY_ID] is null;
+
+                     SET @MySelectCnt = @@ROWCOUNT;
+
+
+
+              END TRY
+              BEGIN CATCH
+                     SELECT
+                      @ERR = ERROR_NUMBER()
+                     ,@ErrorSeverity = ERROR_SEVERITY()
+                     ,@ErrorState = ERROR_STATE()
+                     ,@ErrorProcedure = ERROR_PROCEDURE()
+                     ,@ErrorLine = ERROR_LINE()
+                     ,@ErrorMessage =  ERROR_MESSAGE();
+
+                     SET @My_SP_NAME = @My_SP_NAME + ' : ' +  @message;
+                     EXEC MWH.MERGE_ETL_TryCatchError_wRtn 'save error' , @ERR, @ErrorSeverity, @ErrorState, @ErrorProcedure, @ErrorLine, @ErrorMessage,  @My_SP_NAME  , @TryCatchError_ID       OUTPUT;
+
+              END CATCH
+
+                IF ( @TABLE_STATISTICS_QUEUE_Id != -1  and  @TABLE_STATISTICS_QUEUE_Id is NOT NULL) BEGIN
+                     UPDATE [MWH].[TABLE_STATISTICS_QUEUE]
+                     set [STATUS] = 'DEQUEUED',
+                           [STATISTICS_METHOD] = 'DEQUEUED'
+                     where ID =  @TABLE_STATISTICS_QUEUE_Id;
+                END else BEGIN
+
+
+                     SET  @ERR = 911;
+                     SET  @ErrorSeverity =  911;
+                     SET  @ErrorState = 911;
+                     SET  @ErrorProcedure = @My_SP_NAME;
+                     SET  @ErrorLine = 477;
+                     SET  @ErrorMessage =  @message;
+
+
+                     SET @My_SP_NAME = @My_SP_NAME + ' : ' +  @message;
+                     EXEC MWH.MERGE_ETL_TryCatchError_wRtn 'save error' , @ERR, @ErrorSeverity, @ErrorState, @ErrorProcedure, @ErrorLine, @ErrorMessage,  @My_SP_NAME  , @TryCatchError_ID       OUTPUT;
+
+                END;
+
+
+       END ELSE BEGIN
+
             SELECT
          @ERR = ERROR_NUMBER()
         ,@ErrorSeverity = ERROR_SEVERITY()
@@ -410,4 +471,11 @@ IF( @message = 'QUEUE')  BEGIN
               EXEC MWH.MERGE_ETL_TryCatchError_wRtn 'save error' , @ERR, @ErrorSeverity, @ErrorState, @ErrorProcedure, @ErrorLine, @ErrorMessage,  @My_SP_NAME  , @TryCatchError_ID     OUTPUT;
 
        end
-END  --  message  'UPDATE STATISTICS'
+END  --  message  'DEQUEUE'
+
+go
+
+
+
+grant execute on MWH.MANAGE_STATISTICS_SP to public;
+go

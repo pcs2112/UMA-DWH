@@ -36,3 +36,12 @@ export const getNewStartCycleGroup = (newCycleGroup, currentStartCycleGroup, tot
 
   return newStartCycleGroup;
 };
+
+/**
+ * Scrolls the specified table to the top.
+ * @param {String} htmlId
+ */
+export const scrollTableToTop = (htmlId) => {
+  document.getElementById(htmlId)
+    .getElementsByClassName('rt-tbody')[0].scrollTop = 0;
+};

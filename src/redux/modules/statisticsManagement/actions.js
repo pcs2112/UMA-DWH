@@ -12,7 +12,10 @@ export const actionTypes = {
   UNSELECT_ALL: 'statisticsManagement/UNSELECT_ALL',
   QUEUE_STATS_BEGIN: 'statisticsManagement/QUEUE_STATS_BEGIN',
   QUEUE_STATS_SUCCESS: 'statisticsManagement/QUEUE_STATS_SUCCESS',
-  QUEUE_STATS_FAIL: 'statisticsManagement/QUEUE_STATS_FAIL'
+  QUEUE_STATS_FAIL: 'statisticsManagement/QUEUE_STATS_FAIL',
+  DEQUEUE_STATS_BEGIN: 'statisticsManagement/DEQUEUE_STATS_BEGIN',
+  DEQUEUE_STATS_SUCCESS: 'statisticsManagement/DEQUEUE_STATS_SUCCESS',
+  DEQUEUE_STATS_FAIL: 'statisticsManagement/DEQUEUE_STATS_FAIL'
 };
 
 /**
@@ -103,5 +106,27 @@ export const queueStats = data => ({
     data: {
       tables: data
     }
-  })
+  }),
+  payload: {
+    data
+  }
+});
+
+/**
+ * Action to dequeue the stats.
+ */
+export const dequeueStats = data => ({
+  types: [
+    actionTypes.DEQUEUE_STATS_BEGIN,
+    actionTypes.DEQUEUE_STATS_SUCCESS,
+    actionTypes.DEQUEUE_STATS_FAIL
+  ],
+  makeRequest: client => client.post('/api/etl/statistics/dequeue_stats', {
+    data: {
+      tables: data
+    }
+  }),
+  payload: {
+    data
+  }
 });

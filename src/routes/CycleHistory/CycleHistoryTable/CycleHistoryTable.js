@@ -4,6 +4,7 @@ import 'react-table/react-table.css';
 import ReactTable from 'react-table';
 import checkboxHOC from 'react-table/lib/hoc/selectTable';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
+import { scrollTableToTop } from 'helpers/utils';
 import globalCss from 'css/global';
 import withResponsiveTable from 'components/WithResponsiveTable';
 import RowDetails from './RowDetails';
@@ -159,7 +160,7 @@ class CycleHistoryTable extends Component {
     if (this.props.dataMartsSelectedCount !== prevProps.dataMartsSelectedCount
       || this.props.filters !== prevProps.filters
     ) {
-      this.scrollTop();
+      scrollTableToTop('cycle-history-tbl');
     }
   }
 
@@ -210,10 +211,6 @@ class CycleHistoryTable extends Component {
     }
 
     return dataLoaded ? '' : 'Loading...';
-  };
-
-  scrollTop = () => {
-    document.getElementById('cycle-history-tbl').getElementsByClassName('rt-tbody')[0].scrollTop = 0;
   };
 
   toggleSelection = (key, shift, row) => {

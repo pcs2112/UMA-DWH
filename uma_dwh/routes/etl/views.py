@@ -24,6 +24,14 @@ def post_queue_stats():
     return jsonify(body['tables'])
 
 
+@blueprint.route('/api/etl/statistics/dequeue_stats', methods=('POST',))
+@nocache
+def post_dequeue_stats():
+    body = request.get_json(silent=True)
+    etl.dequeue_stats(body['tables'])
+    return jsonify(body['tables'])
+
+
 @blueprint.route('/api/etl/errors/<error_id>', methods=('GET',))
 @nocache
 def get_error(error_id):

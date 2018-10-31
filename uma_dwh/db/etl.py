@@ -135,6 +135,26 @@ def queue_stats(tables):
         )
 
 
+def dequeue_stats(tables):
+    """
+    Dequeue stats on the specified tables
+    :param tables: List of schemas and tables
+    :type tables: list
+    """
+    for table in tables:
+        execute_sp(
+          'MWH.MANAGE_STATISTICS_SP',
+          {
+            'VARCHAR_01': 'DEQUEUE',
+            'VARCHAR_02': 'MLK-EDM-D-SQ02',
+            'VARCHAR_03': table['database'],
+            'VARCHAR_04': table['schema'],
+            'VARCHAR_05': table['table'],
+            'VARCHAR_06': 'FULLSCAN'
+          }
+        )
+
+
 def fetch_error(error_id):
     """
     Returns the ETL error record.

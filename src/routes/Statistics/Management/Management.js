@@ -26,11 +26,14 @@ class Management extends Component {
     statisticsManagementFilters: PropTypes.object.isRequired,
     statisticsManagementSelectedData: PropTypes.object.isRequired,
     statisticsManagementSelectedCount: PropTypes.number.isRequired,
+    statisticsManagementQueuedSelectedData: PropTypes.array.isRequired,
+    statisticsManagementDequeuedSelectedData: PropTypes.array.isRequired,
     schemas: PropTypes.array.isRequired,
     isStatisticsChartFetching: PropTypes.bool.isRequired,
     statisticsChartDataLoaded: PropTypes.bool.isRequired,
     statisticsChartData: PropTypes.array.isRequired,
-    isRunningStats: PropTypes.bool.isRequired,
+    isQueuingStats: PropTypes.bool.isRequired,
+    isDequeuingStats: PropTypes.bool.isRequired,
     dispatchPollingAction: PropTypes.func.isRequired,
     fetchAllData: PropTypes.func.isRequired,
     fetchStatisticsManagementData: PropTypes.func.isRequired,
@@ -40,7 +43,8 @@ class Management extends Component {
     unselectData: PropTypes.func.isRequired,
     selectAllData: PropTypes.func.isRequired,
     unselectAllData: PropTypes.func.isRequired,
-    runStats: PropTypes.func.isRequired
+    queueStats: PropTypes.func.isRequired,
+    dequeueStats: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -85,19 +89,16 @@ class Management extends Component {
   };
 
   queueStats = () => {
-    const { statisticsManagementSelectedData, queueStats } = this.props;
-    const keys = Object.keys(statisticsManagementSelectedData);
-    if (keys.length > 0) {
-      const tables = keys.map((key) => {
-        const table = statisticsManagementSelectedData[key];
-        return {
-          database: table.database,
-          schema: table.schema,
-          table: table.table
-        };
-      });
+    const { statisticsManagementDequeuedSelectedData, queueStats } = this.props;
+    if (statisticsManagementDequeuedSelectedData.length > 0) {
+      queueStats(statisticsManagementDequeuedSelectedData);
+    }
+  };
 
-      queueStats(tables);
+  dequeueStats = () => {
+    const { statisticsManagementQueuedSelectedData, dequeueStats } = this.props;
+    if (statisticsManagementQueuedSelectedData.length > 0) {
+      dequeueStats(statisticsManagementQueuedSelectedData);
     }
   };
 
@@ -115,12 +116,15 @@ class Management extends Component {
       statisticsManagementFilters,
       statisticsManagementSelectedData,
       statisticsManagementSelectedCount,
+      statisticsManagementQueuedSelectedData,
+      statisticsManagementDequeuedSelectedData,
       schemas,
       isStatisticsChartFetching,
       statisticsChartDataLoaded,
       statisticsChartData,
       fetchStatisticsChartData,
-      isRunningStats,
+      isQueuingStats,
+      isDequeuingStats,
       selectData,
       unselectData,
       unselectAllData
@@ -174,16 +178,25 @@ class Management extends Component {
             selectedData={statisticsManagementSelectedData}
             selectData={selectData}
             unselectData={unselectData}
+            isQueuingStats={isQueuingStats}
           />
         </Segment>
         <Segment>
           <Button
             size="small"
-            disabled={statisticsManagementSelectedCount < 1 || isRunningStats}
-            loading={isRunningStats}
+            disabled={statisticsManagementDequeuedSelectedData.length < 1 || isQueuingStats}
+            loading={isQueuingStats}
             onClick={this.queueStats}
           >
             Queue stats
+          </Button>
+          <Button
+            size="small"
+            disabled={statisticsManagementQueuedSelectedData.length < 1 || isDequeuingStats}
+            loading={isDequeuingStats}
+            onClick={this.dequeueStats}
+          >
+            Dequeue stats
           </Button>
           {statisticsManagementSelectedCount > 0 && (
             <Button
@@ -216,11 +229,15 @@ export default withMainLayout(connect(
     statisticsManagementFilters: statisticsChartReduxModule.selectors.getFilters(state),
     statisticsManagementSelectedData: statisticsManagementReduxModule.selectors.getSelected(state),
     statisticsManagementSelectedCount: statisticsManagementReduxModule.selectors.getSelectedCount(state),
+    statisticsManagementQueuedSelectedData: statisticsManagementReduxModule.selectors.getQueuedSelected(state),
+    statisticsManagementDequeuedSelectedData:
+      statisticsManagementReduxModule.selectors.getDequeuedSelected(state),
     schemas: statisticsSchemasReduxModule.selectors.getSchemas(state),
     isStatisticsChartFetching: state.statisticsChart.isFetching,
     statisticsChartDataLoaded: state.statisticsChart.dataLoaded,
     statisticsChartData: statisticsChartReduxModule.selectors.getStatisticsChartData(state),
-    isRunningStats: state.statisticsManagement.isRunningStats
+    isQueuingStats: state.statisticsManagement.isQueuingStats,
+    isDequeuingStats: state.statisticsManagement.isDequeuingStats
   }),
   dispatch => ({
     dispatchPollingAction: dispatch,
@@ -243,7 +260,9 @@ export default withMainLayout(connect(
     unselectAllData: () => dispatch(statisticsManagementReduxModule.actions.unselectAll()),
     queueStats: tables =>
       dispatch(statisticsManagementReduxModule.actions.queueStats(tables))
+        .then(() => dispatch(statisticsManagementReduxModule.actions.fetch())),
+    dequeueStats: tables =>
+      dispatch(statisticsManagementReduxModule.actions.dequeueStats(tables))
         .then(() => dispatch(statisticsManagementReduxModule.actions.fetch()))
-        .then(() => dispatch(statisticsManagementReduxModule.actions.unselectAll()))
   })
 )(Management));

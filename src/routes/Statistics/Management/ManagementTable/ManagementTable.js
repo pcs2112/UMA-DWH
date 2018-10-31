@@ -5,7 +5,8 @@ import ReactTable from 'react-table';
 import checkboxHOC from 'react-table/lib/hoc/selectTable';
 import withResponsiveTable from 'components/WithResponsiveTable';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
-import globalCss from '../../../../css/global';
+import { scrollTableToTop } from 'helpers/utils';
+import globalCss from 'css/global';
 
 const CheckboxTable = checkboxHOC(ReactTable);
 const keyName = 'schema_table';
@@ -109,6 +110,7 @@ class ManagementTable extends Component {
     selectedData: PropTypes.object.isRequired,
     selectData: PropTypes.func.isRequired,
     unselectData: PropTypes.func.isRequired,
+    isQueuingStats: PropTypes.bool.isRequired
   };
 
   constructor(props) {
@@ -126,7 +128,14 @@ class ManagementTable extends Component {
       || nextProps.data !== this.props.data
       || nextProps.fetchingError !== this.props.fetchingError
       || nextProps.selectedData !== this.props.selectedData
+      || nextProps.isQueuingStats !== this.props.isQueuingStats
       || nextState.expanded !== this.state.expanded;
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.isQueuingStats !== prevProps.isQueuingStats) {
+      scrollTableToTop('statistics-management-tbl');
+    }
   }
 
   onExpanded = (newExpanded, index) => {
@@ -191,31 +200,33 @@ class ManagementTable extends Component {
       tableHeight, isFetching, dataLoaded, data, fetchingError
     } = this.props;
     return (
-      <CheckboxTable
-        data={data}
-        columns={columns}
-        style={{
-          height: `${tableHeight}px`
-        }}
-        manual
-        minRows={100}
-        showPaginationBottom={false}
-        sortable={false}
-        className="-striped"
-        loading={isFetching || fetchingError}
-        loadingText={this.getLoadingText()}
-        noDataText={dataLoaded ? '0 Statistics management records found.' : ''}
-        keyField={keyName}
-        toggleSelection={this.toggleSelection}
-        toggleAll={false}
-        selectAll={false}
-        selectType="checkbox"
-        SelectAllInputComponent={SelectAllInputComponent}
-        getTrProps={this.getTrProps}
-        isSelected={this.isSelected}
-        expanded={this.state.expanded}
-        onExpandedChange={this.onExpanded}
-      />
+      <div id="statistics-management-tbl">
+        <CheckboxTable
+          data={data}
+          columns={columns}
+          style={{
+            height: `${tableHeight}px`
+          }}
+          manual
+          minRows={100}
+          showPaginationBottom={false}
+          sortable={false}
+          className="-striped"
+          loading={isFetching || fetchingError}
+          loadingText={this.getLoadingText()}
+          noDataText={dataLoaded ? '0 Statistics management records found.' : ''}
+          keyField={keyName}
+          toggleSelection={this.toggleSelection}
+          toggleAll={false}
+          selectAll={false}
+          selectType="checkbox"
+          SelectAllInputComponent={SelectAllInputComponent}
+          getTrProps={this.getTrProps}
+          isSelected={this.isSelected}
+          expanded={this.state.expanded}
+          onExpandedChange={this.onExpanded}
+        />
+      </div>
     );
   }
 }

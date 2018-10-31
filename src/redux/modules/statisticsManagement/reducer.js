@@ -6,12 +6,34 @@ import { actionTypes } from './actions';
 
 // Initial state
 const initialState = Object.assign({
-  isRunningStats: false
+  isQueuingStats: false,
+  isDequeuingStats: false
 }, itemListInitialState, itemListSelectInitialState);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
 const itemListSelectReducer = itemListSelectReducerFor(actionTypes);
+
+// Removes the processed items from the selected list
+const removeProcessed = (state, action) => {
+  const { data } = action;
+
+  const selected = {
+    ...state.selected
+  };
+
+  data.forEach((item) => {
+    delete (selected[item.id]);
+  });
+
+  const selectedOrder = state.selectedOrder.filter(item => data.indexOf(item) < 0);
+
+  return {
+    ...state,
+    selected,
+    selectedOrder
+  };
+};
 
 /**
  * DWH statistics reducer.
@@ -54,13 +76,32 @@ export default (state = initialState, action) => {
     case actionTypes.QUEUE_STATS_BEGIN:
       return {
         ...state,
-        isRunningStats: true
+        isQueuingStats: true
       };
-    case actionTypes.QUEUE_STATS_SUCCESS:
+    case actionTypes.QUEUE_STATS_SUCCESS: {
+      const newState = removeProcessed(state, action);
+      newState.isQueuingStats = false;
+      return newState;
+    }
     case actionTypes.QUEUE_STATS_FAIL:
       return {
         ...state,
-        isRunningStats: false
+        isQueuingStats: false
+      };
+    case actionTypes.DEQUEUE_STATS_BEGIN:
+      return {
+        ...state,
+        isDequeuingStats: true
+      };
+    case actionTypes.DEQUEUE_STATS_SUCCESS: {
+      const newState = removeProcessed(state, action);
+      newState.isDequeuingStats = false;
+      return newState;
+    }
+    case actionTypes.DEQUEUE_STATS_FAIL:
+      return {
+        ...state,
+        isDequeuingStats: false
       };
     default:
       return state;
