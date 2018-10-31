@@ -177,13 +177,6 @@ class Home extends Component {
               <Button
                 size="small"
                 style={runCheckButtonCss}
-                disabled={cycleHistorySelectedCount < 1}
-              >
-                Run Check
-              </Button>
-              <Button
-                size="small"
-                style={runCheckButtonCss}
                 onClick={this.handleActiveFilterButton}
               >
                 {cycleHistoryFilters.active === 0 ? 'View All' : 'View Inactive'}
