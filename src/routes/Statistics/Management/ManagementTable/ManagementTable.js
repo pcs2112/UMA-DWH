@@ -20,12 +20,22 @@ const columns = [
   {
     Header: 'LAST UPDATE DTTM',
     accessor: 'last_update_dttm',
-    width: 140
+    width: 150
   },
   {
     Header: 'QUEUED DTTM',
     accessor: 'queued_dttm',
-    width: 140
+    width: 150
+  },
+  {
+    Header: 'LAST RECORD RUNTIME',
+    accessor: 'last_recorded_runtime',
+    width: 150
+  },
+  {
+    Header: 'LAST RECORD DTTM',
+    accessor: 'last_recorded_dttm',
+    width: 150
   },
   {
     Header: 'SCHEMA.TABLE',

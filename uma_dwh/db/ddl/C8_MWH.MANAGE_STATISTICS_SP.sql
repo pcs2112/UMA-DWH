@@ -1,6 +1,70 @@
 -- C8_MWH.MANAGE_STATISTICS_SP.sql
 
 
+/*
+
+DECLARE @MYDATE   DATETIME;
+DECLARE @MYDATETO   DATETIME;
+
+SET @MYDATE = '2018-09-22'
+
+--WHILE @MYDATE < '2018-09-23' begin
+       --select  @MYDATE , dateadd(day,1,@MYDATE);
+       SET  @MYDATETO =  dateadd(day,1,@MYDATE);
+
+       exec S_I3.MERGE_MCS_INTX_PARTICIPANT @MYDATE , @MYDATETO;
+
+       exec S_I3.MERGE_MCS_INTXSEGMENT @MYDATE , @MYDATETO;
+
+       exec S_I3.MERGE_MCS_INTX_PARTICIPANT @MYDATE , @MYDATETO;
+
+       exec S_I3.MERGE_MCS_UMALEADCALLDETAIL @MYDATE , @MYDATETO;
+
+       exec S_I3.MERGE_MCS_AGENTACTIVITYLOG @MYDATE , @MYDATETO;
+
+       exec S_I3.MERGE_MCS_EE_TRANSFEREVENTS @MYDATE , @MYDATETO;
+
+       exec S_I3.MERGE_MCS_INTERACTIONCUSTOMATTRIBUTES @MYDATE , @MYDATETO;
+
+
+
+       set @MYDATE = dateadd(day,1,@MYDATE);
+end;
+
+
+
+
+
+
+DBCC SHOW_STATISTICS ("[MWH].[F_MCS_CALLS]",[FINAL_DIAL_DTTM]) ;
+GO
+
+DBCC SHOW_STATISTICS ("[MWH].[F_MCS_CALLS]",[FINAL_DIAL_DTTM]) WITH HISTOGRAM;
+GO
+Daily.Rebuld Indexes UMA_DWH
+
+*/
+
+
+
+--  exec  MWH.MANAGE_STATISTICS_SP  'QUEUE',  'MLK-EDM-D-SQ02', 'UMA_DWH', 'MWH', 'REPORT_MCS_DAILY_IDLE_CALL_DETAILS', '', '', '', ''
+
+--  exec  MWH.MANAGE_STATISTICS_SP  'UPDATE STATISTICS',  'S_LION', '', 'FULL SCAN', '', '', '', '', ''
+
+
+--  exec  MWH.MANAGE_STATISTICS_SP  'UPDATE STATISTICS',  'MLK-EDM-D-SQ02', 'MWH_FACT', '', 'FULL SCAN', '', '', '', ''
+
+--  exec  MWH.MANAGE_STATISTICS_SP  'UPDATE STATISTICS',  'MLK-EDM-D-SQ02','MWH_XREF', '', 'FULL SCAN', '', '', '', ''
+
+
+/*   TESTING RESULTS
+  select * from [MWH].[STATISTICS_ENGINE_HISTORY] with(nolock) order by ID desc;
+  select * from [MWH].[STATISTICS_ENGINE_HISTORY_V] with(nolock) order by [ENGINE START DTTM] desc;
+  select * from [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] with(nolock) order by ID desc;
+*/
+
+
+
 
 
 
@@ -72,7 +136,9 @@ SET NOCOUNT ON;
 -- exec  MWH.MANAGE_STATISTICS_SP  'QUEUE', 'MLK-EDM-D-SQ02',  'UMA_DWH', 'S_I3', 'LOG_CALL_DATA', 'FULLSCAN',  '', '', '', '', '', '', '', '', ''
 -- exec  MWH.MANAGE_STATISTICS_SP  'QUEUE', 'MLK-EDM-D-SQ02',  'UMA_DWH', 'MWH_DIM', 'D_AmApplicantType', 'FULLSCAN',  '', '', '', '', '', '', '', '', ''
 
--- exec  MWH.MANAGE_STATISTICS_SP  'QUEUE', 'MLK-EDM-D-SQ02',  'UMA_DWH', 'MWH_DIM', 'D_AmMarital', 'FULLSCAN',  '', '', '', '', '', '', '', '', ''
+-- exec  MWH.MANAGE_STATISTICS_SP  'QUEUE', 'MLK-EDM-D-SQ02',  'UMA_DWH', 'MWH_DIM', 'D_STAFF', 'FULLSCAN',  '', '', '', '', '', '', '', '', ''
+
+-- exec  MWH.MANAGE_STATISTICS_SP  'DEQUEUE', 'MLK-EDM-D-SQ02',  'UMA_DWH', 'MWH_DIM', 'D_STAFF', 'FULLSCAN',  '', '', '', '', '', '', '', '', ''
 
 
 
@@ -263,8 +329,6 @@ END CATCH;
 
 
 IF( @message = 'UPDATE STATISTICS')  BEGIN
-
-
        BEGIN TRY
 
               SET    @START_STATISTICS_DTTM = getdate();
@@ -303,9 +367,6 @@ IF( @message = 'UPDATE STATISTICS')  BEGIN
                      and           [TARGET_SCHEMA_NAME] = @SCHEMA
                      and           [TARGET_TABLE_NAME]  = @TABLE;
               end;
-
-
-
 
               END TRY
               BEGIN CATCH

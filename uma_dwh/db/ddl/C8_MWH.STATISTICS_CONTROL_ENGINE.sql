@@ -59,8 +59,38 @@ CROSS APPLY sys.dm_db_stats_properties(stat.object_id, stat.stats_id) AS sp
 group by udt.schema_name,  udt.table_name
 order by max(last_updated) asc
 
+************************************************
+NOTE:
+Get the last run-time for each table and check if it will finish by END_DTTM
+get the last stats run for each table
 
 
+
+IF OBJECT_ID('tempdb..#table_stats_runtime_hist') IS NOT NULL
+       DROP TABLE #table_stats_runtime_hist;
+
+CREATE TABLE #table_stats_runtime_hist (
+       SCHEMA_TABLE_NAME          varchar(120),
+       RUNTIME_SEC                       INTEGER
+);
+
+
+
+
+with table_stats_hist_id ( SCHEMA_TABLE_NAME, STAT_TABLE_HIST_LAST_ID  ) as (
+select [SCHEMA_TABLE_NAME], max(ID) from [MWH].[STATISTICS_ENGINE_TABLE_HISTORY]  group by SCHEMA_TABLE_NAME )
+
+INSERT INTO #table_stats_runtime_hist (SCHEMA_TABLE_NAME, RUNTIME_SEC)
+
+select th.[SCHEMA_TABLE_NAME], th.[STATISTICS_RUNTIME_SEC]
+from table_stats_hist_id sh
+join [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] th with(nolock) on (sh.STAT_TABLE_HIST_LAST_ID = th.ID)
+;
+
+
+select SCHEMA_TABLE_NAME, RUNTIME_SEC from  #table_stats_runtime_hist
+
+************************************************
 
 
 UMA_DWH_TABLES_LAST_RS ( schema,  name, LAST_RUNSTAT_DTTM) as (
@@ -89,7 +119,7 @@ select * from  [MWH].[TABLE_STATISTICS_QUEUE]
 
 
 --   TEST RUN
---   exec  MWH.STATISTICS_CONTROL_ENGINE 'RUN', '2018-10-25 13:00'
+--   exec  MWH.STATISTICS_CONTROL_ENGINE 'RUN', '2018-10-30 13:00'
 
 
 
@@ -107,7 +137,7 @@ AS
 
  --DECLARE @message               VARCHAR(20)  =  'RUN';   --  valid meaages :   RUN
 --DECLARE @End_DTTM              datetime = '2018-10-22 17:30';
-
+--  delete from [MWH].[TABLE_STATISTICS_QUEUE]
 
 SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 SET NOCOUNT ON;
@@ -170,14 +200,14 @@ declare  @Mycurrent_DTTM  datetime;
 set    @Mycurrent_DTTM = getdate();
 
 
-IF  ( case when datepart(hour, @Mycurrent_DTTM) between 6 and 10 then 0 else 1 end ) = 0 begin
+IF  ( case when datepart(hour, @Mycurrent_DTTM) between 6 and 20 then 0 else 1 end ) = 0 begin
 --  stop run stats from running in automatic mode, because its IN the WORKDAY
        set @End_DTTM = null;
 end else begin
 
 IF (@End_DTTM is null) or ( datediff(hour, @Mycurrent_DTTM, @End_DTTM) > 12 ) begin
 --  set to 5am the next day, if the current time is after 8PM
- IF( datepart(hour, @Mycurrent_DTTM) >= 10 ) begin
+ IF( datepart(hour, @Mycurrent_DTTM) >= 20 ) begin
        select @End_DTTM =  DATEADD(HOUR,5,CONVERT(VARCHAR(10), @Mycurrent_DTTM+1,110))
 end else if (datepart(hour, @Mycurrent_DTTM) < 4) begin
        select @End_DTTM =  DATEADD(HOUR,5,CONVERT(VARCHAR(10), @Mycurrent_DTTM,110))
@@ -204,10 +234,41 @@ DECLARE                    @CUR_MIN_MODIFIED_CNT      INTEGER;
 DECLARE                    @CUR_MAX_MODIFIED_CNT      INTEGER;
 DECLARE                    @Current_DTTM              DATETIME;
 DECLARE                    @QUEUED_DTTM               DATETIME;
-
+DECLARE                    @LAST_RUNTIME_SEC          INTEGER;
 
 IF  @message = 'RUN'  and  @End_DTTM is NOT null
        BEGIN
+
+
+
+--NOTE:  table LAST_RUNTIME_SEC check logic
+--Get the last run-time for each table then check while in the cursor, if it will finish by END_DTTM
+--  if not history exists, then guess to the runtime by looking at the rows in the table,
+--   if row count  between 0 and 1000000 then   1 minute
+--   if row count between 1000001 and 100,000,000 then 1 hour
+--   if row count > 100,000,000  MAX guess  2 hours
+
+IF OBJECT_ID('tempdb..#table_stats_runtime_hist') IS NOT NULL
+       DROP TABLE #table_stats_runtime_hist;
+
+CREATE TABLE #table_stats_runtime_hist (
+       SCHEMA_TABLE_NAME          varchar(120),
+       RUNTIME_SEC                       INTEGER
+);
+
+
+with table_stats_hist_id ( SCHEMA_TABLE_NAME, STAT_TABLE_HIST_LAST_ID  ) as (
+select [SCHEMA_TABLE_NAME], max(ID) from [MWH].[STATISTICS_ENGINE_TABLE_HISTORY]  group by SCHEMA_TABLE_NAME )
+
+INSERT INTO #table_stats_runtime_hist (SCHEMA_TABLE_NAME, RUNTIME_SEC)
+
+select th.[SCHEMA_TABLE_NAME], th.[STATISTICS_RUNTIME_SEC]
+from table_stats_hist_id sh
+join [MWH].[STATISTICS_ENGINE_TABLE_HISTORY] th with(nolock) on (sh.STAT_TABLE_HIST_LAST_ID = th.ID)
+;
+
+-----------------------------------------------------------------------------------------------------------------
+
 
 
        INSERT INTO MWH.STATISTICS_ENGINE_HISTORY  (ENGINE_STATUS, ENGINE_MESSAGE, TARGET_SERVER_NAME, TARGET_DB_NAME,  SCHEDULED_END_DTTM  )
@@ -217,28 +278,30 @@ IF  @message = 'RUN'  and  @End_DTTM is NOT null
 
        SET @SP_START_DTTM = sysdatetime();
 
-
        DECLARE db_cursor_statistics_engine CURSOR FOR
-       with UMA_DWH_TABLES ( schema_name,  table_name, SCH_TAB_TXT, queued_dttm) as (
-       SELECT st.table_schema, st.table_name, concat('[' , st.table_schema , '].[' , st.table_name , ']'), qt.INSERT_DTTM
+       with UMA_DWH_TABLES ( schema_name,  table_name, SCH_TAB_TXT, queued_dttm, last_runtime_sec) as (
+       SELECT st.table_schema, st.table_name, concat('[' , st.table_schema , '].[' , st.table_name , ']'), qt.INSERT_DTTM, rh.RUNTIME_SEC
        FROM information_schema.tables st  with(nolock)
        left join [MWH].[TABLE_STATISTICS_QUEUE] qt with(nolock) on (qt.TARGET_SCHEMA_NAME = st.table_schema and qt.TARGET_TABLE_NAME = st.table_name and qt.STATUS = 'QUEUED')
+       left join #table_stats_runtime_hist  rh on (rh.SCHEMA_TABLE_NAME = concat('[' , st.table_schema , '].[' , st.table_name , ']'))
        WHERE st.table_type = 'base table'  )
 
-       select   udt.schema_name,  udt.table_name, udt.SCH_TAB_TXT,   max(last_updated) as LAST_DTTM, coalesce(min(rows),0) as MIN_ROWS, coalesce(min(rows_sampled),0) as MIN_SAMPLED, coalesce(max(rows_sampled),0) as MAX_SAMPLED,   coalesce(min(modification_counter),0) as MIN_MODIFIED_CNT,   coalesce(max(modification_counter),0) as MAX_MODIFIED_CNT, coalesce(min(queued_dttm),'2100-10-21') as QUEUED_DTTM
+       select   udt.schema_name,  udt.table_name, udt.SCH_TAB_TXT,   max(last_updated) as LAST_DTTM, coalesce(min(rows),0) as MIN_ROWS, coalesce(min(rows_sampled),0) as MIN_SAMPLED,
+              coalesce(max(rows_sampled),0) as MAX_SAMPLED,   coalesce(min(modification_counter),0) as MIN_MODIFIED_CNT,   coalesce(max(modification_counter),0) as MAX_MODIFIED_CNT, coalesce(min(queued_dttm),'2100-10-21') as QUEUED_DTTM,
+              coalesce(udt.last_runtime_sec, ( case when min(rows) between 0 and 1000000 then 60 else (case when min(rows) between 1000001 and 100000000 then 3600 else 7200 end) end )) as LAST_RUNTIME_SEC
        from UMA_DWH_TABLES udt
        left join sys.stats AS stat  with(nolock) on (stat.object_id = object_id(udt.SCH_TAB_TXT))
        CROSS APPLY sys.dm_db_stats_properties(stat.object_id, stat.stats_id) AS sp
-       group by udt.schema_name,  udt.table_name, udt.SCH_TAB_TXT
+       group by udt.schema_name,  udt.table_name, udt.SCH_TAB_TXT, udt.last_runtime_sec
        order by min(queued_dttm) desc, max(last_updated) asc;
 
        OPEN db_cursor_statistics_engine
-       FETCH NEXT FROM db_cursor_statistics_engine INTO  @CUR_schema_name, @CUR_table_name, @CUR_SCH_TAB_TXT, @CUR_LAST_DTTM, @CUR_MIN_ROWS, @CUR_MIN_SAMPLED, @CUR_MAX_SAMPLED, @CUR_MIN_MODIFIED_CNT, @CUR_MAX_MODIFIED_CNT, @QUEUED_DTTM
+       FETCH NEXT FROM db_cursor_statistics_engine INTO  @CUR_schema_name, @CUR_table_name, @CUR_SCH_TAB_TXT, @CUR_LAST_DTTM, @CUR_MIN_ROWS, @CUR_MIN_SAMPLED, @CUR_MAX_SAMPLED, @CUR_MIN_MODIFIED_CNT, @CUR_MAX_MODIFIED_CNT, @QUEUED_DTTM, @LAST_RUNTIME_SEC
 
        SET    @Current_DTTM = getdate();
        SET @TryCatchError_ID = 0;
 
-       WHILE @@FETCH_STATUS = 0  and  @TryCatchError_ID = 0   and  @Current_DTTM  < @End_DTTM
+       WHILE @@FETCH_STATUS = 0  and  @TryCatchError_ID = 0   and  dateadd(second,@LAST_RUNTIME_SEC , @Current_DTTM ) < @End_DTTM
        BEGIN
               set @ERR = null;
               set @EngineMessage = null;
@@ -272,8 +335,7 @@ IF  @message = 'RUN'  and  @End_DTTM is NOT null
               END CATCH;
 
               SET    @Current_DTTM = getdate();
-
-              FETCH NEXT FROM db_cursor_statistics_engine INTO  @CUR_schema_name, @CUR_table_name, @CUR_SCH_TAB_TXT, @CUR_LAST_DTTM, @CUR_MIN_ROWS, @CUR_MIN_SAMPLED, @CUR_MAX_SAMPLED, @CUR_MIN_MODIFIED_CNT, @CUR_MAX_MODIFIED_CNT, @QUEUED_DTTM
+              FETCH NEXT FROM db_cursor_statistics_engine INTO  @CUR_schema_name, @CUR_table_name, @CUR_SCH_TAB_TXT, @CUR_LAST_DTTM, @CUR_MIN_ROWS, @CUR_MIN_SAMPLED, @CUR_MAX_SAMPLED, @CUR_MIN_MODIFIED_CNT, @CUR_MAX_MODIFIED_CNT, @QUEUED_DTTM, @LAST_RUNTIME_SEC
        END
 
        CLOSE db_cursor_statistics_engine
@@ -291,9 +353,13 @@ END
 
 ELSE
       BEGIN
-                     INSERT INTO  "S_MST"."UMA_DWH_ETL_ERRORS" ("ERROR_DESCRI", "ETL_JOB_TABLE", "ETL_JOB_TABLE_ID"  )
+                     INSERT INTO  [S_MST].[UMA_DWH_ETL_ERRORS] (ERROR_DESCRI, ETL_JOB_TABLE, ETL_JOB_TABLE_ID )
                      VALUES (  concat(' MWH.STATISTICS_ENGINE_HISTORY  message error, invalid message : ', @message )  , 'MWH.STATISTICS_ENGINE_HISTORY' , 0  );
        END
+
+
+IF OBJECT_ID('tempdb..#table_stats_runtime_hist') IS NOT NULL
+       DROP TABLE #table_stats_runtime_hist;
 
 --     return ( 0 )
 
