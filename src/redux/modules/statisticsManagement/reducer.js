@@ -1,4 +1,3 @@
-import { isEmpty } from 'javascript-utils/lib/utils';
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
 import itemListSelectReducerFor, { initialState as itemListSelectInitialState }
   from '../../reducers/itemListSelectReducerFor';
