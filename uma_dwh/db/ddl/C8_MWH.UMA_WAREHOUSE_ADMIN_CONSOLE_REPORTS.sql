@@ -367,7 +367,7 @@ BEGIN
        SET @MessageValid = 1;
        BEGIN TRY
 
-              select DATA_MART_NAME, max(DONE_DTTM)
+              select DATA_MART_NAME, max(DONE_DTTM) AS 'DONE_DTTM'
               from MWH.ETL_ENGINE_HISTORY  with(nolock)
               where DONE_DTTM > dateadd(day, -90, getdate())
               group by DATA_MART_NAME
