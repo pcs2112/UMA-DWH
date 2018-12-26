@@ -8,11 +8,11 @@ export default (client, data) => {
   const middleware = [clientMiddleware(client), appErrorMiddleware, thunk, reduxPollingMiddleware];
   const finalCreateStore = applyMiddleware(...middleware)(_createStore);
   const reducer = require('./reducer');
-  const store = finalCreateStore(reducer, data);
+  const store = finalCreateStore(reducer.default, data);
 
   if (__DEVELOPMENT__ && module.hot) {
     module.hot.accept('./reducer', () => {
-      store.replaceReducer(require('./reducer'));
+      store.replaceReducer(require('./reducer').default);
     });
   }
 
