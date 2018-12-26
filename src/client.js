@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import config from './config';
 import createStore from './redux/create';
 import { client } from './helpers/ApiClient';
 import getRoutes from './routes';
@@ -26,18 +25,6 @@ renderApp({
   store
 });
 
-if (!config.isProduction) {
+if (__DEVELOPMENT__) {
   window.React = React;
-}
-
-if (__DEVTOOLS__ && !window.devToolsExtension) {
-  const devToolsDest = document.createElement('div');
-  window.document.body.insertBefore(devToolsDest, null);
-  const DevTools = require('./components/DevTools'); // eslint-disable-line
-  ReactDOM.render(
-    <Provider store={store} key="provider">
-      <DevTools />
-    </Provider>,
-    devToolsDest
-  );
 }

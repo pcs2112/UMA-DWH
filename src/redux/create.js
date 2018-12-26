@@ -1,4 +1,4 @@
-import { createStore as _createStore, applyMiddleware, compose } from 'redux';
+import { createStore as _createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { reduxPollingMiddleware } from 'redux-polling';
 import clientMiddleware from './middleware/apiClient';
@@ -6,20 +6,7 @@ import appErrorMiddleware from './middleware/appError';
 
 export default (client, data) => {
   const middleware = [clientMiddleware(client), appErrorMiddleware, thunk, reduxPollingMiddleware];
-
-  let finalCreateStore;
-  if (__DEVELOPMENT__ && __DEVTOOLS__) {
-    const { persistState } = require('redux-devtools');
-    const DevTools = require('../components/DevTools');
-    finalCreateStore = compose(
-      applyMiddleware(...middleware),
-      window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument(),
-      persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
-    )(_createStore);
-  } else {
-    finalCreateStore = applyMiddleware(...middleware)(_createStore);
-  }
-
+  const finalCreateStore = applyMiddleware(...middleware)(_createStore);
   const reducer = require('./reducer');
   const store = finalCreateStore(reducer, data);
 

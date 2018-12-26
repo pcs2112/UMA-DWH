@@ -3,14 +3,13 @@ import PropTypes from 'prop-types';
 import moment from 'moment/moment';
 import { isEmpty } from 'javascript-utils/lib/utils';
 import { DEFAULT_DATE_FORMAT } from 'constants/index';
-import config from 'config';
 import PageHeader from 'components/PageHeader';
 
 const CycleHistoryPageHeader = ({
   cycleHistoryFilters, currentEtlStatus, cycleHistoryDate
 }) => {
   let state = '';
-  let headerText = `${config.app.title} - ETL Cycle History`;
+  let headerText = `${__APP_TITLE__} - ETL Cycle History`;
 
   if (currentEtlStatus === 'FAILED') {
     state = 'error';

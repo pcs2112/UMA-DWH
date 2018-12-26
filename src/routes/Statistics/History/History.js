@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { Segment, Grid, Button } from 'semantic-ui-react';
 import { DEFAULT_DATE_FORMAT } from 'constants/index';
-import config from 'config';
 import statisticsHistoryReduxModule from 'redux/modules/statisticsHistory';
 import statisticsChartReduxModule from 'redux/modules/statisticsChart';
 import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
@@ -68,7 +67,7 @@ class History extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            {config.app.title} - Statistics History{' '}
+            {__APP_TITLE__} - Statistics History{' '}
             ({current.format('MMM D, YYYY')})
           </h1>
         </Segment>
