@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Segment, Grid, Button } from 'semantic-ui-react';
 import moment from 'moment';
-import config from 'config';
 import globalCss from 'css/global';
 import { DEFAULT_DATE_FORMAT } from 'constants/index';
 import etlProcedureHistory from 'redux/modules/etlProcedureHistory';
@@ -70,7 +69,7 @@ class ProceduresHistory extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            {config.app.title} - ETL Procedures History{' '}
+            {__APP_TITLE__} - ETL Procedures History{' '}
             ({current.format('MMM D, YYYY')})
           </h1>
         </Segment>

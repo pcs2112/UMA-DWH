@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { Segment, Grid, Button } from 'semantic-ui-react';
-import config from 'config';
 import tryCatchErrorsChart from 'redux/modules/tryCatchErrorsChart';
 import tryCatchErrors from 'redux/modules/tryCatchErrors';
 import withMainLayout from 'components/WithMainLayout';
@@ -64,7 +63,7 @@ class DWHErrors extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            {config.app.title} - DWH Errors{' '}
+            {__APP_TITLE__} - DWH Errors{' '}
             ({current.format('MMM D, YYYY')})
           </h1>
         </Segment>

@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { Segment, Grid, Button } from 'semantic-ui-react';
 import { DEFAULT_DATE_FORMAT, STATISTICS_MANAGEMENT_REFRESH_TIMEOUT } from 'constants/index';
-import config from 'config';
 import statisticsManagementReduxModule from 'redux/modules/statisticsManagement';
 import statisticsChartReduxModule from 'redux/modules/statisticsChart';
 import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
@@ -137,7 +136,7 @@ class Management extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            {config.app.title} - DWH Statistics Management{' '}
+            {__APP_TITLE__} - DWH Statistics Management{' '}
             ({current.format('MMM D, YYYY')})
           </h1>
         </Segment>

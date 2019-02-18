@@ -1,4 +1,3 @@
-require('babel-polyfill');
 const Express = require('express');
 const webpack = require('webpack');
 const config = require('../src/config');

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { Segment, Grid, Button } from 'semantic-ui-react';
-import config from 'config';
 import reportHistory from 'redux/modules/reportHistory';
 import reportRuntimeChart from 'redux/modules/reportRuntimeChart';
 import reportsReduxModule from 'redux/modules/reports';
@@ -67,7 +66,7 @@ class Reports extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            {config.app.title} - DWH Report History{' '}
+            {__APP_TITLE__} - DWH Report History{' '}
             ({current.format('MMM D, YYYY')})
           </h1>
         </Segment>

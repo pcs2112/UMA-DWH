@@ -3,13 +3,13 @@ import { createDevTools } from 'redux-devtools';
 import LogMonitor from 'redux-devtools-log-monitor';
 import DockMonitor from 'redux-devtools-dock-monitor';
 
-const devTools = (
+const DevTools = createDevTools(
   <DockMonitor
-    toggleVisibilityKey="ctrl-H"
-    changePositionKey="ctrl-Q"
+    toggleVisibilityKey="ctrl-h"
+    changePositionKey="ctrl-q"
   >
-    <LogMonitor />
+    <LogMonitor theme="tomorrow" />
   </DockMonitor>
 );
 
-export default createDevTools(devTools);
+export default DevTools;

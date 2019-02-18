@@ -74,6 +74,7 @@
     "__DEVTOOLS__": true,
     "__CLOUDINARY_CLOUD_NAME__": true,
     "__HTTPS_ENABLED__": true,
+    "__APP_TITLE__": true,
     "socket": true,
     "global": true
   }

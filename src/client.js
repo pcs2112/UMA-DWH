@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import config from './config';
+import RedBox from 'redbox-react';
 import createStore from './redux/create';
 import { client } from './helpers/ApiClient';
 import getRoutes from './routes';
@@ -10,34 +10,43 @@ import App from './routes/App';
 
 const store = createStore(client, window.__data);
 
-const renderApp = (renderProps) => {
+let render = (routes) => {
   ReactDOM.render(
-    <Provider store={renderProps.store}>
+    <Provider store={store}>
       <BrowserRouter>
-        <App routes={renderProps.routes} />
+        <App routes={routes} />
       </BrowserRouter>
     </Provider>,
     document.getElementById('content')
   );
 };
 
-renderApp({
-  routes: getRoutes(store),
-  store
-});
+// Support hot reloading of components and display an overlay for runtime errors.
+if (__DEVELOPMENT__ && module.hot) {
+  const renderApp = render;
+  const renderError = (error) => {
+    ReactDOM.render(
+      <RedBox error={error} />,
+      document.getElementById('content'),
+    );
+  };
 
-if (!config.isProduction) {
-  window.React = React;
+  render = () => {
+    try {
+      const newRoutes = getRoutes(store);
+      renderApp(newRoutes);
+    } catch (error) {
+      renderError(error);
+    }
+  };
+
+  module.hot.accept('./routes', () => {
+    render();
+  });
 }
 
-if (__DEVTOOLS__ && !window.devToolsExtension) {
-  const devToolsDest = document.createElement('div');
-  window.document.body.insertBefore(devToolsDest, null);
-  const DevTools = require('./components/DevTools'); // eslint-disable-line
-  ReactDOM.render(
-    <Provider store={store} key="provider">
-      <DevTools />
-    </Provider>,
-    devToolsDest
-  );
+render(getRoutes(store));
+
+if (!__DEVELOPMENT__) {
+  window.React = React;
 }

@@ -1,35 +1,13 @@
 // Webpack config for development
-const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const config = require('../src/config');
 
 const resolve = dir => path.join(__dirname, '..', dir);
 const rootPath = path.resolve(__dirname, '..');
 const host = (process.env.HOST || 'localhost');
 const port = (+process.env.PORT + 1) || 3001;
-
-// Get the babel options
-const babelrc = fs.readFileSync('./.babelrc');
-let babelrcObject = {};
-
-try {
-  babelrcObject = JSON.parse(babelrc);
-} catch (err) {
-  console.error('==>     ERROR: Error parsing your .babelrc.');
-  console.error(err);
-}
-
-const babelrcObjectDevelopment = (babelrcObject.env && babelrcObject.env.development) || {};
-
-// Merge global and dev-only plugins
-let combinedPlugins = babelrcObject.plugins || [];
-combinedPlugins = combinedPlugins.concat(babelrcObjectDevelopment.plugins);
-
-const babelLoaderQuery = Object.assign({}, babelrcObjectDevelopment, babelrcObject, {
-  plugins: combinedPlugins
-});
-delete babelLoaderQuery.env;
 
 module.exports = {
   mode: 'development',
@@ -37,15 +15,14 @@ module.exports = {
   context: rootPath,
   entry: {
     main: [
-      'semantic-ui-less/semantic.less',
-      'babel-polyfill',
       `webpack-hot-middleware/client?path=http://${host}:${port}/__webpack_hmr`,
+      'semantic-ui-less/semantic.less',
       resolve('src/client.js')
     ]
   },
   output: {
     path: resolve('uma_dwh/static/dist'),
-    filename: 'vendor.js',
+    filename: 'main_source.js',
     publicPath: `http://${host}:${port}/`
   },
   module: {
@@ -55,8 +32,7 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'babel-loader',
-            options: babelLoaderQuery
+            loader: 'babel-loader'
           },
           {
             loader: 'eslint-loader'
@@ -217,7 +193,8 @@ module.exports = {
         NODE_ENV: '"development"'
       },
       __DEVELOPMENT__: true,
-      __DEVTOOLS__: true
+      __HTTPS_ENABLED__: config.env.httpsEnabled,
+      __APP_TITLE__: JSON.stringify(config.app.title)
     }),
     new HtmlWebPackPlugin({
       template: resolve('uma_dwh/static/templates/index.dev.html'),

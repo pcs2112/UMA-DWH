@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Segment, Button } from 'semantic-ui-react';
 import { showModal } from 'redux-modal';
-import config from 'config';
 import users from 'redux/modules/users';
 import withMainLayout from 'components/WithMainLayout';
 import globalCss from 'css/global';
@@ -45,7 +44,7 @@ class List extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            {config.app.title} - ETL Procedures History
+            {__APP_TITLE__} - ETL Procedures History
           </h1>
         </Segment>
         <Segment>

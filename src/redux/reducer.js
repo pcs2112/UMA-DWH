@@ -22,7 +22,7 @@ import statisticsHistory from './modules/statisticsHistory';
 import statisticsManagement from './modules/statisticsManagement';
 import statisticsSchemas from './modules/statisticsSchemas';
 
-export default combineReducers({
+export default () => combineReducers({
   [reduxPollingNamespace]: reduxPollingReducer,
   form,
   modal,
