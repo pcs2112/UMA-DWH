@@ -49,7 +49,7 @@ export const getUpdatingUserInitialValues = createSelector(
       employee_last_name: user.employee_last_name,
       employee_email: user.employee_email,
       employee_phone: user.employee_phone,
-      employee_cell_phone: user.employee_cell_phone,
+      employee_cellphone: user.employee_cellphone,
       employee_password: ''
     };
   }

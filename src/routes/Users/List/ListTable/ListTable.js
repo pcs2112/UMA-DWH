@@ -38,7 +38,7 @@ const columns = [
   },
   {
     Header: 'EMP_CELL_PHONE',
-    accessor: 'employee_cell_phone'
+    accessor: 'employee_cellphone'
   }
 ];
 

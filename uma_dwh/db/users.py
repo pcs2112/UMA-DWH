@@ -21,11 +21,16 @@ def fetch_user_by_id(id_):
     :param id_: User ID
     :type id_: int
     """
-    return execute_admin_console_sp(
+    result = execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
       'LIST_ADMIN_CONSOLE_USER_BY_ID',
       id_
-    )[0]
+    )
+
+    if len(result) < 1:
+        return None
+
+    return result[0]
 
 
 def fetch_user_by_email(email):
@@ -34,11 +39,16 @@ def fetch_user_by_email(email):
     :param email: User email
     :type email: str
     """
-    return execute_admin_console_sp(
+    result = execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
       'LIST_ADMIN_CONSOLE_USER_BY_EMAIL',
       email
-    )[0]
+    )
+
+    if len(result) < 1:
+        return None
+
+    return result[0]
 
 
 def create_user(data):
@@ -52,7 +62,7 @@ def create_user(data):
       'employee_first_name': '',
       'employee_email': '',
       'employee_phone': '',
-      'employee_cell_phone': '',
+      'employee_cellphone': '',
       'employee_password': ''
     }
 
@@ -64,7 +74,7 @@ def create_user(data):
         'employee_first_name',
         'employee_email',
         'employee_phone',
-        'employee_cell_phone',
+        'employee_cellphone',
         'employee_password'
       )
     )
@@ -84,12 +94,15 @@ def create_user(data):
       new_data['employee_first_name'],
       new_data['employee_email'],
       new_data['employee_phone'],
-      new_data['employee_cell_phone'],
+      new_data['employee_cellphone'],
       '',
       generate_password_hash(new_data['employee_password'])
     )
 
-    return fetch_user_by_id(result[0][0])
+    if len(result) < 1:
+        raise DBException("The new user account could not be created.")
+
+    return fetch_user_by_id(result[0]['id'])
 
 
 def update_user(id_, data):
@@ -109,7 +122,7 @@ def update_user(id_, data):
       'employee_first_name': user['employee_first_name'],
       'employee_email': user['employee_email'],
       'employee_phone': user['employee_phone'],
-      'employee_cell_phone': user['employee_cell_phone'],
+      'employee_cellphone': user['employee_cellphone'],
       'employee_password': user['employee_password']
     }
 
@@ -122,7 +135,7 @@ def update_user(id_, data):
         'employee_first_name',
         'employee_email',
         'employee_phone',
-        'employee_cell_phone',
+        'employee_cellphone',
         'employee_password'
       )
     )
@@ -135,7 +148,7 @@ def update_user(id_, data):
       new_data['employee_first_name'],
       new_data['employee_email'],
       new_data['employee_phone'],
-      new_data['employee_cell_phone'],
+      new_data['employee_cellphone'],
       user['employee_password'],
       new_data['employee_password'] if is_empty(new_data['employee_password']) else ''
     )

@@ -10,7 +10,7 @@ export const newUserValidator = memoize(10)(createValidator({
   employee_last_name: required(),
   employee_email: email(),
   employee_phone: phoneNumberValidator,
-  employee_cell_phone: phoneNumberValidator,
+  employee_cellphone: phoneNumberValidator,
   employee_password: validPassword(1, 1, 8)
 }));
 
@@ -19,6 +19,6 @@ export const existingUserValidator = memoize(10)(createValidator({
   employee_last_name: required(),
   employee_email: email(),
   employee_phone: phoneNumberValidator,
-  employee_cell_phone: phoneNumberValidator,
+  employee_cellphone: phoneNumberValidator,
   employee_password: validPassword(1, 1, 8, undefined, true)
 }));

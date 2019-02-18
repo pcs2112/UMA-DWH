@@ -20,21 +20,31 @@ def fetch_file_by_id(id_):
     :param id_: File ID
     :type id_: int
     """
-    return execute_admin_console_sp(
+    result = execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
       'LIST_ERROR_RESOLUTIONS_BY_ID',
       id_
-    )[0]
+    )
+
+    if len(result) < 1:
+        return None
+
+    return result[0]
 
 
 def fetch_last_inserted_file():
     """
     Returns the last inserted file record.
     """
-    return execute_admin_console_sp(
+    result = execute_admin_console_sp(
       'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
       'LIST_LAST_ERROR_RESOLUTION'
-    )[0]
+    )
+
+    if len(result) < 1:
+        return None
+
+    return result[0]
 
 
 def create_file(description, file_path_filename):

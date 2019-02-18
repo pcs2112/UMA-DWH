@@ -22,7 +22,7 @@ const withUserForm = (scenario) => {
         readOnly={scenario !== 'create'}
       />
       <Field name="employee_phone" type="text" component={TextField} label="Phone" />
-      <Field name="employee_cell_phone" type="text" component={TextField} label="Cell Phone" />
+      <Field name="employee_cellphone" type="text" component={TextField} label="Cell Phone" />
       <Field
         name="employee_password"
         type="password"
@@ -58,7 +58,7 @@ const withUserForm = (scenario) => {
       'employee_last_name',
       'employee_email',
       'employee_phone',
-      'employee_cell_phone',
+      'employee_cellphone',
       'employee_password'
     ]
   })(withBasicForm(WithUserForm));
