@@ -11,7 +11,11 @@ const RowExpander = ({ isExpanded }) => (
 );
 
 RowExpander.propTypes = {
-  isExpanded: PropTypes.bool.isRequired
+  isExpanded: PropTypes.bool
+};
+
+RowExpander.defaultProps = {
+  isExpanded: false
 };
 
 export default RowExpander;
