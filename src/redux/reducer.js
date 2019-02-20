@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { reduxPollingNamespace, reduxPollingReducer } from 'redux-polling';
 import { reducer as form } from 'redux-form';
 import { reducer as modal } from 'redux-modal';
+import collegeScorecardFiles from './modules/collegeScorecardFiles';
 import errorTypeResolution from './modules/errorTypeResolution';
 import etlControlManager from './modules/etlControlManager';
 import etlCurrentStatus from './modules/etlCurrentStatus';
@@ -26,6 +27,7 @@ export default () => combineReducers({
   [reduxPollingNamespace]: reduxPollingReducer,
   form,
   modal,
+  collegeScorecardFiles: collegeScorecardFiles.reducer,
   errorTypeResolution: errorTypeResolution.reducer,
   etlControlManager: etlControlManager.reducer,
   etlCurrentStatus: etlCurrentStatus.reducer,
