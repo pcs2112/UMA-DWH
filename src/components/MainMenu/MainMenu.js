@@ -46,6 +46,13 @@ class MainMenu extends Component {
         <Menu.Item as={Link} to="/errors/management" active={isActive(pathname, '/errors/management')}>
           Error Type Management
         </Menu.Item>
+        <Menu.Item
+          as={Link}
+          to="/college_scorecard/reporting"
+          active={isActive(pathname, '/college_scorecard/reporting')}
+        >
+          College Scorecard Reporting
+        </Menu.Item>
         <Menu.Item as={Link} to="/users" active={isActive(pathname, '/users')}>
           Users
         </Menu.Item>
