@@ -117,8 +117,9 @@ class CurrentStatusTable extends Component {
     return '';
   };
 
-  toggleSelection = (key, shift, row) => {
+  toggleSelection = (selectKey, shift, row) => {
     const { selectedData, selectData, unselectData } = this.props;
+    const key = row[keyName];
 
     // Check to see if the key exists
     if (objectHasOwnProperty(selectedData, key)) {
