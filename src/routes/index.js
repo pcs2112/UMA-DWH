@@ -2,6 +2,7 @@ import etlControlManager from 'redux/modules/etlControlManager';
 import etlServers from 'redux/modules/etlServers';
 import reports from 'redux/modules/reports';
 import reportHistory from 'redux/modules/reportHistory';
+import getCollegeScorecardRoutes from './CollegeScorecard';
 import CycleHistory from './CycleHistory';
 import DWHErrors from './DWHErrors';
 import Error from './Error';
@@ -42,6 +43,7 @@ export default ({ dispatch, getState }) => ([
   .concat(getErrorTypeManagementRoutes())
   .concat(getStatisticsRoutes(dispatch))
   .concat(getUserRoutes(dispatch))
+  .concat(getCollegeScorecardRoutes(dispatch))
   .concat([
     {
       path: '/login',
