@@ -10,7 +10,7 @@ export const actionTypes = {
 /**
  * Action to fetch the College scorecard data.
  */
-export const fetch = fileName => ({
+export const fetch = (fileName, populated = '') => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,
@@ -19,11 +19,13 @@ export const fetch = fileName => ({
   makeRequest: client => client.get('/api/college_scorecard/data/details', {
     params: {
       mode: 'DETAIL',
-      filename: fileName
+      filename: fileName,
+      populated
     }
   }),
   payload: {
-    fileName
+    fileName,
+    populated
   }
 });
 

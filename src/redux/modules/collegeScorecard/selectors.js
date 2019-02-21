@@ -14,7 +14,8 @@ const _getData = createDataSelector('collegeScorecard', 'dataLoaded', 'data');
  * @param {Object} state
  */
 const _getFilters = state => ({
-  fileName: state.collegeScorecard.fileName
+  fileName: state.collegeScorecard.fileName,
+  populated: state.collegeScorecard.populated
 });
 
 /**
@@ -48,6 +49,7 @@ export const getSelectedCount = createSelector(
 export const getFilters = createSelector(
   [_getFilters, collegeScorecardFilesReduxModule.selectors.getCollegeScorecardFilesData],
   (filtersFromState, files) => {
+    const { populated } = filtersFromState;
     let { fileName } = filtersFromState;
 
     // Set the default file
@@ -56,7 +58,8 @@ export const getFilters = createSelector(
     }
 
     return {
-      fileName
+      fileName,
+      populated
     };
   }
 );

@@ -5,7 +5,8 @@ import { actionTypes } from './actions';
 
 // Initial state
 const initialState = Object.assign({
-  fileName: ''
+  fileName: '',
+  populated: ''
 }, itemListInitialState, itemListSelectInitialState);
 
 // Create helper reducers
@@ -16,6 +17,7 @@ const itemListSelectReducer = itemListSelectReducerFor(actionTypes);
 const setFilters = (state, action) => {
   const newState = { ...state };
   newState.fileName = action.fileName;
+  newState.populated = action.populated;
   return newState;
 };
 

@@ -29,14 +29,21 @@ class Reporting extends Component {
 
   componentDidMount() {
     const { fetchCollegeScorecardData, collegeScorecardFilters } = this.props;
-    const { fileName } = collegeScorecardFilters;
-    fetchCollegeScorecardData(fileName);
+    const { fileName, populated } = collegeScorecardFilters;
+    fetchCollegeScorecardData(fileName, populated);
   }
 
   componentWillUnmount() {
     const { resetCollegeScorecardData } = this.props;
     resetCollegeScorecardData();
   }
+
+  handleViewFilterButton = () => {
+    const { fetchCollegeScorecardData, collegeScorecardFilters } = this.props;
+    const { populated, fileName } = collegeScorecardFilters;
+    const newPopulated = populated === '' ? 'ALL' : '';
+    fetchCollegeScorecardData(fileName, newPopulated);
+  };
 
   render() {
     const {
@@ -81,7 +88,20 @@ class Reporting extends Component {
           />
         </Segment>
         <Segment>
-          <Button primary>Export</Button>
+          <Button
+            size="small"
+            disabled={isCollegeScorecardFetching}
+            onClick={this.handleViewFilterButton}
+          >
+            {collegeScorecardFilters.populated === '' ? 'View All' : 'View Populated'}
+          </Button>
+          <Button
+            size="small"
+            primary
+            disabled={isCollegeScorecardFetching}
+          >
+            Export
+          </Button>
         </Segment>
       </div>
     );
@@ -100,7 +120,8 @@ export default withMainLayout(connect(
     collegeScorecardFilters: collegeScorecardReduxModule.selectors.getFilters(state),
   }),
   dispatch => ({
-    fetchCollegeScorecardData: fileName => dispatch(collegeScorecardReduxModule.actions.fetch(fileName)),
+    fetchCollegeScorecardData: (fileName, populated) =>
+      dispatch(collegeScorecardReduxModule.actions.fetch(fileName, populated)),
     resetCollegeScorecardData: () => {
       dispatch(collegeScorecardReduxModule.actions.reset());
     },
