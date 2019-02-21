@@ -1,11 +1,14 @@
 import itemListReducerFor, { initialState as itemListInitialState } from 'redux/reducers/itemListReducerFor';
+import itemListSelectReducerFor, { initialState as itemListSelectInitialState }
+  from '../../reducers/itemListSelectReducerFor';
 import { actionTypes } from './actions';
 
 // Initial state
-const initialState = Object.assign({}, itemListInitialState);
+const initialState = Object.assign({}, itemListInitialState, itemListSelectInitialState);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
+const itemListSelectReducer = itemListSelectReducerFor(actionTypes);
 
 /**
  * College scorecard reducer.
@@ -22,6 +25,9 @@ export default (state = initialState, action) => {
       return itemListReducer(state, action);
     case actionTypes.RESET:
       return itemListReducer(state, action);
+    case actionTypes.SELECT:
+    case actionTypes.UNSELECT:
+      return itemListSelectReducer(state, action);
     default:
       return state;
   }
