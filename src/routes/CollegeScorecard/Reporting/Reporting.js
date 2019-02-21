@@ -59,7 +59,6 @@ class Reporting extends Component {
               <Dropdown
                 placeholder="Files"
                 fluid
-                multiple
                 search
                 selection
                 options={filesDropdownOptions}
