@@ -65,9 +65,6 @@ class Reporting extends Component {
                 options={filesDropdownOptions}
               />
             </Grid.Column>
-            <Grid.Column width={2}>
-              <Button primary>Export</Button>
-            </Grid.Column>
           </Grid>
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
@@ -80,6 +77,9 @@ class Reporting extends Component {
             selectData={selectData}
             unselectData={unselectData}
           />
+        </Segment>
+        <Segment>
+          <Button primary>Export</Button>
         </Segment>
       </div>
     );

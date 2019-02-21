@@ -5,6 +5,8 @@ import ReactTable from 'react-table';
 import checkboxHOC from 'react-table/lib/hoc/selectTable';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import withResponsiveTable from 'components/WithResponsiveTable';
+import RowExpander from './RowExpander';
+import RowDetails from './RowDetails';
 
 const CheckboxTable = checkboxHOC(ReactTable);
 const keyName = 'column_name';
@@ -14,6 +16,11 @@ const defaultExpanded = {};
  * Table columns
  */
 const columns = [
+  {
+    expander: true,
+    Expander: RowExpander,
+    width: 30
+  },
   {
     Header: 'COLUMN_NAME',
     accessor: 'column_name',
@@ -42,11 +49,10 @@ const columns = [
   {
     Header: 'DESCRIPTION',
     accessor: 'entry_data_type',
-    width: 200
+    width: 300
   },
   {
-    Header: 'LONG DESCRIPTION',
-    accessor: 'entry_description'
+    Header: ''
   }
 ];
 
@@ -139,6 +145,7 @@ class ColumnsTable extends Component {
           selectType="checkbox"
           keyField={keyName}
           SelectAllInputComponent={SelectAllInputComponent}
+          SubComponent={row => <RowDetails row={row} />}
           expanded={this.state.expanded}
           onExpandedChange={this.onExpanded}
         />
@@ -147,4 +154,4 @@ class ColumnsTable extends Component {
   }
 }
 
-export default withResponsiveTable(ColumnsTable, 320, 200);
+export default withResponsiveTable(ColumnsTable, 320, 280);
