@@ -7,7 +7,7 @@ import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import withResponsiveTable from 'components/WithResponsiveTable';
 
 const CheckboxTable = checkboxHOC(ReactTable);
-const keyName = 'column_name';
+const keyName = 'id';
 const defaultExpanded = {};
 
 /**
