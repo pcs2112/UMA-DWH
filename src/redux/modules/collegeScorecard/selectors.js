@@ -5,8 +5,17 @@ import {
   createGetPropertySelector,
   createFetchingErrorSelector
 } from 'javascript-utils/lib/selectors';
+import collegeScorecardFilesReduxModule from 'redux/modules/collegeScorecardFiles';
 
 const _getData = createDataSelector('collegeScorecard', 'dataLoaded', 'data');
+
+/**
+ * Returns the filters from the state.
+ * @param {Object} state
+ */
+const _getFilters = state => ({
+  fileName: state.collegeScorecard.fileName
+});
 
 /**
  * Returns the fetching error.
@@ -31,4 +40,23 @@ export const getSelected = createGetPropertySelector('collegeScorecard', 'select
 export const getSelectedCount = createSelector(
   [getSelected],
   selected => Object.keys(selected).length
+);
+
+/**
+ * Selector to get the filters.
+ */
+export const getFilters = createSelector(
+  [_getFilters, collegeScorecardFilesReduxModule.selectors.getCollegeScorecardFilesData],
+  (filtersFromState, files) => {
+    let { fileName } = filtersFromState;
+
+    // Set the default file
+    if (fileName === '' && files.length > 0) {
+      fileName = files[0].file_name;
+    }
+
+    return {
+      fileName
+    };
+  }
 );

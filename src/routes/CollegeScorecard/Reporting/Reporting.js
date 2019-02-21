@@ -2,23 +2,25 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Segment, Dropdown, Button, Grid
+  Segment, Button, Grid
 } from 'semantic-ui-react';
 import collegeScorecardReduxModule from 'redux/modules/collegeScorecard';
 import collegeScorecardFilesReduxModule from 'redux/modules/collegeScorecardFiles';
 import withMainLayout from 'components/WithMainLayout';
 import globalCss from 'css/global';
 import ColumnsTable from './ColumnsTable';
+import FilesDropdownFilter from './FilesDropdownFilter';
 
 class Reporting extends Component {
   static propTypes = {
-    filesDropdownOptions: PropTypes.array.isRequired,
+    collegeScorecardFilesData: PropTypes.array.isRequired,
     isCollegeScorecardFetching: PropTypes.bool.isRequired,
     collegeScorecardDataLoaded: PropTypes.bool.isRequired,
     collegeScorecardData: PropTypes.array.isRequired,
     collegeScorecardFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     collegeScorecardSelectedData: PropTypes.object.isRequired,
     // collegeScorecardSelectedCount: PropTypes.number.isRequired,
+    collegeScorecardFilters: PropTypes.object.isRequired,
     fetchCollegeScorecardData: PropTypes.func.isRequired,
     resetCollegeScorecardData: PropTypes.func.isRequired,
     selectData: PropTypes.func.isRequired,
@@ -26,8 +28,9 @@ class Reporting extends Component {
   };
 
   componentDidMount() {
-    const { fetchCollegeScorecardData } = this.props;
-    fetchCollegeScorecardData();
+    const { fetchCollegeScorecardData, collegeScorecardFilters } = this.props;
+    const { fileName } = collegeScorecardFilters;
+    fetchCollegeScorecardData(fileName);
   }
 
   componentWillUnmount() {
@@ -37,12 +40,14 @@ class Reporting extends Component {
 
   render() {
     const {
-      filesDropdownOptions,
+      collegeScorecardFilesData,
       collegeScorecardDataLoaded,
       collegeScorecardData,
       isCollegeScorecardFetching,
       collegeScorecardFetchingError,
       collegeScorecardSelectedData,
+      collegeScorecardFilters,
+      fetchCollegeScorecardData,
       selectData,
       unselectData
     } = this.props;
@@ -56,12 +61,10 @@ class Reporting extends Component {
         <Segment>
           <Grid>
             <Grid.Column width={5}>
-              <Dropdown
-                placeholder="Files"
-                fluid
-                search
-                selection
-                options={filesDropdownOptions}
+              <FilesDropdownFilter
+                files={collegeScorecardFilesData}
+                onChange={fetchCollegeScorecardData}
+                {...collegeScorecardFilters}
               />
             </Grid.Column>
           </Grid>
@@ -87,16 +90,17 @@ class Reporting extends Component {
 
 export default withMainLayout(connect(
   state => ({
-    filesDropdownOptions: collegeScorecardFilesReduxModule.selectors.getFilterOptions(state),
+    collegeScorecardFilesData: collegeScorecardFilesReduxModule.selectors.getCollegeScorecardFilesData(state),
     isCollegeScorecardFetching: state.collegeScorecard.isFetching,
     collegeScorecardDataLoaded: state.collegeScorecard.dataLoaded,
     collegeScorecardData: collegeScorecardReduxModule.selectors.getCollegeScorecardData(state),
     collegeScorecardFetchingError: collegeScorecardReduxModule.selectors.getFetchingError(state),
     collegeScorecardSelectedData: collegeScorecardReduxModule.selectors.getSelected(state),
-    collegeScorecardSelectedCount: collegeScorecardReduxModule.selectors.getSelectedCount(state)
+    collegeScorecardSelectedCount: collegeScorecardReduxModule.selectors.getSelectedCount(state),
+    collegeScorecardFilters: collegeScorecardReduxModule.selectors.getFilters(state),
   }),
   dispatch => ({
-    fetchCollegeScorecardData: () => dispatch(collegeScorecardReduxModule.actions.fetch()),
+    fetchCollegeScorecardData: fileName => dispatch(collegeScorecardReduxModule.actions.fetch(fileName)),
     resetCollegeScorecardData: () => {
       dispatch(collegeScorecardReduxModule.actions.reset());
     },

@@ -10,7 +10,7 @@ export const actionTypes = {
 /**
  * Action to fetch the College scorecard data.
  */
-export const fetch = (filename = 'MERGED1996_97_PP.CSV') => ({
+export const fetch = fileName => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,
@@ -19,9 +19,12 @@ export const fetch = (filename = 'MERGED1996_97_PP.CSV') => ({
   makeRequest: client => client.get('/api/college_scorecard/data/details', {
     params: {
       mode: 'DETAIL',
-      filename
+      filename: fileName
     }
-  })
+  }),
+  payload: {
+    fileName
+  }
 });
 
 /**
