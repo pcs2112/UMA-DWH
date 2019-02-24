@@ -48,7 +48,7 @@ class FilesDropdownFilter extends Component {
     return (
       <Form size="small">
         <Form.Group inline>
-          <Form.Field width={3}>
+          <Form.Field width={2}>
             <div className="right-aligned-label">
               <label>Files</label>
             </div>

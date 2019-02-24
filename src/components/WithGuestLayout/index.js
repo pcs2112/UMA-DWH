@@ -1,3 +1,3 @@
-import { withGuestLayout } from './withGuestLayout';
+import { withGuestLayout } from './WithGuestLayout';
 
 export default withGuestLayout;

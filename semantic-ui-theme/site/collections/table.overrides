@@ -38,11 +38,6 @@
   padding: 2px 4px !important;
 }
 
-.ReactVirtualizedTable {
-  width: 100%;
-  margin-top: 15px;
-}
-
 .rvt-header-row,
 .rvt-even-row,
 .rvt-odd-row,
@@ -73,11 +68,4 @@
   justify-content: center;
   font-size: 1em;
   color: #bdbdbd;
-}
-
-.ReactVirtualized__Table__rowColumn {
-  border-right: 1px solid #e0e0e0;
-  margin-right: 0;
-  padding-left: 2px;
-  padding-right: 2px;
 }

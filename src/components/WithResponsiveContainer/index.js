@@ -1,3 +1,3 @@
-import { withResponsiveContainer } from './withResponsiveContainer';
+import { withResponsiveContainer } from './WithResponsiveContainer';
 
 export default withResponsiveContainer;

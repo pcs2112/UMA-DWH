@@ -19,7 +19,7 @@ class Reporting extends Component {
     collegeScorecardData: PropTypes.array.isRequired,
     collegeScorecardFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     collegeScorecardSelectedData: PropTypes.object.isRequired,
-    // collegeScorecardSelectedCount: PropTypes.number.isRequired,
+    collegeScorecardSelectedCount: PropTypes.number.isRequired,
     collegeScorecardFilters: PropTypes.object.isRequired,
     fetchCollegeScorecardData: PropTypes.func.isRequired,
     resetCollegeScorecardData: PropTypes.func.isRequired,
@@ -53,6 +53,7 @@ class Reporting extends Component {
       isCollegeScorecardFetching,
       collegeScorecardFetchingError,
       collegeScorecardSelectedData,
+      collegeScorecardSelectedCount,
       collegeScorecardFilters,
       fetchCollegeScorecardData,
       selectData,
@@ -83,6 +84,7 @@ class Reporting extends Component {
             isFetching={isCollegeScorecardFetching}
             fetchingError={collegeScorecardFetchingError}
             selectedData={collegeScorecardSelectedData}
+            selectedDataCount={collegeScorecardSelectedCount}
             selectData={selectData}
             unselectData={unselectData}
           />

@@ -1,3 +1,3 @@
-import { withResponsiveTable } from './withResponsiveTable';
+import { withResponsiveTable } from './WithResponsiveTable';
 
 export default withResponsiveTable;

@@ -1,3 +1,3 @@
-import { withCyclePagination } from './withCyclePagination';
+import { withCyclePagination } from './WithCyclePagination';
 
 export default withCyclePagination;

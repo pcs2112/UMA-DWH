@@ -1,3 +1,3 @@
-import { withAsyncPolling } from './withAsyncPolling';
+import { withAsyncPolling } from './WithAsyncPolling';
 
 export default withAsyncPolling;
