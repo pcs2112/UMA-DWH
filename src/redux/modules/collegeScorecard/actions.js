@@ -4,7 +4,9 @@ export const actionTypes = {
   FETCH_FAIL: 'collegeScorecard/FETCH_FAIL',
   RESET: 'collegeScorecard/RESET',
   SELECT: 'collegeScorecard/SELECT',
-  UNSELECT: 'collegeScorecard/UNSELECT'
+  SELECT_ALL: 'collegeScorecard/SELECT_ALL',
+  UNSELECT: 'collegeScorecard/UNSELECT',
+  UNSELECT_ALL: 'collegeScorecard/UNSELECT_ALL'
 };
 
 /**
@@ -39,16 +41,31 @@ export const reset = () => ({
 /**
  * Action to select items.
  */
-export const select = (id, data) => ({
+export const select = data => ({
   type: actionTypes.SELECT,
-  id,
   data
 });
 
 /**
+ * Action to select all items.
+ */
+export const selectAll = keyName => ({
+  type: actionTypes.SELECT_ALL,
+  keyName
+});
+
+
+/**
  * Action to unselect an item.
  */
-export const unselect = id => ({
+export const unselect = keyValue => ({
   type: actionTypes.UNSELECT,
-  id
+  keyValue
+});
+
+/**
+ * Action to unselect all items.
+ */
+export const unselectAll = () => ({
+  type: actionTypes.UNSELECT_ALL
 });

@@ -11,7 +11,7 @@ const initialState = Object.assign({
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
-const itemListSelectReducer = itemListSelectReducerFor(actionTypes);
+const itemListSelectReducer = itemListSelectReducerFor(actionTypes, 'dictionary_entry_id');
 
 // Set the filters data
 const setFilters = (state, action) => {
@@ -39,7 +39,9 @@ export default (state = initialState, action) => {
     case actionTypes.RESET:
       return itemListReducer(state, action);
     case actionTypes.SELECT:
+    case actionTypes.SELECT_ALL:
     case actionTypes.UNSELECT:
+    case actionTypes.UNSELECT_ALL:
       return itemListSelectReducer(state, action);
     case actionTypes.SET_FILTERS:
       return setFilters(state, action);

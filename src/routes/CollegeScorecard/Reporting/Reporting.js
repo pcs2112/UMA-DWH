@@ -24,7 +24,9 @@ class Reporting extends Component {
     fetchCollegeScorecardData: PropTypes.func.isRequired,
     resetCollegeScorecardData: PropTypes.func.isRequired,
     selectData: PropTypes.func.isRequired,
-    unselectData: PropTypes.func.isRequired
+    selectAllData: PropTypes.func.isRequired,
+    unselectData: PropTypes.func.isRequired,
+    unselectAllData: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -57,7 +59,9 @@ class Reporting extends Component {
       collegeScorecardFilters,
       fetchCollegeScorecardData,
       selectData,
-      unselectData
+      selectAllData,
+      unselectData,
+      unselectAllData
     } = this.props;
     return (
       <div>
@@ -90,6 +94,12 @@ class Reporting extends Component {
           />
         </Segment>
         <Segment>
+          <Button
+            size="small"
+            onClick={collegeScorecardSelectedCount < 1 ? selectAllData : unselectAllData}
+          >
+            {collegeScorecardSelectedCount < 1 ? 'Check All' : 'Uncheck All'}
+          </Button>
           <Button
             size="small"
             disabled={isCollegeScorecardFetching}
@@ -127,7 +137,9 @@ export default withMainLayout(connect(
     resetCollegeScorecardData: () => {
       dispatch(collegeScorecardReduxModule.actions.reset());
     },
-    selectData: (id, data) => dispatch(collegeScorecardReduxModule.actions.select(id, data)),
-    unselectData: id => dispatch(collegeScorecardReduxModule.actions.unselect(id))
+    selectData: data => dispatch(collegeScorecardReduxModule.actions.select(data)),
+    selectAllData: () => dispatch(collegeScorecardReduxModule.actions.selectAll()),
+    unselectData: id => dispatch(collegeScorecardReduxModule.actions.unselect(id)),
+    unselectAllData: () => dispatch(collegeScorecardReduxModule.actions.unselectAll()),
   })
 )(Reporting));

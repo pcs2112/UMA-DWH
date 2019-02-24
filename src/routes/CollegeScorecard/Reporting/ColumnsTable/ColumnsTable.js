@@ -8,45 +8,13 @@ import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import withResponsiveContainer from '../../../../components/WithResponsiveContainer';
+import columns from './columns';
 import styles from './styles.less';
 
 const keyName = 'dictionary_entry_id';
-const columns = [
-  {
-    width: 25,
-    label: ''
-  },
-  {
-    dataKey: 'column_name',
-    width: 200,
-    label: 'COLUMN_NAME'
-  },
-  {
-    dataKey: 'row_count',
-    width: 100,
-    label: 'POPULATED'
-  },
-  {
-    dataKey: 'per_pop',
-    width: 100,
-    label: '% POPULATED'
-  },
-  {
-    dataKey: 'entry_data_type',
-    width: 120,
-    label: 'DATA_TYPE'
-  },
-  {
-    dataKey: 'entry_name',
-    width: 500,
-    label: 'DESCRIPTION'
-  },
-  {
-    dataKey: 'entry_description',
-    width: 2000,
-    label: 'LONG DESCRIPTION'
-  }
-];
+const OVERSCAN_COL_COUNT = 0;
+const OVERSCAN_ROW_COUNT = 5;
+const ROW_HEIGHT = 22;
 
 class ColumnsTable extends React.PureComponent {
   static propTypes = {
@@ -59,21 +27,6 @@ class ColumnsTable extends React.PureComponent {
     selectData: PropTypes.func.isRequired,
     unselectData: PropTypes.func.isRequired
   };
-
-  constructor(props, context) {
-    super(props, context);
-
-    this.state = {
-      columnCount: 7,
-      overscanColumnCount: 0,
-      overscanRowCount: 5,
-      rowHeight: 22
-    };
-
-    this._renderBodyCell = this._renderBodyCell.bind(this);
-    this._renderHeaderCell = this._renderHeaderCell.bind(this);
-    this._renderLeftSideCell = this._renderLeftSideCell.bind(this);
-  }
 
   _renderLeftSideHeaderCell = ({
     key, style
@@ -147,7 +100,7 @@ class ColumnsTable extends React.PureComponent {
     if (objectHasOwnProperty(selectedData, key)) {
       unselectData(key);
     } else {
-      selectData(key, row);
+      selectData(row);
     }
   };
 
@@ -157,13 +110,8 @@ class ColumnsTable extends React.PureComponent {
     const {
       containerHeight, isFetching, data, selectedDataCount
     } = this.props;
-    const {
-      columnCount,
-      overscanColumnCount,
-      overscanRowCount,
-      rowHeight
-    } = this.state;
 
+    const columnCount = columns.length;
     const rowCount = data.length;
 
     return (
@@ -189,8 +137,8 @@ class ColumnsTable extends React.PureComponent {
                 cellRenderer={this._renderLeftSideHeaderCell}
                 className={styles.HeaderGrid}
                 width={this._getLeftSideColumnWidth()}
-                height={rowHeight}
-                rowHeight={rowHeight}
+                height={ROW_HEIGHT}
+                rowHeight={ROW_HEIGHT}
                 columnWidth={this._getLeftSideColumnWidth}
                 rowCount={1}
                 columnCount={1}
@@ -201,18 +149,18 @@ class ColumnsTable extends React.PureComponent {
               style={{
                 position: 'absolute',
                 left: 0,
-                top: rowHeight
+                top: ROW_HEIGHT
               }}
             >
               <Grid
-                overscanColumnCount={overscanColumnCount}
-                overscanRowCount={overscanRowCount}
+                overscanColumnCount={OVERSCAN_COL_COUNT}
+                overscanRowCount={OVERSCAN_ROW_COUNT}
                 cellRenderer={this._renderLeftSideCell}
                 columnWidth={this._getLeftSideColumnWidth}
                 columnCount={1}
                 className={styles.LeftSideGrid}
                 height={containerHeight - scrollbarSize()}
-                rowHeight={rowHeight}
+                rowHeight={ROW_HEIGHT}
                 rowCount={rowCount}
                 scrollTop={scrollTop}
                 width={this._getLeftSideColumnWidth()}
@@ -225,7 +173,7 @@ class ColumnsTable extends React.PureComponent {
                   <div>
                     <div
                       style={{
-                        height: rowHeight,
+                        height: ROW_HEIGHT,
                         width: width - scrollbarSize()
                       }}
                     >
@@ -233,13 +181,13 @@ class ColumnsTable extends React.PureComponent {
                         className={styles.HeaderGrid}
                         columnWidth={this._getColumnWidth}
                         columnCount={columnCount}
-                        height={rowHeight}
-                        overscanColumnCount={overscanColumnCount}
+                        height={ROW_HEIGHT}
+                        overscanColumnCount={OVERSCAN_COL_COUNT}
                         cellRenderer={this._renderHeaderCell}
-                        rowHeight={rowHeight}
+                        rowHeight={ROW_HEIGHT}
                         rowCount={1}
                         scrollLeft={scrollLeft}
-                        width={width - scrollbarSize()}
+                        width={width - scrollbarSize() + 10}
                       />
                     </div>
                     <div
@@ -254,10 +202,10 @@ class ColumnsTable extends React.PureComponent {
                         columnCount={columnCount}
                         height={containerHeight}
                         onScroll={onScroll}
-                        overscanColumnCount={overscanColumnCount}
-                        overscanRowCount={overscanRowCount}
+                        overscanColumnCount={OVERSCAN_COL_COUNT}
+                        overscanRowCount={OVERSCAN_ROW_COUNT}
                         cellRenderer={this._renderBodyCell}
-                        rowHeight={rowHeight}
+                        rowHeight={ROW_HEIGHT}
                         rowCount={rowCount}
                         width={width}
                       />
