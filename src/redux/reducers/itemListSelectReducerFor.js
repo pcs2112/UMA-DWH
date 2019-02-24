@@ -1,28 +1,30 @@
 export const initialState = {
   selected: {},
-  selectedOrder: []
+  selectedOrder: [],
+  data: false
 };
 
 /**
  * Reusable factory reducer to select a items from a list.
  *
  * @param {Object} actionTypes
+ * @param {String} keyName
  * @returns {Function}
  */
 const itemListSelectReducerFor = ({
   SELECT, UNSELECT, SELECT_ALL, UNSELECT_ALL
-}) => (state = initialState, action) => {
+}, keyName) => (state = initialState, action) => {
   switch (action.type) {
     case SELECT: {
       // Add the selected item
       const selected = {
         ...state.selected,
-        [action.id]: action.data
+        [action.data[keyName]]: action.data
       };
 
       // Add the selected item to the selected order
       const selectedOrder = [...state.selectedOrder];
-      selectedOrder.push(action.id);
+      selectedOrder.push(action.data[keyName]);
 
       return {
         ...state,
@@ -36,10 +38,10 @@ const itemListSelectReducerFor = ({
       };
 
       // Remove the unselected item
-      delete (selected[action.id]);
+      delete (selected[action.keyValue]);
 
       // Remove the unselected items from the selected order
-      const selectedOrder = state.selectedOrder.filter(item => item !== action.id);
+      const selectedOrder = state.selectedOrder.filter(item => item !== action.keyValue);
 
       return {
         ...state,
@@ -48,14 +50,14 @@ const itemListSelectReducerFor = ({
       };
     }
     case SELECT_ALL: {
-      const { key, data } = action;
+      const { data } = state;
       const selected = {};
       const selectedOrder = [];
 
       if (data.length > 0) {
         data.forEach((item) => {
-          selected[item[key]] = item;
-          selectedOrder.push(item[key]);
+          selected[item[keyName]] = item;
+          selectedOrder.push(item[keyName]);
         });
       }
 
