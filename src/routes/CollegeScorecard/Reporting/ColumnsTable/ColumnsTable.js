@@ -7,19 +7,16 @@ import clsx from 'clsx';
 import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
+import { ROW_HEIGHT, OVERSCAN_COL_COUNT, OVERSCAN_ROW_COUNT } from '../../../../constants/reactVirtualized';
 import withResponsiveContainer from '../../../../components/WithResponsiveContainer';
 import columns from './columns';
-import styles from './styles.less';
+import styles from '../../../../css/react-virtualized.less';
 
 const keyName = 'dictionary_entry_id';
-const OVERSCAN_COL_COUNT = 0;
-const OVERSCAN_ROW_COUNT = 5;
-const ROW_HEIGHT = 22;
 
 class ColumnsTable extends React.PureComponent {
   static propTypes = {
     isFetching: PropTypes.bool.isRequired,
-    // dataLoaded: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
     containerHeight: PropTypes.number.isRequired,
     selectedData: PropTypes.object.isRequired,
