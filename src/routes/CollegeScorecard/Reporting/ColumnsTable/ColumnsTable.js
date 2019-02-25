@@ -89,7 +89,14 @@ class ColumnsTable extends React.PureComponent {
     return data[rowIndex];
   };
 
-  _getRowColorClass = rowIndex => (rowIndex % 2 === 0 ? styles.EvenRow : styles.OddRow);
+  _getRowColorClass = (rowIndex) => {
+    const rowData = this._rowGetter(rowIndex);
+    if (this._isSelected(rowData[keyName])) {
+      return styles.HighlightedRow;
+    }
+
+    return (rowIndex % 2 === 0 ? styles.EvenRow : styles.OddRow);
+  };
 
   _toggleSelection = (row) => {
     const { selectedData, selectData, unselectData } = this.props;
@@ -205,6 +212,7 @@ class ColumnsTable extends React.PureComponent {
                         rowHeight={ROW_HEIGHT}
                         rowCount={rowCount}
                         width={width}
+                        selectedCount={selectedDataCount}
                       />
                     </div>
                   </div>
