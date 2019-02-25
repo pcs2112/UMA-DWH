@@ -4,10 +4,10 @@ import { connect } from 'react-redux';
 import {
   Segment, Button, Grid
 } from 'semantic-ui-react';
-import collegeScorecardReduxModule from 'redux/modules/collegeScorecard';
-import collegeScorecardFilesReduxModule from 'redux/modules/collegeScorecardFiles';
-import withMainLayout from 'components/WithMainLayout';
-import globalCss from 'css/global';
+import collegeScorecardReduxModule from '../../../redux/modules/collegeScorecard';
+import collegeScorecardFilesReduxModule from '../../../redux/modules/collegeScorecardFiles';
+import withMainLayout from '../../../components/WithMainLayout';
+import globalCss from '../../../css/global';
 import ColumnsTable from './ColumnsTable';
 import FilesDropdownFilter from './FilesDropdownFilter';
 
