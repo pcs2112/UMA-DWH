@@ -4,33 +4,23 @@ export default [
     label: ''
   },
   {
-    dataKey: 'column_name',
-    width: 200,
-    label: 'COLUMN_NAME'
+    dataKey: 'group_name',
+    width: 500,
+    label: 'GROUP_NAME'
   },
   {
-    dataKey: 'row_count',
+    dataKey: 'group_col_cnt',
     width: 100,
     label: 'POPULATED'
   },
   {
-    dataKey: 'per_pop',
-    width: 100,
-    label: '% POPULATED'
-  },
-  {
-    dataKey: 'entry_data_type',
+    dataKey: 'group_data_type',
     width: 120,
     label: 'DATA_TYPE'
   },
   {
-    dataKey: 'entry_name',
-    width: 500,
-    label: 'DESCRIPTION'
-  },
-  {
-    dataKey: 'entry_description',
+    dataKey: 'group_description',
     width: 2000,
-    label: 'LONG DESCRIPTION'
+    label: 'DESCRIPTION'
   }
 ];
