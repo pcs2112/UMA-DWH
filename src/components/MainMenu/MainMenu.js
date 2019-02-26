@@ -49,7 +49,10 @@ class MainMenu extends Component {
         <Menu.Item
           as={Link}
           to="/college_scorecard/reporting"
-          active={isActive(pathname, '/college_scorecard/reporting')}
+          active={
+            isActive(pathname, '/college_scorecard/reporting')
+            || isActive(pathname, '/college_scorecard/groups')
+          }
         >
           College Scorecard Reporting
         </Menu.Item>

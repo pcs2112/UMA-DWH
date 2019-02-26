@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { Dropdown, Form } from 'semantic-ui-react';
-import { FILTERS_EXEC_DELAY } from 'constants/index';
+import { FILTERS_EXEC_DELAY } from '../../../constants/index';
 
 class FilesDropdownFilter extends Component {
   static propTypes = {

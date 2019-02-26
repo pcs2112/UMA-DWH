@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import {
   Segment, Button, Grid
 } from 'semantic-ui-react';
@@ -13,7 +12,7 @@ import FilesDropdownFilter from '../FilesDropdownFilter';
 import ColumnsTable from '../ColumnsTable';
 import columns from './columns';
 
-class Reporting extends Component {
+class Groups extends Component {
   static propTypes = {
     collegeScorecardFilesData: PropTypes.array.isRequired,
     isCollegeScorecardFetching: PropTypes.bool.isRequired,
@@ -69,7 +68,7 @@ class Reporting extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            College Scorecard Reporting
+            College Scorecard Groups
           </h1>
         </Segment>
         <Segment>
@@ -113,13 +112,6 @@ class Reporting extends Component {
           </Button>
           <Button
             size="small"
-            as={Link}
-            to="/college_scorecard/groups"
-          >
-            View Groups
-          </Button>
-          <Button
-            size="small"
             primary
             disabled={isCollegeScorecardFetching}
           >
@@ -153,4 +145,4 @@ export default withMainLayout(connect(
     unselectData: id => dispatch(collegeScorecardReduxModule.actions.unselect(id)),
     unselectAllData: () => dispatch(collegeScorecardReduxModule.actions.unselectAll()),
   })
-)(Reporting));
+)(Groups));

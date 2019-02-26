@@ -7,12 +7,9 @@ import clsx from 'clsx';
 import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
-import { ROW_HEIGHT, OVERSCAN_COL_COUNT, OVERSCAN_ROW_COUNT } from '../../../../constants/reactVirtualized';
-import withResponsiveContainer from '../../../../components/WithResponsiveContainer';
-import columns from './columns';
-import styles from '../../../../css/react-virtualized.less';
-
-const keyName = 'dictionary_entry_id';
+import { ROW_HEIGHT, OVERSCAN_COL_COUNT, OVERSCAN_ROW_COUNT } from '../../../constants/reactVirtualized';
+import withResponsiveContainer from '../../../components/WithResponsiveContainer';
+import styles from '../../../css/react-virtualized.less';
 
 class ColumnsTable extends React.PureComponent {
   static propTypes = {
@@ -22,7 +19,9 @@ class ColumnsTable extends React.PureComponent {
     selectedData: PropTypes.object.isRequired,
     selectedDataCount: PropTypes.number.isRequired,
     selectData: PropTypes.func.isRequired,
-    unselectData: PropTypes.func.isRequired
+    unselectData: PropTypes.func.isRequired,
+    columns: PropTypes.array.isRequired,
+    keyName: PropTypes.string.isRequired
   };
 
   _renderLeftSideHeaderCell = ({
@@ -36,6 +35,8 @@ class ColumnsTable extends React.PureComponent {
       return null;
     }
 
+    const { columns } = this.props;
+
     return (
       <div className={styles.HeaderCell} key={key} style={style}>
         {columns[columnIndex].label}
@@ -46,6 +47,7 @@ class ColumnsTable extends React.PureComponent {
   _renderLeftSideCell = ({
     key, rowIndex, style
   }) => {
+    const { keyName } = this.props;
     const rowData = this._rowGetter(rowIndex);
     const rowClass = this._getRowColorClass(rowIndex);
     const classNames = clsx(rowClass, styles.LeftCell);
@@ -68,6 +70,7 @@ class ColumnsTable extends React.PureComponent {
       return null;
     }
 
+    const { columns } = this.props;
     const rowClass = this._getRowColorClass(rowIndex);
     const classNames = clsx(rowClass, styles.Cell);
     const rowData = this._rowGetter(rowIndex);
@@ -80,9 +83,9 @@ class ColumnsTable extends React.PureComponent {
     );
   };
 
-  _getColumnWidth = ({ index }) => columns[index].width;
+  _getColumnWidth = ({ index }) => this.props.columns[index].width;
 
-  _getLeftSideColumnWidth = () => columns[0].width;
+  _getLeftSideColumnWidth = () => this.props.columns[0].width;
 
   _rowGetter = (rowIndex) => {
     const { data } = this.props;
@@ -90,6 +93,7 @@ class ColumnsTable extends React.PureComponent {
   };
 
   _getRowColorClass = (rowIndex) => {
+    const { keyName } = this.props;
     const rowData = this._rowGetter(rowIndex);
     if (this._isSelected(rowData[keyName])) {
       return styles.HighlightedRow;
@@ -99,7 +103,9 @@ class ColumnsTable extends React.PureComponent {
   };
 
   _toggleSelection = (row) => {
-    const { selectedData, selectData, unselectData } = this.props;
+    const {
+      selectedData, selectData, unselectData, keyName
+    } = this.props;
     const key = row[keyName];
     if (objectHasOwnProperty(selectedData, key)) {
       unselectData(key);
@@ -112,7 +118,7 @@ class ColumnsTable extends React.PureComponent {
 
   render() {
     const {
-      containerHeight, isFetching, data, selectedDataCount
+      containerHeight, isFetching, data, selectedDataCount, columns
     } = this.props;
 
     const columnCount = columns.length;
