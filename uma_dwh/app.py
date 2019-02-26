@@ -66,7 +66,9 @@ def register_errorhandlers(app):
 def register_logger(app):
     """Register the application logging"""
     if app.config['IS_PRODUCTION'] and app.config['DEBUG'] is False:
+        formatter = logging.Formatter("[%(asctime)s] {%(pathname)s:%(lineno)d} %(levelname)s - %(message)s")
         log_handler = RotatingFileHandler(app.config['APP_DIR'] + '/logs/app.txt', maxBytes=10000, backupCount=5)
+        log_handler.setFormatter(formatter)
         log_handler.setLevel(logging.ERROR)
         app.logger.setLevel(logging.ERROR)
         app.logger.addHandler(log_handler)
