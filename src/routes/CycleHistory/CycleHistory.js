@@ -21,7 +21,6 @@ import { runCheckButtonCss } from './css';
 
 class Home extends Component {
   static propTypes = {
-    history: PropTypes.object.isRequired,
     // Cycle history props
     dispatchPollingAction: PropTypes.func.isRequired,
     isCycleHistoryFetching: PropTypes.bool.isRequired,
@@ -54,6 +53,12 @@ class Home extends Component {
     currentEtlStatus: PropTypes.string.isRequired,
     // Procedure history props
     setProcedureHistoryFilters: PropTypes.func.isRequired
+  };
+
+  static contextTypes = {
+    router: PropTypes.shape({
+      history: PropTypes.object.isRequired
+    })
   };
 
   componentDidMount() {
@@ -90,7 +95,9 @@ class Home extends Component {
       );
     }
 
-    this.props.history.push('/procedures/history');
+    setTimeout(() => {
+      this.context.router.history.push('/procedures/history');
+    }, 250);
   };
 
   handleActiveFilterButton = () => {
