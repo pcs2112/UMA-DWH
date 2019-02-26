@@ -1,3 +1,3 @@
-import { withPagination } from './withPagination';
+import { withPagination } from './WithPagination';
 
 export default withPagination;

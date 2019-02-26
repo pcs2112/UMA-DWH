@@ -1,33 +1,33 @@
 export const actionTypes = {
-  FETCH_BEGIN: 'collegeScorecard/FETCH_BEGIN',
-  FETCH_SUCCESS: 'collegeScorecard/FETCH_SUCCESS',
-  FETCH_FAIL: 'collegeScorecard/FETCH_FAIL',
-  RESET: 'collegeScorecard/RESET',
-  SELECT: 'collegeScorecard/SELECT',
-  SELECT_ALL: 'collegeScorecard/SELECT_ALL',
-  UNSELECT: 'collegeScorecard/UNSELECT',
-  UNSELECT_ALL: 'collegeScorecard/UNSELECT_ALL'
+  FETCH_BEGIN: 'collegeScorecardGroups/FETCH_BEGIN',
+  FETCH_SUCCESS: 'collegeScorecardGroups/FETCH_SUCCESS',
+  FETCH_FAIL: 'collegeScorecardGroups/FETCH_FAIL',
+  RESET: 'collegeScorecardGroups/RESET',
+  SELECT: 'collegeScorecardGroups/SELECT',
+  SELECT_ALL: 'collegeScorecardGroups/SELECT_ALL',
+  UNSELECT: 'collegeScorecardGroups/UNSELECT',
+  UNSELECT_ALL: 'collegeScorecardGroups/UNSELECT_ALL'
 };
 
 /**
- * Action to fetch the College scorecard data.
+ * Action to fetch the College scorecard group data.
  */
-export const fetch = (fileName, populated = '') => ({
+export const fetch = (fileName, group = 'ALL') => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,
     actionTypes.FETCH_FAIL
   ],
-  makeRequest: client => client.get('/api/college_scorecard/data/details', {
+  makeRequest: client => client.get('/api/college_scorecard/data/summary', {
     params: {
-      mode: 'DETAIL',
+      mode: 'SUMMARY',
       filename: fileName,
-      populated
+      group
     }
   }),
   payload: {
     fileName,
-    populated
+    group
   }
 });
 

@@ -37,3 +37,35 @@
   font-size: 10px;
   padding: 2px 4px !important;
 }
+
+.rvt-header-row,
+.rvt-even-row,
+.rvt-odd-row,
+.rvt-selected-row {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.rvt-odd-row {
+  background-color: #fafafa;
+}
+
+.rvt-selected-row {
+  background-color: #DFE9F3;
+}
+
+.rvt-header-col {
+  text-transform: none;
+}
+
+.rvt-empty {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em;
+  color: #bdbdbd;
+}

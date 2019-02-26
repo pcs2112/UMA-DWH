@@ -17,6 +17,6 @@ path_sp_args_map = {
     'module_func': 'execute_admin_console_sp',
     'sp_name': 'MWH_FILES.MANAGE_CollegeScorecard_Console',
     'sp_message': 'LIST DATA',
-    'sp_in_args': ['mode']
+    'sp_in_args': ['mode', 'filename', 'group']
   }
 }

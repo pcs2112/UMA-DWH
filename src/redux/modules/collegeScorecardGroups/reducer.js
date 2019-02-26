@@ -1,4 +1,4 @@
-import itemListReducerFor, { initialState as itemListInitialState } from 'redux/reducers/itemListReducerFor';
+import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
 import itemListSelectReducerFor, { initialState as itemListSelectInitialState }
   from '../../reducers/itemListSelectReducerFor';
 import { actionTypes } from './actions';
@@ -6,18 +6,18 @@ import { actionTypes } from './actions';
 // Initial state
 const initialState = Object.assign({
   fileName: '',
-  populated: ''
+  group: 'ALL'
 }, itemListInitialState, itemListSelectInitialState);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
-const itemListSelectReducer = itemListSelectReducerFor(actionTypes, 'dictionary_entry_id');
+const itemListSelectReducer = itemListSelectReducerFor(actionTypes, 'group_id');
 
 // Set the filters data
 const setFilters = (state, action) => {
   const newState = { ...state };
   newState.fileName = action.fileName;
-  newState.populated = action.populated;
+  newState.group = action.group;
   return newState;
 };
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import debounce from 'lodash/debounce';
 import { Dropdown, Form } from 'semantic-ui-react';
-import { FILTERS_EXEC_DELAY } from 'constants/index';
+import { FILTERS_EXEC_DELAY } from '../../../constants/index';
 
 class FilesDropdownFilter extends Component {
   static propTypes = {
@@ -48,7 +48,7 @@ class FilesDropdownFilter extends Component {
     return (
       <Form size="small">
         <Form.Group inline>
-          <Form.Field width={3}>
+          <Form.Field width={2}>
             <div className="right-aligned-label">
               <label>Files</label>
             </div>
