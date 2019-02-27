@@ -25,7 +25,7 @@ export default [
   },
   {
     dataKey: 'entry_name',
-    width: 500,
+    width: 600,
     label: 'DESCRIPTION'
   },
   {
