@@ -1,25 +1,21 @@
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
 import itemListSelectReducerFor, { initialState as itemListSelectInitialState }
   from '../../reducers/itemListSelectReducerFor';
+import itemListFiltersReducerFor from '../../reducers/itemListFiltersReducerFor';
 import { actionTypes } from './actions';
 
-// Initial state
-const initialState = Object.assign({
+const defaultFilters = {
   fileName: '',
   group: 'ALL'
-}, itemListInitialState, itemListSelectInitialState);
+};
+
+// Initial state
+const initialState = Object.assign({}, defaultFilters, itemListInitialState, itemListSelectInitialState);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
 const itemListSelectReducer = itemListSelectReducerFor(actionTypes, 'group_id');
-
-// Set the filters data
-const setFilters = (state, action) => {
-  const newState = { ...state };
-  newState.fileName = action.fileName;
-  newState.group = action.group;
-  return newState;
-};
+const setFilters = itemListFiltersReducerFor(actionTypes, defaultFilters);
 
 /**
  * College scorecard reducer.
