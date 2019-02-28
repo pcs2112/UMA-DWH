@@ -1,11 +1,10 @@
 import { createSelector } from 'reselect';
 import {
   createDataSelector,
-  createGetItemsSelector,
   createGetPropertySelector,
   createFetchingErrorSelector
 } from 'javascript-utils/lib/selectors';
-import collegeScorecardFilesReduxModule from 'redux/modules/collegeScorecardFiles';
+import collegeScorecardFilesReduxModule from '../collegeScorecardFiles';
 
 const _getData = createDataSelector('collegeScorecard', 'dataLoaded', 'data');
 
@@ -27,7 +26,20 @@ export const getFetchingError = createFetchingErrorSelector('collegeScorecard', 
 /**
  * Returns the college scorecard data from the state.
  */
-export const getCollegeScorecardData = createGetItemsSelector(_getData);
+/**
+ * Returns the college scorecard data from the state.
+ */
+export const getCollegeScorecardData = createSelector(
+  [_getFilters, _getData],
+  (filtersFromState, data) => {
+    const { populated } = filtersFromState;
+    if (populated === 'ALL') {
+      return data;
+    }
+
+    return data.filter(item => item.per_pop > 0);
+  }
+);
 
 /**
  * Returns the selected items.

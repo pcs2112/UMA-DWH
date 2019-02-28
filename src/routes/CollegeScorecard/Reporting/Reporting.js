@@ -29,13 +29,14 @@ class Reporting extends Component {
     selectData: PropTypes.func.isRequired,
     selectAllData: PropTypes.func.isRequired,
     unselectData: PropTypes.func.isRequired,
-    unselectAllData: PropTypes.func.isRequired
+    unselectAllData: PropTypes.func.isRequired,
+    setFilters: PropTypes.func.isRequired
   };
 
   componentDidMount() {
     const { fetchAllData, collegeScorecardFilters } = this.props;
-    const { fileName, populated } = collegeScorecardFilters;
-    fetchAllData(fileName, populated);
+    const { fileName } = collegeScorecardFilters;
+    fetchAllData(fileName);
   }
 
   componentWillUnmount() {
@@ -44,10 +45,10 @@ class Reporting extends Component {
   }
 
   handleViewFilterButton = () => {
-    const { fetchAllData, collegeScorecardFilters } = this.props;
-    const { populated, fileName } = collegeScorecardFilters;
+    const { setFilters, collegeScorecardFilters } = this.props;
+    const { populated } = collegeScorecardFilters;
     const newPopulated = populated === '' ? 'ALL' : '';
-    fetchAllData(fileName, newPopulated);
+    setFilters('populated', newPopulated);
   };
 
   render() {
@@ -144,8 +145,8 @@ export default withMainLayout(connect(
     collegeScorecardFilters: collegeScorecardReduxModule.selectors.getFilters(state),
   }),
   dispatch => ({
-    fetchAllData: (fileName, populated) => Promise.all([
-      dispatch(collegeScorecardReduxModule.actions.fetch(fileName, populated)),
+    fetchAllData: fileName => Promise.all([
+      dispatch(collegeScorecardReduxModule.actions.fetch(fileName)),
       dispatch(collegeScorecardGroupsReduxModule.actions.fetch(fileName))
     ]),
     resetAllData: () => {
@@ -156,5 +157,6 @@ export default withMainLayout(connect(
     selectAllData: () => dispatch(collegeScorecardReduxModule.actions.selectAll()),
     unselectData: id => dispatch(collegeScorecardReduxModule.actions.unselect(id)),
     unselectAllData: () => dispatch(collegeScorecardReduxModule.actions.unselectAll()),
+    setFilters: (key, value) => dispatch(collegeScorecardReduxModule.actions.setFilters(key, value))
   })
 )(Reporting));

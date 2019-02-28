@@ -34,8 +34,8 @@ class Groups extends Component {
 
   componentDidMount() {
     const { fetchAllData, collegeScorecardFilters } = this.props;
-    const { fileName, populated } = collegeScorecardFilters;
-    fetchAllData(fileName, populated);
+    const { fileName } = collegeScorecardFilters;
+    fetchAllData(fileName);
   }
 
   componentWillUnmount() {
@@ -130,8 +130,8 @@ export default withMainLayout(connect(
     collegeScorecardFilters: collegeScorecardGroupsReduxModule.selectors.getFilters(state),
   }),
   dispatch => ({
-    fetchAllData: (fileName, populated) => Promise.all([
-      dispatch(collegeScorecardReduxModule.actions.fetch(fileName, populated)),
+    fetchAllData: fileName => Promise.all([
+      dispatch(collegeScorecardReduxModule.actions.fetch(fileName)),
       dispatch(collegeScorecardGroupsReduxModule.actions.fetch(fileName))
     ]),
     resetAllData: () => {
