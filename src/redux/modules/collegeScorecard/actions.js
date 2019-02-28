@@ -6,13 +6,14 @@ export const actionTypes = {
   SELECT: 'collegeScorecard/SELECT',
   SELECT_ALL: 'collegeScorecard/SELECT_ALL',
   UNSELECT: 'collegeScorecard/UNSELECT',
-  UNSELECT_ALL: 'collegeScorecard/UNSELECT_ALL'
+  UNSELECT_ALL: 'collegeScorecard/UNSELECT_ALL',
+  SET_FILTERS: 'collegeScorecard/SET_FILTERS'
 };
 
 /**
  * Action to fetch the College scorecard data.
  */
-export const fetch = (fileName, populated = '') => ({
+export const fetch = fileName => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,
@@ -22,12 +23,11 @@ export const fetch = (fileName, populated = '') => ({
     params: {
       mode: 'DETAIL',
       filename: fileName,
-      populated
+      populated: 'ALL'
     }
   }),
   payload: {
-    fileName,
-    populated
+    fileName
   }
 });
 
@@ -68,4 +68,12 @@ export const unselect = keyValue => ({
  */
 export const unselectAll = () => ({
   type: actionTypes.UNSELECT_ALL
+});
+
+/**
+ * Action to set a list filters.
+ */
+export const setFilters = (key, value) => ({
+  type: actionTypes.SET_FILTERS,
+  [key]: value
 });
