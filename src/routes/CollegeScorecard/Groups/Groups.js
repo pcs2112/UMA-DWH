@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import {
   Segment, Button, Grid
 } from 'semantic-ui-react';
+import collegeScorecardReduxModule from '../../../redux/modules/collegeScorecard';
 import collegeScorecardGroupsReduxModule from '../../../redux/modules/collegeScorecardGroups';
 import collegeScorecardFilesReduxModule from '../../../redux/modules/collegeScorecardFiles';
 import withMainLayout from '../../../components/WithMainLayout';
@@ -23,8 +24,8 @@ class Groups extends Component {
     collegeScorecardSelectedData: PropTypes.object.isRequired,
     collegeScorecardSelectedCount: PropTypes.number.isRequired,
     collegeScorecardFilters: PropTypes.object.isRequired,
-    fetchCollegeScorecardGroupsData: PropTypes.func.isRequired,
-    resetCollegeScorecardGroupsData: PropTypes.func.isRequired,
+    fetchAllData: PropTypes.func.isRequired,
+    resetAllData: PropTypes.func.isRequired,
     selectData: PropTypes.func.isRequired,
     selectAllData: PropTypes.func.isRequired,
     unselectData: PropTypes.func.isRequired,
@@ -32,14 +33,14 @@ class Groups extends Component {
   };
 
   componentDidMount() {
-    const { fetchCollegeScorecardGroupsData, collegeScorecardFilters } = this.props;
-    const { fileName, group } = collegeScorecardFilters;
-    fetchCollegeScorecardGroupsData(fileName, group);
+    const { fetchAllData, collegeScorecardFilters } = this.props;
+    const { fileName, populated } = collegeScorecardFilters;
+    fetchAllData(fileName, populated);
   }
 
   componentWillUnmount() {
-    const { resetCollegeScorecardGroupsData } = this.props;
-    resetCollegeScorecardGroupsData();
+    const { resetAllData } = this.props;
+    resetAllData();
   }
 
   render() {
@@ -52,7 +53,7 @@ class Groups extends Component {
       collegeScorecardSelectedData,
       collegeScorecardSelectedCount,
       collegeScorecardFilters,
-      fetchCollegeScorecardGroupsData,
+      fetchAllData,
       selectData,
       selectAllData,
       unselectData,
@@ -70,7 +71,7 @@ class Groups extends Component {
             <Grid.Column width={5}>
               <FilesDropdownFilter
                 files={collegeScorecardFilesData}
-                onChange={fetchCollegeScorecardGroupsData}
+                onChange={fetchAllData}
                 {...collegeScorecardFilters}
               />
             </Grid.Column>
@@ -129,9 +130,12 @@ export default withMainLayout(connect(
     collegeScorecardFilters: collegeScorecardGroupsReduxModule.selectors.getFilters(state),
   }),
   dispatch => ({
-    fetchCollegeScorecardGroupsData: (fileName, group) =>
-      dispatch(collegeScorecardGroupsReduxModule.actions.fetch(fileName, group)),
-    resetCollegeScorecardGroupsData: () => {
+    fetchAllData: (fileName, populated) => Promise.all([
+      dispatch(collegeScorecardReduxModule.actions.fetch(fileName, populated)),
+      dispatch(collegeScorecardGroupsReduxModule.actions.fetch(fileName))
+    ]),
+    resetAllData: () => {
+      dispatch(collegeScorecardReduxModule.actions.reset());
       dispatch(collegeScorecardGroupsReduxModule.actions.reset());
     },
     selectData: data => dispatch(collegeScorecardGroupsReduxModule.actions.select(data)),
