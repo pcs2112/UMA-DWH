@@ -11,7 +11,12 @@ export default [
   {
     dataKey: 'group_col_cnt',
     width: 100,
-    label: 'POPULATED'
+    label: 'COL_COUNT'
+  },
+  {
+    dataKey: 'group_row_cnt',
+    width: 100,
+    label: 'ROW_COUNT'
   },
   {
     dataKey: 'group_data_type',
@@ -20,7 +25,7 @@ export default [
   },
   {
     dataKey: 'group_description',
-    width: 2000,
+    width: 2500,
     label: 'DESCRIPTION'
   }
 ];
