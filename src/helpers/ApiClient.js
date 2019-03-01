@@ -62,7 +62,7 @@ class ApiClient {
 
     return request.responseType('blob')
       .then((res) => {
-        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const url = window.URL.createObjectURL(new Blob([res.body]));
         const link = document.createElement('a');
         link.href = url;
         link.setAttribute('download', outFileName);

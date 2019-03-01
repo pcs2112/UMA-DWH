@@ -49,16 +49,16 @@ class Reporting extends Component {
   };
 
   handleExportButton = () => {
-    const { selectedCollegeScorecardColumnNames } = this.props;
+    const { selectedCollegeScorecardColumnNames, collegeScorecardFilters } = this.props;
+    const { fileName } = collegeScorecardFilters;
     const now = Math.floor(Date.now() / 1000);
-    const outFileName = `college_scorecard_${now}.xlsx`;
+    const outFileName = `college_scorecard_${now}.xls`;
     client.downloadFile('/api/college_scorecard/export', {
       outFileName,
-      params: {
-        outFileName
-      },
       data: {
-        columns: selectedCollegeScorecardColumnNames
+        columns: selectedCollegeScorecardColumnNames,
+        in_filename: fileName,
+        out_filename: outFileName
       }
     });
   };

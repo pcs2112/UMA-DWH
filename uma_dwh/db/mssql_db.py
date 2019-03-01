@@ -157,7 +157,7 @@ def fetch_row(sql, in_args=()):
     return result_as_dict(column_names, row)
 
 
-def execute_sp(sp_name, in_args, out_arg=None):
+def execute_sp(sp_name, in_args, out_arg=None, as_dict=True):
     """
     Executes a stored procedure and returns the result sets.
     The 0 index in the return value contains the value for the out_arg if an out_arg is specified.
@@ -165,9 +165,11 @@ def execute_sp(sp_name, in_args, out_arg=None):
     :param sp_name: Stored procedure name
     :param in_args: Dictionary of store procedure parameters and values
     :param out_arg: Output parameter
+    :param as_dict: Return result set as a Dictionary
     :type sp_name: str
     :type in_args: dict
     :type out_arg: str
+    :type as_dict: boolean
     :return: Stored procedure result sets and out argument
     :rtype: list
     """
@@ -198,7 +200,7 @@ def execute_sp(sp_name, in_args, out_arg=None):
     while 1:
         try:
             result_set = cursor.fetchall()
-            column_names = get_column_names(cursor.description)
+            column_names = get_column_names(cursor.description) if as_dict else []
             if len(column_names) > 0:
                 result.append(result_set_as_dicts(column_names, result_set))
             else:
