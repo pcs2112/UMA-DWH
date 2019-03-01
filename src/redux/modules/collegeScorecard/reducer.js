@@ -16,7 +16,11 @@ const defaultFilters = {
 const itemKeyName = 'dictionary_entry_id';
 
 // Initial state
-const initialState = Object.assign({}, defaultFilters, itemListInitialState, itemListSelectInitialState);
+const initialState = Object.assign({
+  selectedManually: {
+
+  }
+}, defaultFilters, itemListInitialState, itemListSelectInitialState);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
@@ -40,9 +44,26 @@ export default (state = initialState, action) => {
     }
     case actionTypes.RESET:
       return itemListReducer(state, action);
-    case actionTypes.SELECT:
+    case actionTypes.SELECT: {
+      const newState = itemListSelectReducer(state, action);
+      return {
+        ...newState,
+        selectedManually: {
+          ...(newState.selectedManually || {}),
+          [action.data[itemKeyName]]: action.data[itemKeyName]
+        }
+      };
+    }
+    case actionTypes.UNSELECT: {
+      const newState = itemListSelectReducer(state, action);
+      const newSelectedManually = {
+        ...(newState.selectedManually || {})
+      };
+      delete (newSelectedManually[action.keyValue]);
+      newState.selectedManually = newSelectedManually;
+      return newState;
+    }
     case actionTypes.SELECT_ALL:
-    case actionTypes.UNSELECT:
     case actionTypes.UNSELECT_ALL:
       return itemListSelectReducer(state, action);
     case actionTypes.SET_FILTERS:
@@ -78,7 +99,7 @@ export default (state = initialState, action) => {
       };
     }
     case groupsActionTypes.UNSELECT: {
-      const { selected, selectedOrder } = state;
+      const { selected, selectedOrder, selectedManually } = state;
       const { data } = action;
       const columns = data.group_entry_id_list.trim().split(/[\s,]+/);
 
@@ -87,7 +108,9 @@ export default (state = initialState, action) => {
       };
 
       columns.forEach((column) => {
-        delete (newSeleted[column]);
+        if (!objectHasOwnProperty(selectedManually, column)) {
+          delete (newSeleted[column]);
+        }
       });
 
       const newSelectedOrder = [];
