@@ -66,6 +66,14 @@ class ApiClient {
         const link = document.createElement('a');
         link.href = url;
         link.setAttribute('download', outFileName);
+
+        // IE Work around
+        // https://github.com/kennethjiang/js-file-download/blob/master/file-download.js
+
+        if (typeof link.download === 'undefined') {
+          link.setAttribute('target', '_blank');
+        }
+
         document.body.appendChild(link);
         link.click();
       })
