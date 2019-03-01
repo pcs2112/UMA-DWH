@@ -4,6 +4,31 @@ export const initialState = {
   data: false
 };
 
+export const selectAllReducer = (keyName, state) => {
+  const { data } = state;
+  const selected = {};
+  const selectedOrder = [];
+
+  if (data.length > 0) {
+    data.forEach((item) => {
+      selected[item[keyName]] = item;
+      selectedOrder.push(item[keyName]);
+    });
+  }
+
+  return {
+    ...state,
+    selected,
+    selectedOrder
+  };
+};
+
+export const unselectAllReducer = state => ({
+  ...state,
+  selected: initialState.selected,
+  selectedOrder: initialState.selectedOrder
+});
+
 /**
  * Reusable factory reducer to select a items from a list.
  *
@@ -49,30 +74,10 @@ const itemListSelectReducerFor = ({
         selectedOrder
       };
     }
-    case SELECT_ALL: {
-      const { data } = state;
-      const selected = {};
-      const selectedOrder = [];
-
-      if (data.length > 0) {
-        data.forEach((item) => {
-          selected[item[keyName]] = item;
-          selectedOrder.push(item[keyName]);
-        });
-      }
-
-      return {
-        ...state,
-        selected,
-        selectedOrder
-      };
-    }
+    case SELECT_ALL:
+      return selectAllReducer(keyName, state, action);
     case UNSELECT_ALL:
-      return {
-        ...state,
-        selected: initialState.selected,
-        selectedOrder: initialState.selectedOrder
-      };
+      return unselectAllReducer(state);
     default:
       return state;
   }
