@@ -58,9 +58,10 @@ export const selectAll = keyName => ({
 /**
  * Action to unselect an item.
  */
-export const unselect = keyValue => ({
+export const unselect = (keyValue, data) => ({
   type: actionTypes.UNSELECT,
-  keyValue
+  keyValue,
+  data
 });
 
 /**

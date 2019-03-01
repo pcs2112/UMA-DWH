@@ -155,7 +155,7 @@ export default withMainLayout(connect(
     },
     selectData: data => dispatch(collegeScorecardReduxModule.actions.select(data)),
     selectAllData: () => dispatch(collegeScorecardReduxModule.actions.selectAll()),
-    unselectData: id => dispatch(collegeScorecardReduxModule.actions.unselect(id)),
+    unselectData: (id, data) => dispatch(collegeScorecardReduxModule.actions.unselect(id, data)),
     unselectAllData: () => dispatch(collegeScorecardReduxModule.actions.unselectAll()),
     setFilters: (key, value) => dispatch(collegeScorecardReduxModule.actions.setFilters(key, value))
   })

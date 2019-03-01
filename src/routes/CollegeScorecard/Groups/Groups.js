@@ -140,7 +140,7 @@ export default withMainLayout(connect(
     },
     selectData: data => dispatch(collegeScorecardGroupsReduxModule.actions.select(data)),
     selectAllData: () => dispatch(collegeScorecardGroupsReduxModule.actions.selectAll()),
-    unselectData: id => dispatch(collegeScorecardGroupsReduxModule.actions.unselect(id)),
+    unselectData: (id, data) => dispatch(collegeScorecardGroupsReduxModule.actions.unselect(id, data)),
     unselectAllData: () => dispatch(collegeScorecardGroupsReduxModule.actions.unselectAll()),
   })
 )(Groups));

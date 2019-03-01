@@ -108,7 +108,7 @@ class ColumnsTable extends React.PureComponent {
     } = this.props;
     const key = row[keyName];
     if (objectHasOwnProperty(selectedData, key)) {
-      unselectData(key);
+      unselectData(key, row);
     } else {
       selectData(row);
     }
