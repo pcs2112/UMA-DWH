@@ -19,6 +19,7 @@ class Groups extends Component {
     collegeScorecardFilesData: PropTypes.array.isRequired,
     isCollegeScorecardGroupsFetching: PropTypes.bool.isRequired,
     collegeScorecardGroupsDataLoaded: PropTypes.bool.isRequired,
+    isCollegeScorecardFetching: PropTypes.bool.isRequired,
     collegeScorecardDataLoaded: PropTypes.bool.isRequired,
     collegeScorecardGroupsData: PropTypes.array.isRequired,
     collegeScorecardFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
@@ -35,9 +36,17 @@ class Groups extends Component {
 
   componentDidMount() {
     const {
-      collegeScorecardGroupsDataLoaded, collegeScorecardDataLoaded, fetchAllData, collegeScorecardFilters
+      isCollegeScorecardFetching,
+      isCollegeScorecardGroupsFetching,
+      collegeScorecardGroupsDataLoaded,
+      collegeScorecardDataLoaded,
+      fetchAllData,
+      collegeScorecardFilters
     } = this.props;
-    if (!collegeScorecardGroupsDataLoaded && !collegeScorecardDataLoaded) {
+    if (!isCollegeScorecardFetching
+      && !isCollegeScorecardGroupsFetching
+      && !collegeScorecardGroupsDataLoaded
+      && !collegeScorecardDataLoaded) {
       const { fileName } = collegeScorecardFilters;
       fetchAllData(fileName);
     }
@@ -123,6 +132,7 @@ export default withMainLayout(connect(
     collegeScorecardFilesData: collegeScorecardFilesReduxModule.selectors.getCollegeScorecardFilesData(state),
     isCollegeScorecardGroupsFetching: state.collegeScorecardGroups.isFetching,
     collegeScorecardGroupsDataLoaded: state.collegeScorecardGroups.dataLoaded,
+    isCollegeScorecardFetching: state.collegeScorecard.isFetching,
     collegeScorecardDataLoaded: state.collegeScorecard.dataLoaded,
     collegeScorecardGroupsData: collegeScorecardGroupsReduxModule.selectors.getCollegeScorecardGroupsData(state),
     collegeScorecardFetchingError: collegeScorecardGroupsReduxModule.selectors.getFetchingError(state),
