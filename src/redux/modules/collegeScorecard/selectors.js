@@ -75,3 +75,23 @@ export const getFilters = createSelector(
     };
   }
 );
+
+/**
+ * Returns the selected columns names.
+ */
+export const getSelectedColumnNames = createSelector(
+  [getSelected],
+  (selected) => {
+    const keys = Object.keys(selected);
+    if (keys.length < 1) {
+      return [];
+    }
+
+    const columns = [];
+    keys.forEach((key) => {
+      columns.push(selected[key].column_name);
+    });
+
+    return columns;
+  }
+);
