@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import {
   Segment, Button, Grid
 } from 'semantic-ui-react';
+import { client } from '../../../helpers/ApiClient';
 import collegeScorecardReduxModule from '../../../redux/modules/collegeScorecard';
 import collegeScorecardFilesReduxModule from '../../../redux/modules/collegeScorecardFiles';
 import collegeScorecardGroupsReduxModule from '../../../redux/modules/collegeScorecardGroups';
@@ -30,7 +31,8 @@ class Reporting extends Component {
     selectAllData: PropTypes.func.isRequired,
     unselectData: PropTypes.func.isRequired,
     unselectAllData: PropTypes.func.isRequired,
-    setFilters: PropTypes.func.isRequired
+    setFilters: PropTypes.func.isRequired,
+    selectedCollegeScorecardColumnNames: PropTypes.array.isRequired
   };
 
   componentDidMount() {
@@ -44,6 +46,17 @@ class Reporting extends Component {
     const { populated } = collegeScorecardFilters;
     const newPopulated = populated === '' ? 'ALL' : '';
     setFilters('populated', newPopulated);
+  };
+
+  handleExportButton = () => {
+    const { selectedCollegeScorecardColumnNames } = this.props;
+    const now = Math.floor(Date.now() / 1000);
+    client.downloadFile('/api/college_scorecard/export', {
+      outFileName: `college_scorecard_${now}.xlsx`,
+      data: {
+        columns: selectedCollegeScorecardColumnNames
+      }
+    });
   };
 
   render() {
@@ -118,7 +131,8 @@ class Reporting extends Component {
           <Button
             size="small"
             primary
-            disabled={isCollegeScorecardFetching}
+            disabled={isCollegeScorecardFetching || collegeScorecardSelectedCount < 1}
+            onClick={this.handleExportButton}
           >
             Export
           </Button>
@@ -138,6 +152,7 @@ export default withMainLayout(connect(
     collegeScorecardSelectedData: collegeScorecardReduxModule.selectors.getSelected(state),
     collegeScorecardSelectedCount: collegeScorecardReduxModule.selectors.getSelectedCount(state),
     collegeScorecardFilters: collegeScorecardReduxModule.selectors.getFilters(state),
+    selectedCollegeScorecardColumnNames: collegeScorecardReduxModule.selectors.getSelectedColumnNames(state)
   }),
   dispatch => ({
     fetchAllData: fileName => Promise.all([

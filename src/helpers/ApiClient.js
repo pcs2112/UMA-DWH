@@ -40,7 +40,9 @@ class ApiClient {
     this.accessToken = accessToken;
   }
 
-  downloadFile = (path, { headers = {}, params = {}, data } = {}) => {
+  downloadFile = (path, {
+    headers = {}, params = {}, data, outFileName
+  } = {}) => {
     const request = superagent.post(formatUrl(path));
 
     // Set Access Token
@@ -63,7 +65,7 @@ class ApiClient {
         const url = window.URL.createObjectURL(new Blob([res.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', params.fileName);
+        link.setAttribute('download', outFileName);
         document.body.appendChild(link);
         link.click();
       })
