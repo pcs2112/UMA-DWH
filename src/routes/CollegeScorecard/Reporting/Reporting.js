@@ -39,11 +39,6 @@ class Reporting extends Component {
     fetchAllData(fileName);
   }
 
-  componentWillUnmount() {
-    const { resetAllData } = this.props;
-    resetAllData();
-  }
-
   handleViewFilterButton = () => {
     const { setFilters, collegeScorecardFilters } = this.props;
     const { populated } = collegeScorecardFilters;
