@@ -1,7 +1,10 @@
+import xlwt
+import io
 from .mssql_db import execute_sp
+from uma_dwh.utils import is_float, is_int
 
 
-def get_export_data(columns, file_name):
+def get_excel_export_data(columns, file_name):
     xml = '<COLUMNS>'
     for col in columns:
         xml += f'<COLUMN NAME="{col}" />'
@@ -41,7 +44,26 @@ def get_export_data(columns, file_name):
 
     rows.append(header)
     
-    for row in data:
-        rows.append(row)
+    for tmp_row in data:
+        rows.append(tmp_row)
 
-    return rows
+    wb = xlwt.Workbook(encoding='UTF-8')
+    ws = wb.add_sheet('DATA')
+
+    for i, row in enumerate(rows):
+        for x, cell in enumerate(row):
+            label = cell
+            if label is None:
+                label = ''
+            elif is_float(cell):
+                label = float(cell)
+            elif is_int(cell):
+                label = int(cell)
+                
+            ws.write(i, x, label)
+            if i == 0:
+                ws.col(x).width = (len(row[x]) + 4) * 367
+
+    output = io.BytesIO()
+    wb.save(output)
+    return output.getvalue()

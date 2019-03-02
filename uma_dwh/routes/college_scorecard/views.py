@@ -1,12 +1,10 @@
-import xlwt
 import mimetypes
-import io
 from flask import Blueprint, request, Response
 from werkzeug.datastructures import Headers
 from flask_jwt_extended import jwt_required
 from uma_dwh.utils.nocache import nocache
 from uma_dwh.utils.views import execute_sp_func_from_view
-from uma_dwh.db.college_scorecard import get_export_data
+from uma_dwh.db.college_scorecard import get_excel_export_data
 from .api_config import path_sp_args_map
 
 
@@ -16,38 +14,26 @@ blueprint = Blueprint('college_scorecard', __name__)
 @blueprint.route('/api/college_scorecard/export', methods=('POST',))
 def post_export():
     body = request.get_json(silent=True)
+    in_filename = body['in_filename']
+    out_filename = body['out_filename']
     
     # Get export data
-    data = get_export_data(body['columns'], body['in_filename'])
-    
-    # Create workbook
-    wb = xlwt.Workbook(encoding='UTF-8')
-    ws = wb.add_sheet('DATA')
+    output = get_excel_export_data(body['columns'], in_filename)
 
-    for i, row in enumerate(data):
-        for x, cell in enumerate(row):
-            ws.write(i, x, cell)
-            if i == 0:
-                ws.col(x).width = (len(row[x]) + 4) * 367
-
-    output = io.BytesIO()
-    wb.save(output)
-    
     # Create response object
     response = Response()
     response.status_code = 200
-    response.data = output.getvalue()
+    response.data = output
     
-    filename = body['out_filename']
-    mimetype_tuple = mimetypes.guess_type(filename)
+    mimetype_tuple = mimetypes.guess_type(out_filename)
 
     # HTTP headers for forcing file download
     response_headers = Headers({
       'Pragma': 'public',
       'Expires': '0',
       'Cache-Control': 'must-revalidate, post-check=0, pre-check=0',
-      'Content-Type': 'application/ms-excel',
-      'Content-Disposition': 'attachment; filename=\"%s\";' % filename,
+      'Content-Type': mimetype_tuple[0],
+      'Content-Disposition': 'attachment; filename=\"%s\";' % out_filename,
       'Content-Transfer-Encoding': 'binary',
       'Content-Length': len(response.data)
     })
