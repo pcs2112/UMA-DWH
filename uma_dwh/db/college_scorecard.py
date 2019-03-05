@@ -6,12 +6,12 @@ from uma_dwh.utils import is_float, is_int
 
 def get_excel_export_data(columns, file_name):
     xml = '<COLUMNS>'
-    
+
     for col in columns:
         xml += f'<COLUMN NAME="{col}" />'
-    
+
     xml += '</COLUMNS>'
-    
+
     data_result = execute_sp(
         sp_name='MWH_FILES.MANAGE_CollegeScorecard_Console',
         in_args={
@@ -32,25 +32,23 @@ def get_excel_export_data(columns, file_name):
 
     if len(data_result) < 1:
         raise Exception('No title data returned in the call to the MWH_FILES.MANAGE_CollegeScorecard_Console SP.')
-  
-    raw_data = data_result[0]
-  
-    header = [
-        'ROW_NUMBER'
-    ]
-  
-    for col in columns:
+
+    raw_columns = data_result[0]
+    raw_data = data_result[1]
+
+    header = []
+    for col in raw_columns:
         header.append(col.upper())
-    
+
     wb = xlwt.Workbook(encoding='UTF-8')
     ws_data = wb.add_sheet('DATA')
-    
+
     # Print the data tab header
     print_ws_header(ws_data, header)
-    
+
     # Print rows
     print_ws_data(ws_data, raw_data)
-    
+
     output = io.BytesIO()
     wb.save(output)
     return output.getvalue()
@@ -66,11 +64,11 @@ def print_ws_data(ws, rows):
     for i, row in enumerate(rows):
         for x, cell in enumerate(row):
             label = cell
-            if label is None:
+            if label is None or label == 'NULL':
                 label = ''
             elif is_float(cell):
                 label = float(cell)
             elif is_int(cell):
                 label = int(cell)
-                
+
             ws.write(i + 1, x, label)

@@ -200,9 +200,13 @@ def execute_sp(sp_name, in_args, out_arg=None, as_dict=True):
     while 1:
         try:
             result_set = cursor.fetchall()
-            column_names = get_column_names(cursor.description) if as_dict else []
+            column_names = get_column_names(cursor.description)
             if len(column_names) > 0:
-                result.append(result_set_as_dicts(column_names, result_set))
+                if as_dict:
+                    result.append(result_set_as_dicts(column_names, result_set))
+                else:
+                    result.append(column_names)
+                    result.append(result_set)
             else:
                 result.append(result_set)
         except pyodbc.ProgrammingError:
