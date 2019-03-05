@@ -116,7 +116,7 @@ class Reporting extends Component {
             size="small"
             onClick={collegeScorecardSelectedCount < 1 ? selectAllData : unselectAllData}
           >
-            {collegeScorecardSelectedCount < 1 ? 'Check All' : 'Uncheck All'}
+            {collegeScorecardSelectedCount < 1 ? 'Check All' : `Uncheck All (${collegeScorecardSelectedCount})`}
           </Button>
           <Button
             size="small"
