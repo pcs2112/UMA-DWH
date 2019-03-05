@@ -1,8 +1,9 @@
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
-import itemListSelectReducerFor, { initialState as itemListSelectInitialState }
+import itemListSelectReducerFor, { unselectAllReducer, initialState as itemListSelectInitialState }
   from '../../reducers/itemListSelectReducerFor';
 import itemListFiltersReducerFor from '../../reducers/itemListFiltersReducerFor';
 import { actionTypes } from './actions';
+import { actionTypes as collegeScorecardActionTypes } from '../collegeScorecard/actions';
 
 const defaultFilters = {
   fileName: '',
@@ -41,6 +42,8 @@ export default (state = initialState, action) => {
       return itemListSelectReducer(state, action);
     case actionTypes.SET_FILTERS:
       return setFilters(state, action);
+    case collegeScorecardActionTypes.UNSELECT_ALL:
+      return unselectAllReducer(state);
     default:
       return state;
   }
