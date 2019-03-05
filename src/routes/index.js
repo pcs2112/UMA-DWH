@@ -13,6 +13,7 @@ import getErrorTypeManagementRoutes from './ErrorTypeManagement';
 import ReportsHistory from './ReportsHistory';
 import getStatisticsRoutes from './Statistics';
 import getUserRoutes from './Users';
+import Test from './CollegeScorecard/Test';
 
 export default ({ dispatch, getState }) => ([
   {
@@ -33,6 +34,11 @@ export default ({ dispatch, getState }) => ([
     exact: true,
     fetch: () => dispatch(reportHistory.actions.fetchLastDate())
       .then(() => dispatch(reports.actions.fetch(getState().reportHistory.date)))
+  },
+  {
+    path: '/test',
+    component: Test,
+    exact: true
   },
   {
     path: '/dwh/errors',
