@@ -17,6 +17,10 @@ const _getFilters = state => ({
   populated: state.collegeScorecard.populated
 });
 
+const _getSelected = createGetPropertySelector('collegeScorecard', 'selected');
+
+const _getSelectedOrder = createGetPropertySelector('collegeScorecard', 'selectedOrder');
+
 /**
  * Returns the fetching error.
  * @param {Object} state
@@ -42,16 +46,30 @@ export const getCollegeScorecardData = createSelector(
 );
 
 /**
- * Returns the selected items.
- * @param {Object} state
+ * Selector to return the selected items.
  */
 export const getSelected = createGetPropertySelector('collegeScorecard', 'selected');
+
+/**
+ * Selector to return the selected items in order they were selected.
+ */
+export const getSelectedOrdered = createSelector(
+  [_getSelected, _getSelectedOrder],
+  (selected, selectedOrder) => {
+    const data = [];
+    selectedOrder.forEach((itemId) => {
+      data.push(selected[itemId]);
+    });
+
+    return data;
+  }
+);
 
 /**
  * Selector to get the total count of selected items.
  */
 export const getSelectedCount = createSelector(
-  [getSelected],
+  [_getSelected],
   selected => Object.keys(selected).length
 );
 
@@ -80,7 +98,7 @@ export const getFilters = createSelector(
  * Returns the selected columns names.
  */
 export const getSelectedColumnNames = createSelector(
-  [getSelected],
+  [_getSelected],
   (selected) => {
     const keys = Object.keys(selected);
     if (keys.length < 1) {
