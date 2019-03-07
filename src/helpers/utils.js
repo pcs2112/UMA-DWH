@@ -45,3 +45,18 @@ export const scrollTableToTop = (htmlId) => {
   document.getElementById(htmlId)
     .getElementsByClassName('rt-tbody')[0].scrollTop = 0;
 };
+
+/**
+ * Reorders the specified list based on the start and end indices.
+ * @param {Array} list
+ * @param {Number} startIndex
+ * @param {Number} endIndex
+ * @returns {any[]}
+ */
+export const reorderList = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
