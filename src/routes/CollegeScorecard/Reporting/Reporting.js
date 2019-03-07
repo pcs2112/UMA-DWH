@@ -5,15 +5,19 @@ import { Link } from 'react-router-dom';
 import {
   Segment, Button, Grid
 } from 'semantic-ui-react';
-import { client } from '../../../helpers/ApiClient';
+import { showModal } from 'redux-modal';
+// import { client } from '../../../helpers/ApiClient';
 import collegeScorecardReduxModule from '../../../redux/modules/collegeScorecard';
 import collegeScorecardFilesReduxModule from '../../../redux/modules/collegeScorecardFiles';
 import collegeScorecardGroupsReduxModule from '../../../redux/modules/collegeScorecardGroups';
 import withMainLayout from '../../../components/WithMainLayout';
 import globalCss from '../../../css/global';
 import FilesDropdownFilter from '../FilesDropdownFilter';
+import ExportDataModal from '../ExportDataModal';
 import ColumnsTable from '../ColumnsTable';
 import columns from './columns';
+
+const EXPORT_DATA_MODAL = '';
 
 class Reporting extends Component {
   static propTypes = {
@@ -32,7 +36,8 @@ class Reporting extends Component {
     unselectData: PropTypes.func.isRequired,
     unselectAllData: PropTypes.func.isRequired,
     setFilters: PropTypes.func.isRequired,
-    selectedCollegeScorecardColumnNames: PropTypes.array.isRequired
+    selectedCollegeScorecardColumnNames: PropTypes.array.isRequired,
+    showExportDataModal: PropTypes.func.isRequired
   };
 
   state = {
@@ -53,6 +58,8 @@ class Reporting extends Component {
   };
 
   handleExportButton = () => {
+    this.props.showExportDataModal();
+    /*
     const { selectedCollegeScorecardColumnNames, collegeScorecardFilters } = this.props;
     const { fileName } = collegeScorecardFilters;
     const now = Math.floor(Date.now() / 1000);
@@ -74,7 +81,7 @@ class Reporting extends Component {
             isExporting: false
           });
         });
-    });
+    }); */
   };
 
   render() {
@@ -157,6 +164,7 @@ class Reporting extends Component {
             Export
           </Button>
         </Segment>
+        <ExportDataModal name={EXPORT_DATA_MODAL} />
       </div>
     );
   }
@@ -187,6 +195,7 @@ export default withMainLayout(connect(
     selectAllData: () => dispatch(collegeScorecardReduxModule.actions.selectAll()),
     unselectData: (id, data) => dispatch(collegeScorecardReduxModule.actions.unselect(id, data)),
     unselectAllData: () => dispatch(collegeScorecardReduxModule.actions.unselectAll()),
-    setFilters: (key, value) => dispatch(collegeScorecardReduxModule.actions.setFilters(key, value))
+    setFilters: (key, value) => dispatch(collegeScorecardReduxModule.actions.setFilters(key, value)),
+    showExportDataModal: () => dispatch(showModal(EXPORT_DATA_MODAL))
   })
 )(Reporting));
