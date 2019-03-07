@@ -7,6 +7,8 @@ def is_float(value):
     try:
         float(value)
         return True
+    except TypeError:
+        return False
     except ValueError:
         return False
 
@@ -14,7 +16,9 @@ def is_float(value):
 def is_int(value):
     try:
         int(value)
-        return int
+        return True
+    except TypeError:
+        return False
     except ValueError:
         return False
 
