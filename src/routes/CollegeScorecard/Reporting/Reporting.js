@@ -35,6 +35,10 @@ class Reporting extends Component {
     selectedCollegeScorecardColumnNames: PropTypes.array.isRequired
   };
 
+  state = {
+    isExporting: false
+  };
+
   componentDidMount() {
     const { fetchAllData, collegeScorecardFilters } = this.props;
     const { fileName } = collegeScorecardFilters;
@@ -53,17 +57,28 @@ class Reporting extends Component {
     const { fileName } = collegeScorecardFilters;
     const now = Math.floor(Date.now() / 1000);
     const outFileName = `college_scorecard_${now}.xls`;
-    client.downloadFile('/api/college_scorecard/export', {
-      outFileName,
-      data: {
-        columns: selectedCollegeScorecardColumnNames,
-        in_filename: fileName,
-        out_filename: outFileName
-      }
+
+    this.setState({
+      isExporting: true
+    }, () => {
+      client.downloadFile('/api/college_scorecard/export', {
+        outFileName,
+        data: {
+          columns: selectedCollegeScorecardColumnNames,
+          in_filename: fileName,
+          out_filename: outFileName
+        }
+      })
+        .then(() => {
+          this.setState({
+            isExporting: false
+          });
+        });
     });
   };
 
   render() {
+    const { isExporting } = this.state;
     const {
       collegeScorecardFilesData,
       collegeScorecardDataLoaded,
@@ -135,7 +150,8 @@ class Reporting extends Component {
           <Button
             size="small"
             primary
-            disabled={isCollegeScorecardFetching || collegeScorecardSelectedCount < 1}
+            loading={isExporting}
+            disabled={isCollegeScorecardFetching || collegeScorecardSelectedCount < 1 || isExporting}
             onClick={this.handleExportButton}
           >
             Export

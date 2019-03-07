@@ -114,13 +114,6 @@ class Groups extends Component {
           >
             View Reporting
           </Button>
-          <Button
-            size="small"
-            primary
-            disabled={isCollegeScorecardGroupsFetching}
-          >
-            Export
-          </Button>
         </Segment>
       </div>
     );
