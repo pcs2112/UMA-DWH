@@ -7,7 +7,8 @@ export const actionTypes = {
   SELECT_ALL: 'collegeScorecard/SELECT_ALL',
   UNSELECT: 'collegeScorecard/UNSELECT',
   UNSELECT_ALL: 'collegeScorecard/UNSELECT_ALL',
-  SET_FILTERS: 'collegeScorecard/SET_FILTERS'
+  SET_FILTERS: 'collegeScorecard/SET_FILTERS',
+  REORDER: 'collegeScorecard/REORDER'
 };
 
 /**
@@ -77,4 +78,13 @@ export const unselectAll = () => ({
 export const setFilters = (key, value) => ({
   type: actionTypes.SET_FILTERS,
   [key]: value
+});
+
+/**
+ * Action to reorder the items.
+ */
+export const reorder = (startIndex, endIndex) => ({
+  type: actionTypes.REORDER,
+  startIndex,
+  endIndex
 });

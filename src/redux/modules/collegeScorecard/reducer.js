@@ -1,5 +1,6 @@
 import { arrayUnique } from 'javascript-utils/lib/array';
 import { objectHasOwnProperty } from 'javascript-utils/src/utils';
+import { reorderList } from '../../../helpers/utils';
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
 import itemListSelectReducerFor, { selectAllReducer, unselectAllReducer, initialState as itemListSelectInitialState }
   from '../../reducers/itemListSelectReducerFor';
@@ -130,6 +131,16 @@ export default (state = initialState, action) => {
       return selectAllReducer(itemKeyName, state);
     case groupsActionTypes.UNSELECT_ALL:
       return unselectAllReducer(state);
+    case actionTypes.REORDER: {
+      const { selectedOrder } = state;
+      const { startIndex, endIndex } = action;
+      const newSelectedOrder = reorderList(selectedOrder, startIndex, endIndex);
+
+      return {
+        ...state,
+        selectedOrder: newSelectedOrder
+      };
+    }
     default:
       return state;
   }
