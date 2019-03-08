@@ -95,19 +95,14 @@ export const getFilters = createSelector(
 );
 
 /**
- * Returns the selected columns names.
+ * Returns the selected ordered columns names.
  */
 export const getSelectedColumnNames = createSelector(
-  [_getSelected],
+  [getSelectedOrdered],
   (selected) => {
-    const keys = Object.keys(selected);
-    if (keys.length < 1) {
-      return [];
-    }
-
     const columns = [];
-    keys.forEach((key) => {
-      columns.push(selected[key].column_name);
+    selected.forEach((column) => {
+      columns.push(column.column_name);
     });
 
     return columns;
