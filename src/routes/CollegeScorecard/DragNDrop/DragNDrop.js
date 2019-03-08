@@ -39,7 +39,8 @@ const getListStyle = height => ({
   padding: '1px',
   width: 250,
   maxHeight: `${height}px`,
-  overflow: 'auto'
+  overflow: 'auto',
+  border: '1px solid rgba(0, 0, 0, 0.1)'
 });
 
 class DragNDrop extends Component {

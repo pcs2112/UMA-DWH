@@ -126,7 +126,7 @@ class Reporting extends Component {
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
           <Grid>
-            <Grid.Column width={13}>
+            <Grid.Column width={12}>
               <ColumnsTable
                 dataLoaded={isAllDataLoaded}
                 data={collegeScorecardData}
@@ -140,7 +140,7 @@ class Reporting extends Component {
                 keyName="dictionary_entry_id"
               />
             </Grid.Column>
-            <Grid.Column width={3}>
+            <Grid.Column width={4}>
               {collegeScorecardSelectedCount > 0 && (
                 <DragNDrop
                   items={collegeScorecardSelectedOrderedData}
