@@ -5,28 +5,28 @@ import { Link } from 'react-router-dom';
 import {
   Segment, Button, Grid
 } from 'semantic-ui-react';
-import { showModal } from 'redux-modal';
-// import { client } from '../../../helpers/ApiClient';
+import { client } from '../../../helpers/ApiClient';
 import collegeScorecardReduxModule from '../../../redux/modules/collegeScorecard';
 import collegeScorecardFilesReduxModule from '../../../redux/modules/collegeScorecardFiles';
 import collegeScorecardGroupsReduxModule from '../../../redux/modules/collegeScorecardGroups';
 import withMainLayout from '../../../components/WithMainLayout';
 import globalCss from '../../../css/global';
 import FilesDropdownFilter from '../FilesDropdownFilter';
-import ExportDataModal from '../ExportDataModal';
+import DragNDrop from '../DragNDrop';
 import ColumnsTable from '../ColumnsTable';
 import columns from './columns';
 
-const EXPORT_DATA_MODAL = '';
+const SELECTED_LIMIT = 255;
 
 class Reporting extends Component {
   static propTypes = {
+    isDataFetching: PropTypes.bool.isRequired,
+    isAllDataLoaded: PropTypes.bool.isRequired,
     collegeScorecardFilesData: PropTypes.array.isRequired,
-    isCollegeScorecardFetching: PropTypes.bool.isRequired,
-    collegeScorecardDataLoaded: PropTypes.bool.isRequired,
     collegeScorecardData: PropTypes.array.isRequired,
     collegeScorecardFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     collegeScorecardSelectedData: PropTypes.object.isRequired,
+    collegeScorecardSelectedOrderedData: PropTypes.array.isRequired,
     collegeScorecardSelectedCount: PropTypes.number.isRequired,
     collegeScorecardFilters: PropTypes.object.isRequired,
     fetchAllData: PropTypes.func.isRequired,
@@ -36,8 +36,8 @@ class Reporting extends Component {
     unselectData: PropTypes.func.isRequired,
     unselectAllData: PropTypes.func.isRequired,
     setFilters: PropTypes.func.isRequired,
-    selectedCollegeScorecardColumnNames: PropTypes.array.isRequired,
-    showExportDataModal: PropTypes.func.isRequired
+    collegeScorecardSelectedColumnNames: PropTypes.array.isRequired,
+    reorderSelectedData: PropTypes.func.isRequired
   };
 
   state = {
@@ -45,9 +45,14 @@ class Reporting extends Component {
   };
 
   componentDidMount() {
-    const { fetchAllData, collegeScorecardFilters } = this.props;
-    const { fileName } = collegeScorecardFilters;
-    fetchAllData(fileName);
+    const {
+      isDataFetching, isAllDataLoaded, fetchAllData, collegeScorecardFilters
+    } = this.props;
+
+    if (!isDataFetching && !isAllDataLoaded) {
+      const { fileName } = collegeScorecardFilters;
+      fetchAllData(fileName);
+    }
   }
 
   handleViewFilterButton = () => {
@@ -58,9 +63,7 @@ class Reporting extends Component {
   };
 
   handleExportButton = () => {
-    this.props.showExportDataModal();
-    /*
-    const { selectedCollegeScorecardColumnNames, collegeScorecardFilters } = this.props;
+    const { collegeScorecardSelectedColumnNames, collegeScorecardFilters } = this.props;
     const { fileName } = collegeScorecardFilters;
     const now = Math.floor(Date.now() / 1000);
     const outFileName = `college_scorecard_${now}.xls`;
@@ -71,7 +74,7 @@ class Reporting extends Component {
       client.downloadFile('/api/college_scorecard/export', {
         outFileName,
         data: {
-          columns: selectedCollegeScorecardColumnNames,
+          columns: collegeScorecardSelectedColumnNames,
           in_filename: fileName,
           out_filename: outFileName
         }
@@ -81,25 +84,27 @@ class Reporting extends Component {
             isExporting: false
           });
         });
-    }); */
+    });
   };
 
   render() {
     const { isExporting } = this.state;
     const {
+      isDataFetching,
+      isAllDataLoaded,
       collegeScorecardFilesData,
-      collegeScorecardDataLoaded,
       collegeScorecardData,
-      isCollegeScorecardFetching,
       collegeScorecardFetchingError,
       collegeScorecardSelectedData,
+      collegeScorecardSelectedOrderedData,
       collegeScorecardSelectedCount,
       collegeScorecardFilters,
       fetchAllData,
       selectData,
       selectAllData,
       unselectData,
-      unselectAllData
+      unselectAllData,
+      reorderSelectedData
     } = this.props;
     return (
       <div>
@@ -120,29 +125,42 @@ class Reporting extends Component {
           </Grid>
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
-          <ColumnsTable
-            dataLoaded={collegeScorecardDataLoaded}
-            data={collegeScorecardData}
-            isFetching={isCollegeScorecardFetching}
-            fetchingError={collegeScorecardFetchingError}
-            selectedData={collegeScorecardSelectedData}
-            selectedDataCount={collegeScorecardSelectedCount}
-            selectData={selectData}
-            unselectData={unselectData}
-            columns={columns}
-            keyName="dictionary_entry_id"
-          />
+          <Grid>
+            <Grid.Column width={13}>
+              <ColumnsTable
+                dataLoaded={isAllDataLoaded}
+                data={collegeScorecardData}
+                isFetching={isDataFetching}
+                fetchingError={collegeScorecardFetchingError}
+                selectedData={collegeScorecardSelectedData}
+                selectedDataCount={collegeScorecardSelectedCount}
+                selectData={selectData}
+                unselectData={unselectData}
+                columns={columns}
+                keyName="dictionary_entry_id"
+              />
+            </Grid.Column>
+            <Grid.Column width={3}>
+              {collegeScorecardSelectedCount > 0 && (
+                <DragNDrop
+                  items={collegeScorecardSelectedOrderedData}
+                  reorderItems={reorderSelectedData}
+                />
+              )}
+            </Grid.Column>
+          </Grid>
         </Segment>
         <Segment>
           <Button
             size="small"
+            disabled={isDataFetching}
             onClick={collegeScorecardSelectedCount < 1 ? selectAllData : unselectAllData}
           >
             {collegeScorecardSelectedCount < 1 ? 'Check All' : `Uncheck All (${collegeScorecardSelectedCount})`}
           </Button>
           <Button
             size="small"
-            disabled={isCollegeScorecardFetching}
+            disabled={isDataFetching}
             onClick={this.handleViewFilterButton}
           >
             {collegeScorecardFilters.populated === '' ? 'View All' : 'View Populated'}
@@ -154,17 +172,27 @@ class Reporting extends Component {
           >
             View Groups
           </Button>
-          <Button
-            size="small"
-            primary
-            loading={isExporting}
-            disabled={isCollegeScorecardFetching || collegeScorecardSelectedCount < 1 || isExporting}
-            onClick={this.handleExportButton}
-          >
-            Export
-          </Button>
+          {collegeScorecardSelectedCount <= SELECTED_LIMIT && (
+            <Button
+              size="small"
+              primary
+              loading={isExporting}
+              disabled={isDataFetching || collegeScorecardSelectedCount < 1 || isExporting}
+              onClick={this.handleExportButton}
+            >
+              Export
+            </Button>
+          )}
+          {collegeScorecardSelectedCount > SELECTED_LIMIT && (
+            <Button
+              size="small"
+              color="red"
+              disabled
+            >
+              Export
+            </Button>
+          )}
         </Segment>
-        <ExportDataModal name={EXPORT_DATA_MODAL} />
       </div>
     );
   }
@@ -172,15 +200,16 @@ class Reporting extends Component {
 
 export default withMainLayout(connect(
   state => ({
+    isDataFetching: state.collegeScorecard.isFetching || state.collegeScorecardGroups.isFetching,
+    isAllDataLoaded: state.collegeScorecard.dataLoaded && state.collegeScorecardGroups.dataLoaded,
     collegeScorecardFilesData: collegeScorecardFilesReduxModule.selectors.getCollegeScorecardFilesData(state),
-    isCollegeScorecardFetching: state.collegeScorecard.isFetching,
-    collegeScorecardDataLoaded: state.collegeScorecard.dataLoaded,
     collegeScorecardData: collegeScorecardReduxModule.selectors.getCollegeScorecardData(state),
     collegeScorecardFetchingError: collegeScorecardReduxModule.selectors.getFetchingError(state),
     collegeScorecardSelectedData: collegeScorecardReduxModule.selectors.getSelected(state),
+    collegeScorecardSelectedOrderedData: collegeScorecardReduxModule.selectors.getSelectedOrdered(state),
     collegeScorecardSelectedCount: collegeScorecardReduxModule.selectors.getSelectedCount(state),
     collegeScorecardFilters: collegeScorecardReduxModule.selectors.getFilters(state),
-    selectedCollegeScorecardColumnNames: collegeScorecardReduxModule.selectors.getSelectedColumnNames(state)
+    collegeScorecardSelectedColumnNames: collegeScorecardReduxModule.selectors.getSelectedColumnNames(state)
   }),
   dispatch => ({
     fetchAllData: fileName => Promise.all([
@@ -196,6 +225,7 @@ export default withMainLayout(connect(
     unselectData: (id, data) => dispatch(collegeScorecardReduxModule.actions.unselect(id, data)),
     unselectAllData: () => dispatch(collegeScorecardReduxModule.actions.unselectAll()),
     setFilters: (key, value) => dispatch(collegeScorecardReduxModule.actions.setFilters(key, value)),
-    showExportDataModal: () => dispatch(showModal(EXPORT_DATA_MODAL))
+    reorderSelectedData: (sourceIdx, destIdx) =>
+      dispatch(collegeScorecardReduxModule.actions.reorder(sourceIdx, destIdx))
   })
 )(Reporting));

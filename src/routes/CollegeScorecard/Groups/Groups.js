@@ -16,13 +16,11 @@ import columns from './columns';
 
 class Groups extends Component {
   static propTypes = {
+    isDataFetching: PropTypes.bool.isRequired,
+    isAllDataLoaded: PropTypes.bool.isRequired,
     collegeScorecardFilesData: PropTypes.array.isRequired,
-    isCollegeScorecardGroupsFetching: PropTypes.bool.isRequired,
-    collegeScorecardGroupsDataLoaded: PropTypes.bool.isRequired,
-    isCollegeScorecardFetching: PropTypes.bool.isRequired,
-    collegeScorecardDataLoaded: PropTypes.bool.isRequired,
     collegeScorecardGroupsData: PropTypes.array.isRequired,
-    collegeScorecardFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
+    collegeScorecardGroupsFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     collegeScorecardSelectedData: PropTypes.object.isRequired,
     collegeScorecardSelectedCount: PropTypes.number.isRequired,
     collegeScorecardFilters: PropTypes.object.isRequired,
@@ -36,17 +34,12 @@ class Groups extends Component {
 
   componentDidMount() {
     const {
-      isCollegeScorecardFetching,
-      isCollegeScorecardGroupsFetching,
-      collegeScorecardGroupsDataLoaded,
-      collegeScorecardDataLoaded,
+      isDataFetching,
+      isAllDataLoaded,
       fetchAllData,
       collegeScorecardFilters
     } = this.props;
-    if (!isCollegeScorecardFetching
-      && !isCollegeScorecardGroupsFetching
-      && !collegeScorecardGroupsDataLoaded
-      && !collegeScorecardDataLoaded) {
+    if (!isDataFetching && !isAllDataLoaded) {
       const { fileName } = collegeScorecardFilters;
       fetchAllData(fileName);
     }
@@ -54,11 +47,11 @@ class Groups extends Component {
 
   render() {
     const {
+      isDataFetching,
+      isAllDataLoaded,
       collegeScorecardFilesData,
-      collegeScorecardGroupsDataLoaded,
       collegeScorecardGroupsData,
-      isCollegeScorecardGroupsFetching,
-      collegeScorecardFetchingError,
+      collegeScorecardGroupsFetchingError,
       collegeScorecardSelectedData,
       collegeScorecardSelectedCount,
       collegeScorecardFilters,
@@ -88,10 +81,10 @@ class Groups extends Component {
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
           <ColumnsTable
-            dataLoaded={collegeScorecardGroupsDataLoaded}
+            dataLoaded={isAllDataLoaded}
             data={collegeScorecardGroupsData}
-            isFetching={isCollegeScorecardGroupsFetching}
-            fetchingError={collegeScorecardFetchingError}
+            isFetching={isDataFetching}
+            fetchingError={collegeScorecardGroupsFetchingError}
             selectedData={collegeScorecardSelectedData}
             selectedDataCount={collegeScorecardSelectedCount}
             selectData={selectData}
@@ -103,6 +96,7 @@ class Groups extends Component {
         <Segment>
           <Button
             size="small"
+            disabled={isDataFetching}
             onClick={collegeScorecardSelectedCount < 1 ? selectAllData : unselectAllData}
           >
             {collegeScorecardSelectedCount < 1 ? 'Check All' : 'Uncheck All'}
@@ -122,13 +116,11 @@ class Groups extends Component {
 
 export default withMainLayout(connect(
   state => ({
+    isDataFetching: state.collegeScorecard.isFetching || state.collegeScorecardGroups.isFetching,
+    isAllDataLoaded: state.collegeScorecard.dataLoaded && state.collegeScorecardGroups.dataLoaded,
     collegeScorecardFilesData: collegeScorecardFilesReduxModule.selectors.getCollegeScorecardFilesData(state),
-    isCollegeScorecardGroupsFetching: state.collegeScorecardGroups.isFetching,
-    collegeScorecardGroupsDataLoaded: state.collegeScorecardGroups.dataLoaded,
-    isCollegeScorecardFetching: state.collegeScorecard.isFetching,
-    collegeScorecardDataLoaded: state.collegeScorecard.dataLoaded,
     collegeScorecardGroupsData: collegeScorecardGroupsReduxModule.selectors.getCollegeScorecardGroupsData(state),
-    collegeScorecardFetchingError: collegeScorecardGroupsReduxModule.selectors.getFetchingError(state),
+    collegeScorecardGroupsFetchingError: collegeScorecardGroupsReduxModule.selectors.getFetchingError(state),
     collegeScorecardSelectedData: collegeScorecardGroupsReduxModule.selectors.getSelected(state),
     collegeScorecardSelectedCount: collegeScorecardGroupsReduxModule.selectors.getSelectedCount(state),
     collegeScorecardFilters: collegeScorecardGroupsReduxModule.selectors.getFilters(state),
