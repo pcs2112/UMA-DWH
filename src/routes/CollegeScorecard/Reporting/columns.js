@@ -30,7 +30,7 @@ export default [
   },
   {
     dataKey: 'entry_description',
-    width: 2000,
+    width: 1400,
     label: 'LONG DESCRIPTION'
   }
 ];
