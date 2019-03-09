@@ -25,7 +25,7 @@ export default [
   },
   {
     dataKey: 'group_description',
-    width: 2500,
+    width: 800,
     label: 'DESCRIPTION'
   }
 ];
