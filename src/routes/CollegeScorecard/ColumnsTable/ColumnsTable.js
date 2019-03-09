@@ -46,6 +46,21 @@ class ColumnsTable extends React.PureComponent {
     );
   };
 
+  _getHeaderColumnWidth = ({ index }) => {
+    const { columns } = this.props;
+    if (index < columns.length - 1) {
+      return this._getColumnWidth({ index });
+    }
+
+    let totalWidth = 0;
+    columns.forEach((col) => {
+      totalWidth += col.width;
+    });
+
+    return totalWidth <= this.tableWidth
+      ? columns[index].width + (this.tableWidth - totalWidth) : columns[index].width;
+  };
+
   _renderLeftSideCell = ({
     key, rowIndex, style
   }) => {
@@ -83,21 +98,6 @@ class ColumnsTable extends React.PureComponent {
         {value}
       </div>
     );
-  };
-
-  _getHeaderColumnWidth = ({ index }) => {
-    const { columns } = this.props;
-    if (index < columns.length - 1) {
-      return this._getColumnWidth({ index });
-    }
-
-    let totalWidth = 0;
-    columns.forEach((col) => {
-      totalWidth += col.width;
-    });
-
-    return totalWidth <= this.tableWidth
-      ? columns[index].width + (this.tableWidth - totalWidth) : columns[index].width;
   };
 
   _getColumnWidth = ({ index }) => {
