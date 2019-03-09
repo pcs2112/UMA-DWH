@@ -24,6 +24,8 @@ class ColumnsTable extends React.PureComponent {
     keyName: PropTypes.string.isRequired
   };
 
+  tableWidth = 0;
+
   _renderLeftSideHeaderCell = ({
     key, style
   }) => (<div className={styles.HeaderCell} key={key} style={style} />);
@@ -83,7 +85,35 @@ class ColumnsTable extends React.PureComponent {
     );
   };
 
-  _getColumnWidth = ({ index }) => this.props.columns[index].width;
+  _getHeaderColumnWidth = ({ index }) => {
+    const { columns } = this.props;
+    if (index < columns.length - 1) {
+      return this._getColumnWidth({ index });
+    }
+
+    let totalWidth = 0;
+    columns.forEach((col) => {
+      totalWidth += col.width;
+    });
+
+    return totalWidth <= this.tableWidth
+      ? columns[index].width + (this.tableWidth - totalWidth) : columns[index].width;
+  };
+
+  _getColumnWidth = ({ index }) => {
+    const { columns } = this.props;
+    if (index < columns.length - 1) {
+      return columns[index].width;
+    }
+
+    let totalWidth = 0;
+    columns.forEach((col) => {
+      totalWidth += col.width;
+    });
+
+    return totalWidth <= this.tableWidth
+      ? (columns[index].width - scrollbarSize()) + (this.tableWidth - totalWidth) : columns[index].width;
+  };
 
   _getLeftSideColumnWidth = () => this.props.columns[0].width;
 
@@ -179,50 +209,53 @@ class ColumnsTable extends React.PureComponent {
             </div>
             <div className={styles.GridColumn}>
               <AutoSizer disableHeight>
-                {({ width }) => (
-                  <div>
-                    <div
-                      style={{
-                        height: ROW_HEIGHT,
-                        width: width - scrollbarSize()
-                      }}
-                    >
-                      <Grid
-                        className={styles.HeaderGrid}
-                        columnWidth={this._getColumnWidth}
-                        columnCount={columnCount}
-                        height={ROW_HEIGHT}
-                        overscanColumnCount={OVERSCAN_COL_COUNT}
-                        cellRenderer={this._renderHeaderCell}
-                        rowHeight={ROW_HEIGHT}
-                        rowCount={1}
-                        scrollLeft={scrollLeft}
-                        width={width - scrollbarSize() + 10}
-                      />
+                {({ width }) => {
+                  this.tableWidth = width;
+                  return (
+                    <div>
+                      <div
+                        style={{
+                          height: ROW_HEIGHT,
+                          width: width - scrollbarSize()
+                        }}
+                      >
+                        <Grid
+                          className={styles.HeaderGrid}
+                          columnWidth={this._getHeaderColumnWidth}
+                          columnCount={columnCount}
+                          height={ROW_HEIGHT}
+                          overscanColumnCount={OVERSCAN_COL_COUNT}
+                          cellRenderer={this._renderHeaderCell}
+                          rowHeight={ROW_HEIGHT}
+                          rowCount={1}
+                          scrollLeft={scrollLeft}
+                          width={width}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          containerHeight,
+                          width
+                        }}
+                      >
+                        <Grid
+                          className={styles.BodyGrid}
+                          columnWidth={this._getColumnWidth}
+                          columnCount={columnCount}
+                          height={containerHeight}
+                          onScroll={onScroll}
+                          overscanColumnCount={OVERSCAN_COL_COUNT}
+                          overscanRowCount={OVERSCAN_ROW_COUNT}
+                          cellRenderer={this._renderBodyCell}
+                          rowHeight={ROW_HEIGHT}
+                          rowCount={rowCount}
+                          width={width}
+                          selectedCount={selectedDataCount}
+                        />
+                      </div>
                     </div>
-                    <div
-                      style={{
-                        containerHeight,
-                        width
-                      }}
-                    >
-                      <Grid
-                        className={styles.BodyGrid}
-                        columnWidth={this._getColumnWidth}
-                        columnCount={columnCount}
-                        height={containerHeight}
-                        onScroll={onScroll}
-                        overscanColumnCount={OVERSCAN_COL_COUNT}
-                        overscanRowCount={OVERSCAN_ROW_COUNT}
-                        cellRenderer={this._renderBodyCell}
-                        rowHeight={ROW_HEIGHT}
-                        rowCount={rowCount}
-                        width={width}
-                        selectedCount={selectedDataCount}
-                      />
-                    </div>
-                  </div>
-                )}
+                  );
+                }}
               </AutoSizer>
             </div>
           </div>
