@@ -11,12 +11,14 @@ export default [
   {
     dataKey: 'row_count',
     width: 100,
-    label: 'POPULATED'
+    label: 'POPULATED',
+    isNumeric: true
   },
   {
     dataKey: 'per_pop',
     width: 100,
-    label: '% POPULATED'
+    label: '% POPULATED',
+    isNumeric: true
   },
   {
     dataKey: 'entry_data_type',

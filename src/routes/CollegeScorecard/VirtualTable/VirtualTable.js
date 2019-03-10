@@ -88,10 +88,19 @@ class VirtualTable extends React.PureComponent {
     }
 
     const { columns } = this.props;
+    const column = columns[columnIndex];
     const rowClass = this._getRowColorClass(rowIndex);
-    const classNames = clsx(rowClass, styles.Cell);
+    let classNames = clsx(rowClass, styles.Cell);
     const rowData = this._rowGetter(rowIndex);
     const value = rowData[columns[columnIndex].dataKey];
+
+    if (objectHasOwnProperty(column, 'render')) {
+      return column.render(key, value, rowData, classNames, style);
+    }
+
+    if (column.isNumeric) {
+      classNames = clsx(classNames, styles.NumericCell);
+    }
 
     return (
       <div className={classNames} key={key} style={style}>

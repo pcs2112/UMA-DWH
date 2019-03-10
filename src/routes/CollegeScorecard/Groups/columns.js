@@ -11,12 +11,14 @@ export default [
   {
     dataKey: 'group_col_cnt',
     width: 100,
-    label: 'COL_COUNT'
+    label: 'COL_COUNT',
+    isNumeric: true
   },
   {
     dataKey: 'group_row_cnt',
     width: 100,
-    label: 'ROW_COUNT'
+    label: 'ROW_COUNT',
+    isNumeric: true
   },
   {
     dataKey: 'group_data_type',
