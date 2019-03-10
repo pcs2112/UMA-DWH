@@ -12,8 +12,8 @@ import collegeScorecardGroupsReduxModule from '../../../redux/modules/collegeSco
 import withMainLayout from '../../../components/WithMainLayout';
 import globalCss from '../../../css/global';
 import FilesDropdownFilter from '../FilesDropdownFilter';
-import DragNDrop from '../DragNDrop';
 import ColumnsTable from '../ColumnsTable';
+import VirtualSortableList from '../VirtualSortableList';
 import columns from './columns';
 
 const SELECTED_LIMIT = 255;
@@ -142,9 +142,11 @@ class Reporting extends Component {
             </Grid.Column>
             <Grid.Column width={4}>
               {collegeScorecardSelectedCount > 0 && (
-                <DragNDrop
+                <VirtualSortableList
+                  containerWidth={250}
                   items={collegeScorecardSelectedOrderedData}
-                  reorderItems={reorderSelectedData}
+                  itemValueKeyName="column_name"
+                  onSortEnd={reorderSelectedData}
                 />
               )}
             </Grid.Column>
