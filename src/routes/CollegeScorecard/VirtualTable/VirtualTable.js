@@ -11,7 +11,7 @@ import { ROW_HEIGHT, OVERSCAN_COL_COUNT, OVERSCAN_ROW_COUNT } from '../../../con
 import withResponsiveContainer from '../../../components/WithResponsiveContainer';
 import styles from '../../../css/react-virtualized.less';
 
-class ColumnsTable extends React.PureComponent {
+class VirtualTable extends React.PureComponent {
   static propTypes = {
     isFetching: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
@@ -265,4 +265,4 @@ class ColumnsTable extends React.PureComponent {
   }
 }
 
-export default withResponsiveContainer(ColumnsTable, 320, 300);
+export default withResponsiveContainer(VirtualTable, 320, 300);

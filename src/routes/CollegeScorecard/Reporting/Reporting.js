@@ -12,7 +12,7 @@ import collegeScorecardGroupsReduxModule from '../../../redux/modules/collegeSco
 import withMainLayout from '../../../components/WithMainLayout';
 import globalCss from '../../../css/global';
 import FilesDropdownFilter from '../FilesDropdownFilter';
-import ColumnsTable from '../ColumnsTable';
+import VirtualTable from '../VirtualTable';
 import VirtualSortableList from '../VirtualSortableList';
 import columns from './columns';
 
@@ -127,7 +127,7 @@ class Reporting extends Component {
         <Segment style={globalCss.pageHeaderSegment}>
           <Grid>
             <Grid.Column width={12}>
-              <ColumnsTable
+              <VirtualTable
                 dataLoaded={isAllDataLoaded}
                 data={collegeScorecardData}
                 isFetching={isDataFetching}
