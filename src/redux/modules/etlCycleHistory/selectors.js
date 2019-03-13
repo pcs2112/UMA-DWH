@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
+import { objectHasOwnProperty, isEmpty } from 'javascript-utils/lib/utils';
 import {
   createDataSelector,
   createFetchingErrorSelector,
@@ -182,7 +182,7 @@ export const getHistoryByCycleGroup = createSelector(
     });
 
     // Put together the result set
-    const result = [];
+    let result = [];
     controlManager.forEach((item) => {
       if (dataMartsSelected < 1 || objectHasOwnProperty(dataMarts, item.data_mart_name)) {
         const key = item.procedure_name.toLowerCase();
@@ -209,7 +209,14 @@ export const getHistoryByCycleGroup = createSelector(
     });
 
     if (objectHasOwnProperty(filters, 'active') && filters.active === 0) {
-      return result.filter(res => res.active === 0);
+      result = result.filter(res => res.active === 0);
+    }
+
+    if (objectHasOwnProperty(filters, 'query') && !isEmpty(filters.query) && filters.query.length >= 3) {
+      const queryNormalized = filters.query.toLowerCase();
+      result = result.filter(
+        res => `${res.source_schema_name}.${res.source_table_name}`.toLowerCase().indexOf(queryNormalized) > -1
+      );
     }
 
     return result;

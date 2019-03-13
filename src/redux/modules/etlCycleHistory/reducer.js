@@ -8,7 +8,10 @@ const initialState = Object.assign({
   cycleDate: '',
   selected: {},
   selectedOrder: [],
-  filters: {},
+  filters: {
+    query: '',
+    active: 1
+  },
   intervalDuration: 15000
 }, itemListInitialState);
 
