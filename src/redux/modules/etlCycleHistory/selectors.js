@@ -214,9 +214,10 @@ export const getHistoryByCycleGroup = createSelector(
 
     if (objectHasOwnProperty(filters, 'query') && !isEmpty(filters.query) && filters.query.length >= 3) {
       const queryNormalized = filters.query.toLowerCase();
-      result = result.filter(
-        res => `${res.source_schema_name}.${res.source_table_name}`.toLowerCase().indexOf(queryNormalized) > -1
-      );
+      result = result.filter((res) => {
+        const normalizedValue = `${res.target_schema_name}.${res.target_table_name}`.toLowerCase();
+        return normalizedValue.indexOf(queryNormalized) > -1;
+      });
     }
 
     return result;
