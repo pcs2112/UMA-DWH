@@ -41,6 +41,16 @@ def fetch_report(user_id, report_name):
     return None
 
 
+def fetch_report_by_id(id_, user_id, report_name):
+    return execute_admin_console_sp(
+      'MWH_FILES.MANAGE_CollegeScorecard_Console',
+      'GET REPORT',
+      str(id_),
+      report_name,
+      str(user_id)
+    )
+
+
 def create_report(data):
     """
     Creates a report and returns the report's information.

@@ -4,7 +4,7 @@ from werkzeug.datastructures import Headers
 from flask_jwt_extended import jwt_required
 from uma_dwh.utils.nocache import nocache
 from uma_dwh.utils.views import execute_sp_func_from_view
-from uma_dwh.db.college_scorecard import get_excel_export_data, create_report
+from uma_dwh.db.college_scorecard import get_excel_export_data, fetch_report_by_id, create_report
 from uma_dwh.exceptions import InvalidUsage
 from uma_dwh.db.exceptions import DBException
 from .api_config import path_sp_args_map
@@ -50,6 +50,16 @@ def post_export():
 
     return response
 
+
+@blueprint.route('/api/college_scorecard/reports/<report_id>', methods=('GET',))
+@nocache
+@jwt_required
+def get_report(report_id):
+    try:
+        return jsonify(fetch_report_by_id(report_id, request.args['user_id'], request.args['report_name']))
+    except DBException as e:
+        raise InvalidUsage.form_validation_error({'report_name': e.message})
+    
 
 @blueprint.route('/api/college_scorecard/reports', methods=('POST',))
 @nocache
