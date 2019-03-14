@@ -5,6 +5,7 @@ import { reducer as modal } from 'redux-modal';
 import collegeScorecard from './modules/collegeScorecard';
 import collegeScorecardFiles from './modules/collegeScorecardFiles';
 import collegeScorecardGroups from './modules/collegeScorecardGroups';
+import collegeScorecardReports from './modules/collegeScorecardReports';
 import errorTypeResolution from './modules/errorTypeResolution';
 import etlControlManager from './modules/etlControlManager';
 import etlCurrentStatus from './modules/etlCurrentStatus';
@@ -32,6 +33,7 @@ export default () => combineReducers({
   collegeScorecard: collegeScorecard.reducer,
   collegeScorecardFiles: collegeScorecardFiles.reducer,
   collegeScorecardGroups: collegeScorecardGroups.reducer,
+  collegeScorecardReports: collegeScorecardReports.reducer,
   errorTypeResolution: errorTypeResolution.reducer,
   etlControlManager: etlControlManager.reducer,
   etlCurrentStatus: etlCurrentStatus.reducer,
