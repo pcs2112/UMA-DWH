@@ -12,6 +12,7 @@ blueprint = Blueprint('college_scorecard', __name__)
 
 
 @blueprint.route('/api/college_scorecard/export', methods=('POST',))
+@jwt_required
 def post_export():
     body = request.get_json(silent=True)
     in_filename = body['in_filename']
