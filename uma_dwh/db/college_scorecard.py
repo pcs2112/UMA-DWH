@@ -1,9 +1,141 @@
 import xlwt
 import io
+from pydash.objects import pick, assign
+from pydash.predicates import is_empty
 from .mssql_db import execute_sp
 from uma_dwh.utils import is_float, is_int, is_datetime, list_chunks
+from .etl import execute_admin_console_sp
+from .exceptions import DBException
 
 cell_width_padding = 367
+
+
+def get_columns_xml(columns, prepend_default=False):
+    """ Returns the columns xml for the list of specified columns. """
+    xml = '<COLUMNS>'
+    
+    if prepend_default:
+        xml += f'<COLUMN NAME="INSTNM" />'
+        xml += f'<COLUMN NAME="OPEID" />'
+    
+    for col in columns:
+        xml += f'<COLUMN NAME="{col}" />'
+    
+    xml += '</COLUMNS>'
+    
+    return xml
+
+
+def fetch_report(user_id, report_name):
+    """ Fetches a report for the specified user and report name. """
+    result = execute_admin_console_sp(
+        'MWH_FILES.MANAGE_CollegeScorecard_Console',
+        'GET USER REPORTS',
+        str(user_id)
+    )
+    
+    for report in result:
+        if report['d_admin_console_user_id'] == user_id and report['report_name'] == report_name:
+            return report
+        
+    return None
+
+
+def create_report(data):
+    """
+    Creates a report and returns the report's information.
+    :param data: Report data
+    :type data: dict
+    """
+    if not is_empty(data['user_id']) and not is_empty(data['report_name']):
+        report = fetch_report(data['user_id'], data['report_name'])
+        if report:
+            return update_report(data)
+    
+    required_data = {
+        'user_id': '',
+        'report_name': '',
+        'report_descrip': '',
+        'share_dttm': '',
+        'columns': []
+    }
+    
+    new_data = assign(
+        required_data,
+        pick(
+            data,
+            'user_id',
+            'report_name',
+            'report_descrip',
+            'share_dttm',
+            'columns'
+        )
+    )
+    
+    if len(new_data['columns']) < 1:
+        raise DBException(f'"columns" are required.')
+
+    result = execute_admin_console_sp(
+        'MWH_FILES.MANAGE_CollegeScorecard_Console',
+        'SAVE USER SELECTION',
+        new_data['user_id'],
+        new_data['report_name'],
+        new_data['report_descrip'],
+        new_data['share_dttm'],
+        get_columns_xml(new_data['columns'])
+    )
+    
+    if len(result) < 1:
+        raise DBException("The new report could not be saved.")
+    
+    return fetch_report(new_data['user_id'], new_data['report_name'])
+
+
+def update_report(data):
+    """
+    Updates a report and returns the report's information.
+    :param data: New report data
+    :type data: dict
+    """
+    report = fetch_report(data['user_id'], data['report_name'])
+    if report is None:
+        raise DBException(f'The report is invalid.')
+    
+    current_data = {
+        'user_id': report['user_id'],
+        'report_name': report['report_name'],
+        'report_descrip': report['report_descrip'],
+        'share_dttm': report['share_dttm'],
+        'columns': []
+    }
+    
+    new_data = assign(
+        {},
+        current_data,
+        pick(
+            data,
+            'user_id',
+            'report_name',
+            'report_descrip',
+            'share_dttm',
+            'columns'
+        )
+    )
+    
+    if len(new_data['columns']) < 1:
+        raise DBException(f'"columns" are required.')
+    
+    execute_admin_console_sp(
+        'MWH_FILES.MANAGE_CollegeScorecard_Console',
+        'SAVE USER SELECTION',
+        new_data['user_id'],
+        new_data['report_name'],
+        new_data['report_descrip'],
+        new_data['share_dttm'],
+        get_columns_xml(new_data['columns'])
+    )
+    
+    return fetch_report(new_data['user_id'], new_data['report_name'])
 
 
 def get_excel_export_data(columns, file_name):
@@ -66,12 +198,7 @@ def print_ws_export_title(ws, columns, file_name):
     raw_data = []
 
     for cg_i, column_group in enumerate(column_groups):
-        xml = '<COLUMNS>'
-
-        for col in column_group:
-            xml += f'<COLUMN NAME="{col}" />'
-
-        xml += '</COLUMNS>'
+        xml = get_columns_xml(column_group)
 
         data_result = execute_sp(
             sp_name='MWH_FILES.MANAGE_CollegeScorecard_Console',
@@ -115,14 +242,7 @@ def print_ws_export_data(ws, columns, file_name):
     raw_data = []
 
     for cg_i, column_group in enumerate(column_groups):
-        xml = '<COLUMNS>'
-        xml += f'<COLUMN NAME="INSTNM" />'
-        xml += f'<COLUMN NAME="OPEID" />'
-
-        for col in column_group:
-            xml += f'<COLUMN NAME="{col}" />'
-
-        xml += '</COLUMNS>'
+        xml = get_columns_xml(column_group, True)
 
         data_result = execute_sp(
             sp_name='MWH_FILES.MANAGE_CollegeScorecard_Console',

@@ -1,10 +1,12 @@
 import mimetypes
-from flask import Blueprint, request, Response
+from flask import Blueprint, request, Response, jsonify
 from werkzeug.datastructures import Headers
 from flask_jwt_extended import jwt_required
 from uma_dwh.utils.nocache import nocache
 from uma_dwh.utils.views import execute_sp_func_from_view
-from uma_dwh.db.college_scorecard import get_excel_export_data
+from uma_dwh.db.college_scorecard import get_excel_export_data, create_report
+from uma_dwh.exceptions import InvalidUsage
+from uma_dwh.db.exceptions import DBException
 from .api_config import path_sp_args_map
 
 
@@ -47,6 +49,17 @@ def post_export():
     response.headers = response_headers
 
     return response
+
+
+@blueprint.route('/api/college_scorecard/reports', methods=('POST',))
+@nocache
+@jwt_required
+def post_report():
+    body = request.get_json(silent=True)
+    try:
+        return jsonify(create_report(body))
+    except DBException as e:
+        raise InvalidUsage.form_validation_error({'report_name': e.message})
 
 
 @blueprint.route('/api/college_scorecard/<path:path>', methods=('GET', 'POST'))
