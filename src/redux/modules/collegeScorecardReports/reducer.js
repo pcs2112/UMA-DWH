@@ -50,6 +50,7 @@ export default (state = initialState, action) => {
       const { data } = state;
       const { currentId, response } = action;
       const idx = data.findIndex(item => item.id === currentId);
+
       if (idx < 0) {
         return state;
       }
@@ -66,6 +67,11 @@ export default (state = initialState, action) => {
     }
     case actionTypes.RESET:
       return itemListReducer(state, action);
+    case actionTypes.RESET_REPORT:
+      return {
+        ...state,
+        current: undefined
+      };
     default:
       return state;
   }

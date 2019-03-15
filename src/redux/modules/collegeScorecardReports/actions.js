@@ -8,6 +8,7 @@ export const actionTypes = {
   FETCH_REPORT_SUCCESS: 'collegeScorecardReports/FETCH_REPORT_SUCCESS',
   FETCH_REPORT_FAIL: 'collegeScorecardReports/FETCH_REPORT_FAIL',
   RESET: 'collegeScorecardReports/RESET',
+  RESET_REPORT: 'collegeScorecardReports/RESET_REPORT',
   CREATE_BEGIN: 'collegeScorecardReports/CREATE_BEGIN',
   CREATE_SUCCESS: 'collegeScorecardReports/CREATE_SUCCESS',
   CREATE_FAIL: 'collegeScorecardReports/CREATE_FAIL',
@@ -48,6 +49,13 @@ export const fetchReport = id => ({
  */
 export const reset = () => ({
   type: actionTypes.RESET
+});
+
+/**
+ * Resets the current report from the state.
+ */
+export const resetReport = () => ({
+  type: actionTypes.RESET_REPORT
 });
 
 /**

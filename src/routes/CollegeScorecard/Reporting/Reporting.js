@@ -6,6 +6,7 @@ import {
   Segment, Button, Grid
 } from 'semantic-ui-react';
 import { showModal as showModalAction } from 'redux-modal';
+import { isEmpty } from 'javascript-utils/lib/utils';
 import { client } from '../../../helpers/ApiClient';
 import collegeScorecardReduxModule from '../../../redux/modules/collegeScorecard';
 import collegeScorecardFilesReduxModule from '../../../redux/modules/collegeScorecardFiles';
@@ -104,6 +105,16 @@ class Reporting extends Component {
     showModal(modalname);
   };
 
+  getPageTitle = () => {
+    const { collegeScorecardCurrentReport } = this.props;
+    let pageTitle = 'College Scorecard Reporting';
+    if (collegeScorecardCurrentReport) {
+      pageTitle += ` (${collegeScorecardCurrentReport.report_name})`;
+    }
+
+    return pageTitle;
+  };
+
   render() {
     const { isExporting } = this.state;
     const {
@@ -132,7 +143,7 @@ class Reporting extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            College Scorecard Reporting
+            {this.getPageTitle()}
           </h1>
         </Segment>
         <Segment>
@@ -164,27 +175,26 @@ class Reporting extends Component {
             </Grid.Column>
             <Grid.Column width={2}>
               <div className={styles.RightColumn}>
-                {collegeScorecardReportsData.length > 0 && (
-                  <ReportsDropdown
-                    reports={collegeScorecardReportsData}
-                    reportId={currentReportId}
-                    onChange={fetchReport}
-                    className={styles.RightColumnButtons}
-                  />
-                )}
-                {collegeScorecardReportsData.length > 0 && currentReportId && (
-                  <Button
-                    fluid
-                    size="small"
-                    primary
-                    onClick={this.handleShowModal}
-                    modalname={UPDATE_REPORT_MODAL}
-                    className={styles.RightColumnButtons}
-                    disabled={collegeScorecardSelectedCount < 1}
-                  >
-                    Overwrite Report
-                  </Button>
-                )}
+                <ReportsDropdown
+                  reports={collegeScorecardReportsData}
+                  reportId={currentReportId}
+                  onChange={fetchReport}
+                  className={styles.RightColumnButtons}
+                  disabled={collegeScorecardReportsData.length < 1}
+                />
+                <Button
+                  fluid
+                  size="small"
+                  primary
+                  onClick={this.handleShowModal}
+                  modalname={UPDATE_REPORT_MODAL}
+                  className={styles.RightColumnButtons}
+                  disabled={
+                    collegeScorecardReportsData.length < 1 || !currentReportId || collegeScorecardSelectedCount < 1
+                  }
+                >
+                  Save Report
+                </Button>
                 <Button
                   fluid
                   size="small"
@@ -295,12 +305,22 @@ export default withMainLayout(connect(
     selectData: data => dispatch(collegeScorecardReduxModule.actions.select(data)),
     selectAllData: () => dispatch(collegeScorecardReduxModule.actions.selectAll()),
     unselectData: (id, data) => dispatch(collegeScorecardReduxModule.actions.unselect(id, data)),
-    unselectAllData: () => dispatch(collegeScorecardReduxModule.actions.unselectAll()),
+    unselectAllData: () => {
+      dispatch(collegeScorecardReduxModule.actions.unselectAll());
+      dispatch(collegeScorecardReportsReduxModule.actions.resetReport());
+    },
     setFilters: (key, value) => dispatch(collegeScorecardReduxModule.actions.setFilters(key, value)),
     reorderSelectedData: (sourceIdx, destIdx) =>
       dispatch(collegeScorecardReduxModule.actions.reorder(sourceIdx, destIdx)),
     showModal: modalName => dispatch(showModalAction(modalName)),
-    fetchReport: id => dispatch(collegeScorecardReportsReduxModule.actions.fetchReport(id))
-      .then(report => dispatch(collegeScorecardReduxModule.actions.loadSavedReport(report)))
+    fetchReport: (id) => {
+      if (isEmpty(id)) {
+        dispatch(collegeScorecardReduxModule.actions.unselectAll());
+        dispatch(collegeScorecardReportsReduxModule.actions.resetReport());
+      } else {
+        dispatch(collegeScorecardReportsReduxModule.actions.fetchReport(id))
+          .then(report => dispatch(collegeScorecardReduxModule.actions.loadSavedReport(report)));
+      }
+    }
   })
 )(Reporting));
