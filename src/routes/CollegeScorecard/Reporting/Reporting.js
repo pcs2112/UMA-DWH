@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -97,9 +97,9 @@ class Reporting extends Component {
     });
   };
 
-  handleShowModal = (e, { modalName }) => {
+  handleShowModal = (e, { modalname }) => {
     const { showModal } = this.props;
-    showModal(modalName);
+    showModal(modalname);
   };
 
   render() {
@@ -170,35 +170,35 @@ class Reporting extends Component {
                     className={styles.RightColumnButtons}
                   />
                 )}
+                {collegeScorecardReportsData.length > 0 && currentReportId && (
+                  <Button
+                    fluid
+                    size="small"
+                    primary
+                    className={styles.RightColumnButtons}
+                    disabled={collegeScorecardSelectedCount < 1}
+                  >
+                    Overwrite Report
+                  </Button>
+                )}
+                <Button
+                  fluid
+                  size="small"
+                  color="green"
+                  onClick={this.handleShowModal}
+                  className={styles.RightColumnButtons}
+                  modalname={CREATE_REPORT_MODAL}
+                  disabled={collegeScorecardSelectedCount < 1}
+                >
+                  Save New Report
+                </Button>
                 {collegeScorecardSelectedCount > 0 && (
-                  <Fragment>
-                    {currentReportId && (
-                      <Button
-                        fluid
-                        size="small"
-                        primary
-                        className={styles.RightColumnButtons}
-                      >
-                        Overwrite Report
-                      </Button>
-                    )}
-                    <Button
-                      fluid
-                      size="small"
-                      color="green"
-                      onClick={this.handleShowModal}
-                      className={styles.RightColumnButtons}
-                      modalName={CREATE_REPORT_MODAL}
-                    >
-                      Save New Report
-                    </Button>
-                    <VirtualSortableList
-                      containerWidth={220}
-                      items={collegeScorecardSelectedOrderedData}
-                      itemValueKeyName="column_name"
-                      onSortEnd={reorderSelectedData}
-                    />
-                  </Fragment>
+                  <VirtualSortableList
+                    containerWidth={220}
+                    items={collegeScorecardSelectedOrderedData}
+                    itemValueKeyName="column_name"
+                    onSortEnd={reorderSelectedData}
+                  />
                 )}
               </div>
             </Grid.Column>

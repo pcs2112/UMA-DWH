@@ -3,7 +3,7 @@ import { actionTypes } from './actions';
 
 // Initial state
 const initialState = Object.assign({
-  currentId: false
+  current: undefined
 }, itemListInitialState);
 
 // Create helper reducers
@@ -22,6 +22,17 @@ export default (state = initialState, action) => {
     case actionTypes.FETCH_FAIL:
     case actionTypes.FETCH_SUCCESS:
       return itemListReducer(state, action);
+    case actionTypes.CREATE_SUCCESS: {
+      const { response } = action;
+      const current = { ...response };
+      const newState = {
+        ...state,
+        data: [...state.data]
+      };
+      newState.data.push(current);
+      newState.current = current;
+      return newState;
+    }
     case actionTypes.FETCH_REPORT_SUCCESS: {
       const { data } = state;
       const { currentId, response } = action;

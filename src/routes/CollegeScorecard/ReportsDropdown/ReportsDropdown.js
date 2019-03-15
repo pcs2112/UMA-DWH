@@ -14,10 +14,6 @@ class ReportsDropdown extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      reportId: props.reportId || ''
-    };
-
     this.handleOnChange = debounce(this.handleOnChange, FILTERS_EXEC_DELAY);
   }
 
@@ -28,22 +24,18 @@ class ReportsDropdown extends Component {
   }));
 
   handleReportOnChange = (e, { value }) => {
-    if (value !== this.state.reportId) {
-      this.setState({
-        reportId: value
-      }, this.handleOnChange);
+    if (value !== this.props.reportId) {
+      this.handleOnChange(value);
     }
   };
 
-  handleOnChange = () => {
-    const { reportId } = this.state;
+  handleOnChange = (reportId) => {
     const { onChange } = this.props;
     onChange(reportId);
   };
 
   render() {
-    const { reportId } = this.state;
-    const { className } = this.props;
+    const { reportId, className } = this.props;
     return (
       <Dropdown
         fluid
