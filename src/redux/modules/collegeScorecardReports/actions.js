@@ -4,6 +4,9 @@ export const actionTypes = {
   FETCH_BEGIN: 'collegeScorecardReports/FETCH_BEGIN',
   FETCH_SUCCESS: 'collegeScorecardReports/FETCH_SUCCESS',
   FETCH_FAIL: 'collegeScorecardReports/FETCH_FAIL',
+  FETCH_REPORT_BEGIN: 'collegeScorecardReports/FETCH_REPORT_BEGIN',
+  FETCH_REPORT_SUCCESS: 'collegeScorecardReports/FETCH_REPORT_SUCCESS',
+  FETCH_REPORT_FAIL: 'collegeScorecardReports/FETCH_REPORT_FAIL',
   RESET: 'collegeScorecardReports/RESET',
   CREATE_BEGIN: 'collegeScorecardReports/CREATE_BEGIN',
   CREATE_SUCCESS: 'collegeScorecardReports/CREATE_SUCCESS',
@@ -20,6 +23,21 @@ export const fetch = () => ({
     actionTypes.FETCH_FAIL
   ],
   makeRequest: client => client.get('/api/college_scorecard/reports')
+});
+
+/**
+ * Action to fetch a College scorecard report.
+ */
+export const fetchReport = id => ({
+  types: [
+    actionTypes.FETCH_REPORT_BEGIN,
+    actionTypes.FETCH_REPORT_SUCCESS,
+    actionTypes.FETCH_REPORT_FAIL
+  ],
+  makeRequest: client => client.get(`/api/college_scorecard/reports/${id}`),
+  payload: {
+    currentId: id
+  }
 });
 
 /**
