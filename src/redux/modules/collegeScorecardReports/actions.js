@@ -86,7 +86,7 @@ export const update = data => ({
     actionTypes.UPDATE_SUCCESS,
     actionTypes.UPDATE_FAIL
   ],
-  makeRequest: client => client.post('/api/college_scorecard/reports', {
+  makeRequest: client => client.put('/api/college_scorecard/reports', {
     data
   })
     .catch(catchValidation)

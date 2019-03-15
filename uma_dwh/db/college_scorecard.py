@@ -45,10 +45,10 @@ def fetch_report(user_id, report_name):
     report = None
     
     for row in result:
-        if row['d_admin_console_user_id'] == user_id and row['report_name'] == report_name:
+        if row['d_admin_console_user_id'] == user_id and row['report_name'].upper() == report_name.upper():
             report = row
             break
-    
+            
     if not report:
         return None
     
@@ -100,7 +100,7 @@ def create_report(user_id, data):
     if not is_empty(data['report_name']):
         report = fetch_report(user_id, data['report_name'])
         if report:
-            return update_report(user_id, data)
+            raise DBException(f"The report \"{data['report_name']}\" already exists.")
     
     required_data = {
         'user_id': user_id,
@@ -128,7 +128,7 @@ def create_report(user_id, data):
         'MWH_FILES.MANAGE_CollegeScorecard_Console',
         'SAVE USER SELECTION',
         new_data['user_id'],
-        new_data['report_name'],
+        new_data['report_name'].upper(),
         new_data['report_descrip'],
         new_data['share_dttm'],
         get_columns_xml(new_data['columns'])
@@ -176,7 +176,7 @@ def update_report(user_id, data):
         'MWH_FILES.MANAGE_CollegeScorecard_Console',
         'SAVE USER SELECTION',
         new_data['user_id'],
-        new_data['report_name'],
+        new_data['report_name'].upper(),
         new_data['report_descrip'],
         new_data['share_dttm'],
         get_columns_xml(new_data['columns'])
