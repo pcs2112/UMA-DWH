@@ -28,13 +28,9 @@ def get_columns_xml(columns, prepend_default=False):
 
 def fetch_report(user_id, report_name):
     """ Fetches a report for the specified user and report name. """
-    result = execute_admin_console_sp(
-        'MWH_FILES.MANAGE_CollegeScorecard_Console',
-        'GET USER REPORTS',
-        str(user_id)
-    )
+    reports = fetch_reports(user_id)
     
-    for report in result:
+    for report in reports:
         if report['d_admin_console_user_id'] == user_id and report['report_name'] == report_name:
             return report
         
@@ -43,27 +39,38 @@ def fetch_report(user_id, report_name):
 
 def fetch_report_by_id(id_, user_id, report_name):
     return execute_admin_console_sp(
-      'MWH_FILES.MANAGE_CollegeScorecard_Console',
-      'GET REPORT',
-      str(id_),
-      report_name,
-      str(user_id)
+        'MWH_FILES.MANAGE_CollegeScorecard_Console',
+        'GET REPORT',
+        str(id_),
+        report_name,
+        str(user_id)
     )
 
 
-def create_report(data):
+def fetch_reports(user_id):
+  """ Fetches the reports for the specified user. """
+  return execute_admin_console_sp(
+      'MWH_FILES.MANAGE_CollegeScorecard_Console',
+      'GET USER REPORTS',
+      str(user_id)
+  )
+
+
+def create_report(user_id, data):
     """
     Creates a report and returns the report's information.
+    :param user_id: User ID
+    :type user_id: str
     :param data: Report data
     :type data: dict
     """
-    if not is_empty(data['user_id']) and not is_empty(data['report_name']):
-        report = fetch_report(data['user_id'], data['report_name'])
+    if not is_empty(data['report_name']):
+        report = fetch_report(user_id, data['report_name'])
         if report:
             return update_report(data)
     
     required_data = {
-        'user_id': '',
+        'user_id': user_id,
         'report_name': '',
         'report_descrip': '',
         'share_dttm': '',
@@ -74,7 +81,6 @@ def create_report(data):
         required_data,
         pick(
             data,
-            'user_id',
             'report_name',
             'report_descrip',
             'share_dttm',
@@ -95,21 +101,23 @@ def create_report(data):
         get_columns_xml(new_data['columns'])
     )
     
-    return fetch_report(new_data['user_id'], new_data['report_name'])
+    return fetch_report(user_id, new_data['report_name'])
 
 
-def update_report(data):
+def update_report(user_id, data):
     """
     Updates a report and returns the report's information.
+    :param user_id: User ID
+    :type user_id: str
     :param data: New report data
     :type data: dict
     """
-    report = fetch_report(data['user_id'], data['report_name'])
+    report = fetch_report(user_id, data['report_name'])
     if report is None:
         raise DBException(f'The report is invalid.')
     
     current_data = {
-        'user_id': report['user_id'],
+        'user_id': user_id,
         'report_name': report['report_name'],
         'report_descrip': report['report_descrip'],
         'share_dttm': report['share_dttm'],
@@ -121,7 +129,6 @@ def update_report(data):
         current_data,
         pick(
             data,
-            'user_id',
             'report_name',
             'report_descrip',
             'share_dttm',
@@ -142,7 +149,7 @@ def update_report(data):
         get_columns_xml(new_data['columns'])
     )
     
-    return fetch_report(new_data['user_id'], new_data['report_name'])
+    return fetch_report(user_id, new_data['report_name'])
 
 
 def get_excel_export_data(columns, file_name):
