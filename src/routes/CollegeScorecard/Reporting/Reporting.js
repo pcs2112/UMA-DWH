@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import {
   Segment, Button, Grid
 } from 'semantic-ui-react';
+import { showModal as showModalAction } from 'redux-modal';
 import { client } from '../../../helpers/ApiClient';
 import collegeScorecardReduxModule from '../../../redux/modules/collegeScorecard';
 import collegeScorecardFilesReduxModule from '../../../redux/modules/collegeScorecardFiles';
@@ -14,9 +15,12 @@ import globalCss from '../../../css/global';
 import FilesDropdownFilter from '../FilesDropdownFilter';
 import VirtualTable from '../VirtualTable';
 import VirtualSortableList from '../VirtualSortableList';
+import CreateReportModal from '../CreateReportModal';
 import columns from './columns';
+import styles from './styles.less';
 
 const SELECTED_LIMIT = 255;
+const CREATE_REPORT_MODAL = 'CREATE_REPORT_MODAL';
 
 class Reporting extends Component {
   static propTypes = {
@@ -37,7 +41,8 @@ class Reporting extends Component {
     unselectAllData: PropTypes.func.isRequired,
     setFilters: PropTypes.func.isRequired,
     collegeScorecardSelectedColumnNames: PropTypes.array.isRequired,
-    reorderSelectedData: PropTypes.func.isRequired
+    reorderSelectedData: PropTypes.func.isRequired,
+    showModal: PropTypes.func.isRequired
   };
 
   state = {
@@ -85,6 +90,11 @@ class Reporting extends Component {
           });
         });
     });
+  };
+
+  handleShowModal = (e, { modalName }) => {
+    const { showModal } = this.props;
+    showModal(modalName);
   };
 
   render() {
@@ -140,16 +150,28 @@ class Reporting extends Component {
                 keyName="dictionary_entry_id"
               />
             </Grid.Column>
-            <Grid.Column width={4}>
-              {collegeScorecardSelectedCount > 0 && (
-                <VirtualSortableList
-                  containerWidth={250}
-                  items={collegeScorecardSelectedOrderedData}
-                  itemValueKeyName="column_name"
-                  onSortEnd={reorderSelectedData}
-                />
-              )}
-            </Grid.Column>
+            {collegeScorecardSelectedCount > 0 && (
+              <Grid.Column width={2}>
+                <div className={styles.RightColumn}>
+                  <Button
+                    fluid
+                    size="small"
+                    color="green"
+                    onClick={this.handleShowModal}
+                    className={styles.RightColumnButtons}
+                    modalName={CREATE_REPORT_MODAL}
+                  >
+                    Save New Report
+                  </Button>
+                  <VirtualSortableList
+                    containerWidth={220}
+                    items={collegeScorecardSelectedOrderedData}
+                    itemValueKeyName="column_name"
+                    onSortEnd={reorderSelectedData}
+                  />
+                </div>
+              </Grid.Column>
+            )}
           </Grid>
         </Segment>
         <Segment>
@@ -195,6 +217,9 @@ class Reporting extends Component {
             </Button>
           )}
         </Segment>
+        <CreateReportModal
+          name={CREATE_REPORT_MODAL}
+        />
       </div>
     );
   }
@@ -228,6 +253,7 @@ export default withMainLayout(connect(
     unselectAllData: () => dispatch(collegeScorecardReduxModule.actions.unselectAll()),
     setFilters: (key, value) => dispatch(collegeScorecardReduxModule.actions.setFilters(key, value)),
     reorderSelectedData: (sourceIdx, destIdx) =>
-      dispatch(collegeScorecardReduxModule.actions.reorder(sourceIdx, destIdx))
+      dispatch(collegeScorecardReduxModule.actions.reorder(sourceIdx, destIdx)),
+    showModal: modalName => dispatch(showModalAction(modalName))
   })
 )(Reporting));

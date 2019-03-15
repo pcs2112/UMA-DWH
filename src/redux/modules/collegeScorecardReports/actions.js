@@ -1,8 +1,13 @@
+import { catchValidation } from '../../../helpers/redux';
+
 export const actionTypes = {
   FETCH_BEGIN: 'collegeScorecardReports/FETCH_BEGIN',
   FETCH_SUCCESS: 'collegeScorecardReports/FETCH_SUCCESS',
   FETCH_FAIL: 'collegeScorecardReports/FETCH_FAIL',
-  RESET: 'collegeScorecardReports/RESET'
+  RESET: 'collegeScorecardReports/RESET',
+  CREATE_BEGIN: 'collegeScorecardReports/CREATE_BEGIN',
+  CREATE_SUCCESS: 'collegeScorecardReports/CREATE_SUCCESS',
+  CREATE_FAIL: 'collegeScorecardReports/CREATE_FAIL'
 };
 
 /**
@@ -22,4 +27,21 @@ export const fetch = () => ({
  */
 export const reset = () => ({
   type: actionTypes.RESET
+});
+
+/**
+ * Action to create a new report.
+ *
+ * @param {Object} data
+ */
+export const create = data => ({
+  types: [
+    actionTypes.CREATE_BEGIN,
+    actionTypes.CREATE_SUCCESS,
+    actionTypes.CREATE_FAIL
+  ],
+  makeRequest: client => client.post('/api/college_scorecard/reports', {
+    data
+  })
+    .catch(catchValidation)
 });
