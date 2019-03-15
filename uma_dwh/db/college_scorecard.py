@@ -1,5 +1,6 @@
 import xlwt
 import io
+import xml.etree.ElementTree as ET
 from pydash.objects import pick, assign
 from pydash.predicates import is_empty
 from .mssql_db import execute_sp
@@ -26,25 +27,50 @@ def get_columns_xml(columns, prepend_default=False):
     return xml
 
 
+def get_columns_from_xml(xml):
+    """ Returns the list of columns from an xml string. """
+    tree = ET.ElementTree(ET.fromstring(xml))
+    root = tree.getroot()
+    columns = []
+    
+    for col in root:
+        columns.append(col.attrib['NAME'])
+        
+    return columns
+
+
 def fetch_report(user_id, report_name):
     """ Fetches a report for the specified user and report name. """
-    reports = fetch_reports(user_id)
+    result = fetch_reports(user_id)
+    report = None
     
-    for report in reports:
-        if report['d_admin_console_user_id'] == user_id and report['report_name'] == report_name:
-            return report
-        
-    return None
+    for row in result:
+        if row['d_admin_console_user_id'] == user_id and row['report_name'] == report_name:
+            report = row
+            break
+    
+    if not report:
+        return None
+
+    report['xml_data'] = get_columns_from_xml(report['xml_data'])
+    return report
 
 
 def fetch_report_by_id(id_, user_id):
-    return execute_admin_console_sp(
+    result = execute_admin_console_sp(
         'MWH_FILES.MANAGE_CollegeScorecard_Console',
         'GET REPORT',
         str(id_),
         '',
         str(user_id)
     )
+    
+    if len(result) < 1:
+      return None
+    
+    report = result[0]
+    report['xml_data'] = get_columns_from_xml(report['xml_data'])
+    return report
 
 
 def fetch_reports(user_id):
@@ -67,7 +93,7 @@ def create_report(user_id, data):
     if not is_empty(data['report_name']):
         report = fetch_report(user_id, data['report_name'])
         if report:
-            return update_report(data)
+            return update_report(user_id, data)
     
     required_data = {
         'user_id': user_id,
