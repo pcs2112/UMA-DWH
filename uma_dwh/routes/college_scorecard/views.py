@@ -59,7 +59,7 @@ def post_export():
     response.headers = response_headers
 
     return response
-
+    
 
 @blueprint.route('/api/college_scorecard/reports', methods=('GET',))
 @nocache
@@ -67,16 +67,6 @@ def post_export():
 def get_reports():
     try:
         return jsonify(fetch_reports(get_user_id()))
-    except DBException as e:
-        raise InvalidUsage.form_validation_error({'report_name': e.message})
-
-
-@blueprint.route('/api/college_scorecard/reports/<report_id>', methods=('GET',))
-@nocache
-@jwt_required
-def get_report(report_id):
-    try:
-        return jsonify(fetch_report_by_id(report_id, get_user_id(), request.args['report_name']))
     except DBException as e:
         raise InvalidUsage.form_validation_error({'report_name': e.message})
     
@@ -88,6 +78,16 @@ def post_report():
     body = request.get_json(silent=True)
     try:
         return jsonify(create_report(get_user_id(), body))
+    except DBException as e:
+        raise InvalidUsage.form_validation_error({'report_name': e.message})
+    
+    
+@blueprint.route('/api/college_scorecard/reports/<report_id>', methods=('GET',))
+@nocache
+@jwt_required
+def get_report(report_id):
+    try:
+        return jsonify(fetch_report_by_id(report_id, get_user_id()))
     except DBException as e:
         raise InvalidUsage.form_validation_error({'report_name': e.message})
 
