@@ -9,6 +9,7 @@ from .etl import execute_admin_console_sp
 from .exceptions import DBException
 
 cell_width_padding = 367
+max_cell_width = 65535
 
 
 def get_columns_xml(columns, prepend_default=False):
@@ -45,7 +46,7 @@ def fetch_report(user_id, report_name):
     report = None
     
     for row in result:
-        if row['d_admin_console_user_id'] == user_id and row['report_name'].upper() == report_name.upper():
+        if row['report_name'].upper() == report_name.upper():
             report = row
             break
             
@@ -235,7 +236,7 @@ def print_ws_data(ws, rows):
     for i, width in columns_width.items():
         new_width = width * cell_width_padding
         if ws.col(i).width <= new_width:
-            ws.col(i).width = width * cell_width_padding
+            ws.col(i).width = new_width if new_width < max_cell_width else max_cell_width
 
 
 def print_ws_export_title(ws, columns, file_name):
