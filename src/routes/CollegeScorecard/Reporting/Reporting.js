@@ -167,10 +167,21 @@ class Reporting extends Component {
                     reports={collegeScorecardReportsData}
                     reportId={currentReportId}
                     onChange={fetchReport}
+                    className={styles.RightColumnButtons}
                   />
                 )}
                 {collegeScorecardSelectedCount > 0 && (
                   <Fragment>
+                    {currentReportId && (
+                      <Button
+                        fluid
+                        size="small"
+                        primary
+                        className={styles.RightColumnButtons}
+                      >
+                        Overwrite Report
+                      </Button>
+                    )}
                     <Button
                       fluid
                       size="small"
@@ -283,5 +294,6 @@ export default withMainLayout(connect(
       dispatch(collegeScorecardReduxModule.actions.reorder(sourceIdx, destIdx)),
     showModal: modalName => dispatch(showModalAction(modalName)),
     fetchReport: id => dispatch(collegeScorecardReportsReduxModule.actions.fetchReport(id))
+      .then(report => dispatch(collegeScorecardReduxModule.actions.loadFromReport(report)))
   })
 )(Reporting));

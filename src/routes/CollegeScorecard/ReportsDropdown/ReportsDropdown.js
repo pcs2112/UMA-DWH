@@ -8,7 +8,8 @@ class ReportsDropdown extends Component {
   static propTypes = {
     reports: PropTypes.array.isRequired,
     reportId: PropTypes.number,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    className: PropTypes.string
   };
 
   constructor(props) {
@@ -42,6 +43,7 @@ class ReportsDropdown extends Component {
 
   render() {
     const { reportId } = this.state;
+    const { className } = this.props;
     return (
       <Dropdown
         fluid
@@ -52,6 +54,7 @@ class ReportsDropdown extends Component {
         onChange={this.handleReportOnChange}
         value={reportId}
         placeholder="Select a report"
+        className={className}
       />
     );
   }

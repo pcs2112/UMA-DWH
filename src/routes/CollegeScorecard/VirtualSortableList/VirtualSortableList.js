@@ -51,4 +51,4 @@ class VirtualSortableList extends Component {
   }
 }
 
-export default withResponsiveContainer(VirtualSortableList, 320, 320);
+export default withResponsiveContainer(VirtualSortableList, 320, 415);
