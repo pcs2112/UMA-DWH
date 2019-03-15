@@ -33,6 +33,18 @@ export default (state = initialState, action) => {
       newState.current = current;
       return newState;
     }
+    case actionTypes.UPDATE_SUCCESS: {
+      const { response } = action;
+      const current = { ...response };
+      const idx = state.data.findIndex(item => item.id === current.id);
+      const newState = {
+        ...state,
+        data: [...state.data]
+      };
+      newState[idx] = current;
+      newState.current = current;
+      return newState;
+    }
     case actionTypes.FETCH_REPORT_SUCCESS: {
       const { data } = state;
       const { currentId, response } = action;

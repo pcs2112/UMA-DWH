@@ -10,7 +10,10 @@ export const actionTypes = {
   RESET: 'collegeScorecardReports/RESET',
   CREATE_BEGIN: 'collegeScorecardReports/CREATE_BEGIN',
   CREATE_SUCCESS: 'collegeScorecardReports/CREATE_SUCCESS',
-  CREATE_FAIL: 'collegeScorecardReports/CREATE_FAIL'
+  CREATE_FAIL: 'collegeScorecardReports/CREATE_FAIL',
+  UPDATE_BEGIN: 'collegeScorecardReports/UPDATE_BEGIN',
+  UPDATE_SUCCESS: 'collegeScorecardReports/UPDATE_SUCCESS',
+  UPDATE_FAIL: 'collegeScorecardReports/UPDATE_FAIL'
 };
 
 /**
@@ -57,6 +60,23 @@ export const create = data => ({
     actionTypes.CREATE_BEGIN,
     actionTypes.CREATE_SUCCESS,
     actionTypes.CREATE_FAIL
+  ],
+  makeRequest: client => client.post('/api/college_scorecard/reports', {
+    data
+  })
+    .catch(catchValidation)
+});
+
+/**
+ * Action to create save an existing report.
+ *
+ * @param {Object} data
+ */
+export const update = data => ({
+  types: [
+    actionTypes.UPDATE_BEGIN,
+    actionTypes.UPDATE_SUCCESS,
+    actionTypes.UPDATE_FAIL
   ],
   makeRequest: client => client.post('/api/college_scorecard/reports', {
     data

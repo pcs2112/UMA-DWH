@@ -5,12 +5,10 @@ import {
 
 export const newReportValidator = memoize(10)(createValidator({
   report_name: required(),
-  report_descrip: required(),
-  share_dttm: required()
+  report_descrip: required()
 }));
 
 export const existingReportValidator = memoize(10)(createValidator({
   report_name: required(),
-  report_descrip: required(),
-  share_dttm: required()
+  report_descrip: required()
 }));

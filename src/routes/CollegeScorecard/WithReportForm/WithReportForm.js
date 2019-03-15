@@ -13,7 +13,7 @@ const withReportForm = (scenario) => {
     <Fragment>
       <Field name="report_name" type="text" component={TextField} label="Report Name" required />
       <Field name="report_descrip" component={TextAreaField} label="Report Description" required />
-      <Field name="share_dttm" type="date" component={TextField} label="Share Until" required />
+      <Field name="share_dttm" type="date" component={TextField} label="Share Until" />
       <div className="field">
         <Button type="submit" fluid size="large" primary disabled={pristine || submitting}>
           Submit

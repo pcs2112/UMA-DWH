@@ -17,12 +17,14 @@ import FilesDropdownFilter from '../FilesDropdownFilter';
 import VirtualTable from '../VirtualTable';
 import VirtualSortableList from '../VirtualSortableList';
 import CreateReportModal from '../CreateReportModal';
+import UpdateReportModal from '../UpdateReportModal';
 import ReportsDropdown from '../ReportsDropdown';
 import columns from './columns';
 import styles from './styles.less';
 
 const SELECTED_LIMIT = 255;
 const CREATE_REPORT_MODAL = 'CREATE_REPORT_MODAL';
+const UPDATE_REPORT_MODAL = 'UPDATE_REPORT_MODAL';
 
 class Reporting extends Component {
   static propTypes = {
@@ -175,6 +177,8 @@ class Reporting extends Component {
                     fluid
                     size="small"
                     primary
+                    onClick={this.handleShowModal}
+                    modalname={UPDATE_REPORT_MODAL}
                     className={styles.RightColumnButtons}
                     disabled={collegeScorecardSelectedCount < 1}
                   >
@@ -186,8 +190,8 @@ class Reporting extends Component {
                   size="small"
                   color="green"
                   onClick={this.handleShowModal}
-                  className={styles.RightColumnButtons}
                   modalname={CREATE_REPORT_MODAL}
+                  className={styles.RightColumnButtons}
                   disabled={collegeScorecardSelectedCount < 1}
                 >
                   Save New Report
@@ -249,6 +253,9 @@ class Reporting extends Component {
         </Segment>
         <CreateReportModal
           name={CREATE_REPORT_MODAL}
+        />
+        <UpdateReportModal
+          name={UPDATE_REPORT_MODAL}
         />
       </div>
     );
