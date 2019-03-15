@@ -52,7 +52,8 @@ def fetch_report(user_id, report_name):
     if not report:
         return None
 
-    report['xml_data'] = get_columns_from_xml(report['xml_data'])
+    report['columns'] = get_columns_from_xml(report['xml_data'])
+    del report['xml_data']
     return report
 
 
@@ -69,7 +70,8 @@ def fetch_report_by_id(id_, user_id):
       return None
     
     report = result[0]
-    report['xml_data'] = get_columns_from_xml(report['xml_data'])
+    report['columns'] = get_columns_from_xml(report['xml_data'])
+    del report['xml_data']
     return report
 
 
