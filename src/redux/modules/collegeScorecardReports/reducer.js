@@ -27,7 +27,8 @@ export default (state = initialState, action) => {
       const current = { ...response };
       const newState = {
         ...state,
-        data: [...state.data]
+        data: [...(state.data || [])],
+        dataLoaded: true
       };
       newState.data.push(current);
       newState.current = current;
