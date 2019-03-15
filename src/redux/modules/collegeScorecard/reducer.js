@@ -141,7 +141,7 @@ export default (state = initialState, action) => {
         selectedOrder: newSelectedOrder
       };
     }
-    case actionTypes.LOAD_FROM_REPORT: {
+    case actionTypes.LOAD_SAVED_REPORT: {
       const { data } = state;
       const { report } = action;
       const idxLoopup = {};

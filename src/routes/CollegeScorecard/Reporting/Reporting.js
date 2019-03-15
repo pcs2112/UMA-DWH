@@ -294,6 +294,6 @@ export default withMainLayout(connect(
       dispatch(collegeScorecardReduxModule.actions.reorder(sourceIdx, destIdx)),
     showModal: modalName => dispatch(showModalAction(modalName)),
     fetchReport: id => dispatch(collegeScorecardReportsReduxModule.actions.fetchReport(id))
-      .then(report => dispatch(collegeScorecardReduxModule.actions.loadFromReport(report)))
+      .then(report => dispatch(collegeScorecardReduxModule.actions.loadSavedReport(report)))
   })
 )(Reporting));
