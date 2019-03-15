@@ -15,7 +15,7 @@ const withReportForm = (scenario) => {
       <Field name="report_descrip" component={TextAreaField} label="Report Description" required />
       <Field name="share_dttm" type="date" component={TextField} label="Share Until" />
       <div className="field">
-        <Button type="submit" fluid size="large" primary disabled={pristine || submitting}>
+        <Button type="submit" fluid size="large" primary disabled={(pristine && scenario === 'create') || submitting}>
           Submit
         </Button>
       </div>
