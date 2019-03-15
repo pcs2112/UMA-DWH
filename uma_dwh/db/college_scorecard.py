@@ -85,7 +85,7 @@ def create_report(data):
     if len(new_data['columns']) < 1:
         raise DBException(f'"columns" are required.')
 
-    result = execute_admin_console_sp(
+    execute_admin_console_sp(
         'MWH_FILES.MANAGE_CollegeScorecard_Console',
         'SAVE USER SELECTION',
         new_data['user_id'],
@@ -94,9 +94,6 @@ def create_report(data):
         new_data['share_dttm'],
         get_columns_xml(new_data['columns'])
     )
-    
-    if len(result) < 1:
-        raise DBException("The new report could not be saved.")
     
     return fetch_report(new_data['user_id'], new_data['report_name'])
 
