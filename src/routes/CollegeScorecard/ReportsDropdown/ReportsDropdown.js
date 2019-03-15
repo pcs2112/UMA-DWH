@@ -8,7 +8,7 @@ import { FILTERS_EXEC_DELAY } from '../../../constants/index';
 class ReportsDropdown extends Component {
   static propTypes = {
     reports: PropTypes.array.isRequired,
-    reportId: PropTypes.number,
+    reportId: PropTypes.oneOfType(PropTypes.number, PropTypes.string),
     onChange: PropTypes.func.isRequired,
     className: PropTypes.string,
     disabled: PropTypes.bool.isRequired
@@ -39,7 +39,8 @@ class ReportsDropdown extends Component {
   };
 
   handleReportOnChange = (e, { value }) => {
-    if (value !== this.props.reportId) {
+    const { reportId } = this.props;
+    if (value !== reportId) {
       this.handleOnChange(value);
     }
   };

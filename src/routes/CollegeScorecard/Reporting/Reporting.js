@@ -138,7 +138,7 @@ class Reporting extends Component {
       fetchReport
     } = this.props;
 
-    const currentReportId = collegeScorecardCurrentReport ? collegeScorecardCurrentReport.id : undefined;
+    const currentReportId = collegeScorecardCurrentReport ? collegeScorecardCurrentReport.id : '';
     return (
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
