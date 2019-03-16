@@ -25,7 +25,7 @@ class Filters extends Component {
     return (
       <Form size="small">
         <Form.Group>
-          <Form.Field width={13}>
+          <Form.Field width={10}>
             <Input
               icon="search"
               placeholder="Filter by TARGET_SCHEMA_TABLE_NAME"
