@@ -53,7 +53,7 @@ class FilesDropdownFilter extends Component {
               <label>Files</label>
             </div>
           </Form.Field>
-          <Form.Field width={13}>
+          <Form.Field width={10}>
             <Dropdown
               fluid
               selectOnNavigation={false}

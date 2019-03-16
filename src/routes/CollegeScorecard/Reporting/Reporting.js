@@ -289,7 +289,7 @@ export default withMainLayout(connect(
     collegeScorecardFilters: collegeScorecardReduxModule.selectors.getFilters(state),
     collegeScorecardSelectedColumnNames: collegeScorecardReduxModule.selectors.getSelectedColumnNames(state),
     collegeScorecardReportsData: collegeScorecardReportsReduxModule.selectors.getCollegeScorecardReportsData(state),
-    collegeScorecardCurrentReport: state.collegeScorecardReports.current
+    collegeScorecardCurrentReport: collegeScorecardReportsReduxModule.selectors.getCurrentReport(state)
   }),
   dispatch => ({
     fetchAllData: fileName => Promise.all([
