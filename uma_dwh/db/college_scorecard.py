@@ -40,6 +40,18 @@ def get_columns_from_xml(xml):
     return columns
 
 
+def report_exists(user_id, report_name):
+    """ Checks the report exists. """
+    result = execute_admin_console_sp(
+        'MWH_FILES.MANAGE_CollegeScorecard_Console',
+        'CHECK_IF_REPORT_NAME_EXISTS',
+        str(user_id),
+        report_name.upper()
+    )
+    
+    return len(result) > 0
+
+
 def fetch_report(user_id, report_name):
     """ Fetches a report for the specified user and report name. """
     result = fetch_reports(user_id)
@@ -60,12 +72,12 @@ def fetch_report(user_id, report_name):
     return report
 
 
-def fetch_report_by_id(id_, user_id):
+def fetch_report_by_id(id_, user_id, report_name=''):
     result = execute_admin_console_sp(
         'MWH_FILES.MANAGE_CollegeScorecard_Console',
         'GET REPORT',
         str(id_),
-        '',
+        report_name.upper(),
         str(user_id)
     )
     
@@ -98,10 +110,8 @@ def create_report(user_id, data):
     :param data: Report data
     :type data: dict
     """
-    if not is_empty(data['report_name']):
-        report = fetch_report(user_id, data['report_name'])
-        if report:
-            raise DBException(f"The report \"{data['report_name']}\" already exists.")
+    if not is_empty(data['report_name']) and report_exists(user_id, data['report_name']):
+        raise DBException(f"The report \"{data['report_name']}\" already exists.")
     
     required_data = {
         'user_id': user_id,

@@ -8,7 +8,7 @@ import { FILTERS_EXEC_DELAY } from '../../../constants/index';
 class ReportsDropdown extends Component {
   static propTypes = {
     reports: PropTypes.array.isRequired,
-    reportId: PropTypes.oneOfType(PropTypes.number, PropTypes.string),
+    reportId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onChange: PropTypes.func.isRequired,
     className: PropTypes.string,
     disabled: PropTypes.bool.isRequired

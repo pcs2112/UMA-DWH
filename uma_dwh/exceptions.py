@@ -73,5 +73,5 @@ class InvalidUsage(Exception):
 
     @classmethod
     def form_validation_error(cls, payload):
-        form_validation_error = http_error_template(401, 'FORM_VALIDATION_ERROR', 'Validation error.', payload)
+        form_validation_error = http_error_template(400, 'FORM_VALIDATION_ERROR', 'Validation error.', payload)
         return cls(**form_validation_error)

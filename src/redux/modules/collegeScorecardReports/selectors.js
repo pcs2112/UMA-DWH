@@ -24,7 +24,7 @@ export const getCollegeScorecardReportsData = createGetItemsSelector(_getData);
  */
 export const getNewReportFormInitialValues = createSelector(
   [collegeScorecardReduxModule.selectors.getSelectedColumnNames],
-  (userId, columns) => ({
+  columns => ({
     columns
   })
 );
@@ -34,7 +34,7 @@ export const getNewReportFormInitialValues = createSelector(
  */
 export const getExistingReportFormInitialValues = createSelector(
   [getCurrentReport, collegeScorecardReduxModule.selectors.getSelectedColumnNames],
-  (userId, currentReport, columns) => {
+  (currentReport, columns) => {
     const values = {
       columns
     };
