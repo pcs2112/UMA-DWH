@@ -145,6 +145,7 @@ export default (state = initialState, action) => {
       const { data } = state;
       const { report } = action;
       const idxLoopup = {};
+      const newSelectedManually = {};
       const newSelectedOrder = [];
       const newSelected = {};
 
@@ -156,6 +157,7 @@ export default (state = initialState, action) => {
         const idx = idxLoopup[col];
         if (typeof idx !== 'undefined') {
           const column = data[idx];
+          newSelectedManually[column[itemKeyName]] = column[itemKeyName];
           newSelectedOrder.push(column[itemKeyName]);
           newSelected[column[itemKeyName]] = column;
         }
@@ -163,7 +165,7 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        selectedManually: {},
+        selectedManually: newSelectedManually,
         selectedOrder: newSelectedOrder,
         selected: newSelected
       };
