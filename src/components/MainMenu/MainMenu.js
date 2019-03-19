@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Menu } from 'semantic-ui-react';
-import { menuCss } from './css';
+import { menuCss, chuckImgCss } from './css';
 import logo from './logo.png';
+import cmatula from './cmatula.png';
 
 const isActive = (currentPathName, pathName) => currentPathName.indexOf(pathName) > -1;
 
@@ -62,6 +63,9 @@ class MainMenu extends Component {
         <Menu.Item as={Link} to="/logout" onClick={this.onLogout}>
           Logout
         </Menu.Item>
+        <div>
+          <img src={cmatula} className="ui image" alt="Chuck Matula" style={chuckImgCss} />
+        </div>
       </Menu>
     );
   }

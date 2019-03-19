@@ -11,3 +11,10 @@ export const menuCss = {
   overflowY: 'auto',
   borderRight: `1px solid ${globalCss.colors.darkCyan}`
 };
+
+export const chuckImgCss = {
+  width: '50px',
+  position: 'fixed',
+  bottom: '10px',
+  left: '10px'
+};
