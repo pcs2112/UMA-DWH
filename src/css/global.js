@@ -18,6 +18,7 @@ const paleGreen = '#9EE0AC';
 const success = '#21BA45';
 const error = '#ff0000';
 const warning = '#e8bf03';
+const orange = '#e87d0f';
 const rowHighLight = '#DFE9F3';
 
 export default {
@@ -32,7 +33,9 @@ export default {
     error,
     warning,
     rowHighLight,
-    red: error
+    red: error,
+    orange,
+    yellow: warning
   },
   pageHeaderSegment: {
     background: lighterSteelBlue

@@ -180,7 +180,10 @@ class CycleHistoryTable extends Component {
 
     let bgColor = 'none';
     let textColor = '#000';
-    if (row.original.err_num > 0 || row.original.try_catch_err_id > 0) {
+    if (row.original.err_num === 0 && row.original.try_catch_err_id > 0) {
+      bgColor = globalCss.colors.orange;
+      textColor = '#FFF';
+    } else if (row.original.err_num > 0) {
       bgColor = globalCss.colors.error;
       textColor = '#FFF';
     } else if (row.original.table_status === 'RUNNING') {
