@@ -141,6 +141,35 @@ export default (state = initialState, action) => {
         selectedOrder: newSelectedOrder
       };
     }
+    case actionTypes.LOAD_SAVED_REPORT: {
+      const { data } = state;
+      const { report } = action;
+      const idxLoopup = {};
+      const newSelectedManually = {};
+      const newSelectedOrder = [];
+      const newSelected = {};
+
+      data.forEach((item, i) => {
+        idxLoopup[item.column_name] = i;
+      });
+
+      report.columns.forEach((col) => {
+        const idx = idxLoopup[col];
+        if (typeof idx !== 'undefined') {
+          const column = data[idx];
+          newSelectedManually[column[itemKeyName]] = column[itemKeyName];
+          newSelectedOrder.push(column[itemKeyName]);
+          newSelected[column[itemKeyName]] = column;
+        }
+      });
+
+      return {
+        ...state,
+        selectedManually: newSelectedManually,
+        selectedOrder: newSelectedOrder,
+        selected: newSelected
+      };
+    }
     default:
       return state;
   }

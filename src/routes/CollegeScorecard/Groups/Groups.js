@@ -11,7 +11,7 @@ import collegeScorecardFilesReduxModule from '../../../redux/modules/collegeScor
 import withMainLayout from '../../../components/WithMainLayout';
 import globalCss from '../../../css/global';
 import FilesDropdownFilter from '../FilesDropdownFilter';
-import ColumnsTable from '../ColumnsTable';
+import VirtualTable from '../VirtualTable';
 import columns from './columns';
 
 class Groups extends Component {
@@ -80,7 +80,7 @@ class Groups extends Component {
           </Grid>
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
-          <ColumnsTable
+          <VirtualTable
             dataLoaded={isAllDataLoaded}
             data={collegeScorecardGroupsData}
             isFetching={isDataFetching}

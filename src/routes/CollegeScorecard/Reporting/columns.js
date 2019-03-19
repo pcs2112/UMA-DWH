@@ -11,12 +11,14 @@ export default [
   {
     dataKey: 'row_count',
     width: 100,
-    label: 'POPULATED'
+    label: 'POPULATED',
+    isNumeric: true
   },
   {
     dataKey: 'per_pop',
     width: 100,
-    label: '% POPULATED'
+    label: '% POPULATED',
+    isNumeric: true
   },
   {
     dataKey: 'entry_data_type',
@@ -30,7 +32,7 @@ export default [
   },
   {
     dataKey: 'entry_description',
-    width: 2000,
+    width: 1400,
     label: 'LONG DESCRIPTION'
   }
 ];

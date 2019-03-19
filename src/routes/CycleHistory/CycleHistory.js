@@ -17,6 +17,7 @@ import globalCss from 'css/global';
 import CycleHistoryTable from './CycleHistoryTable';
 import CurrentStatusTable from './CurrentStatusTable';
 import CycleHistoryPageHeader from './CycleHistoryPageHeader';
+import Filters from './Filters';
 import { runCheckButtonCss } from './css';
 
 class Home extends Component {
@@ -145,7 +146,8 @@ class Home extends Component {
       isCurrentStatusFetching,
       currentStatusData,
       currentStatusDataTotals,
-      currentEtlStatus
+      currentEtlStatus,
+      setCycleHistoryFilters
     } = this.props;
     return (
       <div>
@@ -155,6 +157,16 @@ class Home extends Component {
             currentEtlStatus={currentEtlStatus}
             cycleHistoryDate={cycleHistoryDate}
           />
+        </Segment>
+        <Segment>
+          <Grid>
+            <Grid.Column width={5}>
+              <Filters
+                onChange={setCycleHistoryFilters}
+                {...cycleHistoryFilters}
+              />
+            </Grid.Column>
+          </Grid>
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
           <CycleHistoryTable

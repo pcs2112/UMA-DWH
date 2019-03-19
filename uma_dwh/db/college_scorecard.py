@@ -1,9 +1,199 @@
 import xlwt
 import io
+import xml.etree.ElementTree as ET
+from pydash.objects import pick, assign
+from pydash.predicates import is_empty
 from .mssql_db import execute_sp
 from uma_dwh.utils import is_float, is_int, is_datetime, list_chunks
+from .etl import execute_admin_console_sp
+from .exceptions import DBException
 
 cell_width_padding = 367
+max_cell_width = 65535
+
+
+def get_columns_xml(columns, prepend_default=False):
+    """ Returns the columns xml for the list of specified columns. """
+    xml = '<COLUMNS>'
+    
+    if prepend_default:
+        xml += f'<COLUMN NAME="INSTNM" />'
+        xml += f'<COLUMN NAME="OPEID" />'
+    
+    for col in columns:
+        xml += f'<COLUMN NAME="{col}" />'
+    
+    xml += '</COLUMNS>'
+    
+    return xml
+
+
+def get_columns_from_xml(xml):
+    """ Returns the list of columns from an xml string. """
+    tree = ET.ElementTree(ET.fromstring(xml))
+    root = tree.getroot()
+    columns = []
+    
+    for col in root:
+        columns.append(col.attrib['NAME'])
+        
+    return columns
+
+
+def report_exists(user_id, report_name):
+    """ Checks the report exists. """
+    result = execute_admin_console_sp(
+        'MWH_FILES.MANAGE_CollegeScorecard_Console',
+        'CHECK_IF_REPORT_NAME_EXISTS',
+        str(user_id),
+        report_name.upper()
+    )
+    
+    return len(result) > 0
+
+
+def fetch_report(user_id, report_name):
+    """ Fetches a report for the specified user and report name. """
+    result = fetch_reports(user_id)
+    report = None
+    
+    for row in result:
+        if row['report_name'].upper() == report_name.upper():
+            report = row
+            break
+            
+    if not report:
+        return None
+    
+    if 'xml_data' in report:
+        report['columns'] = get_columns_from_xml(report['xml_data'])
+        del report['xml_data']
+
+    return report
+
+
+def fetch_report_by_id(id_, user_id, report_name=''):
+    result = execute_admin_console_sp(
+        'MWH_FILES.MANAGE_CollegeScorecard_Console',
+        'GET REPORT',
+        str(id_),
+        report_name.upper(),
+        str(user_id)
+    )
+    
+    if len(result) < 1:
+      return None
+    
+    report = result[0]
+
+    if 'xml_data' in report:
+        report['columns'] = get_columns_from_xml(report['xml_data'])
+        del report['xml_data']
+
+    return report
+
+
+def fetch_reports(user_id):
+  """ Fetches the reports for the specified user. """
+  return execute_admin_console_sp(
+      'MWH_FILES.MANAGE_CollegeScorecard_Console',
+      'GET USER REPORTS',
+      str(user_id)
+  )
+
+
+def create_report(user_id, data):
+    """
+    Creates a report and returns the report's information.
+    :param user_id: User ID
+    :type user_id: str
+    :param data: Report data
+    :type data: dict
+    """
+    if not is_empty(data['report_name']) and report_exists(user_id, data['report_name']):
+        raise DBException(f"The report \"{data['report_name']}\" already exists.")
+    
+    required_data = {
+        'user_id': user_id,
+        'report_name': '',
+        'report_descrip': '',
+        'share_dttm': '',
+        'columns': []
+    }
+    
+    new_data = assign(
+        required_data,
+        pick(
+            data,
+            'report_name',
+            'report_descrip',
+            'share_dttm',
+            'columns'
+        )
+    )
+    
+    if len(new_data['columns']) < 1:
+        raise DBException(f'"columns" are required.')
+
+    execute_admin_console_sp(
+        'MWH_FILES.MANAGE_CollegeScorecard_Console',
+        'SAVE USER SELECTION',
+        new_data['user_id'],
+        new_data['report_name'].upper(),
+        new_data['report_descrip'],
+        new_data['share_dttm'],
+        get_columns_xml(new_data['columns'])
+    )
+    
+    return fetch_report(user_id, new_data['report_name'])
+
+
+def update_report(user_id, data):
+    """
+    Updates a report and returns the report's information.
+    :param user_id: User ID
+    :type user_id: str
+    :param data: New report data
+    :type data: dict
+    """
+    report = fetch_report(user_id, data['report_name'])
+    if report is None:
+        raise DBException(f'The report is invalid.')
+    
+    current_data = {
+        'user_id': user_id,
+        'report_name': report['report_name'],
+        'report_descrip': report['report_descrip'],
+        'share_dttm': report['share_dttm'],
+        'columns': []
+    }
+    
+    new_data = assign(
+        {},
+        current_data,
+        pick(
+            data,
+            'report_name',
+            'report_descrip',
+            'share_dttm',
+            'columns'
+        )
+    )
+    
+    if len(new_data['columns']) < 1:
+        raise DBException(f'"columns" are required.')
+    
+    execute_admin_console_sp(
+        'MWH_FILES.MANAGE_CollegeScorecard_Console',
+        'SAVE USER SELECTION',
+        new_data['user_id'],
+        new_data['report_name'].upper(),
+        new_data['report_descrip'],
+        new_data['share_dttm'],
+        get_columns_xml(new_data['columns'])
+    )
+    
+    return fetch_report(user_id, new_data['report_name'])
 
 
 def get_excel_export_data(columns, file_name):
@@ -56,7 +246,7 @@ def print_ws_data(ws, rows):
     for i, width in columns_width.items():
         new_width = width * cell_width_padding
         if ws.col(i).width <= new_width:
-            ws.col(i).width = width * cell_width_padding
+            ws.col(i).width = new_width if new_width < max_cell_width else max_cell_width
 
 
 def print_ws_export_title(ws, columns, file_name):
@@ -66,12 +256,7 @@ def print_ws_export_title(ws, columns, file_name):
     raw_data = []
 
     for cg_i, column_group in enumerate(column_groups):
-        xml = '<COLUMNS>'
-
-        for col in column_group:
-            xml += f'<COLUMN NAME="{col}" />'
-
-        xml += '</COLUMNS>'
+        xml = get_columns_xml(column_group)
 
         data_result = execute_sp(
             sp_name='MWH_FILES.MANAGE_CollegeScorecard_Console',
@@ -115,14 +300,7 @@ def print_ws_export_data(ws, columns, file_name):
     raw_data = []
 
     for cg_i, column_group in enumerate(column_groups):
-        xml = '<COLUMNS>'
-        xml += f'<COLUMN NAME="INSTNM" />'
-        xml += f'<COLUMN NAME="OPEID" />'
-
-        for col in column_group:
-            xml += f'<COLUMN NAME="{col}" />'
-
-        xml += '</COLUMNS>'
+        xml = get_columns_xml(column_group, True)
 
         data_result = execute_sp(
             sp_name='MWH_FILES.MANAGE_CollegeScorecard_Console',

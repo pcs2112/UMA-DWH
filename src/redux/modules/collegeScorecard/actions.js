@@ -8,7 +8,8 @@ export const actionTypes = {
   UNSELECT: 'collegeScorecard/UNSELECT',
   UNSELECT_ALL: 'collegeScorecard/UNSELECT_ALL',
   SET_FILTERS: 'collegeScorecard/SET_FILTERS',
-  REORDER: 'collegeScorecard/REORDER'
+  REORDER: 'collegeScorecard/REORDER',
+  LOAD_SAVED_REPORT: 'collegeScorecard/LOAD_SAVED_REPORT'
 };
 
 /**
@@ -87,4 +88,12 @@ export const reorder = (startIndex, endIndex) => ({
   type: actionTypes.REORDER,
   startIndex,
   endIndex
+});
+
+/**
+ * Action to load the college scorecard from a report.
+ */
+export const loadSavedReport = report => ({
+  type: actionTypes.LOAD_SAVED_REPORT,
+  report
 });

@@ -11,7 +11,7 @@ import { ROW_HEIGHT, OVERSCAN_COL_COUNT, OVERSCAN_ROW_COUNT } from '../../../con
 import withResponsiveContainer from '../../../components/WithResponsiveContainer';
 import styles from '../../../css/react-virtualized.less';
 
-class ColumnsTable extends React.PureComponent {
+class VirtualTable extends React.PureComponent {
   static propTypes = {
     isFetching: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
@@ -23,6 +23,8 @@ class ColumnsTable extends React.PureComponent {
     columns: PropTypes.array.isRequired,
     keyName: PropTypes.string.isRequired
   };
+
+  tableWidth = 0;
 
   _renderLeftSideHeaderCell = ({
     key, style
@@ -42,6 +44,21 @@ class ColumnsTable extends React.PureComponent {
         {columns[columnIndex].label}
       </div>
     );
+  };
+
+  _getHeaderColumnWidth = ({ index }) => {
+    const { columns } = this.props;
+    if (index < columns.length - 1) {
+      return this._getColumnWidth({ index });
+    }
+
+    let totalWidth = 0;
+    columns.forEach((col) => {
+      totalWidth += col.width;
+    });
+
+    return totalWidth <= this.tableWidth
+      ? columns[index].width + (this.tableWidth - totalWidth) : columns[index].width;
   };
 
   _renderLeftSideCell = ({
@@ -71,10 +88,19 @@ class ColumnsTable extends React.PureComponent {
     }
 
     const { columns } = this.props;
+    const column = columns[columnIndex];
     const rowClass = this._getRowColorClass(rowIndex);
-    const classNames = clsx(rowClass, styles.Cell);
+    let classNames = clsx(rowClass, styles.Cell);
     const rowData = this._rowGetter(rowIndex);
     const value = rowData[columns[columnIndex].dataKey];
+
+    if (objectHasOwnProperty(column, 'render')) {
+      return column.render(key, value, rowData, classNames, style);
+    }
+
+    if (column.isNumeric) {
+      classNames = clsx(classNames, styles.NumericCell);
+    }
 
     return (
       <div className={classNames} key={key} style={style}>
@@ -83,7 +109,20 @@ class ColumnsTable extends React.PureComponent {
     );
   };
 
-  _getColumnWidth = ({ index }) => this.props.columns[index].width;
+  _getColumnWidth = ({ index }) => {
+    const { columns } = this.props;
+    if (index < columns.length - 1) {
+      return columns[index].width;
+    }
+
+    let totalWidth = 0;
+    columns.forEach((col) => {
+      totalWidth += col.width;
+    });
+
+    return totalWidth <= this.tableWidth
+      ? (columns[index].width - scrollbarSize()) + (this.tableWidth - totalWidth) : columns[index].width;
+  };
 
   _getLeftSideColumnWidth = () => this.props.columns[0].width;
 
@@ -179,50 +218,53 @@ class ColumnsTable extends React.PureComponent {
             </div>
             <div className={styles.GridColumn}>
               <AutoSizer disableHeight>
-                {({ width }) => (
-                  <div>
-                    <div
-                      style={{
-                        height: ROW_HEIGHT,
-                        width: width - scrollbarSize()
-                      }}
-                    >
-                      <Grid
-                        className={styles.HeaderGrid}
-                        columnWidth={this._getColumnWidth}
-                        columnCount={columnCount}
-                        height={ROW_HEIGHT}
-                        overscanColumnCount={OVERSCAN_COL_COUNT}
-                        cellRenderer={this._renderHeaderCell}
-                        rowHeight={ROW_HEIGHT}
-                        rowCount={1}
-                        scrollLeft={scrollLeft}
-                        width={width - scrollbarSize() + 10}
-                      />
+                {({ width }) => {
+                  this.tableWidth = width;
+                  return (
+                    <div>
+                      <div
+                        style={{
+                          height: ROW_HEIGHT,
+                          width: width - scrollbarSize()
+                        }}
+                      >
+                        <Grid
+                          className={styles.HeaderGrid}
+                          columnWidth={this._getHeaderColumnWidth}
+                          columnCount={columnCount}
+                          height={ROW_HEIGHT}
+                          overscanColumnCount={OVERSCAN_COL_COUNT}
+                          cellRenderer={this._renderHeaderCell}
+                          rowHeight={ROW_HEIGHT}
+                          rowCount={1}
+                          scrollLeft={scrollLeft}
+                          width={width}
+                        />
+                      </div>
+                      <div
+                        style={{
+                          containerHeight,
+                          width
+                        }}
+                      >
+                        <Grid
+                          className={styles.BodyGrid}
+                          columnWidth={this._getColumnWidth}
+                          columnCount={columnCount}
+                          height={containerHeight}
+                          onScroll={onScroll}
+                          overscanColumnCount={OVERSCAN_COL_COUNT}
+                          overscanRowCount={OVERSCAN_ROW_COUNT}
+                          cellRenderer={this._renderBodyCell}
+                          rowHeight={ROW_HEIGHT}
+                          rowCount={rowCount}
+                          width={width}
+                          selectedCount={selectedDataCount}
+                        />
+                      </div>
                     </div>
-                    <div
-                      style={{
-                        containerHeight,
-                        width
-                      }}
-                    >
-                      <Grid
-                        className={styles.BodyGrid}
-                        columnWidth={this._getColumnWidth}
-                        columnCount={columnCount}
-                        height={containerHeight}
-                        onScroll={onScroll}
-                        overscanColumnCount={OVERSCAN_COL_COUNT}
-                        overscanRowCount={OVERSCAN_ROW_COUNT}
-                        cellRenderer={this._renderBodyCell}
-                        rowHeight={ROW_HEIGHT}
-                        rowCount={rowCount}
-                        width={width}
-                        selectedCount={selectedDataCount}
-                      />
-                    </div>
-                  </div>
-                )}
+                  );
+                }}
               </AutoSizer>
             </div>
           </div>
@@ -232,4 +274,4 @@ class ColumnsTable extends React.PureComponent {
   }
 }
 
-export default withResponsiveContainer(ColumnsTable, 320, 300);
+export default withResponsiveContainer(VirtualTable, 320, 300);

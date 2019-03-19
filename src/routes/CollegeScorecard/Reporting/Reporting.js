@@ -5,18 +5,27 @@ import { Link } from 'react-router-dom';
 import {
   Segment, Button, Grid
 } from 'semantic-ui-react';
+import { showModal as showModalAction } from 'redux-modal';
+import { isEmpty } from 'javascript-utils/lib/utils';
 import { client } from '../../../helpers/ApiClient';
 import collegeScorecardReduxModule from '../../../redux/modules/collegeScorecard';
 import collegeScorecardFilesReduxModule from '../../../redux/modules/collegeScorecardFiles';
 import collegeScorecardGroupsReduxModule from '../../../redux/modules/collegeScorecardGroups';
+import collegeScorecardReportsReduxModule from '../../../redux/modules/collegeScorecardReports';
 import withMainLayout from '../../../components/WithMainLayout';
 import globalCss from '../../../css/global';
 import FilesDropdownFilter from '../FilesDropdownFilter';
-import DragNDrop from '../DragNDrop';
-import ColumnsTable from '../ColumnsTable';
+import VirtualTable from '../VirtualTable';
+import VirtualSortableList from '../VirtualSortableList';
+import CreateReportModal from '../CreateReportModal';
+import UpdateReportModal from '../UpdateReportModal';
+import ReportsDropdown from '../ReportsDropdown';
 import columns from './columns';
+import styles from './styles.less';
 
 const SELECTED_LIMIT = 255;
+const CREATE_REPORT_MODAL = 'CREATE_REPORT_MODAL';
+const UPDATE_REPORT_MODAL = 'UPDATE_REPORT_MODAL';
 
 class Reporting extends Component {
   static propTypes = {
@@ -29,6 +38,9 @@ class Reporting extends Component {
     collegeScorecardSelectedOrderedData: PropTypes.array.isRequired,
     collegeScorecardSelectedCount: PropTypes.number.isRequired,
     collegeScorecardFilters: PropTypes.object.isRequired,
+    collegeScorecardSelectedColumnNames: PropTypes.array.isRequired,
+    collegeScorecardReportsData: PropTypes.array.isRequired,
+    collegeScorecardCurrentReport: PropTypes.object,
     fetchAllData: PropTypes.func.isRequired,
     resetAllData: PropTypes.func.isRequired,
     selectData: PropTypes.func.isRequired,
@@ -36,8 +48,9 @@ class Reporting extends Component {
     unselectData: PropTypes.func.isRequired,
     unselectAllData: PropTypes.func.isRequired,
     setFilters: PropTypes.func.isRequired,
-    collegeScorecardSelectedColumnNames: PropTypes.array.isRequired,
-    reorderSelectedData: PropTypes.func.isRequired
+    reorderSelectedData: PropTypes.func.isRequired,
+    showModal: PropTypes.func.isRequired,
+    fetchReport: PropTypes.func.isRequired
   };
 
   state = {
@@ -87,6 +100,21 @@ class Reporting extends Component {
     });
   };
 
+  handleShowModal = (e, { modalname }) => {
+    const { showModal } = this.props;
+    showModal(modalname);
+  };
+
+  getPageTitle = () => {
+    const { collegeScorecardCurrentReport } = this.props;
+    let pageTitle = 'College Scorecard Reporting';
+    if (collegeScorecardCurrentReport) {
+      pageTitle += ` (${collegeScorecardCurrentReport.report_name})`;
+    }
+
+    return pageTitle;
+  };
+
   render() {
     const { isExporting } = this.state;
     const {
@@ -99,18 +127,23 @@ class Reporting extends Component {
       collegeScorecardSelectedOrderedData,
       collegeScorecardSelectedCount,
       collegeScorecardFilters,
+      collegeScorecardReportsData,
+      collegeScorecardCurrentReport,
       fetchAllData,
       selectData,
       selectAllData,
       unselectData,
       unselectAllData,
-      reorderSelectedData
+      reorderSelectedData,
+      fetchReport
     } = this.props;
+
+    const currentReportId = collegeScorecardCurrentReport ? collegeScorecardCurrentReport.id : '';
     return (
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            College Scorecard Reporting
+            {this.getPageTitle()}
           </h1>
         </Segment>
         <Segment>
@@ -127,7 +160,7 @@ class Reporting extends Component {
         <Segment style={globalCss.pageHeaderSegment}>
           <Grid>
             <Grid.Column width={12}>
-              <ColumnsTable
+              <VirtualTable
                 dataLoaded={isAllDataLoaded}
                 data={collegeScorecardData}
                 isFetching={isDataFetching}
@@ -140,13 +173,48 @@ class Reporting extends Component {
                 keyName="dictionary_entry_id"
               />
             </Grid.Column>
-            <Grid.Column width={4}>
-              {collegeScorecardSelectedCount > 0 && (
-                <DragNDrop
-                  items={collegeScorecardSelectedOrderedData}
-                  reorderItems={reorderSelectedData}
+            <Grid.Column width={2}>
+              <div className={styles.RightColumn}>
+                <ReportsDropdown
+                  reports={collegeScorecardReportsData}
+                  reportId={currentReportId}
+                  onChange={fetchReport}
+                  className={styles.RightColumnButtons}
+                  disabled={collegeScorecardReportsData.length < 1}
                 />
-              )}
+                <Button
+                  fluid
+                  size="small"
+                  primary
+                  onClick={this.handleShowModal}
+                  modalname={UPDATE_REPORT_MODAL}
+                  className={styles.RightColumnButtons}
+                  disabled={
+                    collegeScorecardReportsData.length < 1 || !currentReportId || collegeScorecardSelectedCount < 1
+                  }
+                >
+                  Save Report
+                </Button>
+                <Button
+                  fluid
+                  size="small"
+                  color="green"
+                  onClick={this.handleShowModal}
+                  modalname={CREATE_REPORT_MODAL}
+                  className={styles.RightColumnButtons}
+                  disabled={collegeScorecardSelectedCount < 1}
+                >
+                  Save New Report
+                </Button>
+                {collegeScorecardSelectedCount > 0 && (
+                  <VirtualSortableList
+                    containerWidth={220}
+                    items={collegeScorecardSelectedOrderedData}
+                    itemValueKeyName="column_name"
+                    onSortEnd={reorderSelectedData}
+                  />
+                )}
+              </div>
             </Grid.Column>
           </Grid>
         </Segment>
@@ -193,6 +261,12 @@ class Reporting extends Component {
             </Button>
           )}
         </Segment>
+        <CreateReportModal
+          name={CREATE_REPORT_MODAL}
+        />
+        <UpdateReportModal
+          name={UPDATE_REPORT_MODAL}
+        />
       </div>
     );
   }
@@ -200,8 +274,12 @@ class Reporting extends Component {
 
 export default withMainLayout(connect(
   state => ({
-    isDataFetching: state.collegeScorecard.isFetching || state.collegeScorecardGroups.isFetching,
-    isAllDataLoaded: state.collegeScorecard.dataLoaded && state.collegeScorecardGroups.dataLoaded,
+    isDataFetching: state.collegeScorecard.isFetching
+      || state.collegeScorecardGroups.isFetching
+      || state.collegeScorecardReports.isFetching,
+    isAllDataLoaded: state.collegeScorecard.dataLoaded
+      && state.collegeScorecardGroups.dataLoaded
+      && state.collegeScorecardReports.dataLoaded,
     collegeScorecardFilesData: collegeScorecardFilesReduxModule.selectors.getCollegeScorecardFilesData(state),
     collegeScorecardData: collegeScorecardReduxModule.selectors.getCollegeScorecardData(state),
     collegeScorecardFetchingError: collegeScorecardReduxModule.selectors.getFetchingError(state),
@@ -209,23 +287,40 @@ export default withMainLayout(connect(
     collegeScorecardSelectedOrderedData: collegeScorecardReduxModule.selectors.getSelectedOrdered(state),
     collegeScorecardSelectedCount: collegeScorecardReduxModule.selectors.getSelectedCount(state),
     collegeScorecardFilters: collegeScorecardReduxModule.selectors.getFilters(state),
-    collegeScorecardSelectedColumnNames: collegeScorecardReduxModule.selectors.getSelectedColumnNames(state)
+    collegeScorecardSelectedColumnNames: collegeScorecardReduxModule.selectors.getSelectedColumnNames(state),
+    collegeScorecardReportsData: collegeScorecardReportsReduxModule.selectors.getCollegeScorecardReportsData(state),
+    collegeScorecardCurrentReport: collegeScorecardReportsReduxModule.selectors.getCurrentReport(state)
   }),
   dispatch => ({
     fetchAllData: fileName => Promise.all([
       dispatch(collegeScorecardReduxModule.actions.fetch(fileName)),
-      dispatch(collegeScorecardGroupsReduxModule.actions.fetch(fileName))
+      dispatch(collegeScorecardGroupsReduxModule.actions.fetch(fileName)),
+      dispatch(collegeScorecardReportsReduxModule.actions.fetch())
     ]),
     resetAllData: () => {
       dispatch(collegeScorecardReduxModule.actions.reset());
       dispatch(collegeScorecardGroupsReduxModule.actions.reset());
+      dispatch(collegeScorecardReportsReduxModule.actions.reset());
     },
     selectData: data => dispatch(collegeScorecardReduxModule.actions.select(data)),
     selectAllData: () => dispatch(collegeScorecardReduxModule.actions.selectAll()),
     unselectData: (id, data) => dispatch(collegeScorecardReduxModule.actions.unselect(id, data)),
-    unselectAllData: () => dispatch(collegeScorecardReduxModule.actions.unselectAll()),
+    unselectAllData: () => {
+      dispatch(collegeScorecardReduxModule.actions.unselectAll());
+      dispatch(collegeScorecardReportsReduxModule.actions.resetReport());
+    },
     setFilters: (key, value) => dispatch(collegeScorecardReduxModule.actions.setFilters(key, value)),
     reorderSelectedData: (sourceIdx, destIdx) =>
-      dispatch(collegeScorecardReduxModule.actions.reorder(sourceIdx, destIdx))
+      dispatch(collegeScorecardReduxModule.actions.reorder(sourceIdx, destIdx)),
+    showModal: modalName => dispatch(showModalAction(modalName)),
+    fetchReport: (id) => {
+      if (isEmpty(id)) {
+        dispatch(collegeScorecardReduxModule.actions.unselectAll());
+        dispatch(collegeScorecardReportsReduxModule.actions.resetReport());
+      } else {
+        dispatch(collegeScorecardReportsReduxModule.actions.fetchReport(id))
+          .then(report => dispatch(collegeScorecardReduxModule.actions.loadSavedReport(report)));
+      }
+    }
   })
 )(Reporting));
