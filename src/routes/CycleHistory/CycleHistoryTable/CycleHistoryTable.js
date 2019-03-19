@@ -268,4 +268,4 @@ class CycleHistoryTable extends Component {
   }
 }
 
-export default withResponsiveTable(CycleHistoryTable, 310, 520);
+export default withResponsiveTable(CycleHistoryTable, 280, 520);
