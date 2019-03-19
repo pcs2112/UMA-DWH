@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import ReactTable from 'react-table';
+import { isEmpty } from 'javascript-utils/lib/utils';
 import withResponsiveTable from 'components/WithResponsiveTable';
 import globalCss from 'css/global';
 
@@ -114,7 +115,15 @@ const columns = [
   },
   {
     Header: 'ERROR_MESSAGE',
-    accessor: 'try_catch_err_message',
+    Cell: (row) => {
+      let errMessage = '';
+      if (row.original.err_num > 0) {
+        errMessage = row.original.engine_message;
+      } else if (row.original.try_catch_err_id > 0) {
+        errMessage = row.original.try_catch_err_message;
+      }
+      return isEmpty(errMessage) ? '' : errMessage;
+    },
     minWidth: 300
   }
 ];
@@ -143,7 +152,10 @@ class ProcedureHistoryTable extends Component {
 
     let bgColor = 'none';
     let textColor = '#000';
-    if (row.original.error_number > 0 || row.original.try_catch_err_id > 0) {
+    if (row.original.err_num === 0 && row.original.try_catch_err_id > 0) {
+      bgColor = globalCss.colors.orange;
+      textColor = '#FFF';
+    } else if (row.original.err_num > 0) {
       bgColor = globalCss.colors.error;
       textColor = '#FFF';
     } else if (row.original.table_status === 'RUNNING') {
