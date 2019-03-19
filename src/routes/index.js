@@ -1,4 +1,4 @@
-import etlControlManager from 'redux/modules/etlControlManager';
+import etlControlManagerDetails from 'redux/modules/etlControlManagerDetails';
 import etlServers from 'redux/modules/etlServers';
 import reports from 'redux/modules/reports';
 import reportHistory from 'redux/modules/reportHistory';
@@ -19,7 +19,7 @@ export default ({ dispatch, getState }) => ([
     path: '/',
     component: CycleHistory,
     exact: true,
-    fetch: () => dispatch(etlControlManager.actions.fetchControlManager())
+    fetch: () => dispatch(etlControlManagerDetails.actions.fetch())
   },
   {
     path: '/procedures/history',

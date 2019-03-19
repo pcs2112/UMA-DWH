@@ -1,5 +1,5 @@
 path_sp_args_map = {
-  'control_manager': {
+  'control_manager/details': {
     'module_name': 'uma_dwh.db.etl',
     'module_func': 'execute_admin_console_sp',
     'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',

@@ -7,7 +7,7 @@ import collegeScorecardFiles from './modules/collegeScorecardFiles';
 import collegeScorecardGroups from './modules/collegeScorecardGroups';
 import collegeScorecardReports from './modules/collegeScorecardReports';
 import errorTypeResolution from './modules/errorTypeResolution';
-import etlControlManager from './modules/etlControlManager';
+import etlControlManagerDetails from './modules/etlControlManagerDetails';
 import etlCurrentStatus from './modules/etlCurrentStatus';
 import etlProcedureHistory from './modules/etlProcedureHistory';
 import etlCycleHistory from './modules/etlCycleHistory';
@@ -35,7 +35,7 @@ export default () => combineReducers({
   collegeScorecardGroups: collegeScorecardGroups.reducer,
   collegeScorecardReports: collegeScorecardReports.reducer,
   errorTypeResolution: errorTypeResolution.reducer,
-  etlControlManager: etlControlManager.reducer,
+  etlControlManagerDetails: etlControlManagerDetails.reducer,
   etlCurrentStatus: etlCurrentStatus.reducer,
   etlCycleHistory: etlCycleHistory.reducer,
   etlProcedureHistory: etlProcedureHistory.reducer,

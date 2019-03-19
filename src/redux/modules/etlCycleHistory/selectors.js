@@ -6,8 +6,8 @@ import {
   createGetItemsSelector,
   createGetPropertySelector
 } from 'javascript-utils/lib/selectors';
-import { createGetCurrentCycleGroup, createGetCurrentCycleGroupStartDttm } from 'helpers/selectors';
-import etlControlManager from 'redux/modules/etlControlManager';
+import { createGetCurrentCycleGroup, createGetCurrentCycleGroupStartDttm } from '../../../helpers/selectors';
+import etlControlManagerDetails from '../etlControlManagerDetails';
 
 /**
  * Returns the history data from the state.
@@ -157,7 +157,13 @@ export const getDataMartsSelected = createSelector(
  * Returns the ETL history by cycle group from the state.
  */
 export const getHistoryByCycleGroup = createSelector(
-  [_getData, getCurrentCycleGroup, getDataMartsSelected, etlControlManager.selectors.getControlManager, getFilters],
+  [
+    _getData,
+    getCurrentCycleGroup,
+    getDataMartsSelected,
+    etlControlManagerDetails.selectors.getControlManagerDetailsData,
+    getFilters
+  ],
   (data, cycleGroup, dataMarts, controlManager, filters) => {
     if (data.length < 1 || controlManager.length < 1) {
       return [];

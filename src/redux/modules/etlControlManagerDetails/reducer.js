@@ -8,7 +8,7 @@ const initialState = Object.assign({}, itemListInitialState);
 const itemListReducer = itemListReducerFor(actionTypes);
 
 /**
- * ETL control manager reducer.
+ * ETL control manager details reducer.
  *
  * @param {Object} state
  * @param {Object} action
