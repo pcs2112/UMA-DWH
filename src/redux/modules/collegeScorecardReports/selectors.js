@@ -20,6 +20,18 @@ export const getCurrentReport = createGetPropertySelector('collegeScorecardRepor
 export const getCollegeScorecardReportsData = createGetItemsSelector(_getData);
 
 /**
+ * Returns the college scorecard reports dropdown options.
+ */
+export const getCollegeScorecardReportsDropdownOptions = createSelector(
+  [_getData],
+  data => data.map(report => ({
+    key: report.id,
+    value: report.id,
+    text: report.report_name
+  }))
+);
+
+/**
  * Gets the initial form values for the new report form.
  */
 export const getNewReportFormInitialValues = createSelector(
