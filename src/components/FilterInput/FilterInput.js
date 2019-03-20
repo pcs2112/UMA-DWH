@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'semantic-ui-react';
-import withSearchInput from '../WithSearchInput';
+import withFilterInput from '../WithFilterInput';
 
-const SearchInput = ({ defaultValue, placeholder, onChange }) => (
+const FilterInput = ({ defaultValue, placeholder, onChange }) => (
   <Input
     icon="search"
     placeholder={placeholder}
@@ -12,10 +12,10 @@ const SearchInput = ({ defaultValue, placeholder, onChange }) => (
   />
 );
 
-SearchInput.propTypes = {
+FilterInput.propTypes = {
   defaultValue: PropTypes.string,
   placeholder: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired
 };
 
-export default withSearchInput(SearchInput);
+export default withFilterInput(FilterInput);
