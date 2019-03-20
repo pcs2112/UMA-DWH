@@ -8,7 +8,7 @@ import { FILTERS_EXEC_DELAY } from '../../constants';
 export const withDropdownFilter = (WrappedComponent) => {
   class WithDropdownFilter extends Component {
     static propTypes = {
-      defaultValue: PropTypes.oneOf([PropTypes.string, PropTypes.number]),
+      defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
       onChange: PropTypes.func.isRequired
     };
 
