@@ -10,7 +10,7 @@ import collegeScorecardGroupsReduxModule from '../../../redux/modules/collegeSco
 import collegeScorecardFilesReduxModule from '../../../redux/modules/collegeScorecardFiles';
 import withMainLayout from '../../../components/WithMainLayout';
 import globalCss from '../../../css/global';
-import FilesDropdownFilter from '../FilesDropdownFilter';
+import Filters from './Filters';
 import VirtualTable from '../VirtualTable';
 import columns from './columns';
 
@@ -71,9 +71,9 @@ class Groups extends Component {
         <Segment>
           <Grid>
             <Grid.Column width={5}>
-              <FilesDropdownFilter
-                files={collegeScorecardFilesData}
-                onChange={fetchAllData}
+              <Filters
+                fileOptions={collegeScorecardFilesData}
+                onFileChange={fetchAllData}
                 {...collegeScorecardFilters}
               />
             </Grid.Column>
@@ -118,7 +118,8 @@ export default withMainLayout(connect(
   state => ({
     isDataFetching: state.collegeScorecard.isFetching || state.collegeScorecardGroups.isFetching,
     isAllDataLoaded: state.collegeScorecard.dataLoaded && state.collegeScorecardGroups.dataLoaded,
-    collegeScorecardFilesData: collegeScorecardFilesReduxModule.selectors.getCollegeScorecardFilesData(state),
+    collegeScorecardFilesData: collegeScorecardFilesReduxModule.selectors
+      .getCollegeScorecardFilesDropdownOptions(state),
     collegeScorecardGroupsData: collegeScorecardGroupsReduxModule.selectors.getCollegeScorecardGroupsData(state),
     collegeScorecardGroupsFetchingError: collegeScorecardGroupsReduxModule.selectors.getFetchingError(state),
     collegeScorecardSelectedData: collegeScorecardGroupsReduxModule.selectors.getSelected(state),

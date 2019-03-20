@@ -14,12 +14,12 @@ import collegeScorecardGroupsReduxModule from '../../../redux/modules/collegeSco
 import collegeScorecardReportsReduxModule from '../../../redux/modules/collegeScorecardReports';
 import withMainLayout from '../../../components/WithMainLayout';
 import globalCss from '../../../css/global';
-import FilesDropdownFilter from '../FilesDropdownFilter';
+import Filters from './Filters';
 import VirtualTable from '../VirtualTable';
 import VirtualSortableList from '../VirtualSortableList';
 import CreateReportModal from '../CreateReportModal';
 import UpdateReportModal from '../UpdateReportModal';
-import ReportsDropdown from '../ReportsDropdown';
+import DropdownFilter from '../../../components/DropdownFilter';
 import columns from './columns';
 import styles from './styles.less';
 
@@ -135,7 +135,8 @@ class Reporting extends Component {
       unselectData,
       unselectAllData,
       reorderSelectedData,
-      fetchReport
+      fetchReport,
+      setFilters
     } = this.props;
 
     const currentReportId = collegeScorecardCurrentReport ? collegeScorecardCurrentReport.id : '';
@@ -149,9 +150,10 @@ class Reporting extends Component {
         <Segment>
           <Grid>
             <Grid.Column width={5}>
-              <FilesDropdownFilter
-                files={collegeScorecardFilesData}
-                onChange={fetchAllData}
+              <Filters
+                fileOptions={collegeScorecardFilesData}
+                onQueryChange={setFilters}
+                onFileChange={fetchAllData}
                 {...collegeScorecardFilters}
               />
             </Grid.Column>
@@ -175,9 +177,10 @@ class Reporting extends Component {
             </Grid.Column>
             <Grid.Column width={2}>
               <div className={styles.RightColumn}>
-                <ReportsDropdown
-                  reports={collegeScorecardReportsData}
-                  reportId={currentReportId}
+                <DropdownFilter
+                  options={collegeScorecardReportsData}
+                  defaultValue={currentReportId}
+                  placeholder="Select a report"
                   onChange={fetchReport}
                   className={styles.RightColumnButtons}
                   disabled={collegeScorecardReportsData.length < 1}
@@ -280,7 +283,8 @@ export default withMainLayout(connect(
     isAllDataLoaded: state.collegeScorecard.dataLoaded
       && state.collegeScorecardGroups.dataLoaded
       && state.collegeScorecardReports.dataLoaded,
-    collegeScorecardFilesData: collegeScorecardFilesReduxModule.selectors.getCollegeScorecardFilesData(state),
+    collegeScorecardFilesData: collegeScorecardFilesReduxModule.selectors
+      .getCollegeScorecardFilesDropdownOptions(state),
     collegeScorecardData: collegeScorecardReduxModule.selectors.getCollegeScorecardData(state),
     collegeScorecardFetchingError: collegeScorecardReduxModule.selectors.getFetchingError(state),
     collegeScorecardSelectedData: collegeScorecardReduxModule.selectors.getSelected(state),
@@ -288,7 +292,8 @@ export default withMainLayout(connect(
     collegeScorecardSelectedCount: collegeScorecardReduxModule.selectors.getSelectedCount(state),
     collegeScorecardFilters: collegeScorecardReduxModule.selectors.getFilters(state),
     collegeScorecardSelectedColumnNames: collegeScorecardReduxModule.selectors.getSelectedColumnNames(state),
-    collegeScorecardReportsData: collegeScorecardReportsReduxModule.selectors.getCollegeScorecardReportsData(state),
+    collegeScorecardReportsData: collegeScorecardReportsReduxModule.selectors
+      .getCollegeScorecardReportsDropdownOptions(state),
     collegeScorecardCurrentReport: collegeScorecardReportsReduxModule.selectors.getCurrentReport(state)
   }),
   dispatch => ({
