@@ -10,7 +10,7 @@ import collegeScorecardGroupsReduxModule from '../../../redux/modules/collegeSco
 import collegeScorecardFilesReduxModule from '../../../redux/modules/collegeScorecardFiles';
 import withMainLayout from '../../../components/WithMainLayout';
 import globalCss from '../../../css/global';
-import Filters from '../Filters';
+import Filters from './Filters';
 import VirtualTable from '../VirtualTable';
 import columns from './columns';
 
@@ -73,7 +73,7 @@ class Groups extends Component {
             <Grid.Column width={5}>
               <Filters
                 fileOptions={collegeScorecardFilesData}
-                onChange={fetchAllData}
+                onFileChange={fetchAllData}
                 {...collegeScorecardFilters}
               />
             </Grid.Column>

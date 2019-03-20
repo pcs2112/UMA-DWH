@@ -14,7 +14,7 @@ import collegeScorecardGroupsReduxModule from '../../../redux/modules/collegeSco
 import collegeScorecardReportsReduxModule from '../../../redux/modules/collegeScorecardReports';
 import withMainLayout from '../../../components/WithMainLayout';
 import globalCss from '../../../css/global';
-import Filters from '../Filters';
+import Filters from './Filters';
 import VirtualTable from '../VirtualTable';
 import VirtualSortableList from '../VirtualSortableList';
 import CreateReportModal from '../CreateReportModal';
