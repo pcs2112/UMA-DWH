@@ -42,7 +42,7 @@ const DropdownFilter = ({
 );
 
 DropdownFilter.propTypes = {
-  defaultValue: PropTypes.string,
+  defaultValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   options: PropTypes.array.isRequired,
   placeholder: PropTypes.string,
   className: PropTypes.string,
@@ -51,7 +51,6 @@ DropdownFilter.propTypes = {
 };
 
 DropdownFilter.defaultProps = {
-  defaultValue: '',
   disabled: false
 };
 
