@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { isEmpty, objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import {
   createDataSelector,
   createGetPropertySelector,
@@ -14,7 +15,8 @@ const _getData = createDataSelector('collegeScorecard', 'dataLoaded', 'data');
  */
 const _getFilters = state => ({
   fileName: state.collegeScorecard.fileName,
-  populated: state.collegeScorecard.populated
+  populated: state.collegeScorecard.populated,
+  query: ''
 });
 
 const _getSelected = createGetPropertySelector('collegeScorecard', 'selected');
@@ -35,13 +37,32 @@ export const getFetchingError = createFetchingErrorSelector('collegeScorecard', 
  */
 export const getCollegeScorecardData = createSelector(
   [_getFilters, _getData],
-  (filtersFromState, data) => {
-    const { populated } = filtersFromState;
-    if (populated === 'ALL') {
-      return data;
+  (filters, data) => {
+    const { populated } = filters;
+    let result = [];
+
+    if (populated !== 'ALL') {
+      result = data;
+    } else {
+      result = data.filter(res => res.per_pop > 0);
     }
 
-    return data.filter(item => item.per_pop > 0);
+    if (objectHasOwnProperty(filters, 'query')
+      && !isEmpty(filters.query)
+      && filters.query.length >= 3) {
+      const queryNormalized = filters.query.toLowerCase();
+      result = result.filter((res) => {
+        const normalizedColumnName = `${res.column_name}`.toLowerCase();
+        const normalizedDesc = `${res.entry_name}`.toLowerCase();
+        const normalizedLongDesc = `${res.entry_description}`.toLowerCase();
+
+        return normalizedColumnName.indexOf(queryNormalized) > -1
+          || normalizedDesc.indexOf(queryNormalized) > -1
+          || normalizedLongDesc.indexOf(queryNormalized) > -1;
+      });
+    }
+
+    return result;
   }
 );
 

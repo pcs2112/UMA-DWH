@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Form } from 'semantic-ui-react';
-import FilterInput from '../../../components/FilterInput';
+import InputFilter from '../../../components/InputFilter';
 
 class Filters extends Component {
   static propTypes = {
@@ -9,7 +9,7 @@ class Filters extends Component {
     onChange: PropTypes.func.isRequired
   };
 
-  handleFilterInputOnChange = (value) => {
+  handleInputFilterOnChange = (value) => {
     const { onChange } = this.props;
     onChange('query', value);
   };
@@ -20,10 +20,10 @@ class Filters extends Component {
       <Form size="small">
         <Form.Group>
           <Form.Field width={13}>
-            <FilterInput
+            <InputFilter
               defaultValue={query}
               placeholder="Filter by TARGET_SCHEMA_TABLE_NAME"
-              onChange={this.handleFilterInputOnChange}
+              onChange={this.handleInputFilterOnChange}
             />
           </Form.Field>
         </Form.Group>

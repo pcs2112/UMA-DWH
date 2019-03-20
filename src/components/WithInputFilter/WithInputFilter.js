@@ -5,8 +5,8 @@ import { getDisplayName } from 'javascript-utils/lib/react';
 import { FILTERS_EXEC_DELAY } from '../../constants';
 
 
-export const withFilterInput = (WrappedComponent) => {
-  class WithFilterInput extends Component {
+export const withInputFilter = (WrappedComponent) => {
+  class WithInputFilter extends Component {
     static propTypes = {
       onChange: PropTypes.func.isRequired
     };
@@ -28,7 +28,7 @@ export const withFilterInput = (WrappedComponent) => {
     }
   }
 
-  WithFilterInput.displayName = `WithFilterInput(${getDisplayName(WrappedComponent)})`;
+  WithInputFilter.displayName = `WithInputFilter(${getDisplayName(WrappedComponent)})`;
 
-  return WithFilterInput;
+  return WithInputFilter;
 };

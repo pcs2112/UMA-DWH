@@ -11,7 +11,8 @@ import { actionTypes } from './actions';
 
 const defaultFilters = {
   fileName: '',
-  populated: ''
+  populated: '',
+  query: ''
 };
 
 const itemKeyName = 'dictionary_entry_id';
