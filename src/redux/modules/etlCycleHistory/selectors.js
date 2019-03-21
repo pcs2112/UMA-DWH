@@ -176,12 +176,14 @@ export const getHistoryByCycleGroup = createSelector(
     // Get the map of procedure names to item index
     const map = {};
     const dataByCycleGroup = [];
-    data.forEach((item, index) => {
+    let cycleGroupItemIndex = 0;
+    data.forEach((item) => {
       if (item.cycle_group === cycleGroup) {
         const key = item.calling_proc.toLowerCase();
-        map[key] = index;
+        map[key] = cycleGroupItemIndex;
 
         dataByCycleGroup.push(item);
+        cycleGroupItemIndex++;
       }
     });
 
@@ -194,7 +196,7 @@ export const getHistoryByCycleGroup = createSelector(
 
     // Put together the result set
     let result = [];
-    controlManager.forEach((item) => {
+    controlManager.forEach((item, index) => {
       if (dataMartsSelected < 1 || objectHasOwnProperty(dataMarts, item.data_mart_name)) {
         const key = item.procedure_name.toLowerCase();
         const historyItemIndex = objectHasOwnProperty(map, key) ? map[key] : -1;
@@ -207,7 +209,7 @@ export const getHistoryByCycleGroup = createSelector(
           missingItem.cycle_group = cycleGroup;
           missingItem.data_mart_name = item.data_mart_name;
           missingItem.table_status = 'NOT STARTED';
-          missingItem.status = 2;
+          missingItem.color_status = 2;
           missingItem.source_server_name = item.source_server_name;
           missingItem.source_db_name = item.source_db_name;
           missingItem.source_table_name = item.source_table_name;
@@ -215,6 +217,7 @@ export const getHistoryByCycleGroup = createSelector(
           missingItem.source_schema_name = item.source_schema_name;
           missingItem.target_schema_name = item.target_schema_name;
           missingItem.active = 1;
+          missingItem.original_index = index;
           result.push(missingItem);
         }
       }
@@ -232,7 +235,7 @@ export const getHistoryByCycleGroup = createSelector(
       });
     }
 
-    result.sort(sortMultiple(['status', 'index']));
+    result.sort(sortMultiple(['color_status', 'original_index']));
 
     return result;
   }

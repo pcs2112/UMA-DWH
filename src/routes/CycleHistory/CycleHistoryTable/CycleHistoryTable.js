@@ -180,16 +180,16 @@ class CycleHistoryTable extends Component {
 
     let bgColor = 'none';
     let textColor = '#000';
-    if (row.original.status === -2) {
+    if (row.original.color_status === -2) {
       bgColor = globalCss.colors.error;
       textColor = '#FFF';
-    } else if (row.original.status === -1) {
+    } else if (row.original.color_status === -1) {
       bgColor = globalCss.colors.orange;
       textColor = '#FFF';
-    } else if (row.original.status === 1) {
+    } else if (row.original.color_status === 1) {
       bgColor = globalCss.colors.success;
       textColor = '#FFF';
-    } else if (row.original.status === 2) {
+    } else if (row.original.color_status === 2) {
       bgColor = globalCss.colors[row.original.cycle_group > 0 ? 'warning' : 'paleGreen'];
     } else if (this.isSelected(row.original[keyName])) {
       bgColor = globalCss.colors.rowHighLight;

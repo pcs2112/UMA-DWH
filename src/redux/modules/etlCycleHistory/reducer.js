@@ -39,6 +39,21 @@ const setItemList = (state, action) => {
 
   if (action.response) {
     newState = itemListReducer(state, action);
+    newState.data.forEach((item, index) => {
+      if (item.err_num > 0) {
+        item.color_status = -2;
+      } else if (item.try_catch_err_id > 0) {
+        item.color_status = -1;
+      } else if (item.table_status === 'RUNNING') {
+        item.color_status = 1;
+      } else if (item.table_status === 'NOT STARTED') {
+        item.color_status = 2;
+      } else {
+        item.color_status = 3;
+      }
+
+      item.original_index = index;
+    });
   } else {
     newState = {
       ...state,
@@ -50,22 +65,6 @@ const setItemList = (state, action) => {
   newState.currentCycleGroup = action.currentCycleGroup;
   newState.startCycleGroup = action.startCycleGroup;
   newState.cycleDate = action.cycleDate;
-
-  newState.data.forEach((item, index) => {
-    if (item.err_num > 0) {
-      item.status = -2;
-    } else if (item.try_catch_err_id > 0) {
-      item.status = -1;
-    } else if (item.table_status === 'RUNNING') {
-      item.status = 1;
-    } else if (item.table_status === 'NOT STARTED') {
-      item.status = 2;
-    } else {
-      item.status = 3;
-    }
-
-    item.index = index;
-  });
 
   return newState;
 };
