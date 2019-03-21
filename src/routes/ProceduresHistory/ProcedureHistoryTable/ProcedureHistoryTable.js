@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import ReactTable from 'react-table';
-import { isEmpty } from 'javascript-utils/lib/utils';
-import withResponsiveTable from 'components/WithResponsiveTable';
-import globalCss from 'css/global';
+import withResponsiveTable from '../../../components/WithResponsiveTable';
+import globalCss from '../../../css/global';
 
 const keyName = 'id';
 const noTrProps = {};
@@ -147,6 +146,9 @@ class ProcedureHistoryTable extends Component {
 
     if (row.original.err_num > 0) {
       bgColor = globalCss.colors.error;
+    } else if (row.original.try_catch_err_id > 0) {
+      bgColor = globalCss.colors.orange;
+      textColor = '#FFF';
     } else if (row.original.try_catch_err_id > 0) {
       bgColor = globalCss.colors.orange;
       textColor = '#FFF';
