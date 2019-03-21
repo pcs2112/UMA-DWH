@@ -33,6 +33,43 @@ const setFilters = (state, action) => {
   };
 };
 
+// Updates the item which new properties after a successful fetch
+const setItemList = (state, action) => {
+  let newState;
+
+  if (action.response) {
+    newState = itemListReducer(state, action);
+  } else {
+    newState = {
+      ...state,
+      isFetching: false,
+      fetchingError: initialState.fetchingError
+    };
+  }
+
+  newState.currentCycleGroup = action.currentCycleGroup;
+  newState.startCycleGroup = action.startCycleGroup;
+  newState.cycleDate = action.cycleDate;
+
+  newState.data.forEach((item, index) => {
+    if (item.err_num > 0) {
+      item.status = -2;
+    } else if (item.try_catch_err_id > 0) {
+      item.status = -1;
+    } else if (item.table_status === 'RUNNING') {
+      item.status = 1;
+    } else if (item.table_status === 'NOT STARTED') {
+      item.status = 2;
+    } else {
+      item.status = 3;
+    }
+
+    item.index = index;
+  });
+
+  return newState;
+};
+
 /**
  * ETL history reducer.
  *
@@ -45,24 +82,8 @@ export default (state = initialState, action) => {
     case actionTypes.FETCH_BEGIN:
     case actionTypes.FETCH_FAIL:
       return itemListReducer(state, action);
-    case actionTypes.FETCH_SUCCESS: {
-      let newState;
-      if (action.response) {
-        newState = itemListReducer(state, action);
-      } else {
-        newState = {
-          ...state,
-          isFetching: false,
-          fetchingError: initialState.fetchingError
-        };
-      }
-
-      newState.currentCycleGroup = action.currentCycleGroup;
-      newState.startCycleGroup = action.startCycleGroup;
-      newState.cycleDate = action.cycleDate;
-
-      return newState;
-    }
+    case actionTypes.FETCH_SUCCESS:
+      return setItemList(state, action);
     case actionTypes.RESET:
       return itemListReducer(state, action);
     case actionTypes.CLEAR_FETCH_FAIL:

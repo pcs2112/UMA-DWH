@@ -175,31 +175,15 @@ export const getHistoryByCycleGroup = createSelector(
 
     // Get the map of procedure names to item index
     const map = {};
-    const dataByCycleGroup = data
-      .filter(item => item.cycle_group === cycleGroup)
-      .map((item, index) => {
-        let status = 3;
-
-        // Sort by status
-        if (item.err_num === 0 && item.try_catch_err_id > 0) {
-          status = -1;
-        } else if (item.err_num > 0) {
-          status = -2;
-        } else if (item.table_status === 'RUNNING') {
-          status = 1;
-        } else if (item.table_status === 'NOT STARTED') {
-          status = 2;
-        }
-
+    const dataByCycleGroup = [];
+    data.forEach((item, index) => {
+      if (item.cycle_group === cycleGroup) {
         const key = item.calling_proc.toLowerCase();
         map[key] = index;
 
-        return {
-          ...item,
-          status,
-          index
-        };
-      });
+        dataByCycleGroup.push(item);
+      }
+    });
 
     // Get the empty result for missing history items
     const keys = Object.keys(data[0]);

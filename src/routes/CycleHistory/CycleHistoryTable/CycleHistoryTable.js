@@ -181,10 +181,10 @@ class CycleHistoryTable extends Component {
     let bgColor = 'none';
     let textColor = '#000';
     if (row.original.status === -2) {
-      bgColor = globalCss.colors.orange;
+      bgColor = globalCss.colors.error;
       textColor = '#FFF';
     } else if (row.original.status === -1) {
-      bgColor = globalCss.colors.error;
+      bgColor = globalCss.colors.orange;
       textColor = '#FFF';
     } else if (row.original.status === 1) {
       bgColor = globalCss.colors.success;
