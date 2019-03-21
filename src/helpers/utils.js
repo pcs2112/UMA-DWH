@@ -60,3 +60,50 @@ export const reorderList = (list, startIndex, endIndex) => {
 
   return result;
 };
+
+/**
+ * Sort an array of objects using the specified property name.
+ * Append "-" before the property name to sort in descending order.
+ *
+ * @param {string} property
+ * @returns {function(*, *): number}
+ */
+export const dynamicSort = (property) => {
+  let normalizedProperty = property;
+  let sortOrder = 1;
+  if (property[0] === '-') {
+    sortOrder = -1;
+    normalizedProperty = property.substr(1);
+  }
+
+  return (a, b) => {
+    let result = 0;
+    if ((a[normalizedProperty] < b[normalizedProperty])) {
+      result = -1;
+    } else if (a[normalizedProperty] > b[normalizedProperty]) {
+      result = 1;
+    }
+
+    return result * sortOrder;
+  };
+};
+
+/**
+ * Sort an array of objects using the specified properties.
+ * Append "-" before the property name to sort in descending order.
+ *
+ * @param {Array} props
+ * @returns {function(*, *): number}
+ */
+export const sortMultiple = props => (obj1, obj2) => {
+  let i = 0;
+  let result = 0;
+  const numberOfProperties = props.length;
+
+  while (result === 0 && i < numberOfProperties) {
+    result = dynamicSort(props[i])(obj1, obj2);
+    i++;
+  }
+
+  return result;
+};

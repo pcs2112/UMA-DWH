@@ -7,6 +7,7 @@ import {
   createGetPropertySelector
 } from 'javascript-utils/lib/selectors';
 import { createGetCurrentCycleGroup, createGetCurrentCycleGroupStartDttm } from '../../../helpers/selectors';
+import { sortMultiple } from '../../../helpers/utils';
 import etlControlManagerDetails from '../etlControlManagerDetails';
 
 /**
@@ -174,11 +175,31 @@ export const getHistoryByCycleGroup = createSelector(
 
     // Get the map of procedure names to item index
     const map = {};
-    const dataByCycleGroup = data.filter(item => item.cycle_group === cycleGroup);
-    dataByCycleGroup.forEach((item, index) => {
-      const key = item.calling_proc.toLowerCase();
-      map[key] = index;
-    });
+    const dataByCycleGroup = data
+      .filter(item => item.cycle_group === cycleGroup)
+      .map((item, index) => {
+        let status = 3;
+
+        // Sort by status
+        if (item.err_num === 0 && item.try_catch_err_id > 0) {
+          status = -1;
+        } else if (item.err_num > 0) {
+          status = -2;
+        } else if (item.table_status === 'RUNNING') {
+          status = 1;
+        } else if (item.table_status === 'NOT STARTED') {
+          status = 2;
+        }
+
+        const key = item.calling_proc.toLowerCase();
+        map[key] = index;
+
+        return {
+          ...item,
+          status,
+          index
+        };
+      });
 
     // Get the empty result for missing history items
     const keys = Object.keys(data[0]);
@@ -202,6 +223,7 @@ export const getHistoryByCycleGroup = createSelector(
           missingItem.cycle_group = cycleGroup;
           missingItem.data_mart_name = item.data_mart_name;
           missingItem.table_status = 'NOT STARTED';
+          missingItem.status = 2;
           missingItem.source_server_name = item.source_server_name;
           missingItem.source_db_name = item.source_db_name;
           missingItem.source_table_name = item.source_table_name;
@@ -225,6 +247,8 @@ export const getHistoryByCycleGroup = createSelector(
         return normalizedValue.indexOf(queryNormalized) > -1;
       });
     }
+
+    result.sort(sortMultiple(['status', 'index']));
 
     return result;
   }
