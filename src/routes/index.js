@@ -1,9 +1,10 @@
-import etlControlManagerDetails from 'redux/modules/etlControlManagerDetails';
-import etlServers from 'redux/modules/etlServers';
-import reports from 'redux/modules/reports';
-import reportHistory from 'redux/modules/reportHistory';
+import etlControlManagerDetails from '../redux/modules/etlControlManagerDetails';
+import etlServers from '../redux/modules/etlServers';
+import reports from '../redux/modules/reports';
+import reportHistory from '../redux/modules/reportHistory';
 import getCollegeScorecardRoutes from './CollegeScorecard';
 import CycleHistory from './CycleHistory';
+import Management from './Management';
 import DWHErrors from './DWHErrors';
 import Error from './Error';
 import ForgotPassword from './ForgotPassword';
@@ -20,6 +21,11 @@ export default ({ dispatch, getState }) => ([
     component: CycleHistory,
     exact: true,
     fetch: () => dispatch(etlControlManagerDetails.actions.fetch())
+  },
+  {
+    path: '/management',
+    component: Management,
+    exact: true
   },
   {
     path: '/procedures/history',
