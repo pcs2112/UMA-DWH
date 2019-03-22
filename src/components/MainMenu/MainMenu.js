@@ -32,11 +32,11 @@ class MainMenu extends Component {
         <Menu.Item as={Link} to="/" active={pathname === '/'}>
           ETL Cycle History
         </Menu.Item>
-        <Menu.Item as={Link} to="/management" active={isActive(pathname, '/management')}>
-          ETL Management
-        </Menu.Item>
         <Menu.Item as={Link} to="/procedures/history" active={isActive(pathname, '/procedures/history')}>
           ETL Procedure History
+        </Menu.Item>
+        <Menu.Item as={Link} to="/management" active={isActive(pathname, '/management')}>
+          ETL Management
         </Menu.Item>
         <Menu.Item as={Link} to="/reports/history" active={isActive(pathname, '/reports/history')}>
           DWH Report History

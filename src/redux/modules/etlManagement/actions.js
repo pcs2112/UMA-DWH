@@ -16,3 +16,10 @@ export const fetch = () => ({
   ],
   makeRequest: client => client.get('/api/etl/management')
 });
+
+/**
+ * Resets the state.
+ */
+export const reset = () => ({
+  type: actionTypes.RESET
+});

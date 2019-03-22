@@ -1,11 +1,15 @@
-from .etl import execute_admin_console_sp
+from .etl import execute_sp
 
 
 def fetch_current_values():
     """ Returns the current values. """
-    return execute_admin_console_sp(
+    result = execute_sp(
         'MWH.MNG_ETL_CONTROL_MANAGER',
-        'LIST CURRENT VALUES',
-        'ALL',
-        ''
+        {
+          'message': 'LIST CURRENT VALUES',
+          'DATA_MART_NAME': 'ALL',
+          'PROCEDURE_NAME': ''
+        }
     )
+    
+    return result[0]
