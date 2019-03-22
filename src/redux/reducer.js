@@ -11,6 +11,7 @@ import etlControlManagerDetails from './modules/etlControlManagerDetails';
 import etlCurrentStatus from './modules/etlCurrentStatus';
 import etlProcedureHistory from './modules/etlProcedureHistory';
 import etlCycleHistory from './modules/etlCycleHistory';
+import etlManagement from './modules/etlManagement';
 import etlRunCheck from './modules/etlRunCheck';
 import etlServers from './modules/etlServers';
 import reports from './modules/reports';
@@ -38,6 +39,7 @@ export default () => combineReducers({
   etlControlManagerDetails: etlControlManagerDetails.reducer,
   etlCurrentStatus: etlCurrentStatus.reducer,
   etlCycleHistory: etlCycleHistory.reducer,
+  etlManagement: etlManagement.reducer,
   etlProcedureHistory: etlProcedureHistory.reducer,
   etlRunCheck: etlRunCheck.reducer,
   etlServers: etlServers.reducer,

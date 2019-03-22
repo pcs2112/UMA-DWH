@@ -15,16 +15,16 @@ max_cell_width = 65535
 def get_columns_xml(columns, prepend_default=False):
     """ Returns the columns xml for the list of specified columns. """
     xml = '<COLUMNS>'
-    
+
     if prepend_default:
         xml += f'<COLUMN NAME="INSTNM" />'
         xml += f'<COLUMN NAME="OPEID" />'
-    
+
     for col in columns:
         xml += f'<COLUMN NAME="{col}" />'
-    
+
     xml += '</COLUMNS>'
-    
+
     return xml
 
 
@@ -33,10 +33,10 @@ def get_columns_from_xml(xml):
     tree = ET.ElementTree(ET.fromstring(xml))
     root = tree.getroot()
     columns = []
-    
+
     for col in root:
         columns.append(col.attrib['NAME'])
-        
+
     return columns
 
 
@@ -48,7 +48,7 @@ def report_exists(user_id, report_name):
         str(user_id),
         report_name.upper()
     )
-    
+
     return len(result) > 0
 
 
@@ -56,15 +56,15 @@ def fetch_report(user_id, report_name):
     """ Fetches a report for the specified user and report name. """
     result = fetch_reports(user_id)
     report = None
-    
+
     for row in result:
         if row['report_name'].upper() == report_name.upper():
             report = row
             break
-            
+
     if not report:
         return None
-    
+
     if 'xml_data' in report:
         report['columns'] = get_columns_from_xml(report['xml_data'])
         del report['xml_data']
@@ -80,10 +80,10 @@ def fetch_report_by_id(id_, user_id, report_name=''):
         report_name.upper(),
         str(user_id)
     )
-    
+
     if len(result) < 1:
       return None
-    
+
     report = result[0]
 
     if 'xml_data' in report:
@@ -94,12 +94,12 @@ def fetch_report_by_id(id_, user_id, report_name=''):
 
 
 def fetch_reports(user_id):
-  """ Fetches the reports for the specified user. """
-  return execute_admin_console_sp(
-      'MWH_FILES.MANAGE_CollegeScorecard_Console',
-      'GET USER REPORTS',
-      str(user_id)
-  )
+    """ Fetches the reports for the specified user. """
+    return execute_admin_console_sp(
+        'MWH_FILES.MANAGE_CollegeScorecard_Console',
+        'GET USER REPORTS',
+        str(user_id)
+    )
 
 
 def create_report(user_id, data):
@@ -112,7 +112,7 @@ def create_report(user_id, data):
     """
     if not is_empty(data['report_name']) and report_exists(user_id, data['report_name']):
         raise DBException(f"The report \"{data['report_name']}\" already exists.")
-    
+
     required_data = {
         'user_id': user_id,
         'report_name': '',
@@ -120,7 +120,7 @@ def create_report(user_id, data):
         'share_dttm': '',
         'columns': []
     }
-    
+
     new_data = assign(
         required_data,
         pick(
@@ -131,7 +131,7 @@ def create_report(user_id, data):
             'columns'
         )
     )
-    
+
     if len(new_data['columns']) < 1:
         raise DBException(f'"columns" are required.')
 
@@ -144,7 +144,7 @@ def create_report(user_id, data):
         new_data['share_dttm'],
         get_columns_xml(new_data['columns'])
     )
-    
+
     return fetch_report(user_id, new_data['report_name'])
 
 
@@ -159,7 +159,7 @@ def update_report(user_id, data):
     report = fetch_report(user_id, data['report_name'])
     if report is None:
         raise DBException(f'The report is invalid.')
-    
+
     current_data = {
         'user_id': user_id,
         'report_name': report['report_name'],
@@ -167,7 +167,7 @@ def update_report(user_id, data):
         'share_dttm': report['share_dttm'],
         'columns': []
     }
-    
+
     new_data = assign(
         {},
         current_data,
@@ -179,10 +179,10 @@ def update_report(user_id, data):
             'columns'
         )
     )
-    
+
     if len(new_data['columns']) < 1:
         raise DBException(f'"columns" are required.')
-    
+
     execute_admin_console_sp(
         'MWH_FILES.MANAGE_CollegeScorecard_Console',
         'SAVE USER SELECTION',
@@ -192,7 +192,7 @@ def update_report(user_id, data):
         new_data['share_dttm'],
         get_columns_xml(new_data['columns'])
     )
-    
+
     return fetch_report(user_id, new_data['report_name'])
 
 
