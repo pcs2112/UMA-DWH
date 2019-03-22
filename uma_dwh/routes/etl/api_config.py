@@ -5,7 +5,7 @@ path_sp_args_map = {
     'sp_name': 'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
     'sp_message': 'LIST_CONTROL_MANAGER_DETAILS'
   },
-  'control_manager/management': {
+  'management': {
     'module_name': 'uma_dwh.db.etl_management',
     'module_func': 'fetch_current_values'
   },
