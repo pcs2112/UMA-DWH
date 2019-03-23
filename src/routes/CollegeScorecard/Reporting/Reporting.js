@@ -8,10 +8,10 @@ import {
 import { showModal as showModalAction } from 'redux-modal';
 import { isEmpty } from 'javascript-utils/lib/utils';
 import { client } from '../../../helpers/ApiClient';
-import collegeScorecardRDX from '../../../redux/modules/collegeScorecard';
-import collegeScorecardFilesRDX from '../../../redux/modules/collegeScorecardFiles';
-import collegeScorecardGroupsRDX from '../../../redux/modules/collegeScorecardGroups';
-import collegeScorecardReportsRDX from '../../../redux/modules/collegeScorecardReports';
+import collegeScorecardRdx from '../../../redux/modules/collegeScorecard';
+import collegeScorecardFilesRdx from '../../../redux/modules/collegeScorecardFiles';
+import collegeScorecardGroupsRdx from '../../../redux/modules/collegeScorecardGroups';
+import collegeScorecardReportsRdx from '../../../redux/modules/collegeScorecardReports';
 import withMainLayout from '../../../components/WithMainLayout';
 import withResponsiveContainer from '../../../components/WithResponsiveContainer';
 import CheckboxVirtualTable from '../../../components/CheckboxVirtualTable';
@@ -174,7 +174,7 @@ class Reporting extends Component {
                 selectData={selectData}
                 unselectData={unselectData}
                 columns={columns}
-                keyName={collegeScorecardRDX.constants.LIST_ITEM_KEY_NAME}
+                keyName={collegeScorecardRdx.constants.LIST_ITEM_KEY_NAME}
               />
             </Grid.Column>
             <Grid.Column width={2}>
@@ -285,48 +285,48 @@ export default withMainLayout(connect(
     isAllDataLoaded: state.collegeScorecard.dataLoaded
       && state.collegeScorecardGroups.dataLoaded
       && state.collegeScorecardReports.dataLoaded,
-    collegeScorecardFilesData: collegeScorecardFilesRDX.selectors
+    collegeScorecardFilesData: collegeScorecardFilesRdx.selectors
       .getCollegeScorecardFilesDropdownOptions(state),
-    collegeScorecardData: collegeScorecardRDX.selectors.getCollegeScorecardData(state),
-    collegeScorecardFetchingError: collegeScorecardRDX.selectors.getFetchingError(state),
-    collegeScorecardSelectedData: collegeScorecardRDX.selectors.getSelected(state),
-    collegeScorecardSelectedOrderedData: collegeScorecardRDX.selectors.getSelectedOrdered(state),
-    collegeScorecardSelectedCount: collegeScorecardRDX.selectors.getSelectedCount(state),
-    collegeScorecardFilters: collegeScorecardRDX.selectors.getFilters(state),
-    collegeScorecardSelectedColumnNames: collegeScorecardRDX.selectors.getSelectedColumnNames(state),
-    collegeScorecardReportsData: collegeScorecardReportsRDX.selectors
+    collegeScorecardData: collegeScorecardRdx.selectors.getCollegeScorecardData(state),
+    collegeScorecardFetchingError: collegeScorecardRdx.selectors.getFetchingError(state),
+    collegeScorecardSelectedData: collegeScorecardRdx.selectors.getSelected(state),
+    collegeScorecardSelectedOrderedData: collegeScorecardRdx.selectors.getSelectedOrdered(state),
+    collegeScorecardSelectedCount: collegeScorecardRdx.selectors.getSelectedCount(state),
+    collegeScorecardFilters: collegeScorecardRdx.selectors.getFilters(state),
+    collegeScorecardSelectedColumnNames: collegeScorecardRdx.selectors.getSelectedColumnNames(state),
+    collegeScorecardReportsData: collegeScorecardReportsRdx.selectors
       .getCollegeScorecardReportsDropdownOptions(state),
-    collegeScorecardCurrentReport: collegeScorecardReportsRDX.selectors.getCurrentReport(state)
+    collegeScorecardCurrentReport: collegeScorecardReportsRdx.selectors.getCurrentReport(state)
   }),
   dispatch => ({
     fetchAllData: fileName => Promise.all([
-      dispatch(collegeScorecardRDX.actions.fetch(fileName)),
-      dispatch(collegeScorecardGroupsRDX.actions.fetch(fileName)),
-      dispatch(collegeScorecardReportsRDX.actions.fetch())
+      dispatch(collegeScorecardRdx.actions.fetch(fileName)),
+      dispatch(collegeScorecardGroupsRdx.actions.fetch(fileName)),
+      dispatch(collegeScorecardReportsRdx.actions.fetch())
     ]),
     resetAllData: () => {
-      dispatch(collegeScorecardRDX.actions.reset());
-      dispatch(collegeScorecardGroupsRDX.actions.reset());
-      dispatch(collegeScorecardReportsRDX.actions.reset());
+      dispatch(collegeScorecardRdx.actions.reset());
+      dispatch(collegeScorecardGroupsRdx.actions.reset());
+      dispatch(collegeScorecardReportsRdx.actions.reset());
     },
-    selectData: data => dispatch(collegeScorecardRDX.actions.select(data)),
-    selectAllData: () => dispatch(collegeScorecardRDX.actions.selectAll()),
-    unselectData: (id, data) => dispatch(collegeScorecardRDX.actions.unselect(id, data)),
+    selectData: data => dispatch(collegeScorecardRdx.actions.select(data)),
+    selectAllData: () => dispatch(collegeScorecardRdx.actions.selectAll()),
+    unselectData: (id, data) => dispatch(collegeScorecardRdx.actions.unselect(id, data)),
     unselectAllData: () => {
-      dispatch(collegeScorecardRDX.actions.unselectAll());
-      dispatch(collegeScorecardReportsRDX.actions.resetReport());
+      dispatch(collegeScorecardRdx.actions.unselectAll());
+      dispatch(collegeScorecardReportsRdx.actions.resetReport());
     },
-    setFilters: (key, value) => dispatch(collegeScorecardRDX.actions.setFilters(key, value)),
+    setFilters: (key, value) => dispatch(collegeScorecardRdx.actions.setFilters(key, value)),
     reorderSelectedData: (sourceIdx, destIdx) =>
-      dispatch(collegeScorecardRDX.actions.reorder(sourceIdx, destIdx)),
+      dispatch(collegeScorecardRdx.actions.reorder(sourceIdx, destIdx)),
     showModal: modalName => dispatch(showModalAction(modalName)),
     fetchReport: (id) => {
       if (isEmpty(id)) {
-        dispatch(collegeScorecardRDX.actions.unselectAll());
-        dispatch(collegeScorecardReportsRDX.actions.resetReport());
+        dispatch(collegeScorecardRdx.actions.unselectAll());
+        dispatch(collegeScorecardReportsRdx.actions.resetReport());
       } else {
-        dispatch(collegeScorecardReportsRDX.actions.fetchReport(id))
-          .then(report => dispatch(collegeScorecardRDX.actions.loadSavedReport(report)));
+        dispatch(collegeScorecardReportsRdx.actions.fetchReport(id))
+          .then(report => dispatch(collegeScorecardRdx.actions.loadSavedReport(report)));
       }
     }
   })

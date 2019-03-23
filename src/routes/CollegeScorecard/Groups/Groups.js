@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 import {
   Segment, Button, Grid
 } from 'semantic-ui-react';
-import collegeScorecardReduxModule from '../../../redux/modules/collegeScorecard';
-import collegeScorecardGroupsReduxModule from '../../../redux/modules/collegeScorecardGroups';
-import collegeScorecardFilesReduxModule from '../../../redux/modules/collegeScorecardFiles';
+import collegeScorecardRdx from '../../../redux/modules/collegeScorecard';
+import collegeScorecardGroupsRdx from '../../../redux/modules/collegeScorecardGroups';
+import collegeScorecardFilesRdx from '../../../redux/modules/collegeScorecardFiles';
 import withMainLayout from '../../../components/WithMainLayout';
 import withResponsiveContainer from '../../../components/WithResponsiveContainer';
 import CheckboxVirtualTable from '../../../components/CheckboxVirtualTable';
@@ -93,7 +93,7 @@ class Groups extends Component {
             selectData={selectData}
             unselectData={unselectData}
             columns={columns}
-            keyName="group_id"
+            keyName={collegeScorecardGroupsRdx.constants.LIST_ITEM_KEY_NAME}
           />
         </Segment>
         <Segment>
@@ -121,26 +121,26 @@ export default withMainLayout(connect(
   state => ({
     isDataFetching: state.collegeScorecard.isFetching || state.collegeScorecardGroups.isFetching,
     isAllDataLoaded: state.collegeScorecard.dataLoaded && state.collegeScorecardGroups.dataLoaded,
-    collegeScorecardFilesData: collegeScorecardFilesReduxModule.selectors
+    collegeScorecardFilesData: collegeScorecardFilesRdx.selectors
       .getCollegeScorecardFilesDropdownOptions(state),
-    collegeScorecardGroupsData: collegeScorecardGroupsReduxModule.selectors.getCollegeScorecardGroupsData(state),
-    collegeScorecardGroupsFetchingError: collegeScorecardGroupsReduxModule.selectors.getFetchingError(state),
-    collegeScorecardSelectedData: collegeScorecardGroupsReduxModule.selectors.getSelected(state),
-    collegeScorecardSelectedCount: collegeScorecardGroupsReduxModule.selectors.getSelectedCount(state),
-    collegeScorecardFilters: collegeScorecardGroupsReduxModule.selectors.getFilters(state),
+    collegeScorecardGroupsData: collegeScorecardGroupsRdx.selectors.getCollegeScorecardGroupsData(state),
+    collegeScorecardGroupsFetchingError: collegeScorecardGroupsRdx.selectors.getFetchingError(state),
+    collegeScorecardSelectedData: collegeScorecardGroupsRdx.selectors.getSelected(state),
+    collegeScorecardSelectedCount: collegeScorecardGroupsRdx.selectors.getSelectedCount(state),
+    collegeScorecardFilters: collegeScorecardGroupsRdx.selectors.getFilters(state),
   }),
   dispatch => ({
     fetchAllData: fileName => Promise.all([
-      dispatch(collegeScorecardReduxModule.actions.fetch(fileName)),
-      dispatch(collegeScorecardGroupsReduxModule.actions.fetch(fileName))
+      dispatch(collegeScorecardRdx.actions.fetch(fileName)),
+      dispatch(collegeScorecardGroupsRdx.actions.fetch(fileName))
     ]),
     resetAllData: () => {
-      dispatch(collegeScorecardReduxModule.actions.reset());
-      dispatch(collegeScorecardGroupsReduxModule.actions.reset());
+      dispatch(collegeScorecardRdx.actions.reset());
+      dispatch(collegeScorecardGroupsRdx.actions.reset());
     },
-    selectData: data => dispatch(collegeScorecardGroupsReduxModule.actions.select(data)),
-    selectAllData: () => dispatch(collegeScorecardGroupsReduxModule.actions.selectAll()),
-    unselectData: (id, data) => dispatch(collegeScorecardGroupsReduxModule.actions.unselect(id, data)),
-    unselectAllData: () => dispatch(collegeScorecardGroupsReduxModule.actions.unselectAll()),
+    selectData: data => dispatch(collegeScorecardGroupsRdx.actions.select(data)),
+    selectAllData: () => dispatch(collegeScorecardGroupsRdx.actions.selectAll()),
+    unselectData: (id, data) => dispatch(collegeScorecardGroupsRdx.actions.unselect(id, data)),
+    unselectAllData: () => dispatch(collegeScorecardGroupsRdx.actions.unselectAll()),
   })
 )(Groups));
