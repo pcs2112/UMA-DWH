@@ -9,10 +9,13 @@ import collegeScorecardReduxModule from '../../../redux/modules/collegeScorecard
 import collegeScorecardGroupsReduxModule from '../../../redux/modules/collegeScorecardGroups';
 import collegeScorecardFilesReduxModule from '../../../redux/modules/collegeScorecardFiles';
 import withMainLayout from '../../../components/WithMainLayout';
+import withResponsiveContainer from '../../../components/WithResponsiveContainer';
+import CheckboxVirtualTable from '../../../components/CheckboxVirtualTable';
 import globalCss from '../../../css/global';
 import Filters from './Filters';
-import VirtualTable from '../VirtualTable';
 import columns from './columns';
+
+const Table = withResponsiveContainer(CheckboxVirtualTable, 320, 300);
 
 class Groups extends Component {
   static propTypes = {
@@ -80,7 +83,7 @@ class Groups extends Component {
           </Grid>
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
-          <VirtualTable
+          <Table
             dataLoaded={isAllDataLoaded}
             data={collegeScorecardGroupsData}
             isFetching={isDataFetching}

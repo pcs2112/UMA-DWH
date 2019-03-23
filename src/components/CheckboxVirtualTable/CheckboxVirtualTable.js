@@ -7,11 +7,10 @@ import clsx from 'clsx';
 import scrollbarSize from 'dom-helpers/util/scrollbarSize';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
-import { ROW_HEIGHT, OVERSCAN_COL_COUNT, OVERSCAN_ROW_COUNT } from '../../../constants/reactVirtualized';
-import withResponsiveContainer from '../../../components/WithResponsiveContainer';
-import styles from '../../../css/react-virtualized.less';
+import { ROW_HEIGHT, OVERSCAN_COL_COUNT, OVERSCAN_ROW_COUNT } from '../../constants/reactVirtualized';
+import styles from '../../css/react-virtualized.less';
 
-class VirtualTable extends React.PureComponent {
+class CheckboxVirtualTable extends React.PureComponent {
   static propTypes = {
     isFetching: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
@@ -274,4 +273,4 @@ class VirtualTable extends React.PureComponent {
   }
 }
 
-export default withResponsiveContainer(VirtualTable, 320, 300);
+export default CheckboxVirtualTable;

@@ -13,9 +13,10 @@ import collegeScorecardFilesRDX from '../../../redux/modules/collegeScorecardFil
 import collegeScorecardGroupsRDX from '../../../redux/modules/collegeScorecardGroups';
 import collegeScorecardReportsRDX from '../../../redux/modules/collegeScorecardReports';
 import withMainLayout from '../../../components/WithMainLayout';
+import withResponsiveContainer from '../../../components/WithResponsiveContainer';
+import CheckboxVirtualTable from '../../../components/CheckboxVirtualTable';
 import globalCss from '../../../css/global';
 import Filters from './Filters';
-import VirtualTable from '../VirtualTable';
 import VirtualSortableList from '../VirtualSortableList';
 import CreateReportModal from '../CreateReportModal';
 import UpdateReportModal from '../UpdateReportModal';
@@ -26,6 +27,7 @@ import styles from './styles.less';
 const SELECTED_LIMIT = 255;
 const CREATE_REPORT_MODAL = 'CREATE_REPORT_MODAL';
 const UPDATE_REPORT_MODAL = 'UPDATE_REPORT_MODAL';
+const Table = withResponsiveContainer(CheckboxVirtualTable, 320, 300);
 
 class Reporting extends Component {
   static propTypes = {
@@ -162,7 +164,7 @@ class Reporting extends Component {
         <Segment style={globalCss.pageHeaderSegment}>
           <Grid>
             <Grid.Column width={12}>
-              <VirtualTable
+              <Table
                 dataLoaded={isAllDataLoaded}
                 data={collegeScorecardData}
                 isFetching={isDataFetching}
