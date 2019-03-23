@@ -51,7 +51,7 @@ class Reporting extends Component {
     selectAllData: PropTypes.func.isRequired,
     unselectData: PropTypes.func.isRequired,
     unselectAllData: PropTypes.func.isRequired,
-    setFilters: PropTypes.func.isRequired,
+    setFilter: PropTypes.func.isRequired,
     reorderSelectedData: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
     fetchReport: PropTypes.func.isRequired
@@ -73,10 +73,10 @@ class Reporting extends Component {
   }
 
   handleViewFilterButton = () => {
-    const { setFilters, collegeScorecardFilters } = this.props;
+    const { setFilter, collegeScorecardFilters } = this.props;
     const { populated } = collegeScorecardFilters;
     const newPopulated = populated === '' ? 'ALL' : '';
-    setFilters('populated', newPopulated);
+    setFilter('populated', newPopulated);
   };
 
   handleExportButton = () => {
@@ -140,7 +140,7 @@ class Reporting extends Component {
       unselectAllData,
       reorderSelectedData,
       fetchReport,
-      setFilters
+      setFilter
     } = this.props;
 
     const currentReportId = collegeScorecardCurrentReport ? collegeScorecardCurrentReport.id : '';
@@ -156,7 +156,7 @@ class Reporting extends Component {
             <Grid.Column width={5}>
               <Filters
                 fileOptions={collegeScorecardFilesData}
-                onQueryChange={setFilters}
+                onQueryChange={setFilter}
                 onFileChange={fetchAllData}
                 {...collegeScorecardFilters}
               />
@@ -318,7 +318,7 @@ export default withMainLayout(connect(
       dispatch(collegeScorecardRdx.actions.unselectAll());
       dispatch(collegeScorecardReportsRdx.actions.resetReport());
     },
-    setFilters: (key, value) => dispatch(collegeScorecardRdx.actions.setFilters(key, value)),
+    setFilter: (key, value) => dispatch(collegeScorecardRdx.actions.setFilter(key, value)),
     reorderSelectedData: (sourceIdx, destIdx) =>
       dispatch(collegeScorecardRdx.actions.reorder(sourceIdx, destIdx)),
     showModal: modalName => dispatch(showModalAction(modalName)),

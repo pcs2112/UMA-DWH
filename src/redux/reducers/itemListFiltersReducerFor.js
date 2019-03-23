@@ -1,6 +1,26 @@
 import { objectHasOwnProperty } from 'javascript-utils/src/utils';
 
-export const getInitialState = (defaultFilters, filtersStateKey = 'filters') => ({
+const FILTERS_STATE_KEY_NAME = 'filters';
+
+/**
+ * Action to set a filter.
+ */
+export const createSetFilterAction = (actionType, filtersStateKey = FILTERS_STATE_KEY_NAME) => (key, value) => ({
+  type: actionType,
+  [filtersStateKey]: {
+    [key]: value
+  }
+});
+
+/**
+ * Action to set multiple filters.
+ */
+export const createSetFiltersAction = (actionType, filtersStateKey = FILTERS_STATE_KEY_NAME) => filters => ({
+  type: actionType,
+  [filtersStateKey]: filters
+});
+
+export const getInitialState = (defaultFilters, filtersStateKey = FILTERS_STATE_KEY_NAME) => ({
   [filtersStateKey]: {
     ...defaultFilters
   }
@@ -15,39 +35,42 @@ export const getInitialState = (defaultFilters, filtersStateKey = 'filters') => 
  * @returns {Function}
  */
 const itemListFiltersReducerFor = ({
-  FETCH_BEGIN, FETCH_FAIL, FETCH_SUCCESS, SET_FILTERS
-}, defaultFilters, filtersStateKey = 'filters') =>
+  FETCH_BEGIN, FETCH_FAIL, FETCH_SUCCESS, SET_FILTER, SET_FILTERS
+}, defaultFilters, filtersStateKey = FILTERS_STATE_KEY_NAME) =>
   (state = getInitialState(defaultFilters, filtersStateKey), action) => {
     switch (action.type) {
       case FETCH_BEGIN:
       case FETCH_FAIL:
       case FETCH_SUCCESS:
+      case SET_FILTER:
       case SET_FILTERS: {
         const keys = Object.keys(defaultFilters);
         if (keys.length < 1) {
           return state;
         }
 
-        const newState = {
-          ...state
-        };
-
-        let setNewFilters = true;
-        keys.forEach((key) => {
-          if (objectHasOwnProperty(action, key)) {
-            if (setNewFilters) {
-              newState[filtersStateKey] = {
-                ...newState[filtersStateKey]
-              };
-
-              setNewFilters = false;
+        let filters = {};
+        if (objectHasOwnProperty(action, filtersStateKey)) {
+          filters = action[filtersStateKey];
+        } else {
+          keys.forEach((key) => {
+            if (objectHasOwnProperty(action, key)) {
+              filters[key] = action[key];
             }
+          });
+        }
 
-            newState[filtersStateKey][key] = action[key];
+        if (Object.keys(filters).length < 1) {
+          return state;
+        }
+
+        return {
+          ...state,
+          [filtersStateKey]: {
+            ...state[filtersStateKey],
+            ...filters
           }
-        });
-
-        return newState;
+        };
       }
       default:
         return state;

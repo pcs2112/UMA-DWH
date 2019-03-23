@@ -18,7 +18,6 @@ export const createSelectAllAction = actionType => keyName => ({
   keyName
 });
 
-
 /**
  * Action to unselect an item.
  */

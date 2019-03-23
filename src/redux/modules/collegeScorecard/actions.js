@@ -4,6 +4,8 @@ import {
   createUnselectAction,
   createUnselectAllAction
 } from '../../reducers/itemListSelectReducerFor';
+import { createSetFilterAction } from '../../reducers/itemListFiltersReducerFor';
+import { FILTERS_STATE_KEY_NAME } from './constants';
 
 export const actionTypes = {
   FETCH_BEGIN: 'collegeScorecard/FETCH_BEGIN',
@@ -14,6 +16,7 @@ export const actionTypes = {
   SELECT_ALL: 'collegeScorecard/SELECT_ALL',
   UNSELECT: 'collegeScorecard/UNSELECT',
   UNSELECT_ALL: 'collegeScorecard/UNSELECT_ALL',
+  SET_FILTER: 'collegeScorecard/SET_FILTER',
   SET_FILTERS: 'collegeScorecard/SET_FILTERS',
   REORDER: 'collegeScorecard/REORDER',
   LOAD_SAVED_REPORT: 'collegeScorecard/LOAD_SAVED_REPORT'
@@ -69,12 +72,14 @@ export const unselect = createUnselectAction(actionTypes.UNSELECT);
 export const unselectAll = createUnselectAllAction(actionTypes.UNSELECT_ALL);
 
 /**
- * Action to set a list filters.
+ * Action to set a filter.
  */
-export const setFilters = (key, value) => ({
-  type: actionTypes.SET_FILTERS,
-  [key]: value
-});
+export const setFilter = createSetFilterAction(actionTypes.SET_FILTER, FILTERS_STATE_KEY_NAME);
+
+/**
+ * Action to set filters.
+ */
+export const setFilters = createSetFilterAction(actionTypes.SET_FILTERS, FILTERS_STATE_KEY_NAME);
 
 /**
  * Action to reorder the items.
