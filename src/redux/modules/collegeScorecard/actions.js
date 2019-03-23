@@ -16,7 +16,6 @@ export const actionTypes = {
   SELECT_ALL: 'collegeScorecard/SELECT_ALL',
   UNSELECT: 'collegeScorecard/UNSELECT',
   UNSELECT_ALL: 'collegeScorecard/UNSELECT_ALL',
-  SET_FILTER: 'collegeScorecard/SET_FILTER',
   SET_FILTERS: 'collegeScorecard/SET_FILTERS',
   REORDER: 'collegeScorecard/REORDER',
   LOAD_SAVED_REPORT: 'collegeScorecard/LOAD_SAVED_REPORT'
@@ -74,12 +73,7 @@ export const unselectAll = createUnselectAllAction(actionTypes.UNSELECT_ALL);
 /**
  * Action to set a filter.
  */
-export const setFilter = createSetFilterAction(actionTypes.SET_FILTER, FILTERS_STATE_KEY_NAME);
-
-/**
- * Action to set filters.
- */
-export const setFilters = createSetFilterAction(actionTypes.SET_FILTERS, FILTERS_STATE_KEY_NAME);
+export const setFilter = createSetFilterAction(actionTypes.SET_FILTERS, FILTERS_STATE_KEY_NAME);
 
 /**
  * Action to reorder the items.

@@ -29,6 +29,7 @@ const itemListSelectReducer = itemListSelectReducerFor(
   actionTypes, LIST_ITEM_KEY_NAME, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
 );
 const setFilters = itemListFiltersReducerFor(actionTypes, defaultFilters, FILTERS_STATE_KEY_NAME);
+console.log('hre');
 
 /**
  * College scorecard groups reducer.
@@ -52,8 +53,6 @@ export default (state = initialState, action) => {
     case actionTypes.UNSELECT:
     case actionTypes.UNSELECT_ALL:
       return itemListSelectReducer(state, action);
-    case actionTypes.SET_FILTERS:
-      return setFilters(state, action);
     case collegeScorecardActionTypes.UNSELECT_ALL:
       return unselectAllReducer(state, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME);
     default:

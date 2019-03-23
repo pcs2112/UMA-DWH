@@ -35,14 +35,13 @@ export const getInitialState = (defaultFilters, filtersStateKey = FILTERS_STATE_
  * @returns {Function}
  */
 const itemListFiltersReducerFor = ({
-  FETCH_BEGIN, FETCH_FAIL, FETCH_SUCCESS, SET_FILTER, SET_FILTERS
+  FETCH_BEGIN, FETCH_FAIL, FETCH_SUCCESS, SET_FILTERS
 }, defaultFilters, filtersStateKey = FILTERS_STATE_KEY_NAME) =>
   (state = getInitialState(defaultFilters, filtersStateKey), action) => {
     switch (action.type) {
       case FETCH_BEGIN:
       case FETCH_FAIL:
       case FETCH_SUCCESS:
-      case SET_FILTER:
       case SET_FILTERS: {
         const keys = Object.keys(defaultFilters);
         if (keys.length < 1) {
