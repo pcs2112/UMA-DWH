@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { Segment, Grid, Button } from 'semantic-ui-react';
-import { DEFAULT_DATE_FORMAT, STATISTICS_MANAGEMENT_REFRESH_TIMEOUT } from 'constants/index';
-import statisticsManagementReduxModule from 'redux/modules/statisticsManagement';
-import statisticsChartReduxModule from 'redux/modules/statisticsChart';
-import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
-import withMainLayout from 'components/WithMainLayout';
-import globalCss from 'css/global';
+import { DEFAULT_DATE_FORMAT, STATISTICS_MANAGEMENT_REFRESH_TIMEOUT } from '../../../constants/index';
+import statisticsManagementRdx from '../../../redux/modules/statisticsManagement';
+import statisticsChartRdx from '../../../redux/modules/statisticsChart';
+import statisticsSchemasRdx from '../../../redux/modules/statisticsSchemas';
+import withMainLayout from '../../../components/WithMainLayout';
+import globalCss from '../../../css/global';
 import ManagementTable from './ManagementTable';
 import DateChartFilter from '../DateChartFilter';
 import DropdownFilters from '../DropdownFilters';
@@ -74,7 +74,7 @@ class Management extends Component {
     }
 
     initialTimeout = setTimeout(() => {
-      dispatchPollingAction(statisticsManagementReduxModule.actions.pollingActions.start(dispatchPollingAction));
+      dispatchPollingAction(statisticsManagementRdx.actions.pollingActions.start(dispatchPollingAction));
     }, STATISTICS_MANAGEMENT_REFRESH_TIMEOUT);
   };
 
@@ -84,7 +84,7 @@ class Management extends Component {
       clearTimeout(initialTimeout);
     }
 
-    dispatchPollingAction(statisticsManagementReduxModule.actions.pollingActions.reset());
+    dispatchPollingAction(statisticsManagementRdx.actions.pollingActions.reset());
   };
 
   queueStats = () => {
@@ -102,8 +102,8 @@ class Management extends Component {
   };
 
   selectAll = () => {
-    const { statisticsManagementData, selectAllData } = this.props;
-    selectAllData(statisticsManagementData);
+    const { selectAllData } = this.props;
+    selectAllData();
   };
 
   render() {
@@ -223,18 +223,18 @@ export default withMainLayout(connect(
   state => ({
     isStatisticsManagementFetching: state.statisticsManagement.isFetching,
     statisticsManagementDataLoaded: state.statisticsManagement.dataLoaded,
-    statisticsManagementData: statisticsManagementReduxModule.selectors.getStatisticsManagement(state),
-    statisticsManagementFetchingError: statisticsManagementReduxModule.selectors.getFetchingError(state),
-    statisticsManagementFilters: statisticsChartReduxModule.selectors.getFilters(state),
-    statisticsManagementSelectedData: statisticsManagementReduxModule.selectors.getSelected(state),
-    statisticsManagementSelectedCount: statisticsManagementReduxModule.selectors.getSelectedCount(state),
-    statisticsManagementQueuedSelectedData: statisticsManagementReduxModule.selectors.getQueuedSelected(state),
+    statisticsManagementData: statisticsManagementRdx.selectors.getStatisticsManagement(state),
+    statisticsManagementFetchingError: statisticsManagementRdx.selectors.getFetchingError(state),
+    statisticsManagementFilters: statisticsChartRdx.selectors.getFilters(state),
+    statisticsManagementSelectedData: statisticsManagementRdx.selectors.getSelected(state),
+    statisticsManagementSelectedCount: statisticsManagementRdx.selectors.getSelectedCount(state),
+    statisticsManagementQueuedSelectedData: statisticsManagementRdx.selectors.getQueuedSelected(state),
     statisticsManagementDequeuedSelectedData:
-      statisticsManagementReduxModule.selectors.getDequeuedSelected(state),
-    schemas: statisticsSchemasReduxModule.selectors.getSchemas(state),
+      statisticsManagementRdx.selectors.getDequeuedSelected(state),
+    schemas: statisticsSchemasRdx.selectors.getSchemas(state),
     isStatisticsChartFetching: state.statisticsChart.isFetching,
     statisticsChartDataLoaded: state.statisticsChart.dataLoaded,
-    statisticsChartData: statisticsChartReduxModule.selectors.getStatisticsChartData(state),
+    statisticsChartData: statisticsChartRdx.selectors.getStatisticsChartData(state),
     isQueuingStats: state.statisticsManagement.isQueuingStats,
     isDequeuingStats: state.statisticsManagement.isDequeuingStats
   }),
@@ -242,26 +242,26 @@ export default withMainLayout(connect(
     dispatchPollingAction: dispatch,
     fetchAllData: (schema, date, months) =>
       Promise.all([
-        dispatch(statisticsManagementReduxModule.actions.fetch()),
-        dispatch(statisticsChartReduxModule.actions.fetch(schema, date, months))
+        dispatch(statisticsManagementRdx.actions.fetch()),
+        dispatch(statisticsChartRdx.actions.fetch(schema, date, months))
       ]),
     fetchStatisticsManagementData: () =>
-      dispatch(statisticsManagementReduxModule.actions.fetch()),
+      dispatch(statisticsManagementRdx.actions.fetch()),
     fetchStatisticsChartData: (schema, date, months) =>
-      dispatch(statisticsChartReduxModule.actions.fetch(schema, date, months)),
+      dispatch(statisticsChartRdx.actions.fetch(schema, date, months)),
     resetAllData: () => {
-      dispatch(statisticsManagementReduxModule.actions.reset());
-      dispatch(statisticsChartReduxModule.actions.reset());
+      dispatch(statisticsManagementRdx.actions.reset());
+      dispatch(statisticsChartRdx.actions.reset());
     },
-    selectData: (id, data) => dispatch(statisticsManagementReduxModule.actions.select(id, data)),
-    unselectData: id => dispatch(statisticsManagementReduxModule.actions.unselect(id)),
-    selectAllData: data => dispatch(statisticsManagementReduxModule.actions.selectAll('schema_table', data)),
-    unselectAllData: () => dispatch(statisticsManagementReduxModule.actions.unselectAll()),
+    selectData: data => dispatch(statisticsManagementRdx.actions.select(data)),
+    unselectData: (id, data) => dispatch(statisticsManagementRdx.actions.unselect(id, data)),
+    selectAllData: () => dispatch(statisticsManagementRdx.actions.selectAll()),
+    unselectAllData: () => dispatch(statisticsManagementRdx.actions.unselectAll()),
     queueStats: tables =>
-      dispatch(statisticsManagementReduxModule.actions.queueStats(tables))
-        .then(() => dispatch(statisticsManagementReduxModule.actions.fetch())),
+      dispatch(statisticsManagementRdx.actions.queueStats(tables))
+        .then(() => dispatch(statisticsManagementRdx.actions.fetch())),
     dequeueStats: tables =>
-      dispatch(statisticsManagementReduxModule.actions.dequeueStats(tables))
-        .then(() => dispatch(statisticsManagementReduxModule.actions.fetch()))
+      dispatch(statisticsManagementRdx.actions.dequeueStats(tables))
+        .then(() => dispatch(statisticsManagementRdx.actions.fetch()))
   })
 )(Management));

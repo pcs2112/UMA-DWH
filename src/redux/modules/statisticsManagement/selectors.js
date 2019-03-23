@@ -6,6 +6,7 @@ import {
   createGetPropertySelector
 } from 'javascript-utils/lib/selectors';
 import { isEmpty } from 'javascript-utils/lib/utils';
+import { SELECTED_STATE_KEY_NAME } from './constants';
 
 const _getData = createDataSelector('statisticsManagement', 'dataLoaded', 'data');
 
@@ -24,7 +25,7 @@ export const getStatisticsManagement = createGetItemsSelector(_getData);
  * Returns the selected items.
  * @param {Object} state
  */
-export const getSelected = createGetPropertySelector('statisticsManagement', 'selected');
+export const getSelected = createGetPropertySelector('statisticsManagement', SELECTED_STATE_KEY_NAME);
 
 /**
  * Selector to get the total count of selected statistics management items.

@@ -1,14 +1,16 @@
 import { arrayUnique } from 'javascript-utils/lib/array';
-import { objectHasOwnProperty } from 'javascript-utils/src/utils';
+import { objectHasOwnProperty, isEmpty } from 'javascript-utils/src/utils';
 import { reorderList } from '../../../helpers/utils';
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
-import itemListSelectReducerFor, { selectAllReducer, unselectAllReducer, initialState as itemListSelectInitialState }
+import itemListSelectReducerFor, { unselectAllReducer, getInitialState as itemListSelectInitialState }
   from '../../reducers/itemListSelectReducerFor';
 import itemListFiltersReducerFor, { getInitialState as filtersInitialState }
   from '../../reducers/itemListFiltersReducerFor';
 import { actionTypes as groupsActionTypes } from '../collegeScorecardGroups/actions';
 import { actionTypes } from './actions';
-import { LIST_ITEM_KEY_NAME } from './constants';
+import {
+  LIST_ITEM_KEY_NAME, FILTERS_STATE_KEY_NAME, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
+} from './constants';
 
 const defaultFilters = {
   fileName: '',
@@ -17,16 +19,84 @@ const defaultFilters = {
 };
 
 // Initial state
-const initialState = Object.assign({
-  selectedManually: {
-
-  }
-}, filtersInitialState(defaultFilters), itemListInitialState, itemListSelectInitialState);
+const initialState = Object.assign(
+  {
+    allData: [],
+    selectedManually: {}
+  },
+  filtersInitialState(defaultFilters, FILTERS_STATE_KEY_NAME),
+  itemListInitialState,
+  itemListSelectInitialState(SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME)
+);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
-const itemListSelectReducer = itemListSelectReducerFor(actionTypes, LIST_ITEM_KEY_NAME);
-const setFilters = itemListFiltersReducerFor(actionTypes, defaultFilters);
+const itemListSelectReducer = itemListSelectReducerFor(
+  actionTypes, LIST_ITEM_KEY_NAME, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
+);
+const setFilters = itemListFiltersReducerFor(actionTypes, defaultFilters, FILTERS_STATE_KEY_NAME);
+
+// Handles selecting all items from all the groups
+const selectAllFromGroupsReducer = (state) => {
+  const { allData } = state;
+  const selected = {};
+  const selectedOrder = [];
+
+  if (allData.length > 0) {
+    allData.forEach((item) => {
+      selected[item[LIST_ITEM_KEY_NAME]] = item;
+      selectedOrder.push(item[LIST_ITEM_KEY_NAME]);
+    });
+  }
+
+  return {
+    ...state,
+    [SELECTED_STATE_KEY_NAME]: selected,
+    [SELECTED_ORDER_STATE_KEY_NAME]: selectedOrder
+  };
+};
+
+// Filters the data
+const filterData = (state, action) => {
+  const { data } = state;
+  let { allData } = state;
+
+  if (action.type === actionTypes.FETCH_SUCCESS) {
+    allData = data;
+  }
+
+  const filters = state[FILTERS_STATE_KEY_NAME];
+  const { populated } = filters;
+
+  let newData = [];
+
+  if (populated !== 'ALL') {
+    newData = allData;
+  } else {
+    newData = allData.filter(res => res.per_pop > 0);
+  }
+
+  if (objectHasOwnProperty(filters, 'query')
+    && !isEmpty(filters.query)
+    && filters.query.length >= 3) {
+    const queryNormalized = filters.query.toLowerCase();
+    newData = newData.filter((res) => {
+      const normalizedColumnName = `${res.column_name}`.toLowerCase();
+      const normalizedDesc = `${res.entry_name}`.toLowerCase();
+      const normalizedLongDesc = `${res.entry_description}`.toLowerCase();
+
+      return normalizedColumnName.indexOf(queryNormalized) > -1
+        || normalizedDesc.indexOf(queryNormalized) > -1
+        || normalizedLongDesc.indexOf(queryNormalized) > -1;
+    });
+  }
+
+  return {
+    ...state,
+    data: newData,
+    allData
+  };
+};
 
 /**
  * College scorecard reducer.
@@ -39,12 +109,17 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.FETCH_BEGIN:
     case actionTypes.FETCH_FAIL:
+      return itemListReducer(state, action);
     case actionTypes.FETCH_SUCCESS: {
-      const newState = itemListReducer(state, action);
-      return setFilters(newState, action);
+      const newState = setFilters(itemListReducer(state, action), action);
+      return filterData(newState, action);
     }
     case actionTypes.RESET:
       return itemListReducer(state, action);
+    case actionTypes.SET_FILTERS:
+      return filterData(setFilters(state, action), action);
+
+    // Handles selecting an item
     case actionTypes.SELECT: {
       const newState = itemListSelectReducer(state, action);
       return {
@@ -55,6 +130,8 @@ export default (state = initialState, action) => {
         }
       };
     }
+
+    // Handles unselecting an item
     case actionTypes.UNSELECT: {
       const newState = itemListSelectReducer(state, action);
       const newSelectedManually = {
@@ -64,11 +141,19 @@ export default (state = initialState, action) => {
       newState.selectedManually = newSelectedManually;
       return newState;
     }
+
+    // Handles selecting all the items
     case actionTypes.SELECT_ALL:
-    case actionTypes.UNSELECT_ALL:
       return itemListSelectReducer(state, action);
-    case actionTypes.SET_FILTERS:
-      return setFilters(state, action);
+
+    // Handles unselecting all the items
+    case actionTypes.UNSELECT_ALL: {
+      const newState = itemListSelectReducer(state, action);
+      newState.selectedManually = {};
+      return newState;
+    }
+
+    // Handles selecting all of the items from a group
     case groupsActionTypes.SELECT: {
       const group = action.data;
       const columns = group.group_entry_id_list.trim().split(/[\s,]+/);
@@ -77,16 +162,18 @@ export default (state = initialState, action) => {
       }
 
       const columnLookUp = {};
-      const { data, selected, selectedOrder } = state;
+      const { allData } = state;
+      const selected = state[SELECTED_STATE_KEY_NAME];
+      const selectedOrder = state[SELECTED_ORDER_STATE_KEY_NAME];
       const newSelected = { ...selected };
       const newSelectedOrder = [...selectedOrder];
 
-      data.forEach((item, i) => {
+      allData.forEach((item, i) => {
         columnLookUp[item[LIST_ITEM_KEY_NAME]] = i;
       });
 
       columns.forEach((column) => {
-        const item = data[columnLookUp[column]];
+        const item = allData[columnLookUp[column]];
         if (item) {
           newSelected[item[LIST_ITEM_KEY_NAME]] = item;
           newSelectedOrder.push(item[LIST_ITEM_KEY_NAME]);
@@ -95,12 +182,16 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        selected: newSelected,
-        selectedOrder: arrayUnique(newSelectedOrder)
+        [SELECTED_STATE_KEY_NAME]: newSelected,
+        [SELECTED_ORDER_STATE_KEY_NAME]: arrayUnique(newSelectedOrder)
       };
     }
+
+    // Handles unselecting all of the items from a group
     case groupsActionTypes.UNSELECT: {
-      const { selected, selectedOrder, selectedManually } = state;
+      const { selectedManually } = state;
+      const selected = state[SELECTED_STATE_KEY_NAME];
+      const selectedOrder = state[SELECTED_ORDER_STATE_KEY_NAME];
       const { data } = action;
       const columns = data.group_entry_id_list.trim().split(/[\s,]+/);
 
@@ -123,40 +214,51 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        selected: newSeleted,
-        selectedOrder: newSelectedOrder
+        [SELECTED_STATE_KEY_NAME]: newSeleted,
+        [SELECTED_ORDER_STATE_KEY_NAME]: newSelectedOrder
       };
     }
+
+    // Handles selecting all the items from all the groups
     case groupsActionTypes.SELECT_ALL:
-      return selectAllReducer(LIST_ITEM_KEY_NAME, state);
-    case groupsActionTypes.UNSELECT_ALL:
-      return unselectAllReducer(state);
+      return selectAllFromGroupsReducer(state);
+
+    // Handles unselecting all the items from all the groups
+    case groupsActionTypes.UNSELECT_ALL: {
+      const newState = unselectAllReducer(state, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME);
+      newState.selectedManually = {};
+      return newState;
+    }
+
+    // Orders the list of selected columns
     case actionTypes.REORDER: {
-      const { selectedOrder } = state;
+      const selectedOrder = state[SELECTED_ORDER_STATE_KEY_NAME];
       const { startIndex, endIndex } = action;
       const newSelectedOrder = reorderList(selectedOrder, startIndex, endIndex);
 
       return {
         ...state,
-        selectedOrder: newSelectedOrder
+        [SELECTED_ORDER_STATE_KEY_NAME]: newSelectedOrder
       };
     }
+
+    // Marks all the items from a saved report as selected
     case actionTypes.LOAD_SAVED_REPORT: {
-      const { data } = state;
+      const { allData } = state;
       const { report } = action;
       const idxLoopup = {};
       const newSelectedManually = {};
       const newSelectedOrder = [];
       const newSelected = {};
 
-      data.forEach((item, i) => {
+      allData.forEach((item, i) => {
         idxLoopup[item.column_name] = i;
       });
 
       report.columns.forEach((col) => {
         const idx = idxLoopup[col];
         if (typeof idx !== 'undefined') {
-          const column = data[idx];
+          const column = allData[idx];
           newSelectedManually[column[LIST_ITEM_KEY_NAME]] = column[LIST_ITEM_KEY_NAME];
           newSelectedOrder.push(column[LIST_ITEM_KEY_NAME]);
           newSelected[column[LIST_ITEM_KEY_NAME]] = column;
@@ -166,8 +268,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         selectedManually: newSelectedManually,
-        selectedOrder: newSelectedOrder,
-        selected: newSelected
+        [SELECTED_STATE_KEY_NAME]: newSelected,
+        [SELECTED_ORDER_STATE_KEY_NAME]: newSelectedOrder
       };
     }
     default:

@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import ReactTable from 'react-table';
 import checkboxHOC from 'react-table/lib/hoc/selectTable';
-import withResponsiveTable from 'components/WithResponsiveTable';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
-import { scrollTableToTop } from 'helpers/utils';
-import globalCss from 'css/global';
+import withResponsiveTable from '../../../../components/WithResponsiveTable';
+import { scrollTableToTop } from '../../../../helpers/utils';
+import globalCss from '../../../../css/global';
 
 const CheckboxTable = checkboxHOC(ReactTable);
 const keyName = 'schema_table';
@@ -157,15 +157,16 @@ class ManagementTable extends Component {
     });
   };
 
-  toggleSelection = (key, shift, row) => {
+  toggleSelection = (selectKey, shift, row) => {
     const { selectedData, selectData, unselectData } = this.props;
+    const key = row[keyName];
 
     // Check to see if the key exists
     if (objectHasOwnProperty(selectedData, key)) {
-      unselectData(key);
+      unselectData(key, row);
     } else {
       // It does not exist so add it
-      selectData(key, row);
+      selectData(row);
     }
   };
 

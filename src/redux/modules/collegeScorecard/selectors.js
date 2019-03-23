@@ -1,11 +1,15 @@
 import { createSelector } from 'reselect';
-import { isEmpty, objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import {
   createDataSelector,
   createGetPropertySelector,
   createFetchingErrorSelector
 } from 'javascript-utils/lib/selectors';
-import collegeScorecardFilesReduxModule from '../collegeScorecardFiles';
+import collegeScorecardFilesRdx from '../collegeScorecardFiles';
+import {
+  FILTERS_STATE_KEY_NAME,
+  SELECTED_STATE_KEY_NAME,
+  SELECTED_ORDER_STATE_KEY_NAME
+} from './constants';
 
 const _getData = createDataSelector('collegeScorecard', 'dataLoaded', 'data');
 
@@ -13,11 +17,11 @@ const _getData = createDataSelector('collegeScorecard', 'dataLoaded', 'data');
  * Returns the filters from the state.
  * @param {Object} state
  */
-const _getFilters = state => state.collegeScorecard.filters;
+const _getFilters = state => state.collegeScorecard[FILTERS_STATE_KEY_NAME];
 
-const _getSelected = createGetPropertySelector('collegeScorecard', 'selected');
+const _getSelected = createGetPropertySelector('collegeScorecard', SELECTED_STATE_KEY_NAME);
 
-const _getSelectedOrder = createGetPropertySelector('collegeScorecard', 'selectedOrder');
+const _getSelectedOrder = createGetPropertySelector('collegeScorecard', SELECTED_ORDER_STATE_KEY_NAME);
 
 /**
  * Returns the fetching error.
@@ -32,40 +36,14 @@ export const getFetchingError = createFetchingErrorSelector('collegeScorecard', 
  * Returns the college scorecard data from the state.
  */
 export const getCollegeScorecardData = createSelector(
-  [_getFilters, _getData],
-  (filters, data) => {
-    const { populated } = filters;
-    let result = [];
-
-    if (populated !== 'ALL') {
-      result = data;
-    } else {
-      result = data.filter(res => res.per_pop > 0);
-    }
-
-    if (objectHasOwnProperty(filters, 'query')
-      && !isEmpty(filters.query)
-      && filters.query.length >= 3) {
-      const queryNormalized = filters.query.toLowerCase();
-      result = result.filter((res) => {
-        const normalizedColumnName = `${res.column_name}`.toLowerCase();
-        const normalizedDesc = `${res.entry_name}`.toLowerCase();
-        const normalizedLongDesc = `${res.entry_description}`.toLowerCase();
-
-        return normalizedColumnName.indexOf(queryNormalized) > -1
-          || normalizedDesc.indexOf(queryNormalized) > -1
-          || normalizedLongDesc.indexOf(queryNormalized) > -1;
-      });
-    }
-
-    return result;
-  }
+  [_getData],
+  data => data
 );
 
 /**
  * Selector to return the selected items.
  */
-export const getSelected = createGetPropertySelector('collegeScorecard', 'selected');
+export const getSelected = createGetPropertySelector('collegeScorecard', SELECTED_STATE_KEY_NAME);
 
 /**
  * Selector to return the selected items in order they were selected.
@@ -94,7 +72,7 @@ export const getSelectedCount = createSelector(
  * Selector to get the filters.
  */
 export const getFilters = createSelector(
-  [_getFilters, collegeScorecardFilesReduxModule.selectors.getCollegeScorecardFilesData],
+  [_getFilters, collegeScorecardFilesRdx.selectors.getCollegeScorecardFilesData],
   (filtersFromState, files) => {
     const { populated, query } = filtersFromState;
     let { fileName } = filtersFromState;

@@ -5,7 +5,10 @@ import {
   createGetPropertySelector,
   createFetchingErrorSelector
 } from 'javascript-utils/lib/selectors';
-import collegeScorecardFilesReduxModule from '../collegeScorecardFiles';
+import collegeScorecardFilesRdx from '../collegeScorecardFiles';
+import {
+  FILTERS_STATE_KEY_NAME, SELECTED_STATE_KEY_NAME
+} from './constants';
 
 const _getData = createDataSelector('collegeScorecardGroups', 'dataLoaded', 'data');
 
@@ -13,7 +16,7 @@ const _getData = createDataSelector('collegeScorecardGroups', 'dataLoaded', 'dat
  * Returns the filters from the state.
  * @param {Object} state
  */
-const _getFilters = state => state.collegeScorecardGroups.filters;
+const _getFilters = state => state.collegeScorecardGroups[FILTERS_STATE_KEY_NAME];
 
 /**
  * Returns the fetching error.
@@ -30,7 +33,7 @@ export const getCollegeScorecardGroupsData = createGetItemsSelector(_getData);
  * Returns the selected items.
  * @param {Object} state
  */
-export const getSelected = createGetPropertySelector('collegeScorecardGroups', 'selected');
+export const getSelected = createGetPropertySelector('collegeScorecardGroups', SELECTED_STATE_KEY_NAME);
 
 /**
  * Selector to get the total count of selected items.
@@ -44,7 +47,7 @@ export const getSelectedCount = createSelector(
  * Selector to get the filters.
  */
 export const getFilters = createSelector(
-  [_getFilters, collegeScorecardFilesReduxModule.selectors.getCollegeScorecardFilesData],
+  [_getFilters, collegeScorecardFilesRdx.selectors.getCollegeScorecardFilesData],
   (filtersFromState, files) => {
     const { group } = filtersFromState;
     let { fileName } = filtersFromState;

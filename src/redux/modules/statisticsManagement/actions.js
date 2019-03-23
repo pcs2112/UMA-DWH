@@ -1,5 +1,12 @@
 import { createPollingActions } from 'redux-polling';
-import { STATISTICS_MANAGEMENT_REFRESH_TIMEOUT } from 'constants/index';
+import { STATISTICS_MANAGEMENT_REFRESH_TIMEOUT } from '../../../constants/index';
+import {
+  createSelectAction,
+  createSelectAllAction,
+  createUnselectAction,
+  createUnselectAllAction
+} from '../../reducers/itemListSelectReducerFor';
+
 
 export const actionTypes = {
   FETCH_BEGIN: 'statisticsManagement/FETCH_BEGIN',
@@ -54,37 +61,25 @@ export const reset = () => ({
 });
 
 /**
- * Action to select a statistics management item.
+ * Action to select items.
  */
-export const select = (id, data) => ({
-  type: actionTypes.SELECT,
-  id,
-  data
-});
+export const select = createSelectAction(actionTypes.SELECT);
 
 /**
- * Action to unselect a statistics management item.
+ * Action to select all items.
  */
-export const unselect = id => ({
-  type: actionTypes.UNSELECT,
-  id
-});
+export const selectAll = createSelectAllAction(actionTypes.SELECT_ALL);
+
 
 /**
- * Action to select all statistics management items.
+ * Action to unselect an item.
  */
-export const selectAll = (key, data) => ({
-  type: actionTypes.SELECT_ALL,
-  key,
-  data
-});
+export const unselect = createUnselectAction(actionTypes.UNSELECT);
 
 /**
- * Action to unselect all statistics management items.
+ * Action to unselect all items.
  */
-export const unselectAll = () => ({
-  type: actionTypes.UNSELECT_ALL
-});
+export const unselectAll = createUnselectAllAction(actionTypes.UNSELECT_ALL);
 
 /**
  * Create the polling actions.

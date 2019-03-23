@@ -1,3 +1,10 @@
+import {
+  createSelectAction,
+  createSelectAllAction,
+  createUnselectAction,
+  createUnselectAllAction
+} from '../../reducers/itemListSelectReducerFor';
+
 export const actionTypes = {
   FETCH_BEGIN: 'collegeScorecardGroups/FETCH_BEGIN',
   FETCH_SUCCESS: 'collegeScorecardGroups/FETCH_SUCCESS',
@@ -41,32 +48,20 @@ export const reset = () => ({
 /**
  * Action to select items.
  */
-export const select = data => ({
-  type: actionTypes.SELECT,
-  data
-});
+export const select = createSelectAction(actionTypes.SELECT);
 
 /**
  * Action to select all items.
  */
-export const selectAll = keyName => ({
-  type: actionTypes.SELECT_ALL,
-  keyName
-});
+export const selectAll = createSelectAllAction(actionTypes.SELECT_ALL);
 
 
 /**
  * Action to unselect an item.
  */
-export const unselect = (keyValue, data) => ({
-  type: actionTypes.UNSELECT,
-  keyValue,
-  data
-});
+export const unselect = createUnselectAction(actionTypes.UNSELECT);
 
 /**
  * Action to unselect all items.
  */
-export const unselectAll = () => ({
-  type: actionTypes.UNSELECT_ALL
-});
+export const unselectAll = createUnselectAllAction(actionTypes.UNSELECT_ALL);

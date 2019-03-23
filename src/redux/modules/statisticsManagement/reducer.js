@@ -1,36 +1,45 @@
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
-import itemListSelectReducerFor, { initialState as itemListSelectInitialState }
+import itemListSelectReducerFor, { getInitialState as itemListSelectInitialState }
   from '../../reducers/itemListSelectReducerFor';
 import { actionTypes } from './actions';
+import {
+  LIST_ITEM_KEY_NAME, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
+} from './constants';
 
 // Initial state
-const initialState = Object.assign({
-  isQueuingStats: false,
-  isDequeuingStats: false
-}, itemListInitialState, itemListSelectInitialState);
+const initialState = Object.assign(
+  {
+    isQueuingStats: false,
+    isDequeuingStats: false
+  },
+  itemListInitialState,
+  itemListSelectInitialState(SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME)
+);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
-const itemListSelectReducer = itemListSelectReducerFor(actionTypes);
+const itemListSelectReducer = itemListSelectReducerFor(
+  actionTypes, LIST_ITEM_KEY_NAME, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
+);
 
 // Removes the processed items from the selected list
 const removeProcessed = (state, action) => {
   const { data } = action;
 
   const selected = {
-    ...state.selected
+    ...state[SELECTED_STATE_KEY_NAME]
   };
 
   data.forEach((item) => {
     delete (selected[item.id]);
   });
 
-  const selectedOrder = state.selectedOrder.filter(item => data.indexOf(item) < 0);
+  const selectedOrder = state[SELECTED_ORDER_STATE_KEY_NAME].filter(item => data.indexOf(item) < 0);
 
   return {
     ...state,
-    selected,
-    selectedOrder
+    [SELECTED_STATE_KEY_NAME]: selected,
+    [SELECTED_ORDER_STATE_KEY_NAME]: selectedOrder
   };
 };
 
