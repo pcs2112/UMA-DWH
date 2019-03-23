@@ -4,7 +4,7 @@ import 'react-table/react-table.css';
 import ReactTable from 'react-table';
 import checkboxHOC from 'react-table/lib/hoc/selectTable';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
-import globalCss from 'css/global';
+import globalCss from '../../../css/global';
 
 const CheckboxTable = checkboxHOC(ReactTable);
 const keyName = 'data_mart_name';
@@ -123,10 +123,10 @@ class CurrentStatusTable extends Component {
 
     // Check to see if the key exists
     if (objectHasOwnProperty(selectedData, key)) {
-      unselectData(key);
+      unselectData(key, row);
     } else {
       // It does not exist so add it
-      selectData(key, row);
+      selectData(row);
     }
   };
 

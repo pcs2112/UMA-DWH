@@ -1,40 +1,40 @@
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
+import itemListSelectReducerFor, { getInitialState as itemListSelectInitialState }
+  from '../../reducers/itemListSelectReducerFor';
+import itemListFiltersReducerFor, { getInitialState as filtersInitialState }
+  from '../../reducers/itemListFiltersReducerFor';
 import { actionTypes } from './actions';
+import {
+  LIST_ITEM_KEY_NAME, FILTERS_STATE_KEY_NAME, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
+} from './constants';
+
+const defaultFilters = {
+  query: '',
+  active: 1,
+  cycleDate: ''
+};
 
 // Initial state
-const initialState = Object.assign({
-  currentCycleGroup: 0,
-  startCycleGroup: 0,
-  cycleDate: '',
-  selected: {},
-  selectedOrder: [],
-  filters: {
-    query: '',
-    active: 1
+const initialState = Object.assign(
+  {
+    currentCycleGroup: 0,
+    startCycleGroup: 0,
+    intervalDuration: 15000
   },
-  intervalDuration: 15000
-}, itemListInitialState);
+  filtersInitialState(defaultFilters, FILTERS_STATE_KEY_NAME),
+  itemListInitialState,
+  itemListSelectInitialState(SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME)
+);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
-
-// Set filters
-const setFilters = (state, action) => {
-  if (!action.filter) {
-    return state;
-  }
-
-  return {
-    ...state,
-    filters: {
-      ...state.filters,
-      [action.filter.key]: action.filter.value
-    }
-  };
-};
+const itemListSelectReducer = itemListSelectReducerFor(
+  actionTypes, LIST_ITEM_KEY_NAME, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
+);
+const setFilters = itemListFiltersReducerFor(actionTypes, defaultFilters, FILTERS_STATE_KEY_NAME);
 
 // Updates the item which new properties after a successful fetch
-const setItemList = (state, action) => {
+const filterData = (state, action) => {
   let newState;
 
   if (action.response) {
@@ -64,7 +64,6 @@ const setItemList = (state, action) => {
 
   newState.currentCycleGroup = action.currentCycleGroup;
   newState.startCycleGroup = action.startCycleGroup;
-  newState.cycleDate = action.cycleDate;
 
   return newState;
 };
@@ -81,8 +80,9 @@ export default (state = initialState, action) => {
     case actionTypes.FETCH_BEGIN:
     case actionTypes.FETCH_FAIL:
       return itemListReducer(state, action);
-    case actionTypes.FETCH_SUCCESS:
-      return setItemList(state, action);
+    case actionTypes.FETCH_SUCCESS: {
+      return filterData(setFilters(state, action), action);
+    }
     case actionTypes.RESET:
       return itemListReducer(state, action);
     case actionTypes.CLEAR_FETCH_FAIL:
@@ -90,48 +90,12 @@ export default (state = initialState, action) => {
         ...state,
         fetchingError: initialState.fetchingError
       };
-    case actionTypes.SELECT: {
-      // Add the selected item
-      const selected = {
-        ...state.selected,
-        [action.id]: action.data
-      };
-
-      // Add the selected item to the selected order
-      const selectedOrder = [...state.selectedOrder];
-      selectedOrder.push(action.id);
-
-      return {
-        ...state,
-        selected,
-        selectedOrder
-      };
-    }
-    case actionTypes.UNSELECT: {
-      const selected = {
-        ...state.selected
-      };
-
-      // Remove the unselected item
-      delete (selected[action.id]);
-
-      // Remove the unselected items from the selected order
-      const selectedOrder = state.selectedOrder.filter(item => item !== action.id);
-
-      return {
-        ...state,
-        selected,
-        selectedOrder
-      };
-    }
-    case actionTypes.UNSELECT_ALL:
-      return {
-        ...state,
-        selected: initialState.selected,
-        selectedOrder: initialState.selectedOrder
-      };
     case actionTypes.SET_FILTERS:
       return setFilters(state, action);
+    case actionTypes.SELECT:
+    case actionTypes.UNSELECT:
+    case actionTypes.UNSELECT_ALL:
+      return itemListSelectReducer(state, action);
     case actionTypes.SET_INTERVAL_DURATION:
       return {
         ...state,

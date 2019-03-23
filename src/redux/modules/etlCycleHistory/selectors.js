@@ -9,6 +9,10 @@ import {
 import { createGetCurrentCycleGroup, createGetCurrentCycleGroupStartDttm } from '../../../helpers/selectors';
 import { sortMultiple } from '../../../helpers/utils';
 import etlControlManagerDetails from '../etlControlManagerDetails';
+import {
+  LIST_ITEM_KEY_NAME, FILTERS_STATE_KEY_NAME, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
+} from './constants';
+
 
 /**
  * Returns the history data from the state.
@@ -19,7 +23,7 @@ const _getData = createDataSelector('etlCycleHistory', 'dataLoaded', 'data');
 /**
  * Return the selected order from the state.
  */
-const _getSelectedOrder = createGetPropertySelector('etlCycleHistory', 'selectedOrder');
+const _getSelectedOrder = createGetPropertySelector('etlCycleHistory', SELECTED_ORDER_STATE_KEY_NAME);
 
 /**
  * Returns the ETL history from the state.
@@ -35,13 +39,18 @@ export const getFetchingError = createFetchingErrorSelector('etlCycleHistory', '
 /**
  * Returns the cycle history list filters.
  */
-export const getFilters = createGetPropertySelector('etlCycleHistory', 'filters');
+export const getFilters = createGetPropertySelector('etlCycleHistory', FILTERS_STATE_KEY_NAME);
 
 /**
  * Returns the selected items.
  * @param {Object} state
  */
-export const getSelected = createGetPropertySelector('etlCycleHistory', 'selected');
+export const getSelected = createGetPropertySelector('etlCycleHistory', SELECTED_STATE_KEY_NAME);
+
+/**
+ * Returns the start cycle group.
+ */
+export const getStartCycleGroup = createGetCurrentCycleGroup('etlCycleHistory', 'startCycleGroup');
 
 /**
  * Returns the current cycle group.
@@ -66,7 +75,7 @@ export const getProceduresSelectedCount = createSelector(
     let selectedCount = 0;
 
     keys.forEach((key) => {
-      if (objectHasOwnProperty(selected[key], 'calling_proc')) {
+      if (objectHasOwnProperty(selected[key], LIST_ITEM_KEY_NAME)) {
         selectedCount++;
       }
     });
@@ -85,7 +94,7 @@ export const getProceduresSelected = createSelector(
     const keys = Object.keys(selected);
 
     keys.forEach((key) => {
-      if (objectHasOwnProperty(selected[key], 'calling_proc')) {
+      if (objectHasOwnProperty(selected[key], LIST_ITEM_KEY_NAME)) {
         proceduresSelected[key] = selected[key];
       }
     });
@@ -105,8 +114,9 @@ export const getLastProcedureSelected = createSelector(
     }
 
     const selectedOrderReversed = selectedOrder.reverse();
-    const selectedProcedureName = selectedOrderReversed.find(procedureName =>
-      objectHasOwnProperty(selected, procedureName) && objectHasOwnProperty(selected[procedureName], 'calling_proc'));
+    const selectedProcedureName = selectedOrderReversed
+      .find(procedureName => objectHasOwnProperty(selected, procedureName)
+        && objectHasOwnProperty(selected[procedureName], LIST_ITEM_KEY_NAME));
 
     if (!selectedProcedureName) {
       return undefined;
@@ -126,7 +136,7 @@ export const getDataMartsSelectedCount = createSelector(
     let selectedCount = 0;
 
     keys.forEach((key) => {
-      if (!objectHasOwnProperty(selected[key], 'calling_proc')) {
+      if (!objectHasOwnProperty(selected[key], LIST_ITEM_KEY_NAME)) {
         selectedCount++;
       }
     });
@@ -145,7 +155,7 @@ export const getDataMartsSelected = createSelector(
     const keys = Object.keys(selected);
 
     keys.forEach((key) => {
-      if (!objectHasOwnProperty(selected[key], 'calling_proc')) {
+      if (!objectHasOwnProperty(selected[key], LIST_ITEM_KEY_NAME)) {
         dataMartsSelected[key] = selected[key];
       }
     });
@@ -254,4 +264,9 @@ export const getIntervalDuration = createGetPropertySelector('etlCycleHistory', 
 /**
  * Returns the cycle date.
  */
-export const getCycleDate = createGetPropertySelector('etlCycleHistory', 'cycleDate');
+export const getCycleDate = createSelector(
+  [
+    getFilters
+  ],
+  filters => filters.cycleDate
+);

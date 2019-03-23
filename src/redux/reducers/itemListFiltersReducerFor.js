@@ -43,31 +43,45 @@ const itemListFiltersReducerFor = ({
       case FETCH_FAIL:
       case FETCH_SUCCESS:
       case SET_FILTERS: {
-        const keys = Object.keys(defaultFilters);
-        if (keys.length < 1) {
+        const defaultFilterKeys = Object.keys(defaultFilters);
+        if (defaultFilterKeys.length < 1) {
           return state;
         }
 
-        let filters = {};
+        let newFilters = {};
         if (objectHasOwnProperty(action, filtersStateKey)) {
-          filters = action[filtersStateKey];
+          newFilters = action[filtersStateKey];
         } else {
-          keys.forEach((key) => {
-            if (objectHasOwnProperty(action, key)) {
-              filters[key] = action[key];
+          defaultFilterKeys.forEach((defaultFilterKey) => {
+            if (objectHasOwnProperty(action, defaultFilterKey)) {
+              newFilters[defaultFilterKey] = action[defaultFilterKey];
             }
           });
         }
 
-        if (Object.keys(filters).length < 1) {
+        const newFilterKeys = Object.keys(newFilters);
+        if (newFilterKeys.length < 1) {
+          return state;
+        }
+
+        // Check the filters have changed
+        let filtersChanged = false;
+        const oldFilters = state[filtersStateKey];
+        newFilterKeys.forEach((newFilterKey) => {
+          if (newFilters[newFilterKey] !== oldFilters[newFilterKey]) {
+            filtersChanged = true;
+          }
+        });
+
+        if (!filtersChanged) {
           return state;
         }
 
         return {
           ...state,
           [filtersStateKey]: {
-            ...state[filtersStateKey],
-            ...filters
+            ...oldFilters,
+            ...newFilters
           }
         };
       }

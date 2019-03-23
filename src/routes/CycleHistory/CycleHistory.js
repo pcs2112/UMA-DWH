@@ -6,14 +6,14 @@ import {
   Segment, Grid, Dropdown, Button, Form, Input
 } from 'semantic-ui-react';
 import { objectHasOwnProperty, isEmpty } from 'javascript-utils/lib/utils';
-import { DEFAULT_DATE_FORMAT, DEAULT_MONTHS_SIZE } from 'constants/index';
-import intervalDurations from 'constants/cycleHistoryIntervalDurations';
-import etlCurrentStatus from 'redux/modules/etlCurrentStatus';
-import etlCycleHistory from 'redux/modules/etlCycleHistory';
-import etlProcedureHistory from 'redux/modules/etlProcedureHistory';
-import withMainLayout from 'components/WithMainLayout';
-import CycleArrowPagination from 'components/CycleArrowPagination';
-import globalCss from 'css/global';
+import { DEFAULT_DATE_FORMAT, DEAULT_MONTHS_SIZE } from '../../constants/index';
+import intervalDurations from '../../constants/cycleHistoryIntervalDurations';
+import etlCurrentStatusRdx from '../../redux/modules/etlCurrentStatus';
+import etlCycleHistoryRdx from '../../redux/modules/etlCycleHistory';
+import etlProcedureHistoryRdx from '../../redux/modules/etlProcedureHistory';
+import withMainLayout from '../../components/WithMainLayout';
+import CycleArrowPagination from '../../components/CycleArrowPagination';
+import globalCss from '../../css/global';
 import CycleHistoryTable from './CycleHistoryTable';
 import CurrentStatusTable from './CurrentStatusTable';
 import CycleHistoryPageHeader from './CycleHistoryPageHeader';
@@ -114,7 +114,7 @@ class Home extends Component {
 
   startPolling = (interval) => {
     const { dispatchPollingAction } = this.props;
-    this.pollingActions = etlCycleHistory.actions.getPollingActions(interval);
+    this.pollingActions = etlCycleHistoryRdx.actions.getPollingActions(interval);
     dispatchPollingAction(this.pollingActions.start(dispatchPollingAction));
   };
 
@@ -272,36 +272,37 @@ export default withMainLayout(connect(
   state => ({
     isCycleHistoryFetching: state.etlCycleHistory.isFetching,
     cycleHistoryDataLoaded: state.etlCycleHistory.dataLoaded,
-    cycleHistoryData: etlCycleHistory.selectors.getHistoryByCycleGroup(state),
-    cycleHistoryFetchingError: etlCycleHistory.selectors.getFetchingError(state),
-    currentCycleGroup: etlCycleHistory.selectors.getCurrentCycleGroup(state),
-    currentCycleGroupStartDttm: etlCycleHistory.selectors.getCurrentCycleGroupStartDttm(state),
-    cycleHistoryIntervalDuration: etlCycleHistory.selectors.getIntervalDuration(state),
-    cycleHistoryDate: etlCycleHistory.selectors.getCycleDate(state),
-    cycleHistoryFilters: etlCycleHistory.selectors.getFilters(state),
-    cycleHistorySelectedCount: etlCycleHistory.selectors.getSelectedCount(state),
-    cycleHistorySelectedData: etlCycleHistory.selectors.getSelected(state),
-    proceduresSelectedCount: etlCycleHistory.selectors.getProceduresSelectedCount(state),
-    lastProcedureSelected: etlCycleHistory.selectors.getLastProcedureSelected(state),
-    dataMartsSelectedCount: etlCycleHistory.selectors.getDataMartsSelectedCount(state),
+    cycleHistoryData: etlCycleHistoryRdx.selectors.getHistoryByCycleGroup(state),
+    cycleHistoryFetchingError: etlCycleHistoryRdx.selectors.getFetchingError(state),
+    currentCycleGroup: etlCycleHistoryRdx.selectors.getCurrentCycleGroup(state),
+    currentCycleGroupStartDttm: etlCycleHistoryRdx.selectors.getCurrentCycleGroupStartDttm(state),
+    cycleHistoryIntervalDuration: etlCycleHistoryRdx.selectors.getIntervalDuration(state),
+    cycleHistoryDate: etlCycleHistoryRdx.selectors.getCycleDate(state),
+    cycleHistoryFilters: etlCycleHistoryRdx.selectors.getFilters(state),
+    cycleHistorySelectedCount: etlCycleHistoryRdx.selectors.getSelectedCount(state),
+    cycleHistorySelectedData: etlCycleHistoryRdx.selectors.getSelected(state),
+    proceduresSelectedCount: etlCycleHistoryRdx.selectors.getProceduresSelectedCount(state),
+    lastProcedureSelected: etlCycleHistoryRdx.selectors.getLastProcedureSelected(state),
+    dataMartsSelectedCount: etlCycleHistoryRdx.selectors.getDataMartsSelectedCount(state),
     isCurrentStatusFetching: state.etlCurrentStatus.isFetching,
-    currentStatusData: etlCurrentStatus.selectors.getCurrentStatus(state),
-    currentStatusDataTotals: etlCurrentStatus.selectors.getCurrentStatusTotals(state),
-    currentEtlStatus: etlCurrentStatus.selectors.getCurrentEtlStatus(state)
+    currentStatusData: etlCurrentStatusRdx.selectors.getCurrentStatus(state),
+    currentStatusDataTotals: etlCurrentStatusRdx.selectors.getCurrentStatusTotals(state),
+    currentEtlStatus: etlCurrentStatusRdx.selectors.getCurrentEtlStatus(state)
   }),
   dispatch => ({
     dispatchPollingAction: dispatch,
-    fetchCycleHistory: (cycleGroup, cycleDate) => dispatch(etlCycleHistory.actions.fetchHistory(cycleGroup, cycleDate)),
-    fetchPrevCycleHistory: () => dispatch(etlCycleHistory.actions.fetchPrev()),
-    fetchNextCycleHistory: () => dispatch(etlCycleHistory.actions.fetchNext()),
-    resetCycleHistory: () => dispatch(etlCycleHistory.actions.reset()),
-    selectCycleHistoryData: (id, data) => dispatch(etlCycleHistory.actions.select(id, data)),
-    unselectCycleHistoryData: id => dispatch(etlCycleHistory.actions.unselect(id)),
-    unselectAllCycleHistoryData: () => dispatch(etlCycleHistory.actions.unselectAll()),
+    fetchCycleHistory: (cycleGroup, cycleDate) =>
+      dispatch(etlCycleHistoryRdx.actions.fetchHistory(cycleGroup, cycleDate)),
+    fetchPrevCycleHistory: () => dispatch(etlCycleHistoryRdx.actions.fetchPrev()),
+    fetchNextCycleHistory: () => dispatch(etlCycleHistoryRdx.actions.fetchNext()),
+    resetCycleHistory: () => dispatch(etlCycleHistoryRdx.actions.reset()),
+    selectCycleHistoryData: data => dispatch(etlCycleHistoryRdx.actions.select(data)),
+    unselectCycleHistoryData: (id, data) => dispatch(etlCycleHistoryRdx.actions.unselect(id, data)),
+    unselectAllCycleHistoryData: () => dispatch(etlCycleHistoryRdx.actions.unselectAll()),
     setCycleHistoryIntervalDuration: intervalDuration =>
-      dispatch(etlCycleHistory.actions.setIntervalDuration(intervalDuration)),
-    setCycleHistoryFilters: (key, value) => dispatch(etlCycleHistory.actions.setFilters(key, value)),
+      dispatch(etlCycleHistoryRdx.actions.setIntervalDuration(intervalDuration)),
+    setCycleHistoryFilters: (key, value) => dispatch(etlCycleHistoryRdx.actions.setFilters(key, value)),
     setProcedureHistoryFilters: (serverName, dbName, procedureName, date, months) =>
-      dispatch(etlProcedureHistory.actions.setFilters(serverName, dbName, procedureName, date, months))
+      dispatch(etlProcedureHistoryRdx.actions.setFilters(serverName, dbName, procedureName, date, months))
   })
 )(Home));

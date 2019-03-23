@@ -1,8 +1,16 @@
 import { createPollingActions } from 'redux-polling';
 import { sleep, isEmpty } from 'javascript-utils/lib/utils';
-import { MAX_FETCH_CYCLE_GROUPS, CURRENT_STATUS_INTERAL_DURATION } from 'constants/index';
-import { shouldFetchCycle, getNewStartCycleGroup } from 'helpers/utils';
-import etlCurrentStatus from '../etlCurrentStatus';
+import {
+  createSelectAction,
+  createUnselectAction,
+  createUnselectAllAction
+} from '../../reducers/itemListSelectReducerFor';
+import { FILTERS_STATE_KEY_NAME } from './constants';
+import { createSetFilterAction } from '../../reducers/itemListFiltersReducerFor';
+import { MAX_FETCH_CYCLE_GROUPS, CURRENT_STATUS_INTERAL_DURATION } from '../../../constants/index';
+import { shouldFetchCycle, getNewStartCycleGroup } from '../../../helpers/utils';
+import { getStartCycleGroup, getCurrentCycleGroup, getCycleDate } from './selectors';
+import etlCurrentStatusRdx from '../etlCurrentStatus';
 
 export const actionTypes = {
   FETCH_BEGIN: 'etlCycleHistory/FETCH_BEGIN',
@@ -18,14 +26,16 @@ export const actionTypes = {
 };
 
 const polling = () => (dispatch, getState) => {
-  const { etlCycleHistory } = getState();
-  const {
-    dataLoaded, currentCycleGroup, startCycleGroup, cycleDate
-  } = etlCycleHistory;
+  const state = getState();
+  const { etlCycleHistory: { dataLoaded } } = state;
+  const startCycleGroup = getStartCycleGroup(state);
+  const currentCycleGroup = getCurrentCycleGroup(state);
+  const cycleDate = getCycleDate(state);
+
   const promises = [];
 
   // Fetch current status
-  promises.push(dispatch(etlCurrentStatus.actions.fetchCurrentStatus()));
+  promises.push(dispatch(etlCurrentStatusRdx.actions.fetchCurrentStatus()));
 
   // Fetch the ETL Cycle history
   if (!dataLoaded || (currentCycleGroup < 1 && isEmpty(cycleDate))) {
@@ -72,8 +82,9 @@ const polling = () => (dispatch, getState) => {
  * Async action creator to fetch the ETL history.
  */
 export const fetchHistory = (cycleGroup, cycleDate = '', refresh = false) => (dispatch, getState) => {
-  const { etlCycleHistory } = getState();
-  const { currentCycleGroup, startCycleGroup } = etlCycleHistory;
+  const state = getState();
+  const startCycleGroup = getStartCycleGroup(state);
+  const currentCycleGroup = getCurrentCycleGroup(state);
   const normalizedNewCycleGroup = typeof cycleGroup === 'undefined' ? currentCycleGroup : cycleGroup;
 
   // Fetch data for the new cycle group
@@ -141,14 +152,22 @@ export const fetchHistory = (cycleGroup, cycleDate = '', refresh = false) => (di
 /**
  * Action to fetch the previous cycle group before the current cycle group.
  */
-export const fetchPrev = () => (dispatch, getState) =>
-  dispatch(fetchHistory(getState().etlCycleHistory.currentCycleGroup - 1, getState().etlCycleHistory.cycleDate));
+export const fetchPrev = () => (dispatch, getState) => {
+  const state = getState();
+  const currentCycleGroup = getCurrentCycleGroup(state);
+  const cycleDate = getCycleDate(state);
+  return dispatch(fetchHistory(currentCycleGroup - 1, cycleDate));
+};
 
 /**
  * Action to fetch the next cycle group after the current cycle group.
  */
-export const fetchNext = () => (dispatch, getState) =>
-  dispatch(fetchHistory(getState().etlCycleHistory.currentCycleGroup + 1, getState().etlCycleHistory.cycleDate));
+export const fetchNext = () => (dispatch, getState) => {
+  const state = getState();
+  const currentCycleGroup = getCurrentCycleGroup(state);
+  const cycleDate = getCycleDate(state);
+  dispatch(fetchHistory(currentCycleGroup + 1, cycleDate));
+};
 
 /**
  * Resets the state.
@@ -160,37 +179,22 @@ export const reset = () => ({
 /**
  * Action to select a history item.
  */
-export const select = (id, data) => ({
-  type: actionTypes.SELECT,
-  id,
-  data
-});
+export const select = createSelectAction(actionTypes.SELECT);
 
 /**
  * Action to unselect a history item.
  */
-export const unselect = id => ({
-  type: actionTypes.UNSELECT,
-  id
-});
+export const unselect = createUnselectAction(actionTypes.UNSELECT);
 
 /**
  * Action to unselect all history items.
  */
-export const unselectAll = () => ({
-  type: actionTypes.UNSELECT_ALL
-});
+export const unselectAll = createUnselectAllAction(actionTypes.UNSELECT_ALL);
 
 /**
  * Action to set a list filters.
  */
-export const setFilters = (key, value) => ({
-  type: actionTypes.SET_FILTERS,
-  filter: {
-    key,
-    value
-  }
-});
+export const setFilters = createSetFilterAction(actionTypes.SET_FILTERS, FILTERS_STATE_KEY_NAME);
 
 /**
  * Sets the interval duration
