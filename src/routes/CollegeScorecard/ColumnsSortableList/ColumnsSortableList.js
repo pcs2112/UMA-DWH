@@ -13,7 +13,7 @@ const SortableItem = sortableElement(({ value, style }) => (
   </div>
 ));
 
-class SortableList extends Component {
+class ColumnsSortableList extends Component {
   static propTypes = {
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired,
@@ -56,4 +56,4 @@ class SortableList extends Component {
   }
 }
 
-export default SortableList;
+export default ColumnsSortableList;

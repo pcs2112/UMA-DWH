@@ -15,9 +15,10 @@ import collegeScorecardReportsRdx from '../../../redux/modules/collegeScorecardR
 import withMainLayout from '../../../components/WithMainLayout';
 import withResponsiveContainer from '../../../components/WithResponsiveContainer';
 import CheckboxVirtualTable from '../../../components/CheckboxVirtualTable';
+import withVirtualSortableList from '../../../components/WithVirtualSortableList';
 import globalCss from '../../../css/global';
 import Filters from './Filters';
-import VirtualSortableList from '../VirtualSortableList';
+import ColumnsSortableList from '../ColumnsSortableList';
 import CreateReportModal from '../CreateReportModal';
 import UpdateReportModal from '../UpdateReportModal';
 import DropdownFilter from '../../../components/DropdownFilter';
@@ -28,6 +29,7 @@ const SELECTED_LIMIT = 255;
 const CREATE_REPORT_MODAL = 'CREATE_REPORT_MODAL';
 const UPDATE_REPORT_MODAL = 'UPDATE_REPORT_MODAL';
 const Table = withResponsiveContainer(CheckboxVirtualTable, 320, 300);
+const ColumnsList = withResponsiveContainer(withVirtualSortableList(ColumnsSortableList), 320, 415);
 
 class Reporting extends Component {
   static propTypes = {
@@ -212,7 +214,7 @@ class Reporting extends Component {
                   Save New Report
                 </Button>
                 {collegeScorecardSelectedCount > 0 && (
-                  <VirtualSortableList
+                  <ColumnsList
                     containerWidth={220}
                     items={collegeScorecardSelectedOrderedData}
                     itemValueKeyName="column_name"
