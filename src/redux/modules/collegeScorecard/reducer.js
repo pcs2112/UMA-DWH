@@ -4,7 +4,8 @@ import { reorderList } from '../../../helpers/utils';
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
 import itemListSelectReducerFor, { selectAllReducer, unselectAllReducer, initialState as itemListSelectInitialState }
   from '../../reducers/itemListSelectReducerFor';
-import itemListFiltersReducerFor from '../../reducers/itemListFiltersReducerFor';
+import itemListFiltersReducerFor, { getInitialState as filtersInitialState }
+  from '../../reducers/itemListFiltersReducerFor';
 import { actionTypes as groupsActionTypes } from '../collegeScorecardGroups/actions';
 
 import { actionTypes } from './actions';
@@ -22,7 +23,7 @@ const initialState = Object.assign({
   selectedManually: {
 
   }
-}, defaultFilters, itemListInitialState, itemListSelectInitialState);
+}, filtersInitialState(defaultFilters), itemListInitialState, itemListSelectInitialState);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);

@@ -13,11 +13,7 @@ const _getData = createDataSelector('collegeScorecard', 'dataLoaded', 'data');
  * Returns the filters from the state.
  * @param {Object} state
  */
-const _getFilters = state => ({
-  fileName: state.collegeScorecard.fileName,
-  populated: state.collegeScorecard.populated,
-  query: state.collegeScorecard.query
-});
+const _getFilters = state => state.collegeScorecard.filters;
 
 const _getSelected = createGetPropertySelector('collegeScorecard', 'selected');
 

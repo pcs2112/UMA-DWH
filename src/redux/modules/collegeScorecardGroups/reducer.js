@@ -1,7 +1,8 @@
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
 import itemListSelectReducerFor, { unselectAllReducer, initialState as itemListSelectInitialState }
   from '../../reducers/itemListSelectReducerFor';
-import itemListFiltersReducerFor from '../../reducers/itemListFiltersReducerFor';
+import itemListFiltersReducerFor, { getInitialState as filtersInitialState }
+  from '../../reducers/itemListFiltersReducerFor';
 import { actionTypes } from './actions';
 import { actionTypes as collegeScorecardActionTypes } from '../collegeScorecard/actions';
 
@@ -11,7 +12,9 @@ const defaultFilters = {
 };
 
 // Initial state
-const initialState = Object.assign({}, defaultFilters, itemListInitialState, itemListSelectInitialState);
+const initialState = Object.assign(
+  {}, filtersInitialState(defaultFilters), itemListInitialState, itemListSelectInitialState
+);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);

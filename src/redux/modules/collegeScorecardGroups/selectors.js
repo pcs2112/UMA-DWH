@@ -13,10 +13,7 @@ const _getData = createDataSelector('collegeScorecardGroups', 'dataLoaded', 'dat
  * Returns the filters from the state.
  * @param {Object} state
  */
-const _getFilters = state => ({
-  fileName: state.collegeScorecardGroups.fileName,
-  group: state.collegeScorecardGroups.group
-});
+const _getFilters = state => state.collegeScorecardGroups.filters;
 
 /**
  * Returns the fetching error.
