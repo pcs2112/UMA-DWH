@@ -1,9 +1,12 @@
 import { createSelector } from 'reselect';
-import { createDataSelector } from 'javascript-utils/lib/selectors';
+import { createDataSelector, createGetPropertySelector } from 'javascript-utils/lib/selectors';
+import { SELECTED_STATE_KEY_NAME } from './constants';
 
 const emptyDataTotals = {};
 
 const _getData = createDataSelector('etlCurrentStatus', 'dataLoaded', 'data');
+
+const _getSelected = createGetPropertySelector('etlCurrentStatus', SELECTED_STATE_KEY_NAME);
 
 /**
  * Returns the ETL current status from the state.
@@ -33,4 +36,20 @@ export const getCurrentEtlStatus = createSelector(
 
     return data[data.length - 1].data_mart_status;
   }
+);
+
+/**
+ * Selector to get the total count of data marts selected.
+ */
+export const getSelectedCount = createSelector(
+  [_getSelected],
+  selected => Object.keys(selected).length
+);
+
+/**
+ * Selector to get the data marts selected.
+ */
+export const getSelected = createSelector(
+  [_getSelected],
+  selected => selected
 );

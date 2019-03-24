@@ -10,7 +10,7 @@ import { createSetFilterAction } from '../../reducers/itemListFiltersReducerFor'
 import { MAX_FETCH_CYCLE_GROUPS, CURRENT_STATUS_INTERAL_DURATION } from '../../../constants/index';
 import { shouldFetchCycle, getNewStartCycleGroup } from '../../../helpers/utils';
 import { getStartCycleGroup, getCurrentCycleGroup, getCycleDate } from './selectors';
-import etlCurrentStatusRdx from '../etlCurrentStatus';
+import { fetchCurrentStatus } from '../etlCurrentStatus/actions';
 
 export const actionTypes = {
   FETCH_BEGIN: 'etlCycleHistory/FETCH_BEGIN',
@@ -35,7 +35,7 @@ const polling = () => (dispatch, getState) => {
   const promises = [];
 
   // Fetch current status
-  promises.push(dispatch(etlCurrentStatusRdx.actions.fetchCurrentStatus()));
+  promises.push(dispatch(fetchCurrentStatus()));
 
   // Fetch the ETL Cycle history
   if (!dataLoaded || (currentCycleGroup < 1 && isEmpty(cycleDate))) {

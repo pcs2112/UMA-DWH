@@ -7,7 +7,6 @@ import { actionTypes } from './actions';
 import {
   LIST_ITEM_KEY_NAME, FILTERS_STATE_KEY_NAME, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
 } from './constants';
-
 import { actionTypes as collegeScorecardActionTypes } from '../collegeScorecard/actions';
 
 const defaultFilters = {
@@ -29,7 +28,6 @@ const itemListSelectReducer = itemListSelectReducerFor(
   actionTypes, LIST_ITEM_KEY_NAME, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
 );
 const setFilters = itemListFiltersReducerFor(actionTypes, defaultFilters, FILTERS_STATE_KEY_NAME);
-console.log('hre');
 
 /**
  * College scorecard groups reducer.

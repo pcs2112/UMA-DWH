@@ -37,7 +37,6 @@ class Home extends Component {
     cycleHistorySelectedData: PropTypes.object.isRequired,
     proceduresSelectedCount: PropTypes.number.isRequired,
     lastProcedureSelected: PropTypes.object,
-    dataMartsSelectedCount: PropTypes.number.isRequired,
     fetchCycleHistory: PropTypes.func.isRequired,
     fetchPrevCycleHistory: PropTypes.func.isRequired,
     fetchNextCycleHistory: PropTypes.func.isRequired,
@@ -52,6 +51,10 @@ class Home extends Component {
     currentStatusData: PropTypes.array.isRequired,
     currentStatusDataTotals: PropTypes.object.isRequired,
     currentEtlStatus: PropTypes.string.isRequired,
+    dataMartsSelectedCount: PropTypes.number.isRequired,
+    dataMartsSelectedData: PropTypes.object.isRequired,
+    selectDataMartData: PropTypes.func.isRequired,
+    unselectDataMartData: PropTypes.func.isRequired,
     // Procedure history props
     setProcedureHistoryFilters: PropTypes.func.isRequired
   };
@@ -137,7 +140,6 @@ class Home extends Component {
       cycleHistorySelectedCount,
       cycleHistorySelectedData,
       proceduresSelectedCount,
-      dataMartsSelectedCount,
       fetchPrevCycleHistory,
       fetchNextCycleHistory,
       selectCycleHistoryData,
@@ -147,6 +149,10 @@ class Home extends Component {
       currentStatusData,
       currentStatusDataTotals,
       currentEtlStatus,
+      dataMartsSelectedCount,
+      dataMartsSelectedData,
+      selectDataMartData,
+      unselectDataMartData,
       setCycleHistoryFilters
     } = this.props;
     return (
@@ -189,9 +195,9 @@ class Home extends Component {
                 data={currentStatusData}
                 dataTotals={currentStatusDataTotals}
                 fetchingError={false}
-                selectedData={cycleHistorySelectedData}
-                selectData={selectCycleHistoryData}
-                unselectData={unselectCycleHistoryData}
+                selectedData={dataMartsSelectedData}
+                selectData={selectDataMartData}
+                unselectData={unselectDataMartData}
               />
               <Button
                 size="small"
@@ -281,9 +287,10 @@ export default withMainLayout(connect(
     cycleHistoryFilters: etlCycleHistoryRdx.selectors.getFilters(state),
     cycleHistorySelectedCount: etlCycleHistoryRdx.selectors.getSelectedCount(state),
     cycleHistorySelectedData: etlCycleHistoryRdx.selectors.getSelected(state),
-    proceduresSelectedCount: etlCycleHistoryRdx.selectors.getProceduresSelectedCount(state),
-    lastProcedureSelected: etlCycleHistoryRdx.selectors.getLastProcedureSelected(state),
-    dataMartsSelectedCount: etlCycleHistoryRdx.selectors.getDataMartsSelectedCount(state),
+    proceduresSelectedCount: etlCycleHistoryRdx.selectors.getSelectedCount(state),
+    lastProcedureSelected: etlCycleHistoryRdx.selectors.getLastSelected(state),
+    dataMartsSelectedCount: etlCurrentStatusRdx.selectors.getSelectedCount(state),
+    dataMartsSelectedData: etlCurrentStatusRdx.selectors.getSelected(state),
     isCurrentStatusFetching: state.etlCurrentStatus.isFetching,
     currentStatusData: etlCurrentStatusRdx.selectors.getCurrentStatus(state),
     currentStatusDataTotals: etlCurrentStatusRdx.selectors.getCurrentStatusTotals(state),
@@ -299,6 +306,8 @@ export default withMainLayout(connect(
     selectCycleHistoryData: data => dispatch(etlCycleHistoryRdx.actions.select(data)),
     unselectCycleHistoryData: (id, data) => dispatch(etlCycleHistoryRdx.actions.unselect(id, data)),
     unselectAllCycleHistoryData: () => dispatch(etlCycleHistoryRdx.actions.unselectAll()),
+    selectDataMartData: data => dispatch(etlCurrentStatusRdx.actions.select(data)),
+    unselectDataMartData: (id, data) => dispatch(etlCurrentStatusRdx.actions.unselect(id, data)),
     setCycleHistoryIntervalDuration: intervalDuration =>
       dispatch(etlCycleHistoryRdx.actions.setIntervalDuration(intervalDuration)),
     setCycleHistoryFilters: (key, value) => dispatch(etlCycleHistoryRdx.actions.setFilters(key, value)),

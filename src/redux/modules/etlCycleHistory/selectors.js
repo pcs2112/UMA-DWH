@@ -8,11 +8,11 @@ import {
 } from 'javascript-utils/lib/selectors';
 import { createGetCurrentCycleGroupStartDttm } from '../../../helpers/selectors';
 import { sortMultiple } from '../../../helpers/utils';
-import etlControlManagerDetails from '../etlControlManagerDetails';
+import { getControlManagerDetailsData } from '../etlControlManagerDetails/selectors';
+import { getSelected as getSelectedDataMarts } from '../etlCurrentStatus/selectors';
 import {
   LIST_ITEM_KEY_NAME, FILTERS_STATE_KEY_NAME, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
 } from './constants';
-
 
 /**
  * Returns the history data from the state.
@@ -66,47 +66,9 @@ export const getSelectedCount = createSelector(
 );
 
 /**
- * Selector to get the total count of procedures selected.
- */
-export const getProceduresSelectedCount = createSelector(
-  [getSelected],
-  (selected) => {
-    const keys = Object.keys(selected);
-    let selectedCount = 0;
-
-    keys.forEach((key) => {
-      if (objectHasOwnProperty(selected[key], LIST_ITEM_KEY_NAME)) {
-        selectedCount++;
-      }
-    });
-
-    return selectedCount;
-  }
-);
-
-/**
- * Selector to get the procedures selected.
- */
-export const getProceduresSelected = createSelector(
-  [getSelected],
-  (selected) => {
-    const proceduresSelected = {};
-    const keys = Object.keys(selected);
-
-    keys.forEach((key) => {
-      if (objectHasOwnProperty(selected[key], LIST_ITEM_KEY_NAME)) {
-        proceduresSelected[key] = selected[key];
-      }
-    });
-
-    return proceduresSelected;
-  }
-);
-
-/**
  * Selector to get the last procedure selected.
  */
-export const getLastProcedureSelected = createSelector(
+export const getLastSelected = createSelector(
   [_getSelectedOrder, getSelected],
   (selectedOrder, selected) => {
     if (selectedOrder.length < 1) {
@@ -127,52 +89,14 @@ export const getLastProcedureSelected = createSelector(
 );
 
 /**
- * Selector to get the total count of data marts selected.
- */
-export const getDataMartsSelectedCount = createSelector(
-  [getSelected],
-  (selected) => {
-    const keys = Object.keys(selected);
-    let selectedCount = 0;
-
-    keys.forEach((key) => {
-      if (!objectHasOwnProperty(selected[key], LIST_ITEM_KEY_NAME)) {
-        selectedCount++;
-      }
-    });
-
-    return selectedCount;
-  }
-);
-
-/**
- * Selector to get the data marts selected.
- */
-export const getDataMartsSelected = createSelector(
-  [getSelected],
-  (selected) => {
-    const dataMartsSelected = {};
-    const keys = Object.keys(selected);
-
-    keys.forEach((key) => {
-      if (!objectHasOwnProperty(selected[key], LIST_ITEM_KEY_NAME)) {
-        dataMartsSelected[key] = selected[key];
-      }
-    });
-
-    return dataMartsSelected;
-  }
-);
-
-/**
  * Returns the ETL history by cycle group from the state.
  */
 export const getHistoryByCycleGroup = createSelector(
   [
     _getData,
     getCurrentCycleGroup,
-    getDataMartsSelected,
-    etlControlManagerDetails.selectors.getControlManagerDetailsData,
+    getSelectedDataMarts,
+    getControlManagerDetailsData,
     getFilters
   ],
   (data, cycleGroup, dataMarts, controlManager, filters) => {
@@ -181,7 +105,7 @@ export const getHistoryByCycleGroup = createSelector(
     }
 
     // Get the data mart selected count
-    const dataMartsSelected = Object.keys(dataMarts).length;
+    const dataMartsSelectedCount = Object.keys(dataMarts).length;
 
     // Get the map of procedure names to item index
     const map = {};
@@ -207,7 +131,7 @@ export const getHistoryByCycleGroup = createSelector(
     // Put together the result set
     let result = [];
     controlManager.forEach((item, index) => {
-      if (dataMartsSelected < 1 || objectHasOwnProperty(dataMarts, item.data_mart_name)) {
+      if (dataMartsSelectedCount < 1 || objectHasOwnProperty(dataMarts, item.data_mart_name)) {
         const key = item.procedure_name.toLowerCase();
         const historyItemIndex = objectHasOwnProperty(map, key) ? map[key] : -1;
         if (historyItemIndex > -1) {
