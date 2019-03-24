@@ -11,6 +11,9 @@ import { MAX_FETCH_CYCLE_GROUPS, CURRENT_STATUS_INTERAL_DURATION } from '../../.
 import { shouldFetchCycle, getNewStartCycleGroup } from '../../../helpers/utils';
 import { getStartCycleGroup, getCurrentCycleGroup, getCycleDate } from './selectors';
 import { fetchCurrentStatus } from '../etlCurrentStatus/actions';
+import { getSelected as getSelectedDataMarts } from '../etlCurrentStatus/selectors';
+import { getControlManagerDetailsData } from '../etlControlManagerDetails/selectors';
+
 
 export const actionTypes = {
   FETCH_BEGIN: 'etlCycleHistory/FETCH_BEGIN',
@@ -31,6 +34,8 @@ const polling = () => (dispatch, getState) => {
   const startCycleGroup = getStartCycleGroup(state);
   const currentCycleGroup = getCurrentCycleGroup(state);
   const cycleDate = getCycleDate(state);
+  const dataMarts = getSelectedDataMarts(state);
+  const controlManager = getControlManagerDetailsData(state);
 
   const promises = [];
 
@@ -60,9 +65,11 @@ const polling = () => (dispatch, getState) => {
         }
       }),
       payload: {
-        currentCycleGroup,
         startCycleGroup: newStartCycleGroup,
-        cycleDate
+        currentCycleGroup,
+        cycleDate,
+        dataMarts,
+        controlManager
       }
     }));
   }
@@ -86,6 +93,8 @@ export const fetchHistory = (cycleGroup, cycleDate = '', refresh = false) => (di
   const startCycleGroup = getStartCycleGroup(state);
   const currentCycleGroup = getCurrentCycleGroup(state);
   const normalizedNewCycleGroup = typeof cycleGroup === 'undefined' ? currentCycleGroup : cycleGroup;
+  const dataMarts = getSelectedDataMarts(state);
+  const controlManager = getControlManagerDetailsData(state);
 
   // Fetch data for the new cycle group
   if (refresh || shouldFetchCycle(normalizedNewCycleGroup, startCycleGroup, MAX_FETCH_CYCLE_GROUPS)) {
@@ -111,9 +120,11 @@ export const fetchHistory = (cycleGroup, cycleDate = '', refresh = false) => (di
           }
         }),
         payload: {
-          currentCycleGroup: normalizedNewCycleGroup,
           startCycleGroup: newStartCycleGroup,
-          cycleDate
+          currentCycleGroup: normalizedNewCycleGroup,
+          cycleDate,
+          dataMarts,
+          controlManager
         }
       })
         .then(() => {
@@ -136,9 +147,11 @@ export const fetchHistory = (cycleGroup, cycleDate = '', refresh = false) => (di
       .then(() => {
         dispatch({
           type: actionTypes.FETCH_SUCCESS,
-          currentCycleGroup: normalizedNewCycleGroup,
           startCycleGroup,
-          cycleDate
+          currentCycleGroup: normalizedNewCycleGroup,
+          cycleDate,
+          dataMarts,
+          controlManager
         });
 
         resolve();

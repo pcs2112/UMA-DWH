@@ -1,3 +1,5 @@
+import { isEmpty, objectHasOwnProperty } from 'javascript-utils/lib/utils';
+import { sortMultiple } from '../../../helpers/utils';
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
 import itemListSelectReducerFor, { getInitialState as itemListSelectInitialState }
   from '../../reducers/itemListSelectReducerFor';
@@ -17,8 +19,9 @@ const defaultFilters = {
 // Initial state
 const initialState = Object.assign(
   {
-    currentCycleGroup: 0,
+    allData: false,
     startCycleGroup: 0,
+    currentCycleGroup: 0,
     intervalDuration: 15000
   },
   filtersInitialState(defaultFilters, FILTERS_STATE_KEY_NAME),
@@ -35,11 +38,24 @@ const setFilters = itemListFiltersReducerFor(actionTypes, defaultFilters, FILTER
 
 // Updates the item which new properties after a successful fetch
 const filterData = (state, action) => {
-  let newState;
+  const { filters } = state;
+  let { allData } = state;
+  const {
+    startCycleGroup, currentCycleGroup, dataMarts, controlManager
+  } = action;
+
+  const newState = {
+    ...state,
+    dataLoaded: true,
+    isFetching: false,
+    fetchingError: initialState.fetchingError,
+    startCycleGroup,
+    currentCycleGroup
+  };
 
   if (action.response) {
-    newState = itemListReducer(state, action);
-    newState.data.forEach((item, index) => {
+    allData = action.response;
+    allData.forEach((item, index) => {
       if (item.err_num > 0) {
         item.color_status = -2;
       } else if (item.try_catch_err_id > 0) {
@@ -54,16 +70,78 @@ const filterData = (state, action) => {
 
       item.original_index = index;
     });
-  } else {
-    newState = {
-      ...state,
-      isFetching: false,
-      fetchingError: initialState.fetchingError
-    };
+
+    newState.allData = allData;
   }
 
-  newState.currentCycleGroup = action.currentCycleGroup;
-  newState.startCycleGroup = action.startCycleGroup;
+  // Get the data mart selected count
+  const dataMartsSelectedCount = Object.keys(dataMarts).length;
+
+  // Get the map of procedure names to item index
+  const map = {};
+  const dataByCycleGroup = [];
+  let cycleGroupItemIndex = 0;
+  allData.forEach((item) => {
+    if (item.cycle_group === currentCycleGroup) {
+      const key = item.calling_proc.toLowerCase();
+      map[key] = cycleGroupItemIndex;
+
+      dataByCycleGroup.push(item);
+      cycleGroupItemIndex++;
+    }
+  });
+
+  // Get the empty result for missing history items
+  const keys = Object.keys(allData[0]);
+  const defaultMissingItem = {};
+  keys.forEach((key) => {
+    defaultMissingItem[key] = '';
+  });
+
+  // Put together the new data
+  let newData = [];
+  controlManager.forEach((item, index) => {
+    if (dataMartsSelectedCount < 1 || objectHasOwnProperty(dataMarts, item.data_mart_name)) {
+      const key = item.procedure_name.toLowerCase();
+      const historyItemIndex = objectHasOwnProperty(map, key) ? map[key] : -1;
+      if (historyItemIndex > -1) {
+        newData.push(dataByCycleGroup[historyItemIndex]);
+      } else {
+        const missingItem = { ...defaultMissingItem };
+        missingItem.id = `${item.procedure_name}_${currentCycleGroup}`;
+        missingItem.calling_proc = item.procedure_name;
+        missingItem.cycle_group = currentCycleGroup;
+        missingItem.data_mart_name = item.data_mart_name;
+        missingItem.table_status = 'NOT STARTED';
+        missingItem.color_status = 2;
+        missingItem.source_server_name = item.source_server_name;
+        missingItem.source_db_name = item.source_db_name;
+        missingItem.source_table_name = item.source_table_name;
+        missingItem.target_table_name = item.target_table_name;
+        missingItem.source_schema_name = item.source_schema_name;
+        missingItem.target_schema_name = item.target_schema_name;
+        missingItem.active = 1;
+        missingItem.original_index = index;
+        newData.push(missingItem);
+      }
+    }
+  });
+
+  if (objectHasOwnProperty(filters, 'active') && filters.active === 0) {
+    newData = newData.filter(item => item.active === 0);
+  }
+
+  if (objectHasOwnProperty(filters, 'query') && !isEmpty(filters.query) && filters.query.length >= 3) {
+    const queryNormalized = filters.query.toLowerCase();
+    newData = newData.filter((item) => {
+      const normalizedValue = `${item.target_schema_name}.${item.target_table_name}`.toLowerCase();
+      return normalizedValue.indexOf(queryNormalized) > -1;
+    });
+  }
+
+  newData.sort(sortMultiple(['color_status', 'original_index']));
+
+  newState.data = newData;
 
   return newState;
 };
