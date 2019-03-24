@@ -13,11 +13,7 @@ import {
 
 const _getData = createDataSelector('collegeScorecard', 'dataLoaded', 'data');
 
-/**
- * Returns the filters from the state.
- * @param {Object} state
- */
-const _getFilters = state => state.collegeScorecard[FILTERS_STATE_KEY_NAME];
+const _getFilters = createGetPropertySelector('collegeScorecard', FILTERS_STATE_KEY_NAME);
 
 const _getSelected = createGetPropertySelector('collegeScorecard', SELECTED_STATE_KEY_NAME);
 

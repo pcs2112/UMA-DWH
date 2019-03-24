@@ -1,14 +1,5 @@
 import { createSelector } from 'reselect';
-import { CYCLE_GROUP_PAGE_SIZE } from 'constants/index';
-
-/**
- * Creates a selector to return the pagination's current cycle group.
- *
- * @param {String} stateName
- * @param {String} propertyName
- */
-export const createGetCurrentCycleGroup = (stateName, propertyName = 'currentCycleGroup') =>
-  state => state[stateName][propertyName] || 0;
+import { CYCLE_GROUP_PAGE_SIZE } from '../constants/index';
 
 /**
  * Creates a selector to return the pagination's current cycle group's start dttm.

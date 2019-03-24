@@ -6,7 +6,7 @@ import {
   createGetItemsSelector,
   createGetPropertySelector
 } from 'javascript-utils/lib/selectors';
-import { createGetCurrentCycleGroup, createGetCurrentCycleGroupStartDttm } from '../../../helpers/selectors';
+import { createGetCurrentCycleGroupStartDttm } from '../../../helpers/selectors';
 import { sortMultiple } from '../../../helpers/utils';
 import etlControlManagerDetails from '../etlControlManagerDetails';
 import {
@@ -50,12 +50,12 @@ export const getSelected = createGetPropertySelector('etlCycleHistory', SELECTED
 /**
  * Returns the start cycle group.
  */
-export const getStartCycleGroup = createGetCurrentCycleGroup('etlCycleHistory', 'startCycleGroup');
+export const getStartCycleGroup = createGetPropertySelector('etlCycleHistory', 'startCycleGroup');
 
 /**
  * Returns the current cycle group.
  */
-export const getCurrentCycleGroup = createGetCurrentCycleGroup('etlCycleHistory', 'currentCycleGroup');
+export const getCurrentCycleGroup = createGetPropertySelector('etlCycleHistory', 'currentCycleGroup');
 
 /**
  * Selector to get the total count of procedures and data marts selected.
@@ -265,8 +265,6 @@ export const getIntervalDuration = createGetPropertySelector('etlCycleHistory', 
  * Returns the cycle date.
  */
 export const getCycleDate = createSelector(
-  [
-    getFilters
-  ],
+  [getFilters],
   filters => filters.cycleDate
 );
