@@ -11,7 +11,7 @@ import { sortMultiple } from '../../../helpers/utils';
 import { getControlManagerDetailsData } from '../etlControlManagerDetails/selectors';
 import { getSelected as getSelectedDataMarts } from '../etlCurrentStatus/selectors';
 import {
-  LIST_ITEM_KEY_NAME, FILTERS_STATE_KEY_NAME, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
+  FILTERS_STATE_KEY_NAME, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
 } from './constants';
 
 /**
@@ -75,16 +75,7 @@ export const getLastSelected = createSelector(
       return undefined;
     }
 
-    const selectedOrderReversed = selectedOrder.reverse();
-    const selectedProcedureName = selectedOrderReversed
-      .find(procedureName => objectHasOwnProperty(selected, procedureName)
-        && objectHasOwnProperty(selected[procedureName], LIST_ITEM_KEY_NAME));
-
-    if (!selectedProcedureName) {
-      return undefined;
-    }
-
-    return selected[selectedProcedureName];
+    return selected[selectedOrder[selectedOrder.length - 1]];
   }
 );
 
