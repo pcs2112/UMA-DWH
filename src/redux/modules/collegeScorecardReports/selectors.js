@@ -26,7 +26,7 @@ export const getCollegeScorecardReportsDropdownOptions = createSelector(
   [_getData],
   data => data.map(report => ({
     key: report.id,
-    value: report.report_name,
+    value: report.id,
     text: report.report_name
   }))
 );
