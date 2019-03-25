@@ -44,12 +44,18 @@ export const getSelected = createGetPropertySelector('etlCycleHistory', SELECTED
 /**
  * Returns the start cycle group.
  */
-export const getStartCycleGroup = createGetPropertySelector('etlCycleHistory', 'startCycleGroup');
+export const getStartCycleGroup = createSelector(
+  [getFilters],
+  filters => filters.startCycleGroup
+);
 
 /**
  * Returns the current cycle group.
  */
-export const getCurrentCycleGroup = createGetPropertySelector('etlCycleHistory', 'currentCycleGroup');
+export const getCurrentCycleGroup = createSelector(
+  [getFilters],
+  filters => filters.currentCycleGroup
+);
 
 /**
  * Selector to get the total count of procedures and data marts selected.
@@ -89,7 +95,10 @@ export const getCurrentCycleGroupStartDttm = createGetCurrentCycleGroupStartDttm
 /**
  * Returns the interval duration from the state.
  */
-export const getIntervalDuration = createGetPropertySelector('etlCycleHistory', 'intervalDuration');
+export const getIntervalDuration = createSelector(
+  [getFilters],
+  filters => filters.intervalDuration
+);
 
 /**
  * Returns the cycle date.

@@ -7,7 +7,7 @@ import {
 } from '../../reducers/itemListSelectReducerFor';
 import { FILTERS_STATE_KEY_NAME } from './constants';
 import { createSetFilterAction } from '../../reducers/itemListFiltersReducerFor';
-import { MAX_FETCH_CYCLE_GROUPS, CURRENT_STATUS_INTERAL_DURATION } from '../../../constants/index';
+import { MAX_FETCH_CYCLE_GROUPS } from '../../../constants/index';
 import { shouldFetchCycle, getNewStartCycleGroup } from '../../../helpers/utils';
 import { getStartCycleGroup, getCurrentCycleGroup, getCycleDate } from './selectors';
 import { fetchCurrentStatus } from '../etlCurrentStatus/actions';
@@ -24,8 +24,7 @@ export const actionTypes = {
   SELECT: 'etlCycleHistory/SELECT',
   UNSELECT: 'etlCycleHistory/UNSELECT',
   UNSELECT_ALL: 'etlCycleHistory/UNSELECT_ALL',
-  SET_FILTERS: 'etlCycleHistory/SET_FILTERS',
-  SET_INTERVAL_DURATION: 'etlCycleHistory/SET_INTERVAL_DURATION'
+  SET_FILTERS: 'etlCycleHistory/SET_FILTERS'
 };
 
 const polling = () => (dispatch, getState) => {
@@ -208,15 +207,6 @@ export const unselectAll = createUnselectAllAction(actionTypes.UNSELECT_ALL);
  * Action to set a list filters.
  */
 export const setFilters = createSetFilterAction(actionTypes.SET_FILTERS, FILTERS_STATE_KEY_NAME);
-
-/**
- * Sets the interval duration
- * @param {Number} intervalDuration
- */
-export const setIntervalDuration = (intervalDuration = CURRENT_STATUS_INTERAL_DURATION) => ({
-  type: actionTypes.SET_INTERVAL_DURATION,
-  intervalDuration
-});
 
 /**
  * Returns the polling actions.

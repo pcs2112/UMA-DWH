@@ -217,7 +217,7 @@ class Home extends Component {
               <Button
                 size="small"
                 style={runCheckButtonCss}
-                disabled={cycleHistorySelectedCount < 1}
+                disabled={cycleHistorySelectedCount < 1 && dataMartsSelectedCount < 1}
                 onClick={unselectAllCycleHistoryData}
               >
                 Uncheck All
@@ -309,7 +309,7 @@ export default withMainLayout(connect(
     selectDataMartData: data => dispatch(etlCurrentStatusRdx.actions.select(data)),
     unselectDataMartData: (id, data) => dispatch(etlCurrentStatusRdx.actions.unselect(id, data)),
     setCycleHistoryIntervalDuration: intervalDuration =>
-      dispatch(etlCycleHistoryRdx.actions.setIntervalDuration(intervalDuration)),
+      dispatch(etlCycleHistoryRdx.actions.setFilters('intervalDuration', intervalDuration)),
     setCycleHistoryFilters: (key, value) => dispatch(etlCycleHistoryRdx.actions.setFilters(key, value)),
     setProcedureHistoryFilters: (serverName, dbName, procedureName, date, months) =>
       dispatch(etlProcedureHistoryRdx.actions.setFilters(serverName, dbName, procedureName, date, months))

@@ -6,6 +6,7 @@ import itemListSelectReducerFor, { getInitialState as itemListSelectInitialState
 import itemListFiltersReducerFor, { getInitialState as filtersInitialState }
   from '../../reducers/itemListFiltersReducerFor';
 import { actionTypes } from './actions';
+import { actionTypes as etlCurrentStatusActionTypes } from '../etlCurrentStatus/actions';
 import {
   LIST_ITEM_KEY_NAME, FILTERS_STATE_KEY_NAME, SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
 } from './constants';
@@ -13,16 +14,16 @@ import {
 const defaultFilters = {
   query: '',
   active: 1,
-  cycleDate: ''
+  cycleDate: '',
+  startCycleGroup: 0,
+  currentCycleGroup: 0,
+  intervalDuration: 15000
 };
 
 // Initial state
 const initialState = Object.assign(
   {
-    allData: false,
-    startCycleGroup: 0,
-    currentCycleGroup: 0,
-    intervalDuration: 15000
+    allData: false
   },
   filtersInitialState(defaultFilters, FILTERS_STATE_KEY_NAME),
   itemListInitialState,
@@ -37,25 +38,18 @@ const itemListSelectReducer = itemListSelectReducerFor(
 const setFilters = itemListFiltersReducerFor(actionTypes, defaultFilters, FILTERS_STATE_KEY_NAME);
 
 // Updates the item which new properties after a successful fetch
-const filterData = (state, action) => {
-  const { filters } = state;
-  let { allData } = state;
-  const {
-    startCycleGroup, currentCycleGroup, dataMarts, controlManager
-  } = action;
-
+const filterDataFromFetch = (state, action) => {
   const newState = {
     ...state,
     dataLoaded: true,
     isFetching: false,
-    fetchingError: initialState.fetchingError,
-    startCycleGroup,
-    currentCycleGroup
+    fetchingError: initialState.fetchingError
   };
 
   if (action.response) {
-    allData = action.response;
-    allData.forEach((item, index) => {
+    const { response, dataMarts, controlManager } = action;
+    newState.allData = [...response];
+    newState.allData.forEach((item, index) => {
       if (item.err_num > 0) {
         item.color_status = -2;
       } else if (item.try_catch_err_id > 0) {
@@ -71,7 +65,24 @@ const filterData = (state, action) => {
       item.original_index = index;
     });
 
-    newState.allData = allData;
+    newState.dataMarts = dataMarts;
+    newState.controlManager = controlManager;
+  }
+
+  return newState;
+};
+
+// Filters the data by the filter values
+const filterData = (state) => {
+  const {
+    allData, filters: { query, active, currentCycleGroup }, dataMarts, controlManager
+  } = state;
+
+  if (allData.length < 1 || controlManager.length < 1) {
+    return {
+      ...state,
+      data: []
+    };
   }
 
   // Get the data mart selected count
@@ -101,9 +112,12 @@ const filterData = (state, action) => {
   // Put together the new data
   let newData = [];
   controlManager.forEach((item, index) => {
+    // Only select items for data marts selected, if none, then all data is selected
     if (dataMartsSelectedCount < 1 || objectHasOwnProperty(dataMarts, item.data_mart_name)) {
       const key = item.procedure_name.toLowerCase();
       const historyItemIndex = objectHasOwnProperty(map, key) ? map[key] : -1;
+
+      // History record found
       if (historyItemIndex > -1) {
         newData.push(dataByCycleGroup[historyItemIndex]);
       } else {
@@ -127,27 +141,31 @@ const filterData = (state, action) => {
     }
   });
 
-  if (objectHasOwnProperty(filters, 'active') && filters.active === 0) {
+  // Filter by active status
+  if (active === 0) {
     newData = newData.filter(item => item.active === 0);
   }
 
-  if (objectHasOwnProperty(filters, 'query') && !isEmpty(filters.query) && filters.query.length >= 3) {
-    const queryNormalized = filters.query.toLowerCase();
+  // Filter by query value
+  if (!isEmpty(query) && query.length >= 3) {
+    const queryNormalized = query.toLowerCase();
     newData = newData.filter((item) => {
       const normalizedValue = `${item.target_schema_name}.${item.target_table_name}`.toLowerCase();
       return normalizedValue.indexOf(queryNormalized) > -1;
     });
   }
 
+  // Sort by color status and original index
   newData.sort(sortMultiple(['color_status', 'original_index']));
 
-  newState.data = newData;
-
-  return newState;
+  return {
+    ...state,
+    data: newData
+  };
 };
 
 /**
- * ETL history reducer.
+ * ETL cycle history reducer.
  *
  * @param {Object} state
  * @param {Object} action
@@ -159,7 +177,9 @@ export default (state = initialState, action) => {
     case actionTypes.FETCH_FAIL:
       return itemListReducer(state, action);
     case actionTypes.FETCH_SUCCESS: {
-      return filterData(setFilters(state, action), action);
+      const newStateWithFilters = setFilters(state, action);
+      const newStateWithFetch = filterDataFromFetch(newStateWithFilters, action);
+      return filterData(newStateWithFetch, action);
     }
     case actionTypes.RESET:
       return itemListReducer(state, action);
@@ -168,17 +188,46 @@ export default (state = initialState, action) => {
         ...state,
         fetchingError: initialState.fetchingError
       };
-    case actionTypes.SET_FILTERS:
-      return setFilters(state, action);
+    case actionTypes.SET_FILTERS: {
+      const newStateWithFilters = setFilters(state, action);
+      return filterData(newStateWithFilters, action);
+    }
     case actionTypes.SELECT:
     case actionTypes.UNSELECT:
-    case actionTypes.UNSELECT_ALL:
       return itemListSelectReducer(state, action);
-    case actionTypes.SET_INTERVAL_DURATION:
-      return {
+    case actionTypes.UNSELECT_ALL: {
+      const newState = itemListSelectReducer(state, action);
+      newState.dataMarts = {};
+      return filterData(newState);
+    }
+
+    // Handle selecting a data mart
+    case etlCurrentStatusActionTypes.SELECT: {
+      const { data } = action;
+      const newState = {
         ...state,
-        intervalDuration: action.intervalDuration
+        dataMarts: {
+          ...state.dataMarts,
+          [data.data_mart_name]: { ...data }
+        }
       };
+
+      return filterData(newState);
+    }
+
+    // Handle unselecting a data mart
+    case etlCurrentStatusActionTypes.UNSELECT: {
+      const { dataMarts } = state;
+      delete (dataMarts[action.keyValue]);
+      const newState = {
+        ...state,
+        dataMarts: {
+          ...dataMarts,
+        }
+      };
+
+      return filterData(newState);
+    }
     default:
       return state;
   }
