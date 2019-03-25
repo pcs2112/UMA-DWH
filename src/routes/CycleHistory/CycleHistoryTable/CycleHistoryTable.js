@@ -158,7 +158,9 @@ class CycleHistoryTable extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.dataMartsSelectedCount !== prevProps.dataMartsSelectedCount
-      || this.props.filters !== prevProps.filters
+      || this.props.filters.cycleDate !== prevProps.filters.cycleDate
+      || this.props.filters.active !== prevProps.filters.active
+      || this.props.filters.query !== prevProps.filters.query
     ) {
       scrollTableToTop('cycle-history-tbl');
     }
