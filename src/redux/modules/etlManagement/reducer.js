@@ -70,6 +70,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.FETCH_BEGIN:
     case actionTypes.FETCH_FAIL:
+    case actionTypes.RESET:
       return itemListReducer(state, action);
     case actionTypes.FETCH_SUCCESS: {
       const newState = setFilters(itemListReducer(state, action), action);
