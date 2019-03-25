@@ -19,10 +19,10 @@ class Filters extends Component {
     return (
       <Form size="small">
         <Form.Group inline>
-          <Form.Field width={10}>
+          <Form.Field width={13}>
             <InputFilter
               defaultValue={query}
-              placeholder="Filter by DATA_MART and PROCEDURE_NAME"
+              placeholder="Filter by DATA_MART_NAME and PROCEDURE_NAME"
               onChange={this.handleQueryFilterOnChange}
             />
           </Form.Field>
