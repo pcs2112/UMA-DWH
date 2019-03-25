@@ -20,7 +20,7 @@ class Filters extends Component {
 
   handleFileFilterOnChange = (value) => {
     const { onFileChange } = this.props;
-    onFileChange('fileName', value);
+    onFileChange(value);
   };
 
   render() {
