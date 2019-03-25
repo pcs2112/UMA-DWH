@@ -58,32 +58,27 @@ const selectAllFromGroupsReducer = (state) => {
 
 // Filters the data
 const filterData = (state, action) => {
-  const { data } = state;
+  const { data, [FILTERS_STATE_KEY_NAME]: { populated, query } } = state;
   let { allData } = state;
 
   if (action.type === actionTypes.FETCH_SUCCESS) {
     allData = data;
   }
 
-  const filters = state[FILTERS_STATE_KEY_NAME];
-  const { populated } = filters;
-
   let newData = [];
 
   if (populated !== 'ALL') {
     newData = allData;
   } else {
-    newData = allData.filter(res => res.per_pop > 0);
+    newData = allData.filter(item => item.per_pop > 0);
   }
 
-  if (objectHasOwnProperty(filters, 'query')
-    && !isEmpty(filters.query)
-    && filters.query.length >= 3) {
-    const queryNormalized = filters.query.toLowerCase();
-    newData = newData.filter((res) => {
-      const normalizedColumnName = `${res.column_name}`.toLowerCase();
-      const normalizedDesc = `${res.entry_name}`.toLowerCase();
-      const normalizedLongDesc = `${res.entry_description}`.toLowerCase();
+  if (!isEmpty(query) && query.length >= 3) {
+    const queryNormalized = query.toLowerCase();
+    newData = newData.filter((item) => {
+      const normalizedColumnName = `${item.column_name}`.toLowerCase();
+      const normalizedDesc = `${item.entry_name}`.toLowerCase();
+      const normalizedLongDesc = `${item.entry_description}`.toLowerCase();
 
       return normalizedColumnName.indexOf(queryNormalized) > -1
         || normalizedDesc.indexOf(queryNormalized) > -1

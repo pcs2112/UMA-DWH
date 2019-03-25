@@ -2,16 +2,19 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Segment
+  Button,
+  Segment,
+  Grid
 } from 'semantic-ui-react';
+import etlManagementRdx from '../../redux/modules/etlManagement';
 import withMainLayout from '../../components/WithMainLayout';
 import withResponsiveContainer from '../../components/WithResponsiveContainer';
 import VirtualTable from '../../components/VirtualTable';
+import Filters from './Filters';
 import globalCss from '../../css/global';
-import etlManagementReduxModule from '../../redux/modules/etlManagement';
 import columns from './columns';
 
-const Table = withResponsiveContainer(VirtualTable, 400, 160);
+const Table = withResponsiveContainer(VirtualTable, 320, 300);
 
 class Management extends Component {
   static propTypes = {
@@ -19,8 +22,10 @@ class Management extends Component {
     isAllDataLoaded: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
     fetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
+    filters: PropTypes.object.isRequired,
     fetchAllData: PropTypes.func.isRequired,
-    // resetAllData: PropTypes.func.isRequired,
+    resetAllData: PropTypes.func.isRequired,
+    setFilter: PropTypes.func.isRequired
   };
 
   static contextTypes = {
@@ -39,12 +44,25 @@ class Management extends Component {
     }
   }
 
+  componentWillUnmount() {
+    const { resetAllData } = this.props;
+    resetAllData();
+  }
+
+  handleViewFilterButton = () => {
+    const { setFilter, filters: { view } } = this.props;
+    const newView = view === '' ? 'ALL' : '';
+    setFilter('view', newView);
+  };
+
   render() {
     const {
       isAllDataLoaded,
       isDataFetching,
       data,
-      fetchingError
+      fetchingError,
+      filters,
+      setFilter
     } = this.props;
     return (
       <div>
@@ -52,6 +70,16 @@ class Management extends Component {
           <h1 style={globalCss.pageHeaderSegmentH1}>
             ETL Management
           </h1>
+        </Segment>
+        <Segment>
+          <Grid>
+            <Grid.Column width={5}>
+              <Filters
+                onQueryChange={setFilter}
+                {...filters}
+              />
+            </Grid.Column>
+          </Grid>
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
           <Table
@@ -62,6 +90,15 @@ class Management extends Component {
             columns={columns}
           />
         </Segment>
+        <Segment>
+          <Button
+            size="small"
+            disabled={isDataFetching}
+            onClick={this.handleViewFilterButton}
+          >
+            {filters.view !== 'ALL' ? 'View All' : 'Exclude Testing'}
+          </Button>
+        </Segment>
       </div>
     );
   }
@@ -71,15 +108,17 @@ export default withMainLayout(connect(
   state => ({
     isDataFetching: state.etlManagement.isFetching,
     isAllDataLoaded: state.etlManagement.dataLoaded,
-    data: etlManagementReduxModule.selectors.getData(state),
-    fetchingError: etlManagementReduxModule.selectors.getFetchingError(state)
+    data: etlManagementRdx.selectors.getData(state),
+    fetchingError: etlManagementRdx.selectors.getFetchingError(state),
+    filters: etlManagementRdx.selectors.getFilters(state)
   }),
   dispatch => ({
     fetchAllData: () => Promise.all([
-      dispatch(etlManagementReduxModule.actions.fetch())
+      dispatch(etlManagementRdx.actions.fetch())
     ]),
     resetAllData: () => {
-      dispatch(etlManagementReduxModule.actions.reset());
-    }
+      dispatch(etlManagementRdx.actions.reset());
+    },
+    setFilter: (key, value) => dispatch(etlManagementRdx.actions.setFilter(key, value))
   })
 )(Management));
