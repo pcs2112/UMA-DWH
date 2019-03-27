@@ -5,7 +5,7 @@ import {
   createGetItemsSelector, createGetPropertySelector
 } from 'javascript-utils/lib/selectors';
 import { DEFAULT_DATE_FORMAT } from '../../../constants';
-import collegeScorecardReduxModule from '../collegeScorecard';
+import collegeScorecardRdx from '../collegeScorecard';
 
 const _getData = createDataSelector('collegeScorecardReports', 'dataLoaded', 'data');
 
@@ -35,7 +35,7 @@ export const getCollegeScorecardReportsDropdownOptions = createSelector(
  * Gets the initial form values for the new report form.
  */
 export const getNewReportFormInitialValues = createSelector(
-  [collegeScorecardReduxModule.selectors.getSelectedColumnNames],
+  [collegeScorecardRdx.selectors.getSelectedColumnNames],
   columns => ({
     columns
   })
@@ -45,7 +45,7 @@ export const getNewReportFormInitialValues = createSelector(
  * Gets the initial form values for the save report form.
  */
 export const getExistingReportFormInitialValues = createSelector(
-  [getCurrentReport, collegeScorecardReduxModule.selectors.getSelectedColumnNames],
+  [getCurrentReport, collegeScorecardRdx.selectors.getSelectedColumnNames],
   (currentReport, columns) => {
     const values = {
       columns
@@ -55,6 +55,24 @@ export const getExistingReportFormInitialValues = createSelector(
       values.report_name = currentReport.report_name;
       values.report_descrip = currentReport.report_descrip;
       values.share_dttm = currentReport.share_dttm ? moment(currentReport.share_dttm).format(DEFAULT_DATE_FORMAT) : '';
+    }
+
+    return values;
+  }
+);
+
+/**
+ * Gets the initial form values for the save report to table form.
+ */
+export const getNewSaveReportTableFormInitialValues = createSelector(
+  [getCurrentReport, collegeScorecardRdx.selectors.getSelectedColumnNames],
+  (currentReport, columns) => {
+    const values = {
+      columns
+    };
+
+    if (currentReport) {
+      values.report_id = currentReport.id;
     }
 
     return values;
