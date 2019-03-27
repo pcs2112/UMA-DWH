@@ -196,6 +196,42 @@ def update_report(user_id, data):
     return fetch_report(user_id, new_data['report_name'])
 
 
+def report_table_exists(report_id, table_schema, table_name):
+    """ Checks if a report table exists. """
+    result = execute_sp(
+        'MWH_FILES.C8_COLLEGE_SCORECARD_TABLE',
+        {
+          'message': 'DOES TABLE EXISTS',
+          'USER_REPORT_ID': str(report_id),
+          'TABLE_SCHEMA': table_schema,
+          'TABLE_NAME': table_name
+        }
+    )
+
+    if len(result) < 1:
+        return False
+
+    return result[0]['row_count'] > 0
+
+
+def save_report_table(report_id, table_schema, table_name):
+    """ Saves the report table. """
+    if report_table_exists(report_id, table_schema, table_name) is False:
+        raise DBException(f'The report already exists.')
+
+    result = execute_sp(
+        'MWH_FILES.C8_COLLEGE_SCORECARD_TABLE',
+        {
+          'message': 'CREATE TABLE USING REPORT XML',
+          'USER_REPORT_ID': str(report_id),
+          'TABLE_SCHEMA': table_schema,
+          'TABLE_NAME': table_name
+        }
+    )
+
+    return result[0]
+
+
 def get_excel_export_data(columns, file_name):
     wb = xlwt.Workbook(encoding='UTF-8')
 
