@@ -179,7 +179,7 @@ class Reporting extends Component {
                 keyName={collegeScorecardRdx.constants.LIST_ITEM_KEY_NAME}
               />
             </Grid.Column>
-            <Grid.Column width={2}>
+            <Grid.Column width={4}>
               <div className={styles.RightColumn}>
                 <DropdownFilter
                   options={collegeScorecardReportsData}
@@ -215,7 +215,7 @@ class Reporting extends Component {
                 </Button>
                 {collegeScorecardSelectedCount > 0 && (
                   <ColumnsList
-                    containerWidth={220}
+                    containerWidth={260}
                     items={collegeScorecardSelectedOrderedData}
                     itemValueKeyName="column_name"
                     onSortEnd={reorderSelectedData}
