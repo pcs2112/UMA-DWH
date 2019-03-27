@@ -153,7 +153,7 @@ class Reporting extends Component {
         </Segment>
         <Segment>
           <Grid>
-            <Grid.Column width={5}>
+            <Grid.Column width={8}>
               <Filters
                 fileOptions={collegeScorecardFilesData}
                 onQueryChange={setFilter}

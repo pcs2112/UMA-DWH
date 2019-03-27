@@ -20,7 +20,7 @@ class Filters extends Component {
     return (
       <Form size="small">
         <Form.Group inline>
-          <Form.Field width={8}>
+          <Form.Field width={10}>
             <DropdownFilter
               defaultValue={fileName}
               options={fileOptions}

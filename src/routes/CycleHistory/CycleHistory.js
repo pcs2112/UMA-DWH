@@ -166,7 +166,7 @@ class Home extends Component {
         </Segment>
         <Segment>
           <Grid>
-            <Grid.Column width={5}>
+            <Grid.Column width={8}>
               <Filters
                 onChange={setCycleHistoryFilters}
                 {...cycleHistoryFilters}

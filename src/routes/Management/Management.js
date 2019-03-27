@@ -73,7 +73,7 @@ class Management extends Component {
         </Segment>
         <Segment>
           <Grid>
-            <Grid.Column width={5}>
+            <Grid.Column width={16}>
               <Filters
                 onQueryChange={setFilter}
                 {...filters}
