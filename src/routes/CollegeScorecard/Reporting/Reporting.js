@@ -29,7 +29,7 @@ const SELECTED_LIMIT = 255;
 const CREATE_REPORT_MODAL = 'CREATE_REPORT_MODAL';
 const UPDATE_REPORT_MODAL = 'UPDATE_REPORT_MODAL';
 const Table = withResponsiveContainer(CheckboxVirtualTable, 320, 300);
-const ColumnsList = withResponsiveContainer(withVirtualSortableList(ColumnsSortableList), 320, 415);
+const ColumnsList = withResponsiveContainer(withVirtualSortableList(ColumnsSortableList), 205, 415);
 
 class Reporting extends Component {
   static propTypes = {
