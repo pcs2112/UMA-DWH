@@ -82,7 +82,7 @@ def fetch_report_by_id(id_, user_id, report_name=''):
     )
 
     if len(result) < 1:
-      return None
+        return None
 
     report = result[0]
 
