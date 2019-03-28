@@ -217,7 +217,7 @@ def report_table_exists(report_id, table_schema, table_name):
 def save_report_table(report_id, table_schema, table_name):
     """ Saves the report table. """
     if report_table_exists(report_id, table_schema, table_name) is False:
-        raise DBValidationException(f'The report already exists.', 'table_name')
+        raise DBValidationException(f'The table name already exists.', 'table_name')
 
     result = execute_sp(
         'MWH_FILES.C8_COLLEGE_SCORECARD_TABLE',

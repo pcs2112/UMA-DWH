@@ -106,7 +106,7 @@ export const saveReportTable = data => ({
     actionTypes.SAVE_REPORT_TABLE_SUCCESS,
     actionTypes.SAVE_REPORT_TABLE_FAIL
   ],
-  makeRequest: client => client.put('/api/college_scorecard/save_report_table', {
+  makeRequest: client => client.post('/api/college_scorecard/save_report_table', {
     data
   })
     .catch(catchValidation)

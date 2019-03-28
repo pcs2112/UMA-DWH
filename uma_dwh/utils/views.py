@@ -1,7 +1,7 @@
 import importlib
 from flask import jsonify, request
 from uma_dwh.exceptions import InvalidUsage
-from uma_dwh.db.exceptions import SPException
+from uma_dwh.db.exceptions import SPException, DBValidationException
 from uma_dwh.db.etl import fetch_error
 
 
@@ -72,3 +72,7 @@ def execute_sp_func_from_view(path, http_method, path_sp_args_map):
             raise InvalidUsage.etl_error(message=e.message)
 
         raise InvalidUsage.etl_error(e.message, fetch_error(e.error_id))
+    except DBValidationException as e:
+        err_response = {}
+        err_response[e.field_name] = e.message
+        raise InvalidUsage.form_validation_error(err_response)

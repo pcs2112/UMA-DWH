@@ -22,6 +22,6 @@ path_sp_args_map = {
   'save_report_table': {
     'module_name': 'uma_dwh.db.college_scorecard',
     'module_func': 'save_report_table',
-    'sp_in_args': ['table_name', 'table_schema']
+    'sp_in_args': ['table_name', 'table_schema', 'report_id']
   }
 }

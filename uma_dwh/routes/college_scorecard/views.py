@@ -9,7 +9,7 @@ from uma_dwh.db.college_scorecard import (
 )
 from uma_dwh.db.users import fetch_user_by_email
 from uma_dwh.exceptions import InvalidUsage
-from uma_dwh.db.exceptions import DBException, DBValidationException
+from uma_dwh.db.exceptions import DBException
 from .api_config import path_sp_args_map
 
 
@@ -101,9 +101,4 @@ def get_report(report_id):
 @nocache
 @jwt_required
 def get_sp_data(path):
-    try:
-        return execute_sp_func_from_view(path, request.method, path_sp_args_map)
-    except DBValidationException as e:
-        err_response = {}
-        err_response[e.field_name] = e.message
-        raise InvalidUsage.form_validation_error(err_response)
+    return execute_sp_func_from_view(path, request.method, path_sp_args_map)

@@ -65,11 +65,9 @@ export const getExistingReportFormInitialValues = createSelector(
  * Gets the initial form values for the save report to table form.
  */
 export const getNewSaveReportTableFormInitialValues = createSelector(
-  [getCurrentReport, collegeScorecardRdx.selectors.getSelectedColumnNames],
-  (currentReport, columns) => {
-    const values = {
-      columns
-    };
+  [getCurrentReport],
+  (currentReport) => {
+    const values = {};
 
     if (currentReport) {
       values.report_id = currentReport.id;
