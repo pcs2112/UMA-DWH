@@ -9,7 +9,7 @@ from uma_dwh.db.college_scorecard import (
 )
 from uma_dwh.db.users import fetch_user_by_email
 from uma_dwh.exceptions import InvalidUsage
-from uma_dwh.db.exceptions import DBException
+from uma_dwh.db.exceptions import DBException, DBValidationException
 from .api_config import path_sp_args_map
 
 
@@ -20,8 +20,8 @@ def get_user_id():
     claims = get_jwt_claims()
     result = fetch_user_by_email(claims['email'])
     if result is None:
-      raise InvalidUsage.unauthorized_request()
-    
+        raise InvalidUsage.unauthorized_request()
+
     return result['id']
 
 
@@ -31,7 +31,7 @@ def post_export():
     body = request.get_json(silent=True)
     in_filename = body['in_filename']
     out_filename = body['out_filename']
-    
+
     # Get export data
     output = get_excel_export_data(body['columns'], in_filename)
 
@@ -39,7 +39,7 @@ def post_export():
     response = Response()
     response.status_code = 200
     response.data = output
-    
+
     mimetype_tuple = mimetypes.guess_type(out_filename)
 
     # HTTP headers for forcing file download
@@ -61,7 +61,7 @@ def post_export():
     response.headers = response_headers
 
     return response
-    
+
 
 @blueprint.route('/api/college_scorecard/reports', methods=('GET',))
 @nocache
@@ -71,7 +71,7 @@ def get_reports():
         return jsonify(fetch_reports(get_user_id()))
     except DBException as e:
         raise InvalidUsage.form_validation_error({'report_name': e.message})
-    
+
 
 @blueprint.route('/api/college_scorecard/reports', methods=('POST', 'PUT',))
 @nocache
@@ -81,11 +81,11 @@ def save_report():
     try:
         if request.method == 'POST':
             return jsonify(create_report(get_user_id(), body))
-        
+
         return jsonify(update_report(get_user_id(), body))
     except DBException as e:
         raise InvalidUsage.form_validation_error({'report_name': e.message})
-    
+
 
 @blueprint.route('/api/college_scorecard/reports/<report_id>', methods=('GET',))
 @nocache
@@ -101,4 +101,9 @@ def get_report(report_id):
 @nocache
 @jwt_required
 def get_sp_data(path):
-    return execute_sp_func_from_view(path, request.method, path_sp_args_map)
+    try:
+        return execute_sp_func_from_view(path, request.method, path_sp_args_map)
+    except DBValidationException as e:
+        err_response = {}
+        err_response[e.field_name] = e.message
+        raise InvalidUsage.form_validation_error(err_response)

@@ -18,5 +18,10 @@ path_sp_args_map = {
     'sp_name': 'MWH_FILES.MANAGE_CollegeScorecard_Console',
     'sp_message': 'LIST DATA',
     'sp_in_args': ['mode', 'filename', 'group']
+  },
+  'save_report_table': {
+    'module_name': 'uma_dwh.db.college_scorecard',
+    'module_func': 'save_report_table',
+    'sp_in_args': ['table_name', 'table_schema']
   }
 }

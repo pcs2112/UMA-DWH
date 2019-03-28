@@ -6,7 +6,7 @@ from pydash.predicates import is_empty
 from .mssql_db import execute_sp
 from uma_dwh.utils import is_float, is_int, is_datetime, list_chunks
 from .etl import execute_admin_console_sp
-from .exceptions import DBException
+from .exceptions import DBException, DBValidationException
 
 cell_width_padding = 367
 max_cell_width = 65535
@@ -217,7 +217,7 @@ def report_table_exists(report_id, table_schema, table_name):
 def save_report_table(report_id, table_schema, table_name):
     """ Saves the report table. """
     if report_table_exists(report_id, table_schema, table_name) is False:
-        raise DBException(f'The report already exists.')
+        raise DBValidationException(f'The report already exists.', 'table_name')
 
     result = execute_sp(
         'MWH_FILES.C8_COLLEGE_SCORECARD_TABLE',

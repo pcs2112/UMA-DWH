@@ -14,7 +14,10 @@ export const actionTypes = {
   CREATE_FAIL: 'collegeScorecardReports/CREATE_FAIL',
   UPDATE_BEGIN: 'collegeScorecardReports/UPDATE_BEGIN',
   UPDATE_SUCCESS: 'collegeScorecardReports/UPDATE_SUCCESS',
-  UPDATE_FAIL: 'collegeScorecardReports/UPDATE_FAIL'
+  UPDATE_FAIL: 'collegeScorecardReports/UPDATE_FAIL',
+  SAVE_REPORT_TABLE_BEGIN: 'collegeScorecardReports/SAVE_REPORT_TABLE_BEGIN',
+  SAVE_REPORT_TABLE_SUCCESS: 'collegeScorecardReports/SAVE_REPORT_TABLE_SUCCESS',
+  SAVE_REPORT_TABLE_FAIL: 'collegeScorecardReports/SAVE_REPORT_TABLE_FAIL'
 };
 
 /**
@@ -87,6 +90,23 @@ export const update = data => ({
     actionTypes.UPDATE_FAIL
   ],
   makeRequest: client => client.put('/api/college_scorecard/reports', {
+    data
+  })
+    .catch(catchValidation)
+});
+
+/**
+ * Action to create save a report table.
+ *
+ * @param {Object} data
+ */
+export const saveReportTable = data => ({
+  types: [
+    actionTypes.SAVE_REPORT_TABLE_BEGIN,
+    actionTypes.SAVE_REPORT_TABLE_SUCCESS,
+    actionTypes.SAVE_REPORT_TABLE_FAIL
+  ],
+  makeRequest: client => client.put('/api/college_scorecard/save_report_table', {
     data
   })
     .catch(catchValidation)

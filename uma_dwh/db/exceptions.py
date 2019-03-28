@@ -10,3 +10,10 @@ class DBException(Exception):
         Exception.__init__(self)
         self.message = message
         self.code = code
+
+
+class DBValidationException(Exception):
+    def __init__(self, message, field_name):
+        Exception.__init__(self)
+        self.message = message
+        self.field_name = field_name
