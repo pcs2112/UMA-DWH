@@ -3,7 +3,7 @@ import io
 import xml.etree.ElementTree as ET
 from pydash.objects import pick, assign
 from pydash.predicates import is_empty
-from .mssql_db import execute_sp
+from .mssql_db import execute_sp, get_sp_result_set
 from uma_dwh.utils import is_float, is_int, is_datetime, list_chunks
 from .etl import execute_admin_console_sp
 from .exceptions import DBException, DBValidationException
@@ -198,7 +198,7 @@ def update_report(user_id, data):
 
 def report_table_exists(report_id, table_schema, table_name):
     """ Checks if a report table exists. """
-    result = execute_sp(
+    results = execute_sp(
         'MWH_FILES.C8_COLLEGE_SCORECARD_TABLE',
         {
           'message': 'DOES TABLE EXISTS',
@@ -208,10 +208,12 @@ def report_table_exists(report_id, table_schema, table_name):
         }
     )
 
-    if len(result) < 1:
+    result = get_sp_result_set(results)
+
+    if not result:
         return False
     
-    row_count = 0 if result[0][0]['row_count'] is None else result[0][0]['row_count']
+    row_count = 0 if result[0]['row_count'] is None else result[0]['row_count']
     return row_count > 0
 
 
@@ -220,7 +222,7 @@ def save_report_table(report_id, table_schema, table_name):
     if report_table_exists(report_id, table_schema, table_name):
         raise DBValidationException(f'The table name already exists.', 'table_name')
 
-    result = execute_sp(
+    results = execute_sp(
         'MWH_FILES.C8_COLLEGE_SCORECARD_TABLE',
         {
           'message': 'CREATE TABLE USING REPORT XML',
@@ -230,7 +232,7 @@ def save_report_table(report_id, table_schema, table_name):
         }
     )
 
-    return result[0]
+    return get_sp_result_set(results)
 
 
 def get_excel_export_data(columns, file_name):
