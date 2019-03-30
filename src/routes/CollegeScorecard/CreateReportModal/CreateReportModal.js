@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Header } from 'semantic-ui-react';
-import { connectModal, hideModal } from 'redux-modal';
+import { connectModal } from 'redux-modal';
 import collegeScorecardReportsReduxModule from '../../../redux/modules/collegeScorecardReports';
 import withReportForm from '../WithReportForm';
 
 const ReportForm = withReportForm('create');
 
 const CreateReportModal = ({
-  name, open, onClose, onSubmit, onSubmitSuccess, initialValues
+  name, open, onClose, onSubmit, initialValues
 }) => (
   <Modal
     open={open}
@@ -24,7 +24,6 @@ const CreateReportModal = ({
         form={`${name}_FORM`}
         initialValues={initialValues}
         onSubmit={onSubmit}
-        onSubmitSuccess={onSubmitSuccess}
       />
     </Modal.Content>
   </Modal>
@@ -35,7 +34,6 @@ CreateReportModal.propTypes = {
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  onSubmitSuccess: PropTypes.func.isRequired,
   initialValues: PropTypes.object.isRequired
 };
 
@@ -46,9 +44,6 @@ export default connectModal(
     initialValues: collegeScorecardReportsReduxModule.selectors.getNewReportFormInitialValues(state)
   }),
   dispatch => ({
-    onSubmit: data => dispatch(collegeScorecardReportsReduxModule.actions.create(data)),
-    onSubmitSuccess: () => {
-      dispatch(hideModal());
-    }
+    onSubmit: data => dispatch(collegeScorecardReportsReduxModule.actions.create(data))
   })
 );

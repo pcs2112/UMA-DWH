@@ -28,7 +28,6 @@ const withUserForm = (scenario) => {
         type="password"
         component={TextField}
         label="Password"
-        autoComplete="new-password"
         required={scenario === 'create'}
       />
       <div className="field">
