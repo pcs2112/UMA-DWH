@@ -202,7 +202,7 @@ def report_table_exists(report_id, table_schema, table_name):
         'MWH_FILES.C8_COLLEGE_SCORECARD_TABLE',
         {
           'message': 'DOES TABLE EXISTS',
-          'USER_REPORT_ID': str(report_id),
+          'USER_REPORT_ID': report_id,
           'TABLE_SCHEMA': table_schema,
           'TABLE_NAME': table_name
         }
@@ -210,20 +210,21 @@ def report_table_exists(report_id, table_schema, table_name):
 
     if len(result) < 1:
         return False
-
-    return result[0]['row_count'] > 0
+    
+    row_count = 0 if result[0][0]['row_count'] is None else result[0][0]['row_count']
+    return row_count > 0
 
 
 def save_report_table(report_id, table_schema, table_name):
     """ Saves the report table. """
-    if report_table_exists(report_id, table_schema, table_name) is False:
+    if report_table_exists(report_id, table_schema, table_name):
         raise DBValidationException(f'The table name already exists.', 'table_name')
 
     result = execute_sp(
         'MWH_FILES.C8_COLLEGE_SCORECARD_TABLE',
         {
           'message': 'CREATE TABLE USING REPORT XML',
-          'USER_REPORT_ID': str(report_id),
+          'USER_REPORT_ID': report_id,
           'TABLE_SCHEMA': table_schema,
           'TABLE_NAME': table_name
         }

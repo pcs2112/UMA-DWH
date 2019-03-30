@@ -5,16 +5,21 @@ from uma_dwh.db.exceptions import SPException, DBValidationException
 from uma_dwh.db.etl import fetch_error
 
 
-def get_sp_func_in_args_from_dict(required_args, args):
+def get_sp_func_in_args_from_dict(required_args, args, as_dict=False):
     """
     Returns the in args for a helper SP function.
     :param required_args:
     :type required_args: list
     :param args:
     :type args: dict
-    :return: List of in arguments for the admin_console_sp function
+    :param as_dict:
+    :type as_dict: bool
+    :return: List or dict of in arguments for the SP function
     """
-    out_args = []
+    if as_dict:
+        out_args = {}
+    else:
+        out_args = []
 
     if len(required_args) > 0:
         for required_arg in required_args:
@@ -24,7 +29,10 @@ def get_sp_func_in_args_from_dict(required_args, args):
                   -1
                 )
 
-            out_args.append(args[required_arg])
+            if as_dict:
+                out_args[required_arg] = args[required_arg]
+            else:
+                out_args.append(args[required_arg])
 
     return out_args
 
@@ -53,10 +61,12 @@ def execute_sp_func_from_view(path, http_method, path_sp_args_map):
         in_args = []
         if 'sp_in_args' in path_data:
             req_args = request.args if http_method == 'GET' else request.get_json(silent=True)
-
+            as_dict = False if 'sp_name' in path_data else True
+            
             in_args = get_sp_func_in_args_from_dict(
               path_data['sp_in_args'],
-              req_args
+              req_args,
+              as_dict
             )
 
         if 'sp_name' in path_data:
@@ -66,7 +76,7 @@ def execute_sp_func_from_view(path, http_method, path_sp_args_map):
               *in_args
             ))
 
-        return jsonify(func(*in_args))
+        return jsonify(func(**in_args))
     except SPException as e:
         if e.error_id == -1:
             raise InvalidUsage.etl_error(message=e.message)
