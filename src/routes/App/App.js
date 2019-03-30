@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
 import { reactRouterFetch } from 'javascript-utils/lib/react-router';
 import { Dimmer, Loader } from 'semantic-ui-react';
-import userModule from 'redux/modules/user';
-import Error from 'routes/Error';
-import NProgress from 'components/NProgress';
+import userModule from '../../redux/modules/user';
+import Error from '../Error';
+import NProgress from '../../components/NProgress';
 
 class App extends Component {
   static propTypes = {

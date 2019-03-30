@@ -58,7 +58,7 @@ def execute_sp_func_from_view(path, http_method, path_sp_args_map):
         func = getattr(module, path_data['module_func'])
 
         #  Get the SP in arguments from the request
-        in_args = []
+        in_args = None
         if 'sp_in_args' in path_data:
             req_args = request.args if http_method == 'GET' else request.get_json(silent=True)
             as_dict = False if 'sp_name' in path_data else True
@@ -70,11 +70,17 @@ def execute_sp_func_from_view(path, http_method, path_sp_args_map):
             )
 
         if 'sp_name' in path_data:
+            if in_args is None:
+                in_args = []
+
             return jsonify(func(
               path_data['sp_name'],
               path_data['sp_message'],
               *in_args
             ))
+
+        if in_args is None:
+          in_args = {}
 
         return jsonify(func(**in_args))
     except SPException as e:

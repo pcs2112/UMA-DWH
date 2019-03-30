@@ -232,7 +232,15 @@ def save_report_table(report_id, table_schema, table_name):
         }
     )
 
-    return get_sp_result_set(results)
+    result = get_sp_result_set(results)
+    if not result:
+        raise DBValidationException(f'The table could not be created.', 'table_name')
+    
+    row_count = 0 if result[0]['row_count'] is None else result[0]['row_count']
+    if row_count < 1:
+        raise DBValidationException(f'The table could not be created.', 'table_name')
+    
+    return result[0]
 
 
 def get_excel_export_data(columns, file_name):
