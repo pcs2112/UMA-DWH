@@ -24,6 +24,7 @@ const UpdateReportModal = ({
         form={`${name}_FORM`}
         initialValues={initialValues}
         onSubmit={onSubmit}
+        onClose={onClose}
       />
     </Modal.Content>
   </Modal>

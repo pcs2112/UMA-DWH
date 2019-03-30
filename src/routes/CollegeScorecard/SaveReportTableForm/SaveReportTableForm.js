@@ -13,6 +13,7 @@ class SaveReportTableForm extends Component {
     submitSucceeded: PropTypes.bool.isRequired,
     handleSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
     tableNameExistsError: PropTypes.bool
   };
 
@@ -46,7 +47,7 @@ class SaveReportTableForm extends Component {
 
   render() {
     const {
-      pristine, submitting, submitSucceeded, handleSubmit, onSubmit
+      pristine, submitting, submitSucceeded, handleSubmit, onSubmit, onClose
     } = this.props;
     const { tableNameExistsError } = this.state;
     return (
@@ -84,15 +85,27 @@ class SaveReportTableForm extends Component {
           required
         />
         <div className="field">
-          <Button
-            type="submit"
-            fluid
-            size="large"
-            primary
-            disabled={pristine || submitting || submitSucceeded}
-          >
-            Submit
-          </Button>
+          {!submitSucceeded && (
+            <Button
+              type="submit"
+              fluid
+              size="large"
+              primary
+              disabled={pristine || submitting || submitSucceeded}
+            >
+              Submit
+            </Button>
+          )}
+          {submitSucceeded && (
+            <Button
+              type="submit"
+              fluid
+              size="large"
+              onClick={onClose}
+            >
+              Close
+            </Button>
+          )}
         </div>
       </Form>
     );

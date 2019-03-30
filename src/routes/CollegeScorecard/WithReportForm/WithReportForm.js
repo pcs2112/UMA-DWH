@@ -8,7 +8,7 @@ import { newReportValidator, existingReportValidator } from './validate';
 
 const withReportForm = (scenario) => {
   const WithReportForm = ({
-    pristine, submitting, submitSucceeded
+    pristine, submitting, submitSucceeded, onClose
   }) => (
     <Fragment>
       {submitSucceeded && (
@@ -28,15 +28,27 @@ const withReportForm = (scenario) => {
       <Field name="report_descrip" component={TextAreaField} label="Report Description" required />
       <Field name="share_dttm" type="date" component={TextField} label="Share Until" />
       <div className="field">
-        <Button
-          type="submit"
-          fluid
-          size="large"
-          primary
-          disabled={(pristine && scenario === 'create') || submitting || submitSucceeded}
-        >
-          Submit
-        </Button>
+        {!submitSucceeded && (
+          <Button
+            type="submit"
+            fluid
+            size="large"
+            primary
+            disabled={(pristine && scenario === 'create') || submitting || submitSucceeded}
+          >
+            Submit
+          </Button>
+        )}
+        {submitSucceeded && (
+          <Button
+            type="submit"
+            fluid
+            size="large"
+            onClick={onClose}
+          >
+            Close
+          </Button>
+        )}
       </div>
     </Fragment>
   );
@@ -44,7 +56,8 @@ const withReportForm = (scenario) => {
   WithReportForm.propTypes = {
     submitting: PropTypes.bool,
     pristine: PropTypes.bool,
-    submitSucceeded: PropTypes.bool
+    submitSucceeded: PropTypes.bool,
+    onClose: PropTypes.func.isRequired
   };
 
   let validate;
