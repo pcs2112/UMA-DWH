@@ -98,7 +98,6 @@ class SaveReportTableForm extends Component {
           )}
           {submitSucceeded && (
             <Button
-              type="submit"
               fluid
               size="large"
               onClick={onClose}
