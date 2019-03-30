@@ -67,7 +67,9 @@ export const getExistingReportFormInitialValues = createSelector(
 export const getNewSaveReportTableFormInitialValues = createSelector(
   [getCurrentReport],
   (currentReport) => {
-    const values = {};
+    const values = {
+      overwrite: 0
+    };
 
     if (currentReport) {
       values.report_id = currentReport.id;

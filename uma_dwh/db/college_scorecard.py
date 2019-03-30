@@ -217,9 +217,9 @@ def report_table_exists(report_id, table_schema, table_name):
     return row_count > 0
 
 
-def save_report_table(report_id, table_schema, table_name):
+def save_report_table(report_id, table_schema, table_name, overwrite=0):
     """ Saves the report table. """
-    if report_table_exists(report_id, table_schema, table_name):
+    if overwrite == 0 and report_table_exists(report_id, table_schema, table_name):
         raise DBValidationException(f'The table name already exists.', 'table_name')
 
     results = execute_sp(
