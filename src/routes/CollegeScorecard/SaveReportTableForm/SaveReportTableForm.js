@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { reduxForm, Field, getFormSubmitErrors } from 'redux-form';
 import { connect } from 'react-redux';
 import { Form, Button, Message } from 'semantic-ui-react';
+import { isEmpty } from 'javascript-utils/lib/utils';
 import { TextField, CheckBoxField } from '../../../components/ReduxForm';
+import FormError from '../../../components/FormError';
 import { newReportTableValidator } from './validate';
 
 class SaveReportTableForm extends Component {
@@ -11,6 +13,7 @@ class SaveReportTableForm extends Component {
     pristine: PropTypes.bool.isRequired,
     submitting: PropTypes.bool.isRequired,
     submitSucceeded: PropTypes.bool.isRequired,
+    error: PropTypes.string,
     handleSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
@@ -47,7 +50,7 @@ class SaveReportTableForm extends Component {
 
   render() {
     const {
-      pristine, submitting, submitSucceeded, handleSubmit, onSubmit, onClose
+      pristine, submitting, submitSucceeded, error, handleSubmit, onSubmit, onClose
     } = this.props;
     const { tableNameExistsError } = this.state;
     return (
@@ -56,6 +59,7 @@ class SaveReportTableForm extends Component {
         autoComplete="off"
         disabled={submitSucceeded}
         success={submitSucceeded}
+        error={!isEmpty(error)}
       >
         {submitSucceeded && (
           <Message
@@ -63,6 +67,7 @@ class SaveReportTableForm extends Component {
             content="The table was created successfully."
           />
         )}
+        {error && <FormError error={error} />}
         <Field
           name="table_name"
           type="text"
