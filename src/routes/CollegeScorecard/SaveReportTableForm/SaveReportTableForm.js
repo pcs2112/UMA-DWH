@@ -69,6 +69,14 @@ class SaveReportTableForm extends Component {
         )}
         {error && <FormError error={error} />}
         <Field
+          name="table_schema"
+          type="text"
+          component={TextField}
+          label="Table Schema"
+          required
+          readOnly
+        />
+        <Field
           name="table_name"
           type="text"
           component={TextField}
@@ -82,13 +90,6 @@ class SaveReportTableForm extends Component {
             label="Check to overwrite the existing table"
           />
         )}
-        <Field
-          name="table_schema"
-          type="text"
-          component={TextField}
-          label="Table Schema"
-          required
-        />
         <div className="field">
           {!submitSucceeded && (
             <Button

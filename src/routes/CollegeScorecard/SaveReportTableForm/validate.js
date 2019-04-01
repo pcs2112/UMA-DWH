@@ -4,6 +4,5 @@ import {
 } from 'javascript-utils/lib/validation';
 
 export const newReportTableValidator = memoize(10)(createValidator({
-  table_name: required(),
-  table_schema: required()
+  table_name: required()
 }));

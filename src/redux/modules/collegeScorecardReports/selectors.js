@@ -68,7 +68,8 @@ export const getNewSaveReportTableFormInitialValues = createSelector(
   [getCurrentReport],
   (currentReport) => {
     const values = {
-      overwrite: false
+      overwrite: false,
+      table_schema: 'MWH_FILES'
     };
 
     if (currentReport) {
