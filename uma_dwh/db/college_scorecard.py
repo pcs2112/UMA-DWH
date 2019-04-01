@@ -102,19 +102,17 @@ def fetch_reports(user_id):
     )
 
 
-def create_report(user_id, data):
+def create_report(data):
     """
     Creates a report and returns the report's information.
-    :param user_id: User ID
-    :type user_id: str
     :param data: Report data
     :type data: dict
     """
-    if not is_empty(data['report_name']) and report_exists(user_id, data['report_name']):
-        raise DBException(f"The report \"{data['report_name']}\" already exists.")
+    if not is_empty(data['report_name']) and report_exists(data['user_id'], data['report_name']):
+        raise DBValidationException(f"The report \"{data['report_name']}\" already exists.", 'report_name')
 
     required_data = {
-        'user_id': user_id,
+        'user_id': data['user_id'],
         'report_name': '',
         'report_descrip': '',
         'share_dttm': '',
@@ -145,23 +143,21 @@ def create_report(user_id, data):
         get_columns_xml(new_data['columns'])
     )
 
-    return fetch_report(user_id, new_data['report_name'])
+    return fetch_report(new_data['user_id'], new_data['report_name'])
 
 
-def update_report(user_id, data):
+def update_report(data):
     """
     Updates a report and returns the report's information.
-    :param user_id: User ID
-    :type user_id: str
     :param data: New report data
     :type data: dict
     """
-    report = fetch_report(user_id, data['report_name'])
+    report = fetch_report(data['user_id'], data['report_name'])
     if report is None:
-        raise DBException(f'The report is invalid.')
+        raise DBValidationException(f'The report is invalid.', 'report_name')
 
     current_data = {
-        'user_id': user_id,
+        'user_id': data['user_id'],
         'report_name': report['report_name'],
         'report_descrip': report['report_descrip'],
         'share_dttm': report['share_dttm'],
@@ -193,7 +189,7 @@ def update_report(user_id, data):
         get_columns_xml(new_data['columns'])
     )
 
-    return fetch_report(user_id, new_data['report_name'])
+    return fetch_report(new_data['user_id'], new_data['report_name'])
 
 
 def report_table_exists(report_id, table_schema, table_name):
@@ -207,7 +203,7 @@ def report_table_exists(report_id, table_schema, table_name):
           'TABLE_NAME': table_name
         }
     )
-
+    
     result = get_sp_result_set(results)
 
     if not result:
@@ -219,10 +215,10 @@ def report_table_exists(report_id, table_schema, table_name):
 
 def save_report_table(report_id, table_schema, table_name, overwrite=0):
     """ Saves the report table. """
-    if overwrite == 0 and report_table_exists(report_id, table_schema, table_name):
+    if overwrite is False and report_table_exists(report_id, table_schema, table_name):
         raise DBValidationException(f'The table name already exists.', 'table_name')
 
-    results = execute_sp(
+    return execute_sp(
         'MWH_FILES.C8_COLLEGE_SCORECARD_TABLE',
         {
           'message': 'CREATE TABLE USING REPORT XML',
@@ -231,6 +227,9 @@ def save_report_table(report_id, table_schema, table_name, overwrite=0):
           'TABLE_NAME': table_name
         }
     )
+    
+    """
+    print(results)
 
     result = get_sp_result_set(results)
     if not result:
@@ -241,6 +240,7 @@ def save_report_table(report_id, table_schema, table_name, overwrite=0):
         raise DBValidationException(f'The table could not be created.', 'table_name')
     
     return result[0]
+    """
 
 
 def get_excel_export_data(columns, file_name):

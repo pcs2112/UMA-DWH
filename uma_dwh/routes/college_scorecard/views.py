@@ -1,28 +1,16 @@
 import mimetypes
 from flask import Blueprint, request, Response, jsonify
 from werkzeug.datastructures import Headers
-from flask_jwt_extended import jwt_required, get_jwt_claims
+from flask_jwt_extended import jwt_required
 from uma_dwh.utils.nocache import nocache
-from uma_dwh.utils.views import execute_sp_func_from_view
+from uma_dwh.utils.views import execute_sp_func_from_view, get_user_id
 from uma_dwh.db.college_scorecard import (
-  get_excel_export_data, fetch_reports, fetch_report_by_id, create_report, update_report
+  get_excel_export_data, fetch_report_by_id
 )
-from uma_dwh.db.users import fetch_user_by_email
-from uma_dwh.exceptions import InvalidUsage
-from uma_dwh.db.exceptions import DBException
 from .api_config import path_sp_args_map
 
 
 blueprint = Blueprint('college_scorecard', __name__)
-
-
-def get_user_id():
-    claims = get_jwt_claims()
-    result = fetch_user_by_email(claims['email'])
-    if result is None:
-        raise InvalidUsage.unauthorized_request()
-
-    return result['id']
 
 
 @blueprint.route('/api/college_scorecard/export', methods=('POST',))
@@ -63,41 +51,14 @@ def post_export():
     return response
 
 
-@blueprint.route('/api/college_scorecard/reports', methods=('GET',))
-@nocache
-@jwt_required
-def get_reports():
-    try:
-        return jsonify(fetch_reports(get_user_id()))
-    except DBException as e:
-        raise InvalidUsage.form_validation_error({'report_name': e.message})
-
-
-@blueprint.route('/api/college_scorecard/reports', methods=('POST', 'PUT',))
-@nocache
-@jwt_required
-def save_report():
-    body = request.get_json(silent=True)
-    try:
-        if request.method == 'POST':
-            return jsonify(create_report(get_user_id(), body))
-
-        return jsonify(update_report(get_user_id(), body))
-    except DBException as e:
-        raise InvalidUsage.form_validation_error({'report_name': e.message})
-
-
 @blueprint.route('/api/college_scorecard/reports/<report_id>', methods=('GET',))
 @nocache
 @jwt_required
 def get_report(report_id):
-    try:
-        return jsonify(fetch_report_by_id(report_id, get_user_id()))
-    except DBException as e:
-        raise InvalidUsage.form_validation_error({'report_name': e.message})
+    return jsonify(fetch_report_by_id(report_id, get_user_id()))
 
 
-@blueprint.route('/api/college_scorecard/<path:path>', methods=('GET', 'POST'))
+@blueprint.route('/api/college_scorecard/<path:path>', methods=('GET', 'POST', 'PUT',))
 @nocache
 @jwt_required
 def get_sp_data(path):

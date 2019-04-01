@@ -68,7 +68,7 @@ export const getNewSaveReportTableFormInitialValues = createSelector(
   [getCurrentReport],
   (currentReport) => {
     const values = {
-      overwrite: 0
+      overwrite: false
     };
 
     if (currentReport) {

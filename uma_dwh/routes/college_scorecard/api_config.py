@@ -22,6 +22,27 @@ path_sp_args_map = {
   'save_report_table': {
     'module_name': 'uma_dwh.db.college_scorecard',
     'module_func': 'save_report_table',
-    'sp_in_args': ['table_name', 'table_schema', 'report_id']
+    'sp_in_args': ['table_name', 'table_schema', 'report_id', 'overwrite']
+  },
+  'reports': {
+    'GET': {
+      'module_name': 'uma_dwh.db.college_scorecard',
+      'module_func': 'fetch_reports',
+      'sp_in_args_inject_user': 'user_id'
+    },
+    'POST': {
+      'module_name': 'uma_dwh.db.college_scorecard',
+      'module_func': 'create_report',
+      'sp_in_args': ['report_name', 'report_descrip', 'share_dttm', 'columns'],
+      'sp_in_args_inject_user': 'user_id',
+      'sp_in_args_as_payload': True
+    },
+    'PUT': {
+      'module_name': 'uma_dwh.db.college_scorecard',
+      'module_func': 'update_report',
+      'sp_in_args': ['report_name', 'report_descrip', 'share_dttm', 'columns'],
+      'sp_in_args_inject_user': 'user_id',
+      'sp_in_args_as_payload': True
+    }
   }
 }
