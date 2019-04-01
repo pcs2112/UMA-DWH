@@ -69,7 +69,7 @@ export const getNewSaveReportTableFormInitialValues = createSelector(
   (currentReport) => {
     const values = {
       overwrite: false,
-      table_schema: 'MWH_FILES'
+      table_schema: 'COLLEGE_SC'
     };
 
     if (currentReport) {
