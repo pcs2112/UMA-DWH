@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Header } from 'semantic-ui-react';
-import { connectModal, hideModal } from 'redux-modal';
-import users from 'redux/modules/users';
+import { connectModal } from 'redux-modal';
+import users from '../../../../redux/modules/users';
 import withUserForm from '../WithUserForm';
 
 const UserForm = withUserForm('create');
 
 const CreateUserModal = ({
-  name, open, onClose, onSubmit, onSubmitSuccess
+  name, open, onClose, onSubmit
 }) => (
   <Modal
     open={open}
@@ -23,7 +23,7 @@ const CreateUserModal = ({
       <UserForm
         form={`${name}_FORM`}
         onSubmit={onSubmit}
-        onSubmitSuccess={onSubmitSuccess}
+        onClose={onClose}
       />
     </Modal.Content>
   </Modal>
@@ -33,8 +33,7 @@ CreateUserModal.propTypes = {
   name: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  onSubmitSuccess: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired
 };
 
 export default connectModal(
@@ -42,9 +41,6 @@ export default connectModal(
   'modal',
   null,
   dispatch => ({
-    onSubmit: data => dispatch(users.actions.createUser(data)),
-    onSubmitSuccess: () => {
-      dispatch(hideModal());
-    }
+    onSubmit: data => dispatch(users.actions.createUser(data))
   })
 );

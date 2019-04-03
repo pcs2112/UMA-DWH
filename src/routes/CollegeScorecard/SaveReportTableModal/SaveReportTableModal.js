@@ -2,12 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Header } from 'semantic-ui-react';
 import { connectModal } from 'redux-modal';
-import collegeScorecardReportsReduxModule from '../../../redux/modules/collegeScorecardReports';
-import withReportForm from '../WithReportForm';
+import collegeScorecardReportsRdx from '../../../redux/modules/collegeScorecardReports';
+import SaveReportTableForm from '../SaveReportTableForm';
 
-const ReportForm = withReportForm('create');
-
-const CreateReportModal = ({
+const SaveReportTableModal = ({
   name, open, onClose, onSubmit, initialValues
 }) => (
   <Modal
@@ -18,9 +16,9 @@ const CreateReportModal = ({
     dimmer="inverted"
     closeOnDimmerClick={false}
   >
-    <Header content={<h1>SAVE NEW REPORT</h1>} />
+    <Header content={<h1>SAVE REPORT IN TABLE</h1>} />
     <Modal.Content>
-      <ReportForm
+      <SaveReportTableForm
         form={`${name}_FORM`}
         initialValues={initialValues}
         onSubmit={onSubmit}
@@ -30,7 +28,7 @@ const CreateReportModal = ({
   </Modal>
 );
 
-CreateReportModal.propTypes = {
+SaveReportTableModal.propTypes = {
   name: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
@@ -39,12 +37,12 @@ CreateReportModal.propTypes = {
 };
 
 export default connectModal(
-  CreateReportModal,
+  SaveReportTableModal,
   'modal',
   state => ({
-    initialValues: collegeScorecardReportsReduxModule.selectors.getNewReportFormInitialValues(state)
+    initialValues: collegeScorecardReportsRdx.selectors.getNewSaveReportTableFormInitialValues(state)
   }),
   dispatch => ({
-    onSubmit: data => dispatch(collegeScorecardReportsReduxModule.actions.create(data))
+    onSubmit: data => dispatch(collegeScorecardReportsRdx.actions.saveReportTable(data))
   })
 );

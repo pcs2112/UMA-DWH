@@ -21,6 +21,7 @@ import Filters from './Filters';
 import ColumnsSortableList from '../ColumnsSortableList';
 import CreateReportModal from '../CreateReportModal';
 import UpdateReportModal from '../UpdateReportModal';
+import SaveReportTableModal from '../SaveReportTableModal';
 import DropdownFilter from '../../../components/DropdownFilter';
 import columns from './columns';
 import styles from './styles.less';
@@ -28,8 +29,9 @@ import styles from './styles.less';
 const SELECTED_LIMIT = 255;
 const CREATE_REPORT_MODAL = 'CREATE_REPORT_MODAL';
 const UPDATE_REPORT_MODAL = 'UPDATE_REPORT_MODAL';
+const SAVE_REPORT_TABLE_MODAL = 'SAVE_REPORT_TABLE_MODAL';
 const Table = withResponsiveContainer(CheckboxVirtualTable, 320, 300);
-const ColumnsList = withResponsiveContainer(withVirtualSortableList(ColumnsSortableList), 320, 415);
+const ColumnsList = withResponsiveContainer(withVirtualSortableList(ColumnsSortableList), 205, 415);
 
 class Reporting extends Component {
   static propTypes = {
@@ -179,7 +181,7 @@ class Reporting extends Component {
                 keyName={collegeScorecardRdx.constants.LIST_ITEM_KEY_NAME}
               />
             </Grid.Column>
-            <Grid.Column width={2}>
+            <Grid.Column width={4}>
               <div className={styles.RightColumn}>
                 <DropdownFilter
                   options={collegeScorecardReportsData}
@@ -215,7 +217,7 @@ class Reporting extends Component {
                 </Button>
                 {collegeScorecardSelectedCount > 0 && (
                   <ColumnsList
-                    containerWidth={220}
+                    containerWidth={260}
                     items={collegeScorecardSelectedOrderedData}
                     itemValueKeyName="column_name"
                     onSortEnd={reorderSelectedData}
@@ -228,14 +230,14 @@ class Reporting extends Component {
         <Segment>
           <Button
             size="small"
-            disabled={isDataFetching}
+            disabled={isDataFetching || isExporting}
             onClick={collegeScorecardSelectedCount < 1 ? selectAllData : unselectAllData}
           >
             {collegeScorecardSelectedCount < 1 ? 'Check All' : `Uncheck All (${collegeScorecardSelectedCount})`}
           </Button>
           <Button
             size="small"
-            disabled={isDataFetching}
+            disabled={isDataFetching || isExporting}
             onClick={this.handleViewFilterButton}
           >
             {collegeScorecardFilters.populated === '' ? 'View All' : 'View Populated'}
@@ -244,35 +246,42 @@ class Reporting extends Component {
             size="small"
             as={Link}
             to="/college_scorecard/groups"
+            disabled={isDataFetching || isExporting}
           >
             View Groups
           </Button>
-          {collegeScorecardSelectedCount <= SELECTED_LIMIT && (
-            <Button
-              size="small"
-              primary
-              loading={isExporting}
-              disabled={isDataFetching || collegeScorecardSelectedCount < 1 || isExporting}
-              onClick={this.handleExportButton}
-            >
-              Export
-            </Button>
-          )}
-          {collegeScorecardSelectedCount > SELECTED_LIMIT && (
-            <Button
-              size="small"
-              color="red"
-              disabled
-            >
-              Export
-            </Button>
-          )}
+          <Button
+            size="small"
+            primary
+            loading={isExporting}
+            disabled={isDataFetching || isExporting || collegeScorecardSelectedCount < 1}
+            onClick={this.handleExportButton}
+          >
+            Export
+          </Button>
+          <Button
+            size="small"
+            color="green"
+            onClick={this.handleShowModal}
+            modalname={SAVE_REPORT_TABLE_MODAL}
+            disabled={
+              isDataFetching
+              || isExporting
+              || !collegeScorecardCurrentReport
+              || collegeScorecardSelectedCount > SELECTED_LIMIT
+            }
+          >
+            Save to Table
+          </Button>
         </Segment>
         <CreateReportModal
           name={CREATE_REPORT_MODAL}
         />
         <UpdateReportModal
           name={UPDATE_REPORT_MODAL}
+        />
+        <SaveReportTableModal
+          name={SAVE_REPORT_TABLE_MODAL}
         />
       </div>
     );

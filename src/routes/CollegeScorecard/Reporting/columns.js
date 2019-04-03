@@ -5,7 +5,7 @@ export default [
   },
   {
     dataKey: 'column_name',
-    width: 200,
+    width: 260,
     label: 'COLUMN_NAME'
   },
   {

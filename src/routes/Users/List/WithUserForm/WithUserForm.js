@@ -1,16 +1,22 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm, Field } from 'redux-form';
-import { Button } from 'semantic-ui-react';
-import withBasicForm from 'components/WithBasicForm';
-import { TextField } from 'components/ReduxForm';
+import { Button, Message } from 'semantic-ui-react';
+import withBasicForm from '../../../../components/WithBasicForm';
+import { TextField } from '../../../../components/ReduxForm';
 import { newUserValidator, existingUserValidator } from './validate';
 
 const withUserForm = (scenario) => {
   const WithUserForm = ({
-    pristine, submitting
+    pristine, submitting, submitSucceeded, onClose
   }) => (
     <Fragment>
+      {submitSucceeded && (
+        <Message
+          success
+          content="The user account was saved successfully."
+        />
+      )}
       <Field name="employee_first_name" type="text" component={TextField} label="First Name" required />
       <Field name="employee_last_name" type="text" component={TextField} label="Last Name" required />
       <Field
@@ -28,20 +34,28 @@ const withUserForm = (scenario) => {
         type="password"
         component={TextField}
         label="Password"
-        autoComplete="new-password"
         required={scenario === 'create'}
       />
       <div className="field">
-        <Button type="submit" fluid size="large" primary disabled={pristine || submitting}>
-          Submit
-        </Button>
+        {!submitSucceeded && (
+          <Button type="submit" fluid size="large" primary disabled={pristine || submitting}>
+            Submit
+          </Button>
+        )}
+        {submitSucceeded && (
+          <Button fluid size="large" onClick={onClose}>
+            Close
+          </Button>
+        )}
       </div>
     </Fragment>
   );
 
   WithUserForm.propTypes = {
     submitting: PropTypes.bool,
-    pristine: PropTypes.bool
+    pristine: PropTypes.bool,
+    submitSucceeded: PropTypes.bool,
+    onClose: PropTypes.func.isRequired
   };
 
   let validate;

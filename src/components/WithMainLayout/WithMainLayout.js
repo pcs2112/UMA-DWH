@@ -4,14 +4,19 @@ import { connect } from 'react-redux';
 import { Route, Redirect } from 'react-router-dom';
 import { getDisplayName } from 'javascript-utils/lib/react';
 import { Grid } from 'semantic-ui-react';
-import userModule from 'redux/modules/user';
-import MainMenu from 'components/MainMenu';
+import userModule from '../../redux/modules/user';
+import MainMenu from '../MainMenu';
 import { mainContentCss } from './css';
 
 export const withMainLayout = (WrappedComponent) => {
-  const WithMainLayout = ({
-    location, isLoggedIn, onLogout, ...rest
-  }) => (
+  const WithMainLayout = (
+    {
+      isLoggedIn, onLogout, ...rest
+    },
+    {
+      router: { history: { location } }
+    }
+  ) => (
     <Route
       {...rest}
       render={({ staticContext }) => {
@@ -42,9 +47,16 @@ export const withMainLayout = (WrappedComponent) => {
   );
 
   WithMainLayout.propTypes = {
-    location: PropTypes.object.isRequired,
     isLoggedIn: PropTypes.bool.isRequired,
     onLogout: PropTypes.func.isRequired
+  };
+
+  WithMainLayout.contextTypes = {
+    router: PropTypes.shape({
+      history: PropTypes.shape({
+        location: PropTypes.object.isRequired
+      }).isRequired
+    }).isRequired
   };
 
   WithMainLayout.displayName = `WithMainLayout(${getDisplayName(WrappedComponent)})`;

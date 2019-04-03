@@ -7,9 +7,14 @@ import { Grid } from 'semantic-ui-react';
 import { mainColStyles, mainGridStyles } from './css';
 
 export const withGuestLayout = (WrappedComponent) => {
-  const WithGuestLayout = ({
-    location, isLoggedIn, ...rest
-  }) => (
+  const WithGuestLayout = (
+    {
+      isLoggedIn, ...rest
+    },
+    {
+      router: { history: { location } }
+    }
+  ) => (
     <Route
       {...rest}
       render={({ staticContext }) => {
@@ -37,6 +42,14 @@ export const withGuestLayout = (WrappedComponent) => {
   WithGuestLayout.propTypes = {
     location: PropTypes.object.isRequired,
     isLoggedIn: PropTypes.bool.isRequired
+  };
+
+  WithGuestLayout.contextTypes = {
+    router: PropTypes.shape({
+      history: PropTypes.shape({
+        location: PropTypes.object.isRequired
+      }).isRequired
+    }).isRequired
   };
 
   WithGuestLayout.displayName = `WithGuestLayout(${getDisplayName(WrappedComponent)})`;
