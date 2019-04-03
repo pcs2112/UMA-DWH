@@ -72,6 +72,15 @@ export default (state = initialState, action) => {
         ...state,
         current: undefined
       };
+    case actionTypes.SAVE_REPORT_TABLE_SUCCESS: {
+      const { response, tableSchema, tableName } = action;
+      return {
+        ...state,
+        newTableSchema: tableSchema,
+        newTableName: tableName,
+        newReportRowCount: response.row_count
+      };
+    }
     default:
       return state;
   }

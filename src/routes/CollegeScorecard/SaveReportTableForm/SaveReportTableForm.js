@@ -17,7 +17,10 @@ class SaveReportTableForm extends Component {
     handleSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
-    tableNameExistsError: PropTypes.bool
+    tableNameExistsError: PropTypes.bool,
+    createdTableSchema: PropTypes.string.isRequired,
+    createdTableName: PropTypes.string.isRequired,
+    insertedRowCount: PropTypes.number.isRequired
   };
 
   static defaultProps = {
@@ -50,7 +53,16 @@ class SaveReportTableForm extends Component {
 
   render() {
     const {
-      pristine, submitting, submitSucceeded, error, handleSubmit, onSubmit, onClose
+      pristine,
+      submitting,
+      submitSucceeded,
+      error,
+      handleSubmit,
+      onSubmit,
+      onClose,
+      createdTableSchema,
+      createdTableName,
+      insertedRowCount
     } = this.props;
     const { tableNameExistsError } = this.state;
     return (
@@ -64,7 +76,9 @@ class SaveReportTableForm extends Component {
         {submitSucceeded && (
           <Message
             success
-            content="The table was created successfully."
+            content={
+              `[${createdTableSchema}].[${createdTableName}] with ${insertedRowCount} records was created successfully.`
+            }
           />
         )}
         {error && <FormError error={error} />}
@@ -131,7 +145,10 @@ export default connect(
   (state, { form }) => {
     const errors = getFormSubmitErrors(form)(state);
     return {
-      tableNameExistsError: errors && errors.table_name === 'The table name already exists.'
+      tableNameExistsError: errors && errors.table_name === 'The table name already exists.',
+      createdTableSchema: state.collegeScorecardReports.newTableSchema || '',
+      createdTableName: state.collegeScorecardReports.newTableName || '',
+      insertedRowCount: state.collegeScorecardReports.newReportRowCount || 0
     };
   }
 )(connForm);

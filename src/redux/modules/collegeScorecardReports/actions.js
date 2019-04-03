@@ -109,5 +109,9 @@ export const saveReportTable = data => ({
   makeRequest: client => client.post('/api/college_scorecard/save_report_table', {
     data
   })
-    .catch(catchValidation)
+    .catch(catchValidation),
+  payload: {
+    tableSchema: data.table_schema,
+    tableName: data.table_name
+  }
 });
