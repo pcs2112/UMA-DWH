@@ -203,12 +203,12 @@ def report_table_exists(report_id, table_schema, table_name):
           'TABLE_NAME': table_name
         }
     )
-    
+
     result = get_sp_result_set(results)
 
     if not result:
         return False
-    
+
     row_count = 0 if result[0]['row_count'] is None else result[0]['row_count']
     return row_count > 0
 
@@ -218,7 +218,7 @@ def save_report_table(report_id, table_schema, table_name, overwrite=0):
     if overwrite is False and report_table_exists(report_id, table_schema, table_name):
         raise DBValidationException(f'The table name already exists.', 'table_name')
 
-    return execute_sp(
+    results = execute_sp(
         'MWH_FILES.C8_COLLEGE_SCORECARD_TABLE',
         {
           'message': 'CREATE TABLE USING REPORT XML',
@@ -227,20 +227,16 @@ def save_report_table(report_id, table_schema, table_name, overwrite=0):
           'TABLE_NAME': table_name
         }
     )
-    
-    """
-    print(results)
 
     result = get_sp_result_set(results)
     if not result:
         raise DBValidationException(f'The table could not be created.', 'table_name')
-    
+
     row_count = 0 if result[0]['row_count'] is None else result[0]['row_count']
     if row_count < 1:
         raise DBValidationException(f'The table could not be created.', 'table_name')
-    
+
     return result[0]
-    """
 
 
 def get_excel_export_data(columns, file_name):

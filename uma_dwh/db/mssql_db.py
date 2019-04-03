@@ -168,7 +168,7 @@ def execute_sp(sp_name, in_args, out_arg=None, as_dict=True):
     :param as_dict: Return result set as a Dictionary
     :type sp_name: str
     :type in_args: dict
-    :type out_arg: str
+    :type out_arg: str or None
     :type as_dict: boolean
     :return: Stored procedure result sets and out argument
     :rtype: list
