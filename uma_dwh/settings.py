@@ -21,7 +21,7 @@ class Settings(object):
     DB_USER = os.getenv('DB_USER')
     DB_PASSWORD = os.getenv('DB_PASSWORD')
     DB_DRIVER = os.getenv('DB_DRIVER')
-    DB_TRUSTED_CONNECTION = os.getenv('DB_TRUSTED_CONNECTION') == 1
+    DB_TRUSTED_CONNECTION = os.getenv('DB_TRUSTED_CONNECTION') == '1'
     SECRET_KEY = 'DWH-ADMIN-CONSOLE-SECRET'
     JWT_SECRET_KEY = 'DWH-ADMIN-CONSOLE-JWT'
     JWT_TOKEN_LOCATION = ['headers']
@@ -39,7 +39,7 @@ class Settings(object):
     ]
     OPSGENIE_API_KEY = '602e1fed-1cee-496a-8454-5d63520bfba4'
     OPSGENIE_GENIE_KEY = 'GenieKey'
-    OPSGENIE_ENABLED = os.getenv('OPSGENIE_ENABLED') == 1
+    OPSGENIE_ENABLED = os.getenv('OPSGENIE_ENABLED') == '1'
     ADMINS = [
       'cmatula@ultimatemedical.edu'
     ]
