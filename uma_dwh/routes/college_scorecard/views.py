@@ -1,12 +1,10 @@
 import mimetypes
-from flask import Blueprint, request, Response, jsonify
+from flask import Blueprint, request, Response
 from werkzeug.datastructures import Headers
 from flask_jwt_extended import jwt_required
 from uma_dwh.utils.nocache import nocache
-from uma_dwh.utils.views import execute_sp_func_from_view, get_user_id
-from uma_dwh.db.college_scorecard import (
-  get_excel_export_data, fetch_report_by_id
-)
+from uma_dwh.utils.views import execute_sp_func_from_view
+from uma_dwh.db.college_scorecard import get_excel_export_data
 from .api_config import path_sp_args_map
 
 
@@ -49,13 +47,6 @@ def post_export():
     response.headers = response_headers
 
     return response
-
-
-@blueprint.route('/api/college_scorecard/reports/<report_id>', methods=('GET',))
-@nocache
-@jwt_required
-def get_report(report_id):
-    return jsonify(fetch_report_by_id(report_id, get_user_id()))
 
 
 @blueprint.route('/api/college_scorecard/<path:path>', methods=('GET', 'POST', 'PUT',))
