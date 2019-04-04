@@ -1,3 +1,6 @@
+import React from 'react';
+import ContentEditable from '../../../components/ContentEditable';
+
 export default [
   {
     width: 25,
@@ -6,7 +9,16 @@ export default [
   {
     dataKey: 'column_name',
     width: 260,
-    label: 'COLUMN_NAME'
+    label: 'COLUMN_NAME',
+    render: (key, value, rowData, classNames, style) => (
+      <ContentEditable
+        key={key}
+        html={value}
+        classNames={classNames}
+        styles={style}
+        onChange={() => {}}
+      />
+    )
   },
   {
     dataKey: 'row_count',
