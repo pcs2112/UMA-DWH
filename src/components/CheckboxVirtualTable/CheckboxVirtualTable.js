@@ -39,7 +39,7 @@ class CheckboxVirtualTable extends React.PureComponent {
     const { columns } = this.props;
 
     return (
-      <div className={styles.HeaderCell} key={key} style={style}>
+      <div className={styles.HeaderCell} key={key} style={style} contentEditable>
         {columns[columnIndex].label}
       </div>
     );
