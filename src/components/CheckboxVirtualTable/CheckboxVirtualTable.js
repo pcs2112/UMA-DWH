@@ -95,7 +95,11 @@ class CheckboxVirtualTable extends React.PureComponent {
     const value = rowData[columns[columnIndex].dataKey];
 
     if (objectHasOwnProperty(column, 'render')) {
-      return column.render(key, value, rowData, classNames, style, onCellChange);
+      return (
+        <div className={classNames} key={key} style={style}>
+          {column.render(key, value, rowData, onCellChange)}
+        </div>
+      );
     }
 
     if (column.isNumeric) {

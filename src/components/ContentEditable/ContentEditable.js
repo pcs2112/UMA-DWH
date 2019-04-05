@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
+const styles = { width: '100%' };
+
 class ContentEditable extends Component {
   static propTypes = {
     html: PropTypes.string,
-    classNames: PropTypes.string,
-    styles: PropTypes.object,
     onChange: PropTypes.func.isRequired
   };
 
@@ -28,16 +28,23 @@ class ContentEditable extends Component {
     this.lastHtml = html;
   };
 
+  preventEnterKey = (e) => {
+    const keycode = e.charCode || e.keyCode;
+    if (keycode === 13) {
+      e.preventDefault();
+    }
+  };
+
   render() {
-    const { html, classNames, styles } = this.props;
+    const { html } = this.props;
     return (
-      <div
+      <div // eslint-disable-line
         ref={this.divRef}
         onInput={this.emitChange}
         onBlur={this.emitChange}
+        onKeyPress={this.preventEnterKey}
         contentEditable
         dangerouslySetInnerHTML={{ __html: html }}
-        className={classNames}
         style={styles}
       />
     );
