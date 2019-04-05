@@ -56,7 +56,8 @@ class Reporting extends Component {
     setFilter: PropTypes.func.isRequired,
     reorderSelectedData: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
-    fetchReport: PropTypes.func.isRequired
+    fetchReport: PropTypes.func.isRequired,
+    saveUmaColumnTitle: PropTypes.func.isRequired
   };
 
   state = {
@@ -142,7 +143,8 @@ class Reporting extends Component {
       unselectAllData,
       reorderSelectedData,
       fetchReport,
-      setFilter
+      setFilter,
+      saveUmaColumnTitle
     } = this.props;
 
     const currentReportId = collegeScorecardCurrentReport ? collegeScorecardCurrentReport.id : '';
@@ -179,6 +181,7 @@ class Reporting extends Component {
                 unselectData={unselectData}
                 columns={columns}
                 keyName={collegeScorecardRdx.constants.LIST_ITEM_KEY_NAME}
+                onCellChange={saveUmaColumnTitle}
               />
             </Grid.Column>
             <Grid.Column width={4}>
@@ -339,6 +342,8 @@ export default withMainLayout(connect(
         dispatch(collegeScorecardReportsRdx.actions.fetchReport(id))
           .then(report => dispatch(collegeScorecardRdx.actions.loadSavedReport(report)));
       }
-    }
+    },
+    saveUmaColumnTitle: (columnIndex, columnName, newColumnName) =>
+      dispatch(collegeScorecardRdx.actions.saveUmaColumnTitle(columnIndex, columnName, newColumnName))
   })
 )(Reporting));

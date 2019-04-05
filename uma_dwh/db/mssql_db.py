@@ -15,7 +15,7 @@ def init_db(app):
         'DB_NAME': app.config['DB_NAME'],
         'DB_USER': app.config['DB_USER'],
         'DB_PASSWORD': app.config['DB_PASSWORD'],
-        'DB_TRUSTED_CONNECTION': app.config['DB_TRUSTED_CONNECTION'] == '1'
+        'DB_TRUSTED_CONNECTION': app.config['DB_TRUSTED_CONNECTION']
     }
 
     app.teardown_request(close)
@@ -183,8 +183,12 @@ def execute_sp(sp_name, in_args, out_arg=None, as_dict=True):
 
     in_params = []
     for key in in_args:
-        sql += f'@{key} = ?, '
-        in_params.append(str(in_args[key]))   # Convert all in args to string
+      sql += f'@{key} = ?, '
+      in_param = in_args[key]
+      if in_param is not None:
+        in_param = str(in_param)
+  
+      in_params.append(in_param)  # Convert all in args to string
 
     sql = sql.rstrip(', ')
     sql += f';'

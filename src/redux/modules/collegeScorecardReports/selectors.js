@@ -37,7 +37,8 @@ export const getCollegeScorecardReportsDropdownOptions = createSelector(
 export const getNewReportFormInitialValues = createSelector(
   [collegeScorecardRdx.selectors.getSelectedColumnNames],
   columns => ({
-    columns
+    columns,
+    share_dttm: ''
   })
 );
 
@@ -48,7 +49,8 @@ export const getExistingReportFormInitialValues = createSelector(
   [getCurrentReport, collegeScorecardRdx.selectors.getSelectedColumnNames],
   (currentReport, columns) => {
     const values = {
-      columns
+      columns,
+      share_dttm: ''
     };
 
     if (currentReport) {

@@ -66,17 +66,20 @@ export const resetReport = () => ({
  *
  * @param {Object} data
  */
-export const create = data => ({
-  types: [
-    actionTypes.CREATE_BEGIN,
-    actionTypes.CREATE_SUCCESS,
-    actionTypes.CREATE_FAIL
-  ],
-  makeRequest: client => client.post('/api/college_scorecard/reports', {
-    data
-  })
-    .catch(catchValidation)
-});
+export const create = (data) => {
+  console.log(data);
+  return {
+    types: [
+      actionTypes.CREATE_BEGIN,
+      actionTypes.CREATE_SUCCESS,
+      actionTypes.CREATE_FAIL
+    ],
+    makeRequest: client => client.post('/api/college_scorecard/reports', {
+      data
+    })
+      .catch(catchValidation)
+  };
+};
 
 /**
  * Action to create save an existing report.

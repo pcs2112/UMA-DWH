@@ -6,6 +6,7 @@ import {
 } from '../../reducers/itemListSelectReducerFor';
 import { createSetFilterAction } from '../../reducers/itemListFiltersReducerFor';
 import { FILTERS_STATE_KEY_NAME } from './constants';
+import { catchValidation } from '../../../helpers/redux';
 
 export const actionTypes = {
   FETCH_BEGIN: 'collegeScorecard/FETCH_BEGIN',
@@ -18,7 +19,10 @@ export const actionTypes = {
   UNSELECT_ALL: 'collegeScorecard/UNSELECT_ALL',
   SET_FILTERS: 'collegeScorecard/SET_FILTERS',
   REORDER: 'collegeScorecard/REORDER',
-  LOAD_SAVED_REPORT: 'collegeScorecard/LOAD_SAVED_REPORT'
+  LOAD_SAVED_REPORT: 'collegeScorecard/LOAD_SAVED_REPORT',
+  SAVE_UMA_COLUMN_TITLE_BEGIN: 'collegeScorecard/SAVE_UMA_COLUMN_TITLE_BEGIN',
+  SAVE_UMA_COLUMN_TITLE_SUCCESS: 'collegeScorecard/SAVE_UMA_COLUMN_TITLE_SUCCESS',
+  SAVE_UMA_COLUMN_TITLE_FAIL: 'collegeScorecard/SAVE_UMA_COLUMN_TITLE_FAIL'
 };
 
 /**
@@ -91,3 +95,32 @@ export const loadSavedReport = report => ({
   type: actionTypes.LOAD_SAVED_REPORT,
   report
 });
+
+/**
+ * Action to save the UMA column title.
+ */
+export const saveUmaColumnTitle = (columnIndex, columnName, newColumnName) => {
+  let normalizedNewColumnName = newColumnName;
+  if (normalizedNewColumnName.startsWith('* :')) {
+    normalizedNewColumnName = normalizedNewColumnName.replace('* :', '');
+  }
+  return {
+    types: [
+      actionTypes.SAVE_UMA_COLUMN_TITLE_BEGIN,
+      actionTypes.SAVE_UMA_COLUMN_TITLE_SUCCESS,
+      actionTypes.SAVE_UMA_COLUMN_TITLE_FAIL
+    ],
+    makeRequest: client => client.post('/api/college_scorecard/reports/column', {
+      data: {
+        column_name: columnName,
+        uma_excel_column_name: normalizedNewColumnName
+      }
+    })
+      .catch(catchValidation),
+    payload: {
+      columnIndex,
+      columnName,
+      newColumnName: normalizedNewColumnName
+    }
+  };
+};

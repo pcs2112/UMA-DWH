@@ -1,3 +1,6 @@
+import React from 'react';
+import TableCellEditable from '../../../components/TableCellEditable';
+
 export default [
   {
     width: 25,
@@ -33,6 +36,13 @@ export default [
   {
     dataKey: 'entry_description',
     width: 1400,
-    label: 'LONG DESCRIPTION'
+    label: 'REPORT COLUMN NAME',
+    render: (key, value, rowData, onCellChange) => (
+      <TableCellEditable
+        key={key}
+        html={value}
+        onChange={newValue => onCellChange(parseInt(key.split('-')[0], 10), rowData.column_name, newValue)}
+      />
+    )
   }
 ];
