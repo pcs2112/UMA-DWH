@@ -1,5 +1,5 @@
 import React from 'react';
-import ContentEditable from '../../../components/ContentEditable';
+import TableCellEditable from '../../../components/TableCellEditable';
 
 export default [
   {
@@ -9,14 +9,7 @@ export default [
   {
     dataKey: 'column_name',
     width: 260,
-    label: 'COLUMN_NAME',
-    render: (key, value, rowData, onCellChange) => (
-      <ContentEditable
-        key={key}
-        html={value}
-        onChange={newValue => onCellChange(key, newValue)}
-      />
-    )
+    label: 'COLUMN_NAME'
   },
   {
     dataKey: 'row_count',
@@ -43,6 +36,14 @@ export default [
   {
     dataKey: 'entry_description',
     width: 1400,
-    label: 'LONG DESCRIPTION'
+    label: 'REPORT COLUMN NAME',
+    render: (key, value, rowData, onCellChange) => (
+      <TableCellEditable
+        key={key}
+        html={value}
+        onChange={newValue => onCellChange(parseInt(key.split('-')[0], 10), rowData.column_name, newValue)}
+      />
+    )
   }
 ];
+git add

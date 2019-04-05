@@ -241,7 +241,7 @@ def save_report_table(report_id, table_schema, table_name, overwrite=0):
 
 def save_uma_column_title(user_id, column_name, uma_excel_column_name):
     """ Saves the new UMA column title. """
-    result = execute_admin_console_sp(
+    execute_admin_console_sp(
         'MWH_FILES.MANAGE_CollegeScorecard_Console',
         'SAVE_UMA_COLUMN_TITLE',
         column_name,
@@ -249,7 +249,10 @@ def save_uma_column_title(user_id, column_name, uma_excel_column_name):
         str(user_id)
     )
 
-    return result
+    return {
+      'column_name': column_name,
+      'uma_excel_column_name': uma_excel_column_name
+    }
 
 
 def get_excel_export_data(columns, file_name):

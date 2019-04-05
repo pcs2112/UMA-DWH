@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const styles = { width: '100%' };
 
-class ContentEditable extends Component {
+class TableCellEditable extends Component {
   static propTypes = {
     html: PropTypes.string,
     onChange: PropTypes.func.isRequired
@@ -18,7 +18,7 @@ class ContentEditable extends Component {
     return nextProps.html !== this.divRef.current.innerHTML;
   }
 
-  emitChange = () => {
+  handleOnChange = () => {
     const html = this.divRef.current.innerHTML;
     const { onChange } = this.props;
     if (onChange && html !== this.lastHtml) {
@@ -28,27 +28,29 @@ class ContentEditable extends Component {
     this.lastHtml = html;
   };
 
-  preventEnterKey = (e) => {
+  handleKeyPress = (e) => {
     const keycode = e.charCode || e.keyCode;
     if (keycode === 13) {
       e.preventDefault();
+      this.divRef.current.blur();
+      this.handleOnChange();
     }
   };
 
   render() {
     const { html } = this.props;
-    return (
-      <div // eslint-disable-line
-        ref={this.divRef}
-        onInput={this.emitChange}
-        onBlur={this.emitChange}
-        onKeyPress={this.preventEnterKey}
-        contentEditable
-        dangerouslySetInnerHTML={{ __html: html }}
-        style={styles}
-      />
+    return React.createElement(
+      'div',
+      {
+        ref: this.divRef,
+        onKeyPress: this.handleKeyPress,
+        suppressContentEditableWarning: true,
+        contentEditable: true,
+        dangerouslySetInnerHTML: { __html: html },
+        style: styles
+      }
     );
   }
 }
 
-export default ContentEditable;
+export default TableCellEditable;
