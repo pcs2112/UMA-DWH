@@ -16,5 +16,5 @@ cp -r "$_cwd/uma_dwh" "$_targetRoot/$_rootDirName/uma_dwh"
 rm -rf "$_targetRoot/$_rootDirName/uma_dwh/static/run_books"
 mkdir  "$_targetRoot/$_rootDirName/uma_dwh/static/run_books"
 find "$_targetRoot/$_rootDirName" | grep -E "(__pycache__|\.pyc|\.pyo$)" | xargs rm -rf
-cd "$_targetRoot"
-zip -r "$_targetRoot/$_rootDirName.zip" ./${_rootDirName}/*
+cd "$_targetRoot/${_rootDirName}"
+zip -r "$_targetRoot/$_rootDirName.zip" .
