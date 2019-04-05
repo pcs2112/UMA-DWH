@@ -46,8 +46,18 @@ path_sp_args_map = {
     }
   },
   'reports/<id_>': {
-    'module_name': 'uma_dwh.db.college_scorecard',
-    'module_func': 'fetch_report_by_id',
-    'sp_in_args_inject_user': 'user_id'
+    'GET': {
+      'module_name': 'uma_dwh.db.college_scorecard',
+      'module_func': 'fetch_report_by_id',
+      'sp_in_args_inject_user': 'user_id'
+    }
+  },
+  'reports/column': {
+    'POST': {
+      'module_name': 'uma_dwh.db.college_scorecard',
+      'module_func': 'save_uma_column_title',
+      'sp_in_args_inject_user': 'user_id',
+      'sp_in_args': ['column_name', 'uma_excel_column_name']
+    }
   }
 }
