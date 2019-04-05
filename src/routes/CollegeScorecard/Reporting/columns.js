@@ -10,13 +10,13 @@ export default [
     dataKey: 'column_name',
     width: 260,
     label: 'COLUMN_NAME',
-    render: (key, value, rowData, classNames, style) => (
+    render: (key, value, rowData, classNames, style, onCellChange) => (
       <ContentEditable
         key={key}
         html={value}
         classNames={classNames}
         styles={style}
-        onChange={() => {}}
+        onChange={newValue => onCellChange(key, newValue)}
       />
     )
   },

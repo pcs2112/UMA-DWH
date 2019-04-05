@@ -15,18 +15,14 @@ class ContentEditable extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return nextProps.html !== this.divRef.innerHTML;
+    return nextProps.html !== this.divRef.current.innerHTML;
   }
 
   emitChange = () => {
-    const html = this.divRef.innerHTML;
+    const html = this.divRef.current.innerHTML;
     const { onChange } = this.props;
     if (onChange && html !== this.lastHtml) {
-      onChange({
-        target: {
-          value: html
-        }
-      });
+      onChange(html);
     }
 
     this.lastHtml = html;

@@ -18,7 +18,10 @@ export const actionTypes = {
   UNSELECT_ALL: 'collegeScorecard/UNSELECT_ALL',
   SET_FILTERS: 'collegeScorecard/SET_FILTERS',
   REORDER: 'collegeScorecard/REORDER',
-  LOAD_SAVED_REPORT: 'collegeScorecard/LOAD_SAVED_REPORT'
+  LOAD_SAVED_REPORT: 'collegeScorecard/LOAD_SAVED_REPORT',
+  UPDATE_UMA_COLUMN_BEGIN: 'collegeScorecard/UPDATE_UMA_COLUMN_BEGIN',
+  UPDATE_UMA_COLUMN_SUCCESS: 'collegeScorecard/UPDATE_UMA_COLUMN_SUCCESS',
+  UPDATE_UMA_COLUMN_FAIL: 'collegeScorecard/UPDATE_UMA_COLUMN_FAIL'
 };
 
 /**
@@ -90,4 +93,23 @@ export const reorder = (startIndex, endIndex) => ({
 export const loadSavedReport = report => ({
   type: actionTypes.LOAD_SAVED_REPORT,
   report
+});
+
+/**
+ * Action to fetch the College scorecard data.
+ */
+export const updateUmaColumn = name => ({
+  types: [
+    actionTypes.UPDATE_UMA_COLUMN_BEGIN,
+    actionTypes.UPDATE_UMA_COLUMN_SUCCESS,
+    actionTypes.UPDATE_UMA_COLUMN_FAIL
+  ],
+  makeRequest: client => client.get('/api/college_scorecard/update_column', {
+    params: {
+      name
+    }
+  }),
+  payload: {
+    name
+  }
 });

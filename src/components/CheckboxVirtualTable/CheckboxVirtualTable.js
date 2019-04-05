@@ -20,7 +20,8 @@ class CheckboxVirtualTable extends React.PureComponent {
     selectData: PropTypes.func.isRequired,
     unselectData: PropTypes.func.isRequired,
     columns: PropTypes.array.isRequired,
-    keyName: PropTypes.string.isRequired
+    keyName: PropTypes.string.isRequired,
+    onCellChange: PropTypes.func
   };
 
   tableWidth = 0;
@@ -86,7 +87,7 @@ class CheckboxVirtualTable extends React.PureComponent {
       return null;
     }
 
-    const { columns } = this.props;
+    const { columns, onCellChange } = this.props;
     const column = columns[columnIndex];
     const rowClass = this._getRowColorClass(rowIndex);
     let classNames = clsx(rowClass, styles.Cell);
@@ -94,7 +95,7 @@ class CheckboxVirtualTable extends React.PureComponent {
     const value = rowData[columns[columnIndex].dataKey];
 
     if (objectHasOwnProperty(column, 'render')) {
-      return column.render(key, value, rowData, classNames, style);
+      return column.render(key, value, rowData, classNames, style, onCellChange);
     }
 
     if (column.isNumeric) {
