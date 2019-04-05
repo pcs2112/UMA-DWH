@@ -267,12 +267,13 @@ export default (state = initialState, action) => {
         [SELECTED_ORDER_STATE_KEY_NAME]: newSelectedOrder
       };
     }
+
     // Handles saving the UMA column title
     case actionTypes.SAVE_UMA_COLUMN_TITLE_SUCCESS: {
       const { columnIndex, newColumnName } = action;
       const { data } = state;
       const newData = data.slice();
-      let normalizedNewColumnName = newColumnName;
+      let normalizedNewColumnName = newColumnName.trim();
       if (!normalizedNewColumnName.startsWith('* :')) {
         normalizedNewColumnName = `* :${normalizedNewColumnName}`;
       }

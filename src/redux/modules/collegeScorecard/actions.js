@@ -102,7 +102,7 @@ export const loadSavedReport = report => ({
 export const saveUmaColumnTitle = (columnIndex, columnName, newColumnName) => {
   let normalizedNewColumnName = newColumnName;
   if (normalizedNewColumnName.startsWith('* :')) {
-    normalizedNewColumnName = normalizedNewColumnName.replace('* :');
+    normalizedNewColumnName = normalizedNewColumnName.replace('* :', '');
   }
   return {
     types: [

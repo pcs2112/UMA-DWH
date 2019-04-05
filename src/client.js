@@ -8,6 +8,18 @@ import { client } from './helpers/ApiClient';
 import getRoutes from './routes';
 import App from './routes/App';
 
+// Disable contentEditable warning during development
+if (__DEVELOPMENT__) {
+  console.error = (() => {
+    const { error } = console;
+    return (exception) => {
+      if ((`${exception}`).indexOf('Warning: A component is `contentEditable`') !== 0) {
+        error.apply(console, arguments); // eslint-disable-line
+      }
+    };
+  })();
+}
+
 const store = createStore(client, window.__data);
 
 let render = (routes) => {

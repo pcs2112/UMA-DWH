@@ -18,23 +18,23 @@ class TableCellEditable extends Component {
     return nextProps.html !== this.divRef.current.innerHTML;
   }
 
-  handleOnChange = () => {
-    const html = this.divRef.current.innerHTML;
-    const { onChange } = this.props;
-    if (onChange && html !== this.lastHtml) {
-      onChange(html);
-    }
-
-    this.lastHtml = html;
-  };
-
   handleKeyPress = (e) => {
+    const html = this.divRef.current.innerHTML;
     const keycode = e.charCode || e.keyCode;
+
     if (keycode === 13) {
       e.preventDefault();
+
       this.divRef.current.blur();
-      this.handleOnChange();
+
+
+      const { onChange } = this.props;
+      if (onChange && html !== this.lastHtml) {
+        onChange(html.trim());
+      }
     }
+
+    this.lastHtml = html.trim();
   };
 
   render() {
@@ -44,7 +44,6 @@ class TableCellEditable extends Component {
       {
         ref: this.divRef,
         onKeyPress: this.handleKeyPress,
-        suppressContentEditableWarning: true,
         contentEditable: true,
         dangerouslySetInnerHTML: { __html: html },
         style: styles
