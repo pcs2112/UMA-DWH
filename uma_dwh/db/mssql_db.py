@@ -232,9 +232,13 @@ def execute_sp(sp_name, in_args, out_arg=None, as_dict=True):
     return results
 
 
-def get_sp_result_set(results, index=0):
+def get_sp_result_set(results, index=0, out_arg=None):
     """ Utility to return a specified result set from results from a SP call. """
-    if len(results) < 1:
+    results_set_count = len(results)
+    if results_set_count < 1:
+        return False
+    
+    if results_set_count == 1 and out_arg and out_arg in results[0][0]:
         return False
 
     return results[index]

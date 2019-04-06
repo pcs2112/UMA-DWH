@@ -1,7 +1,7 @@
 import uma_dwh.utils.opsgenie as opsgenie
 from uma_dwh.utils import date_diff_in_seconds
 from datetime import datetime
-from .mssql_db import execute_sp, get_out_arg
+from .mssql_db import execute_sp, get_sp_result_set, get_out_arg
 from .exceptions import SPException
 from .utils import execute_sp_with_required_in_args, fill_in_sp_in_args
 
@@ -207,5 +207,9 @@ def execute_admin_console_sp(*args, out_arg='sp_status_code'):
     
     if status_code > 1:
         raise SPException(f'Stored Procedure call to "{args[0]}" failed.', status_code)
+    
+    result = get_sp_result_set(results, 0, out_arg)
+    if not result:
+        return []
 
-    return results[0]
+    return result
