@@ -1,4 +1,4 @@
-from .etl import execute_sp
+from py_utils.mssql_db import execute_sp
 
 
 def fetch_current_values():

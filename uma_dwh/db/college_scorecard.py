@@ -3,7 +3,7 @@ import io
 import xml.etree.ElementTree as ET
 from pydash.objects import pick, assign
 from pydash.predicates import is_empty
-from .mssql_db import execute_sp, get_sp_result_set, get_out_arg
+from py_utils.mssql_db import execute_sp, get_sp_result_set, get_out_arg
 from uma_dwh.utils import is_float, is_int, is_datetime, list_chunks
 from .utils import execute_sp_with_required_in_args
 from .exceptions import DBException, DBValidationException

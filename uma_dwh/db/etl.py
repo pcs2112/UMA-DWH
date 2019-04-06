@@ -1,7 +1,7 @@
 import uma_dwh.utils.opsgenie as opsgenie
 from uma_dwh.utils import date_diff_in_seconds
 from datetime import datetime
-from .mssql_db import execute_sp, get_sp_result_set, get_out_arg
+from py_utils.mssql_db import execute_sp, get_sp_result_set, get_out_arg
 from .exceptions import SPException
 from .utils import execute_sp_with_required_in_args, fill_in_sp_in_args
 

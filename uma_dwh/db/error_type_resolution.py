@@ -1,5 +1,5 @@
 import os
-from .mssql_db import execute_sp
+from py_utils.mssql_db import execute_sp
 from .etl import execute_admin_console_sp
 from .exceptions import DBException
 

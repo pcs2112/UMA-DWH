@@ -1,4 +1,4 @@
-from .mssql_db import execute_sp, get_out_arg
+from py_utils.mssql_db import execute_sp, get_out_arg
 
 
 def fill_in_sp_in_args(in_args, sp_args_length=10, sp_in_arg_prefix='VARCHAR_'):
