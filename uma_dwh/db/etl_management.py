@@ -6,9 +6,9 @@ def fetch_current_values():
     result = execute_sp(
         'MWH.MNG_ETL_CONTROL_MANAGER',
         {
-          'message': 'LIST CURRENT VALUES',
-          'DATA_MART_NAME': 'ALL',
-          'PROCEDURE_NAME': ''
+            'message': 'LIST CURRENT VALUES',
+            'DATA_MART_NAME': 'ALL',
+            'PROCEDURE_NAME': ''
         }
     )
     

@@ -30,24 +30,24 @@ def get_db():
     if db is None:
         if this.config['DB_TRUSTED_CONNECTION']:
             cnxn_str = 'Driver=%s;Server=%s;DATABASE=%s;Trusted_Connection=yes;' % (
-              this.config['DB_DRIVER'],
-              this.config['DB_SERVER'],
-              this.config['DB_NAME']
+                this.config['DB_DRIVER'],
+                this.config['DB_SERVER'],
+                this.config['DB_NAME']
             )
 
             db = g._database = pyodbc.connect(
-              cnxn_str,
-              autocommit=True
+                cnxn_str,
+                autocommit=True
             )
         else:
             db = g._database = pyodbc.connect(
-              p_str=None,
-              driver=this.config['DB_DRIVER'],
-              server=this.config['DB_SERVER'],
-              database=this.config['DB_NAME'],
-              uid=this.config['DB_USER'],
-              pwd=this.config['DB_PASSWORD'],
-              autocommit=True
+                p_str=None,
+                driver=this.config['DB_DRIVER'],
+                server=this.config['DB_SERVER'],
+                database=this.config['DB_NAME'],
+                uid=this.config['DB_USER'],
+                pwd=this.config['DB_PASSWORD'],
+                autocommit=True
             )
     return db
 
@@ -104,9 +104,12 @@ def get_column_names(result_set_description):
     :type result_set_description: list
     """
     column_names = []
-    for description in result_set_description:
-        if description[0]:
-            column_names.append(normalize_column_name(description[0]))
+    for i, description in enumerate(result_set_description):
+        column_name = description[0]
+        if not column_name:
+            column_name = f'COLUMN_{i}'
+
+        column_names.append(normalize_column_name(column_name))
 
     return column_names
 
@@ -174,8 +177,9 @@ def execute_sp(sp_name, in_args, out_arg=None, as_dict=True):
     :rtype: list
     """
     sql = ''
-
-    if out_arg is not None:
+    
+    if out_arg:
+        out_arg = out_arg.lower()
         sql = f'DECLARE @{out_arg} INTEGER;'
         sql += f'EXEC @{out_arg} = {sp_name} '
     else:
@@ -183,23 +187,23 @@ def execute_sp(sp_name, in_args, out_arg=None, as_dict=True):
 
     in_params = []
     for key in in_args:
-      sql += f'@{key} = ?, '
-      in_param = in_args[key]
-      if in_param is not None:
-        in_param = str(in_param)
+        sql += f'@{key} = ?, '
+        in_param = in_args[key]
+        if in_param is not None:
+            in_param = str(in_param)
   
-      in_params.append(in_param)  # Convert all in args to string
+        in_params.append(in_param)  # Convert all in args to string
 
     sql = sql.rstrip(', ')
     sql += f';'
 
     if out_arg is not None:
-        sql += f'SELECT @{out_arg};'
+        sql += f'SELECT @{out_arg} AS {out_arg};'
 
     cursor = get_db().cursor()
     cursor.execute(sql, in_params)
 
-    result = []
+    results = []
 
     while 1:
         try:
@@ -207,12 +211,12 @@ def execute_sp(sp_name, in_args, out_arg=None, as_dict=True):
             column_names = get_column_names(cursor.description)
             if len(column_names) > 0:
                 if as_dict:
-                    result.append(result_set_as_dicts(column_names, result_set))
+                    results.append(result_set_as_dicts(column_names, result_set))
                 else:
-                    result.append(column_names)
-                    result.append(result_set)
+                    results.append(column_names)
+                    results.append(result_set)
             else:
-                result.append(result_set)
+                results.append(result_set)
         except pyodbc.ProgrammingError:
             pass
 
@@ -220,8 +224,12 @@ def execute_sp(sp_name, in_args, out_arg=None, as_dict=True):
             break
 
     cursor.close()
+    
+    # Validate out arg was provided from the SP call
+    if out_arg:
+        get_out_arg(results, out_arg)
 
-    return result
+    return results
 
 
 def get_sp_result_set(results, index=0):
@@ -230,3 +238,15 @@ def get_sp_result_set(results, index=0):
         return False
 
     return results[index]
+
+
+def get_out_arg(results, out_arg):
+    """ Returns the out arguments from the result sets from a SP call. """
+    out_arg = out_arg.lower()
+    results_count = len(results)
+    if results_count < 1 or out_arg not in results[results_count - 1][0]:
+        raise pyodbc.ProgrammingError(
+            f'The out argument "{out_arg}" was not captured from call to the stored procedure.'
+        )
+    
+    return results[results_count - 1][0][out_arg]

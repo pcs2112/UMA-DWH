@@ -3,9 +3,9 @@ import io
 import xml.etree.ElementTree as ET
 from pydash.objects import pick, assign
 from pydash.predicates import is_empty
-from .mssql_db import execute_sp, get_sp_result_set
+from .mssql_db import execute_sp, get_sp_result_set, get_out_arg
 from uma_dwh.utils import is_float, is_int, is_datetime, list_chunks
-from .etl import execute_admin_console_sp
+from .utils import execute_sp_with_required_in_args
 from .exceptions import DBException, DBValidationException
 
 cell_width_padding = 367
@@ -42,12 +42,14 @@ def get_columns_from_xml(xml):
 
 def report_exists(user_id, report_name):
     """ Checks the report exists. """
-    result = execute_admin_console_sp(
+    results = execute_sp_with_required_in_args(
         'MWH_FILES.MANAGE_CollegeScorecard_Console',
         'CHECK_IF_REPORT_NAME_EXISTS',
         str(user_id),
         report_name.upper()
     )
+    
+    result = get_sp_result_set(results)
 
     return len(result) > 0
 
@@ -73,13 +75,15 @@ def fetch_report(user_id, report_name):
 
 
 def fetch_report_by_id(id_, user_id, report_name=''):
-    result = execute_admin_console_sp(
+    results = execute_sp_with_required_in_args(
         'MWH_FILES.MANAGE_CollegeScorecard_Console',
         'GET REPORT',
         str(id_),
         report_name.upper(),
         str(user_id)
     )
+
+    result = get_sp_result_set(results)
 
     if len(result) < 1:
         return None
@@ -95,11 +99,13 @@ def fetch_report_by_id(id_, user_id, report_name=''):
 
 def fetch_reports(user_id):
     """ Fetches the reports for the specified user. """
-    return execute_admin_console_sp(
+    results = execute_sp_with_required_in_args(
         'MWH_FILES.MANAGE_CollegeScorecard_Console',
         'GET USER REPORTS',
         str(user_id)
     )
+    
+    return get_sp_result_set(results)
 
 
 def create_report(data):
@@ -133,7 +139,7 @@ def create_report(data):
     if len(new_data['columns']) < 1:
         raise DBException(f'"columns" are required.')
 
-    execute_admin_console_sp(
+    execute_sp_with_required_in_args(
         'MWH_FILES.MANAGE_CollegeScorecard_Console',
         'SAVE USER SELECTION',
         new_data['user_id'],
@@ -179,7 +185,7 @@ def update_report(data):
     if len(new_data['columns']) < 1:
         raise DBException(f'"columns" are required.')
 
-    execute_admin_console_sp(
+    execute_sp_with_required_in_args(
         'MWH_FILES.MANAGE_CollegeScorecard_Console',
         'SAVE USER SELECTION',
         new_data['user_id'],
@@ -197,10 +203,10 @@ def report_table_exists(report_id, table_schema, table_name):
     results = execute_sp(
         'MWH_FILES.C8_COLLEGE_SCORECARD_TABLE',
         {
-          'message': 'DOES TABLE EXISTS',
-          'USER_REPORT_ID': report_id,
-          'TABLE_SCHEMA': table_schema,
-          'TABLE_NAME': table_name
+            'message': 'DOES TABLE EXISTS',
+            'USER_REPORT_ID': report_id,
+            'TABLE_SCHEMA': table_schema,
+            'TABLE_NAME': table_name
         }
     )
 
@@ -221,13 +227,18 @@ def save_report_table(report_id, table_schema, table_name, overwrite=0):
     results = execute_sp(
         'MWH_FILES.C8_COLLEGE_SCORECARD_TABLE',
         {
-          'message': 'CREATE TABLE USING REPORT XML',
-          'USER_REPORT_ID': report_id,
-          'TABLE_SCHEMA': table_schema,
-          'TABLE_NAME': table_name
+            'message': 'CREATE TABLE USING REPORT XML',
+            'USER_REPORT_ID': report_id,
+            'TABLE_SCHEMA': table_schema,
+            'TABLE_NAME': table_name
         }
     )
-
+    
+    if len(results) < 1:
+        return {
+          'row_count': 0
+        }
+    
     result = get_sp_result_set(results)
     if not result:
         raise DBValidationException(f'The table could not be created.', 'table_name')
@@ -241,14 +252,20 @@ def save_report_table(report_id, table_schema, table_name, overwrite=0):
 
 def save_uma_column_title(user_id, column_name, uma_excel_column_name):
     """ Saves the new UMA column title. """
-    execute_admin_console_sp(
+    out_arg = 'return_cnt'
+    results = execute_sp_with_required_in_args(
         'MWH_FILES.MANAGE_CollegeScorecard_Console',
         'SAVE_UMA_COLUMN_TITLE',
         column_name,
         uma_excel_column_name,
-        str(user_id)
+        str(user_id),
+        out_arg=out_arg
     )
-
+    
+    status_code = get_out_arg(results, out_arg)
+    if status_code < 0:
+        raise DBException(f'"{column_name}" could not be saved.')
+    
     return {
       'column_name': column_name,
       'uma_excel_column_name': uma_excel_column_name
@@ -331,7 +348,7 @@ def print_ws_export_title(ws, columns, file_name):
                 'VARCHAR_08': '',
                 'VARCHAR_09': ''
             },
-            out_arg='TryCatchError_ID',
+            out_arg=None,
             as_dict=False
         )
 
@@ -375,7 +392,7 @@ def print_ws_export_data(ws, columns, file_name):
                 'VARCHAR_08': '',
                 'VARCHAR_09': ''
             },
-            out_arg='TryCatchError_ID',
+            out_arg=None,
             as_dict=False
         )
 

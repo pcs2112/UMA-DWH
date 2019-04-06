@@ -10,8 +10,8 @@ def fetch_users():
     Returns the list of Admin Console users.
     """
     return execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-      'LIST_ADMIN_CONSOLE_USERS'
+        'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+        'LIST_ADMIN_CONSOLE_USERS'
     )
 
 
@@ -22,9 +22,9 @@ def fetch_user_by_id(id_):
     :type id_: int
     """
     result = execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-      'LIST_ADMIN_CONSOLE_USER_BY_ID',
-      id_
+        'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+        'LIST_ADMIN_CONSOLE_USER_BY_ID',
+        id_
     )
 
     if len(result) < 1:
@@ -40,9 +40,9 @@ def fetch_user_by_email(email):
     :type email: str
     """
     result = execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-      'LIST_ADMIN_CONSOLE_USER_BY_EMAIL',
-      email
+        'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+        'LIST_ADMIN_CONSOLE_USER_BY_EMAIL',
+        email
     )
 
     if len(result) < 1:
@@ -58,25 +58,25 @@ def create_user(data):
     :type data: dict
     """
     required_data = {
-      'employee_last_name': '',
-      'employee_first_name': '',
-      'employee_email': '',
-      'employee_phone': '',
-      'employee_cellphone': '',
-      'employee_password': ''
+        'employee_last_name': '',
+        'employee_first_name': '',
+        'employee_email': '',
+        'employee_phone': '',
+        'employee_cellphone': '',
+        'employee_password': ''
     }
 
     new_data = assign(
-      required_data,
-      pick(
-        data,
-        'employee_last_name',
-        'employee_first_name',
-        'employee_email',
-        'employee_phone',
-        'employee_cellphone',
-        'employee_password'
-      )
+        required_data,
+        pick(
+            data,
+            'employee_last_name',
+            'employee_first_name',
+            'employee_email',
+            'employee_phone',
+            'employee_cellphone',
+            'employee_password'
+        )
     )
 
     if is_empty(new_data['employee_email']):
@@ -87,16 +87,16 @@ def create_user(data):
         raise DBException(f"{new_data['employee_email']} already exists.")
 
     result = execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      'SAVE ADMIN CONSOLE USER',
-      '',
-      new_data['employee_last_name'],
-      new_data['employee_first_name'],
-      new_data['employee_email'],
-      new_data['employee_phone'],
-      new_data['employee_cellphone'],
-      '',
-      generate_password_hash(new_data['employee_password'])
+        'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+        'SAVE ADMIN CONSOLE USER',
+        '',
+        new_data['employee_last_name'],
+        new_data['employee_first_name'],
+        new_data['employee_email'],
+        new_data['employee_phone'],
+        new_data['employee_cellphone'],
+        '',
+        generate_password_hash(new_data['employee_password'])
     )
 
     if len(result) < 1:
@@ -118,39 +118,39 @@ def update_user(id_, data):
         raise DBException(f'{id_} is and invalid user ID.')
 
     current_data = {
-      'employee_last_name': user['employee_last_name'],
-      'employee_first_name': user['employee_first_name'],
-      'employee_email': user['employee_email'],
-      'employee_phone': user['employee_phone'],
-      'employee_cellphone': user['employee_cellphone'],
-      'employee_password': user['employee_password']
+        'employee_last_name': user['employee_last_name'],
+        'employee_first_name': user['employee_first_name'],
+        'employee_email': user['employee_email'],
+        'employee_phone': user['employee_phone'],
+        'employee_cellphone': user['employee_cellphone'],
+        'employee_password': user['employee_password']
     }
 
     new_data = assign(
-      {},
-      current_data,
-      pick(
-        data,
-        'employee_last_name',
-        'employee_first_name',
-        'employee_email',
-        'employee_phone',
-        'employee_cellphone',
-        'employee_password'
-      )
+        {},
+        current_data,
+        pick(
+            data,
+            'employee_last_name',
+            'employee_first_name',
+            'employee_email',
+            'employee_phone',
+            'employee_cellphone',
+            'employee_password'
+        )
     )
 
     execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      'SAVE ADMIN CONSOLE USER',
-      id_,
-      new_data['employee_last_name'],
-      new_data['employee_first_name'],
-      new_data['employee_email'],
-      new_data['employee_phone'],
-      new_data['employee_cellphone'],
-      user['employee_password'],
-      new_data['employee_password'] if is_empty(new_data['employee_password']) else ''
+        'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+        'SAVE ADMIN CONSOLE USER',
+        id_,
+        new_data['employee_last_name'],
+        new_data['employee_first_name'],
+        new_data['employee_email'],
+        new_data['employee_phone'],
+        new_data['employee_cellphone'],
+        user['employee_password'],
+        new_data['employee_password'] if is_empty(new_data['employee_password']) else ''
     )
 
     return fetch_user_by_id(id_)
@@ -172,10 +172,10 @@ def login_user(email, password):
         raise DBException(f'"{email}" is an invalid account.', -2)
 
     execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      'LOGIN',
-      email,
-      user_result['employee_password']
+        'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+        'LOGIN',
+        email,
+        user_result['employee_password']
     )
 
     return user_result['id']
@@ -199,11 +199,11 @@ def reset_user_password(email, existing_password, new_password):
         raise DBException('The password is invalid.', -2)
 
     execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-      'PASSWORD RESET',
-      email,
-      user_result['employee_password'],
-      generate_password_hash(new_password)
+        'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+        'PASSWORD RESET',
+        email,
+        user_result['employee_password'],
+        generate_password_hash(new_password)
     )
 
     return user_result['id']
@@ -225,11 +225,11 @@ def forgot_password(data, scenario):
 
     if scenario == 3:
         execute_admin_console_sp(
-          'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
-          'PASSWORD RESET',
-          user_result['employee_email'],
-          user_result['employee_password'],
-          generate_password_hash(data['new_password'])
+            'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE',
+            'PASSWORD RESET',
+            user_result['employee_email'],
+            user_result['employee_password'],
+            generate_password_hash(data['new_password'])
         )
 
         return user_result['id']

@@ -9,8 +9,8 @@ def fetch_files():
     Returns the list of files.
     """
     return execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-      'LIST_ERROR_RESOLUTIONS'
+        'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+        'LIST_ERROR_RESOLUTIONS'
     )
 
 
@@ -21,9 +21,9 @@ def fetch_file_by_id(id_):
     :type id_: int
     """
     result = execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-      'LIST_ERROR_RESOLUTIONS_BY_ID',
-      id_
+        'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+        'LIST_ERROR_RESOLUTIONS_BY_ID',
+        id_
     )
 
     if len(result) < 1:
@@ -37,8 +37,8 @@ def fetch_last_inserted_file():
     Returns the last inserted file record.
     """
     result = execute_admin_console_sp(
-      'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
-      'LIST_LAST_ERROR_RESOLUTION'
+        'MWH.UMA_WAREHOUSE_ADMIN_CONSOLE_REPORTS',
+        'LIST_LAST_ERROR_RESOLUTION'
     )
 
     if len(result) < 1:
@@ -59,14 +59,14 @@ def create_file(description, file_path_filename):
         raise DBException(f'"{file_path_filename}" does not exist under the run_books directory', -1)
 
     execute_sp(
-      'MWH.ERROR_RESOLUTIONS_MGR',
-      {
-        'message': 'save',
-        'ID': '',
-        'ACTIVE_FLAG': '1',
-        'DESCRIPTION': description,
-        'FILE_PATH_FILENAME': file_path_filename
-      }
+        'MWH.ERROR_RESOLUTIONS_MGR',
+        {
+            'message': 'save',
+            'ID': '',
+            'ACTIVE_FLAG': '1',
+            'DESCRIPTION': description,
+            'FILE_PATH_FILENAME': file_path_filename
+        }
     )
 
     return fetch_last_inserted_file()
@@ -86,14 +86,14 @@ def update_file(id_, file_path_filename, description):
         raise DBException(f'"{file_path_filename}" does not exist under the run_books directory.', -1)
 
     execute_sp(
-      'MWH.ERROR_RESOLUTIONS_MGR',
-      {
-        'message': 'save',
-        'ID': id_,
-        'ACTIVE_FLAG': '1',
-        'DESCRIPTION': description,
-        'FILE_PATH_FILENAME': file_path_filename
-      }
+        'MWH.ERROR_RESOLUTIONS_MGR',
+        {
+            'message': 'save',
+            'ID': id_,
+            'ACTIVE_FLAG': '1',
+            'DESCRIPTION': description,
+            'FILE_PATH_FILENAME': file_path_filename
+        }
     )
 
     return fetch_file_by_id(id_)
