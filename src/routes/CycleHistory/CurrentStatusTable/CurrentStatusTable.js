@@ -55,7 +55,7 @@ const columns = [
   },
   {
     Header: 'RUN_TIME',
-    accessor: 'run_time_to_current_data_mart_status',
+    accessor: 'run_time_to_current_datamart_status',
     width: 70,
     getProps: () => ({
       style: {
