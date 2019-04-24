@@ -87,6 +87,17 @@ export const getFilters = createSelector(
 );
 
 /**
+ * Selector to get the current selected file.
+ */
+export const getSelectedFile = createSelector(
+  [_getFilters],
+  (filtersFromState) => {
+    const { fileName } = filtersFromState;
+    return fileName;
+  }
+);
+
+/**
  * Returns the selected ordered columns names.
  */
 export const getSelectedColumnNames = createSelector(

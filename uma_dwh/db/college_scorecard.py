@@ -219,7 +219,7 @@ def report_table_exists(report_id, table_schema, table_name):
     return row_count > 0
 
 
-def save_report_table(report_id, table_schema, table_name, overwrite=0):
+def save_report_table(report_id, table_schema, table_name, filename, overwrite=0):
     """ Saves the report table. """
     if overwrite is False and report_table_exists(report_id, table_schema, table_name):
         raise DBValidationException(f'The table name already exists.', 'table_name')
@@ -230,7 +230,8 @@ def save_report_table(report_id, table_schema, table_name, overwrite=0):
             'message': 'CREATE TABLE USING REPORT XML',
             'USER_REPORT_ID': report_id,
             'TABLE_SCHEMA': table_schema,
-            'TABLE_NAME': table_name
+            'TABLE_NAME': table_name,
+            'D_CSV_FILE_NAME': filename
         }
     )
     
