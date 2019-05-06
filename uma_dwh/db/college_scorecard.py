@@ -17,11 +17,11 @@ def get_columns_xml(columns, prepend_default=False):
     xml = '<COLUMNS>'
 
     if prepend_default:
-        xml += f'<COLUMN NAME="INSTNM" />'
-        xml += f'<COLUMN NAME="OPEID" />'
+        xml += f'<COL N="INSTNM" />'
+        xml += f'<COL N="OPEID" />'
 
     for col in columns:
-        xml += f'<COLUMN NAME="{col}" />'
+        xml += f'<COL N="{col}" />'
 
     xml += '</COLUMNS>'
 
@@ -48,7 +48,7 @@ def report_exists(user_id, report_name):
         str(user_id),
         report_name.upper()
     )
-    
+
     result = get_sp_result_set(results)
 
     return len(result) > 0
@@ -104,7 +104,7 @@ def fetch_reports(user_id):
         'GET USER REPORTS',
         str(user_id)
     )
-    
+
     return get_sp_result_set(results)
 
 
@@ -234,12 +234,12 @@ def save_report_table(report_id, table_schema, table_name, filename, overwrite=0
             'D_CSV_FILE_NAME': filename
         }
     )
-    
+
     if len(results) < 1:
         return {
           'row_count': 0
         }
-    
+
     result = get_sp_result_set(results)
     if not result:
         raise DBValidationException(f'The table could not be created.', 'table_name')
@@ -262,11 +262,11 @@ def save_uma_column_title(user_id, column_name, uma_excel_column_name):
         str(user_id),
         out_arg=out_arg
     )
-    
+
     status_code = get_out_arg(results, out_arg)
     if status_code < 0:
         raise DBException(f'"{column_name}" could not be saved.')
-    
+
     return {
       'column_name': column_name,
       'uma_excel_column_name': uma_excel_column_name
