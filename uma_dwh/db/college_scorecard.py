@@ -1,4 +1,4 @@
-import xlwt
+import xlsxwriter
 import io
 import xml.etree.ElementTree as ET
 from pydash.objects import pick, assign
@@ -8,7 +8,7 @@ from uma_dwh.utils import is_float, is_int, is_datetime, list_chunks
 from .utils import execute_sp_with_required_in_args
 from .exceptions import DBException, DBValidationException
 
-cell_width_padding = 367
+cell_width_padding = 4
 max_cell_width = 65535
 
 
@@ -274,43 +274,43 @@ def save_uma_column_title(user_id, column_name, uma_excel_column_name):
 
 
 def get_excel_export_data(columns, file_name):
-    wb = xlwt.Workbook(encoding='UTF-8')
+    output = io.BytesIO()
+    wb = xlsxwriter.Workbook(output)
 
     # Prints the title worksheet
-    ws_data = wb.add_sheet('TITLE')
-    print_ws_export_title(ws_data, columns, file_name)
+    ws_title = wb.add_worksheet('TITLE')
+    print_ws_export_title(ws_title, columns, file_name)
 
     # Prints the data worksheet
-    ws_data = wb.add_sheet('DATA')
+    ws_data = wb.add_worksheet('DATA')
     print_ws_export_data(ws_data, columns, file_name)
 
-    output = io.BytesIO()
-    wb.save(output)
+    wb.close()
     return output.getvalue()
 
 
-def print_ws_header(ws, header):
-    """ Print the header in the specified worksheet instance. """
-    for x, cell in enumerate(header):
-        ws.write(0, x, cell)
-        ws.col(x).width = len(str(cell)) * cell_width_padding
-
-
-def print_ws_data(ws, rows):
+def print_ws_data(ws, header, rows):
     """ Print the data in the specified worksheet instance. """
     columns_width = {}
+
+    for i, header_cell in enumerate(header):
+        ws.write_string(0, i, str(header_cell))
+        columns_width[i] = len(str(header_cell)) + cell_width_padding
+
     for i, row in enumerate(rows):
         for x, cell_value in enumerate(row):
             cell_length = len(str(cell_value))
 
             if cell_value is None or cell_value == 'NULL':
-                cell_value = ''
+                ws.write_string(i + 1, x, '')
             elif is_float(cell_value):
-                cell_value = float(cell_value)
+                ws.write_number(i + 1, x, float(cell_value))
             elif is_int(cell_value):
-                cell_value = int(cell_value)
+                ws.write_number(i + 1, x, int(cell_value))
             elif is_datetime(cell_value):
-                cell_value = cell_value.strftime('%Y-%m-%d %H:%M:%S')
+                ws.write_string(i + 1, x, cell_value.strftime('%Y-%m-%d %H:%M:%S'))
+            else:
+                ws.write_string(i + 1, x, cell_value)
 
             if x in columns_width:
                 if cell_length > columns_width[x]:
@@ -318,12 +318,9 @@ def print_ws_data(ws, rows):
             else:
                 columns_width[x] = cell_length
 
-            ws.write(i + 1, x, cell_value)
-
     for i, width in columns_width.items():
-        new_width = width * cell_width_padding
-        if ws.col(i).width <= new_width:
-            ws.col(i).width = new_width if new_width < max_cell_width else max_cell_width
+        new_width = width + cell_width_padding
+        ws.set_column(i, i, new_width if new_width < max_cell_width else max_cell_width)
 
 
 def print_ws_export_title(ws, columns, file_name):
@@ -363,11 +360,8 @@ def print_ws_export_title(ws, columns, file_name):
         for row in data_result[1]:
             raw_data.append(row)
 
-    # Print the data tab header
-    print_ws_header(ws, header)
-
-    # Print rows
-    print_ws_data(ws, raw_data)
+    # Print the excel data
+    print_ws_data(ws, header, raw_data)
 
 
 def print_ws_export_data(ws, columns, file_name):
@@ -415,8 +409,5 @@ def print_ws_export_data(ws, columns, file_name):
             else:
                 raw_data[j].extend(row)
 
-    # Print the data tab header
-    print_ws_header(ws, header)
-
-    # Print rows
-    print_ws_data(ws, raw_data)
+    # Print the excel data
+    print_ws_data(ws, header, raw_data)

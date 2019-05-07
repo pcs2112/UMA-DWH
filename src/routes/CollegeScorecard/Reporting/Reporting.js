@@ -26,7 +26,7 @@ import DropdownFilter from '../../../components/DropdownFilter';
 import columns from './columns';
 import styles from './styles.less';
 
-const SELECTED_LIMIT = 255;
+const SELECTED_LIMIT = 1024;
 const CREATE_REPORT_MODAL = 'CREATE_REPORT_MODAL';
 const UPDATE_REPORT_MODAL = 'UPDATE_REPORT_MODAL';
 const SAVE_REPORT_TABLE_MODAL = 'SAVE_REPORT_TABLE_MODAL';
