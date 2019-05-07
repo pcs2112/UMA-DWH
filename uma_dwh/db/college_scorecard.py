@@ -35,7 +35,7 @@ def get_columns_from_xml(xml):
     columns = []
 
     for col in root:
-        columns.append(col.attrib['NAME'])
+        columns.append(col.attrib['N'])
 
     return columns
 
