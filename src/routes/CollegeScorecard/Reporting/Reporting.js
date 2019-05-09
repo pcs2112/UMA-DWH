@@ -88,7 +88,9 @@ class Reporting extends Component {
     const { collegeScorecardSelectedColumnNames, collegeScorecardFilters } = this.props;
     const { fileName } = collegeScorecardFilters;
     const now = Math.floor(Date.now() / 1000);
-    const outFileName = `college_scorecard_${now}.xlsx`;
+
+    let outFileName = fileName.split('.').slice(0, -1).join('.');
+    outFileName = `${outFileName}_${now}.xlsx`;
 
     this.setState({
       isExporting: true
