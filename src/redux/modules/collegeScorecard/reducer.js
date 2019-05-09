@@ -275,7 +275,7 @@ export default (state = initialState, action) => {
       const newData = data.slice();
       let normalizedNewColumnName = newColumnName.trim();
       if (!normalizedNewColumnName.startsWith('* :')) {
-        normalizedNewColumnName = `* :${normalizedNewColumnName}`;
+        normalizedNewColumnName = `* : ${normalizedNewColumnName}`;
       }
 
       newData[columnIndex] = {

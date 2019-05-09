@@ -99,28 +99,22 @@ export const loadSavedReport = report => ({
 /**
  * Action to save the UMA column title.
  */
-export const saveUmaColumnTitle = (columnIndex, columnName, newColumnName) => {
-  let normalizedNewColumnName = newColumnName;
-  if (normalizedNewColumnName.startsWith('* :')) {
-    normalizedNewColumnName = normalizedNewColumnName.replace('* :', '');
-  }
-  return {
-    types: [
-      actionTypes.SAVE_UMA_COLUMN_TITLE_BEGIN,
-      actionTypes.SAVE_UMA_COLUMN_TITLE_SUCCESS,
-      actionTypes.SAVE_UMA_COLUMN_TITLE_FAIL
-    ],
-    makeRequest: client => client.post('/api/college_scorecard/reports/column', {
-      data: {
-        column_name: columnName,
-        uma_excel_column_name: normalizedNewColumnName
-      }
-    })
-      .catch(catchValidation),
-    payload: {
-      columnIndex,
-      columnName,
-      newColumnName: normalizedNewColumnName
+export const saveUmaColumnTitle = (columnIndex, columnName, newColumnName) => ({
+  types: [
+    actionTypes.SAVE_UMA_COLUMN_TITLE_BEGIN,
+    actionTypes.SAVE_UMA_COLUMN_TITLE_SUCCESS,
+    actionTypes.SAVE_UMA_COLUMN_TITLE_FAIL
+  ],
+  makeRequest: client => client.post('/api/college_scorecard/reports/column', {
+    data: {
+      column_name: columnName,
+      uma_excel_column_name: newColumnName
     }
-  };
-};
+  })
+    .catch(catchValidation),
+  payload: {
+    columnIndex,
+    columnName,
+    newColumnName
+  }
+});

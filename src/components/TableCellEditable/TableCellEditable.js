@@ -6,7 +6,12 @@ const styles = { width: '100%' };
 class TableCellEditable extends Component {
   static propTypes = {
     html: PropTypes.string,
+    prefixText: PropTypes.string,
     onChange: PropTypes.func.isRequired
+  };
+
+  static defaultProps = {
+    prefixText: '* :'
   };
 
   constructor(props) {
@@ -19,7 +24,7 @@ class TableCellEditable extends Component {
   }
 
   handleKeyPress = (e) => {
-    const html = this.divRef.current.innerHTML;
+    let html = this.divRef.current.innerHTML.trim();
     const keycode = e.charCode || e.keyCode;
 
     if (keycode === 13) {
@@ -27,14 +32,21 @@ class TableCellEditable extends Component {
 
       this.divRef.current.blur();
 
-
-      const { onChange } = this.props;
+      const { onChange, prefixText } = this.props;
       if (onChange && html !== this.lastHtml) {
-        onChange(html.trim());
+        if (prefixText) {
+          if (!html.startsWith(prefixText)) {
+            this.divRef.current.innerHTML = `${prefixText} ${html}`;
+          }
+
+          html = html.replace(prefixText, '');
+        }
+
+        onChange(html);
       }
     }
 
-    this.lastHtml = html.trim();
+    this.lastHtml = html;
   };
 
   render() {
