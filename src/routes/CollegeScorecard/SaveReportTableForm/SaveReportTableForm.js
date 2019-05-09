@@ -132,7 +132,7 @@ class SaveReportTableForm extends Component {
 }
 
 const connForm = reduxForm({
-  newReportTableValidator,
+  validate: newReportTableValidator,
   fields: [
     'report_id',
     'table_name',

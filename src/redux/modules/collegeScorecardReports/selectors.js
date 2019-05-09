@@ -69,10 +69,12 @@ export const getExistingReportFormInitialValues = createSelector(
 export const getNewSaveReportTableFormInitialValues = createSelector(
   [getCurrentReport, collegeScorecardRdx.selectors.getSelectedFile],
   (currentReport, filename) => {
+    const newFileName = filename.split('.').slice(0, -1).join('.');
     const values = {
       overwrite: false,
       table_schema: 'COLLEGE_SC',
-      filename
+      filename,
+      table_name: `[NEW_TABLE_NAME]_${newFileName}`
     };
 
     if (currentReport) {
