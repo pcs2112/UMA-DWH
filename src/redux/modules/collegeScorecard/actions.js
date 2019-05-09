@@ -15,6 +15,7 @@ export const actionTypes = {
   RESET: 'collegeScorecard/RESET',
   SELECT: 'collegeScorecard/SELECT',
   SELECT_ALL: 'collegeScorecard/SELECT_ALL',
+  SELECT_DEFAULT: 'collegeScorecard/SELECT_DEFAULT',
   UNSELECT: 'collegeScorecard/UNSELECT',
   UNSELECT_ALL: 'collegeScorecard/UNSELECT_ALL',
   SET_FILTERS: 'collegeScorecard/SET_FILTERS',
@@ -64,7 +65,6 @@ export const select = createSelectAction(actionTypes.SELECT);
  */
 export const selectAll = createSelectAllAction(actionTypes.SELECT_ALL);
 
-
 /**
  * Action to unselect an item.
  */
@@ -74,6 +74,13 @@ export const unselect = createUnselectAction(actionTypes.UNSELECT);
  * Action to unselect all items.
  */
 export const unselectAll = createUnselectAllAction(actionTypes.UNSELECT_ALL);
+
+/**
+ * Action to select all the default items.
+ */
+export const selectDefault = () => ({
+  type: actionTypes.SELECT_DEFAULT
+});
 
 /**
  * Action to set a filter.

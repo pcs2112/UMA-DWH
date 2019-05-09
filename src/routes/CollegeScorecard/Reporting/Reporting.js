@@ -54,6 +54,7 @@ class Reporting extends Component {
     selectAllData: PropTypes.func.isRequired,
     unselectData: PropTypes.func.isRequired,
     unselectAllData: PropTypes.func.isRequired,
+    selectDefaultData: PropTypes.func.isRequired,
     setFilter: PropTypes.func.isRequired,
     autoReorderSelectedData: PropTypes.func.isRequired,
     reorderSelectedData: PropTypes.func.isRequired,
@@ -145,6 +146,7 @@ class Reporting extends Component {
       selectAllData,
       unselectData,
       unselectAllData,
+      selectDefaultData,
       autoReorderSelectedData,
       reorderSelectedData,
       fetchReport,
@@ -265,6 +267,13 @@ class Reporting extends Component {
           </Button>
           <Button
             size="small"
+            disabled={isDataFetching || isExporting}
+            onClick={selectDefaultData}
+          >
+            Select Default
+          </Button>
+          <Button
+            size="small"
             as={Link}
             to="/college_scorecard/groups"
             disabled={isDataFetching || isExporting}
@@ -354,6 +363,7 @@ export default withMainLayout(connect(
       dispatch(collegeScorecardRdx.actions.unselectAll());
       dispatch(collegeScorecardReportsRdx.actions.resetReport());
     },
+    selectDefaultData: () => dispatch(collegeScorecardRdx.actions.selectDefault()),
     setFilter: (key, value) => dispatch(collegeScorecardRdx.actions.setFilter(key, value)),
     autoReorderSelectedData: () => dispatch(collegeScorecardRdx.actions.autoReorder()),
     reorderSelectedData: (sourceIdx, destIdx) =>

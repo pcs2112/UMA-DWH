@@ -148,6 +148,38 @@ export default (state = initialState, action) => {
       return newState;
     }
 
+    // Handles selecting the default items
+    case actionTypes.SELECT_DEFAULT: {
+      const { data, selectedManually } = state;
+      const selected = state[SELECTED_STATE_KEY_NAME];
+      const selectedOrder = state[SELECTED_ORDER_STATE_KEY_NAME];
+      const newSelected = { ...selected };
+      const newSelectedOrder = [...selectedOrder];
+      const newSelectedManually = { ...selectedManually };
+      let newSelectedCount = 0;
+
+      for (let i = 0; i < 10; i++) {
+        if (!objectHasOwnProperty(selected, data[i][LIST_ITEM_KEY_NAME])) {
+          const item = data[i];
+          newSelected[item[LIST_ITEM_KEY_NAME]] = item;
+          newSelectedOrder.push(item[LIST_ITEM_KEY_NAME]);
+          newSelectedManually[item[LIST_ITEM_KEY_NAME]] = item[LIST_ITEM_KEY_NAME];
+          newSelectedCount++;
+        }
+      }
+
+      if (newSelectedCount < 1) {
+        return state;
+      }
+
+      return {
+        ...state,
+        [SELECTED_STATE_KEY_NAME]: newSelected,
+        [SELECTED_ORDER_STATE_KEY_NAME]: newSelectedOrder,
+        selectedManually: newSelectedManually
+      };
+    }
+
     // Handles selecting all of the items from a group
     case groupsActionTypes.SELECT: {
       const group = action.data;
