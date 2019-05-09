@@ -16,6 +16,7 @@ import withMainLayout from '../../../components/WithMainLayout';
 import withResponsiveContainer from '../../../components/WithResponsiveContainer';
 import CheckboxVirtualTable from '../../../components/CheckboxVirtualTable';
 import withVirtualSortableList from '../../../components/WithVirtualSortableList';
+import PageHeader from '../../../components/PageHeader';
 import globalCss from '../../../css/global';
 import Filters from './Filters';
 import ColumnsSortableList from '../ColumnsSortableList';
@@ -151,9 +152,10 @@ class Reporting extends Component {
     return (
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
-          <h1 style={globalCss.pageHeaderSegmentH1}>
-            {this.getPageTitle()}
-          </h1>
+          <PageHeader
+            headerText={this.getPageTitle()}
+            state={collegeScorecardCurrentReport && collegeScorecardCurrentReport.hasChanged ? 'error' : ''}
+          />
         </Segment>
         <Segment>
           <Grid>
@@ -257,7 +259,12 @@ class Reporting extends Component {
             size="small"
             primary
             loading={isExporting}
-            disabled={isDataFetching || isExporting || collegeScorecardSelectedCount < 1}
+            disabled={
+              isDataFetching
+              || isExporting
+              || collegeScorecardSelectedCount < 1
+              || (collegeScorecardCurrentReport && collegeScorecardCurrentReport.hasChanged)
+            }
             onClick={this.handleExportButton}
           >
             Export
@@ -272,6 +279,7 @@ class Reporting extends Component {
               || isExporting
               || !collegeScorecardCurrentReport
               || collegeScorecardSelectedCount > SELECTED_LIMIT
+              || collegeScorecardCurrentReport.hasChanged
             }
           >
             Save to Table

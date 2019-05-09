@@ -1,5 +1,7 @@
 import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
 import { actionTypes } from './actions';
+import { actionTypes as collegeScorecardActionTypes } from '../collegeScorecard/actions';
+import { actionTypes as groupsActionTypes } from '../collegeScorecardGroups/actions';
 
 // Initial state
 const initialState = Object.assign({
@@ -79,6 +81,27 @@ export default (state = initialState, action) => {
         newTableSchema: tableSchema,
         newTableName: tableName,
         newReportRowCount: response.row_count
+      };
+    }
+    case collegeScorecardActionTypes.SELECT:
+    case collegeScorecardActionTypes.UNSELECT:
+    case collegeScorecardActionTypes.SELECT_ALL:
+    case collegeScorecardActionTypes.UNSELECT_ALL:
+    case groupsActionTypes.SELECT:
+    case groupsActionTypes.UNSELECT:
+    case groupsActionTypes.SELECT_ALL:
+    case groupsActionTypes.UNSELECT_ALL: {
+      const { current } = state;
+      if (!current || current.hasChanged) {
+        return state;
+      }
+
+      return {
+        ...state,
+        current: {
+          ...current,
+          hasChanged: true
+        }
       };
     }
     default:
