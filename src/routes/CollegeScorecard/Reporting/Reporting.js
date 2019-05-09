@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -32,7 +32,7 @@ const CREATE_REPORT_MODAL = 'CREATE_REPORT_MODAL';
 const UPDATE_REPORT_MODAL = 'UPDATE_REPORT_MODAL';
 const SAVE_REPORT_TABLE_MODAL = 'SAVE_REPORT_TABLE_MODAL';
 const Table = withResponsiveContainer(CheckboxVirtualTable, 320, 300);
-const ColumnsList = withResponsiveContainer(withVirtualSortableList(ColumnsSortableList), 205, 415);
+const ColumnsList = withResponsiveContainer(withVirtualSortableList(ColumnsSortableList), 205, 440);
 
 class Reporting extends Component {
   static propTypes = {
@@ -55,6 +55,7 @@ class Reporting extends Component {
     unselectData: PropTypes.func.isRequired,
     unselectAllData: PropTypes.func.isRequired,
     setFilter: PropTypes.func.isRequired,
+    autoReorderSelectedData: PropTypes.func.isRequired,
     reorderSelectedData: PropTypes.func.isRequired,
     showModal: PropTypes.func.isRequired,
     fetchReport: PropTypes.func.isRequired,
@@ -142,6 +143,7 @@ class Reporting extends Component {
       selectAllData,
       unselectData,
       unselectAllData,
+      autoReorderSelectedData,
       reorderSelectedData,
       fetchReport,
       setFilter,
@@ -221,12 +223,24 @@ class Reporting extends Component {
                   Save New Report
                 </Button>
                 {collegeScorecardSelectedCount > 0 && (
-                  <ColumnsList
-                    containerWidth={260}
-                    items={collegeScorecardSelectedOrderedData}
-                    itemValueKeyName="column_name"
-                    onSortEnd={reorderSelectedData}
-                  />
+                  <Fragment>
+                    <ColumnsList
+                      containerWidth={260}
+                      items={collegeScorecardSelectedOrderedData}
+                      itemValueKeyName="column_name"
+                      onSortEnd={reorderSelectedData}
+                    />
+                    <Button
+                      fluid
+                      size="small"
+                      primary
+                      className={styles.RightColumnButtons}
+                      disabled={collegeScorecardSelectedCount < 2}
+                      onClick={autoReorderSelectedData}
+                    >
+                      Reorder columns
+                    </Button>
+                  </Fragment>
                 )}
               </div>
             </Grid.Column>
@@ -339,6 +353,7 @@ export default withMainLayout(connect(
       dispatch(collegeScorecardReportsRdx.actions.resetReport());
     },
     setFilter: (key, value) => dispatch(collegeScorecardRdx.actions.setFilter(key, value)),
+    autoReorderSelectedData: () => dispatch(collegeScorecardRdx.actions.autoReorder()),
     reorderSelectedData: (sourceIdx, destIdx) =>
       dispatch(collegeScorecardRdx.actions.reorder(sourceIdx, destIdx)),
     showModal: modalName => dispatch(showModalAction(modalName)),

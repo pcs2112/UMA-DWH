@@ -225,6 +225,24 @@ export default (state = initialState, action) => {
       return newState;
     }
 
+    // Auto reorders the list of selected columns
+    case actionTypes.AUTO_REORDER: {
+      const { data } = state;
+      const selected = state[SELECTED_STATE_KEY_NAME];
+      const newSelectedOrder = [];
+
+      data.forEach((item) => {
+        if (objectHasOwnProperty(selected, item[LIST_ITEM_KEY_NAME])) {
+          newSelectedOrder.push(item[LIST_ITEM_KEY_NAME]);
+        }
+      });
+
+      return {
+        ...state,
+        [SELECTED_ORDER_STATE_KEY_NAME]: newSelectedOrder
+      };
+    }
+
     // Orders the list of selected columns
     case actionTypes.REORDER: {
       const selectedOrder = state[SELECTED_ORDER_STATE_KEY_NAME];

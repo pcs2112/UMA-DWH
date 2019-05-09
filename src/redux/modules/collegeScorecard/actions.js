@@ -18,6 +18,7 @@ export const actionTypes = {
   UNSELECT: 'collegeScorecard/UNSELECT',
   UNSELECT_ALL: 'collegeScorecard/UNSELECT_ALL',
   SET_FILTERS: 'collegeScorecard/SET_FILTERS',
+  AUTO_REORDER: 'collegeScorecard/AUTO_REORDER',
   REORDER: 'collegeScorecard/REORDER',
   LOAD_SAVED_REPORT: 'collegeScorecard/LOAD_SAVED_REPORT',
   SAVE_UMA_COLUMN_TITLE_BEGIN: 'collegeScorecard/SAVE_UMA_COLUMN_TITLE_BEGIN',
@@ -78,6 +79,13 @@ export const unselectAll = createUnselectAllAction(actionTypes.UNSELECT_ALL);
  * Action to set a filter.
  */
 export const setFilter = createSetFilterAction(actionTypes.SET_FILTERS, FILTERS_STATE_KEY_NAME);
+
+/**
+ * Action to auto reorder the items.
+ */
+export const autoReorder = () => ({
+  type: actionTypes.AUTO_REORDER
+});
 
 /**
  * Action to reorder the items.

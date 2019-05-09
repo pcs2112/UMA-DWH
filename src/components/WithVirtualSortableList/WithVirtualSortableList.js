@@ -22,6 +22,13 @@ export const withVirtualSortableList = (WrappedComponent) => {
       helperClass: styles.SortableHelper
     };
 
+    componentDidUpdate(prevProps) {
+      if (prevProps.items !== this.props.items) {
+        this.List.recomputeRowHeights();
+        this.List.forceUpdate();
+      }
+    }
+
     registerListRef = (listInstance) => {
       this.List = listInstance;
     };
@@ -33,9 +40,6 @@ export const withVirtualSortableList = (WrappedComponent) => {
 
       const { onSortEnd } = this.props;
       onSortEnd(oldIndex, newIndex);
-
-      this.List.recomputeRowHeights();
-      this.List.forceUpdate();
     };
 
     render() {
