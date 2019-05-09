@@ -87,6 +87,7 @@ export default (state = initialState, action) => {
     case collegeScorecardActionTypes.UNSELECT:
     case collegeScorecardActionTypes.SELECT_ALL:
     case collegeScorecardActionTypes.UNSELECT_ALL:
+    case collegeScorecardActionTypes.REORDER:
     case groupsActionTypes.SELECT:
     case groupsActionTypes.UNSELECT:
     case groupsActionTypes.SELECT_ALL:
