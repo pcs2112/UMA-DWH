@@ -1,5 +1,5 @@
-import statisticsHistoryReduxModule from 'redux/modules/statisticsHistory';
-import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
+import statisticsHistoryReduxModule from '../../redux/modules/statisticsHistory';
+import statisticsSchemasReduxModule from '../../redux/modules/statisticsSchemas';
 import History from './History';
 import Management from './Management';
 

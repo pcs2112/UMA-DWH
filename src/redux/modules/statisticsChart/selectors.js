@@ -1,28 +1,26 @@
 import moment from 'moment';
 import {
   createDataSelector,
-  createGetItemsSelector
+  createGetItemsSelector,
+  createGetPropertySelector
 } from 'javascript-utils/lib/selectors';
-import { createSelector } from 'reselect/lib/index';
-import { DEAULT_MONTHS_SIZE, DEFAULT_DATE_FORMAT } from 'constants/index';
-import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
+import { createSelector } from 'reselect';
+import { DEAULT_MONTHS_SIZE, DEFAULT_DATE_FORMAT } from '../../../constants/index';
+import statisticsSchemasReduxModule from '../statisticsSchemas';
+import { FILTERS_STATE_KEY_NAME } from './constants';
 
 const _getData = createDataSelector('statisticsChart', 'dataLoaded', 'data');
-
-/**
- * Returns the DWH statistics chart data from the state.
- */
-export const getStatisticsChartData = createGetItemsSelector(_getData);
 
 /**
  * Returns the filters from the state.
  * @param {Object} state
  */
-const _getFilters = state => ({
-  schema: state.statisticsChart.schema,
-  date: state.statisticsChart.date,
-  months: state.statisticsChart.months
-});
+const _getFilters = createGetPropertySelector('statisticsChart', FILTERS_STATE_KEY_NAME);
+
+/**
+ * Returns the DWH statistics chart data from the state.
+ */
+export const getStatisticsChartData = createGetItemsSelector(_getData);
 
 /**
  * Selector to get the statistics chart filters.

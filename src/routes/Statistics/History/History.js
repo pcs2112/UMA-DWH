@@ -4,15 +4,16 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import moment from 'moment';
 import { Segment, Grid, Button } from 'semantic-ui-react';
-import { DEFAULT_DATE_FORMAT } from 'constants/index';
-import statisticsHistoryReduxModule from 'redux/modules/statisticsHistory';
-import statisticsChartReduxModule from 'redux/modules/statisticsChart';
-import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
-import withMainLayout from 'components/WithMainLayout';
-import globalCss from 'css/global';
+import { DEFAULT_DATE_FORMAT } from '../../../constants/index';
+import statisticsHistoryReduxModule from '../../../redux/modules/statisticsHistory';
+import statisticsChartReduxModule from '../../../redux/modules/statisticsChart';
+import statisticsSchemasReduxModule from '../../../redux/modules/statisticsSchemas';
+import withMainLayout from '../../../components/WithMainLayout';
+import globalCss from '../../../css/global';
 import HistoryTable from './HistoryTable';
 import DateChartFilter from '../DateChartFilter';
 import DropdownFilters from '../DropdownFilters';
+import Filters from '../Filters';
 
 class History extends Component {
   static propTypes = {
@@ -26,7 +27,8 @@ class History extends Component {
     statisticsChartDataLoaded: PropTypes.bool.isRequired,
     statisticsChartData: PropTypes.array.isRequired,
     fetchAllData: PropTypes.func.isRequired,
-    resetAllData: PropTypes.func.isRequired
+    resetAllData: PropTypes.func.isRequired,
+    setFilter: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -57,7 +59,8 @@ class History extends Component {
       isStatisticsChartFetching,
       statisticsChartDataLoaded,
       statisticsChartData,
-      fetchAllData
+      fetchAllData,
+      setFilter
     } = this.props;
 
     const current = moment(statisticsHistoryFilters.date, DEFAULT_DATE_FORMAT);
@@ -99,6 +102,16 @@ class History extends Component {
             </Grid.Column>
           </Grid>
         </Segment>
+        <Segment>
+          <Grid>
+            <Grid.Column width={8}>
+              <Filters
+                {...statisticsHistoryFilters}
+                onChange={setFilter}
+              />
+            </Grid.Column>
+          </Grid>
+        </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
           <HistoryTable
             dataLoaded={statisticsHistoryDataLoaded}
@@ -133,6 +146,9 @@ export default withMainLayout(connect(
     resetAllData: () => {
       dispatch(statisticsHistoryReduxModule.actions.reset());
       dispatch(statisticsChartReduxModule.actions.reset());
+    },
+    setFilter: (key, value) => {
+      dispatch(statisticsHistoryReduxModule.actions.setFilter(key, value));
     }
   })
 )(History));

@@ -1,30 +1,28 @@
 import { createSelector } from 'reselect';
 import moment from 'moment';
-import { DEAULT_MONTHS_SIZE, DEFAULT_DATE_FORMAT } from 'constants/index';
 import {
   createDataSelector,
   createGetItemsSelector,
-  createFetchingErrorSelector
+  createFetchingErrorSelector,
+  createGetPropertySelector
 } from 'javascript-utils/lib/selectors';
-import statisticsSchemasReduxModule from 'redux/modules/statisticsSchemas';
+import statisticsSchemasReduxModule from '../statisticsSchemas';
+import { DEAULT_MONTHS_SIZE, DEFAULT_DATE_FORMAT } from '../../../constants/index';
+import { FILTERS_STATE_KEY_NAME } from './constants';
 
 const _getData = createDataSelector('statisticsHistory', 'dataLoaded', 'data');
+
+/**
+ * Returns the filters from the state.
+ * @param {Object} state
+ */
+const _getFilters = createGetPropertySelector('statisticsHistory', FILTERS_STATE_KEY_NAME);
 
 /**
  * Returns the fetching error.
  * @param {Object} state
  */
 export const getFetchingError = createFetchingErrorSelector('statisticsHistory', 'fetchingError', 'payload');
-
-/**
- * Returns the filters from the state.
- * @param {Object} state
- */
-const _getFilters = state => ({
-  schema: state.statisticsHistory.schema,
-  date: state.statisticsHistory.date,
-  months: state.statisticsHistory.months
-});
 
 /**
  * Returns the DWH statistics history from the state.
@@ -55,6 +53,7 @@ export const getFilters = createSelector(
     }
 
     return {
+      ...filtersFromState,
       schema,
       date,
       months

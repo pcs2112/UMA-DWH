@@ -1,27 +1,31 @@
-import itemListReducerFor, { initialState as itemListInitialState } from 'redux/reducers/itemListReducerFor';
+import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
+import itemListFiltersReducerFor, { getInitialState as filtersInitialState }
+  from '../../reducers/itemListFiltersReducerFor';
 import { actionTypes } from './actions';
+import { actionTypes as historyActionTypes } from '../statisticsHistory/actions';
+import {
+  FILTERS_STATE_KEY_NAME
+} from './constants';
 
 // Initial state
-const initialState = Object.assign({
+const defaultFilters = {
   schema: '',
   date: '',
   months: ''
-}, itemListInitialState);
+};
+
+// Initial state
+const initialState = Object.assign(
+  filtersInitialState(defaultFilters, FILTERS_STATE_KEY_NAME),
+  itemListInitialState
+);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
-
-// Set the filters
-const setFilters = (state, action) => {
-  const newState = { ...state };
-  newState.schema = action.schema;
-  newState.date = action.date;
-  newState.months = action.months;
-  return newState;
-};
+const setFilters = itemListFiltersReducerFor(actionTypes, defaultFilters, FILTERS_STATE_KEY_NAME);
 
 /**
- * ETL report runtime chart data reducer.
+ * ETL statistics chart data reducer.
  *
  * @param {Object} state
  * @param {Object} action
@@ -39,6 +43,15 @@ export default (state = initialState, action) => {
       return itemListReducer(state, action);
     case actionTypes.SET_FILTERS:
       return setFilters(state, action);
+    case historyActionTypes.FETCH_LAST_DATE_SUCCESS:
+      return {
+        ...state,
+        [FILTERS_STATE_KEY_NAME]: {
+          ...state[FILTERS_STATE_KEY_NAME],
+          date: action.response[0].last_date,
+          staled_stats: action.response[0].staled_stats === 1
+        }
+      };
     default:
       return state;
   }

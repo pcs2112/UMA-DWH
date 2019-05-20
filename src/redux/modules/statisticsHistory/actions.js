@@ -1,3 +1,6 @@
+import { FILTERS_STATE_KEY_NAME } from './constants';
+import { createSetFilterAction, createSetFiltersAction } from '../../reducers/itemListFiltersReducerFor';
+
 export const actionTypes = {
   FETCH_BEGIN: 'statisticsHistory/FETCH_BEGIN',
   FETCH_SUCCESS: 'statisticsHistory/FETCH_SUCCESS',
@@ -51,11 +54,11 @@ export const reset = () => ({
 });
 
 /**
- * Sets the filters.
+ * Action to set a filter.
  */
-export const setFilters = (schema, date, months) => ({
-  type: actionTypes.SET_FILTERS,
-  schema,
-  date,
-  months
-});
+export const setFilter = createSetFilterAction(actionTypes.SET_FILTERS, FILTERS_STATE_KEY_NAME);
+
+/**
+ * Action to set multiple filters.
+ */
+export const setFilters = createSetFiltersAction(actionTypes.SET_FILTERS, FILTERS_STATE_KEY_NAME);

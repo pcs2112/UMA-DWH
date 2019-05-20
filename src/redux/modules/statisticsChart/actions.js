@@ -2,8 +2,7 @@ export const actionTypes = {
   FETCH_BEGIN: 'statisticsChart/FETCH_BEGIN',
   FETCH_SUCCESS: 'statisticsChart/FETCH_SUCCESS',
   FETCH_FAIL: 'statisticsChart/FETCH_FAIL',
-  RESET: 'statisticsChart/RESET',
-  SET_FILTERS: 'statisticsChart/SET_FILTERS'
+  RESET: 'statisticsChart/RESET'
 };
 
 /**
@@ -34,14 +33,4 @@ export const fetch = (schema, date, months) => ({
  */
 export const reset = () => ({
   type: actionTypes.RESET
-});
-
-/**
- * Sets filters.
- */
-export const setFilters = (schema, date, months) => ({
-  type: actionTypes.SET_FILTERS,
-  schema,
-  date,
-  months
 });

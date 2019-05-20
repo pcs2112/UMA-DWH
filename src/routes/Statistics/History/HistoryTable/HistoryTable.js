@@ -145,4 +145,4 @@ class HistoryTable extends Component {
   }
 }
 
-export default withResponsiveTable(HistoryTable, 300, 360);
+export default withResponsiveTable(HistoryTable, 300, 450);
