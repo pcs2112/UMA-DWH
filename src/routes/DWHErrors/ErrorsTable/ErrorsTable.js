@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import ReactTable from 'react-table';
-import withResponsiveTable from 'components/WithResponsiveTable';
+import withResponsiveTable from '../../../components/WithResponsiveTable';
 
 const keyName = 'id';
 
@@ -144,4 +144,4 @@ class ErrorsTable extends Component {
   }
 }
 
-export default withResponsiveTable(ErrorsTable, 300, 360);
+export default withResponsiveTable(ErrorsTable, 300, 450);

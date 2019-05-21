@@ -1,22 +1,29 @@
-import itemListReducerFor, { initialState as itemListInitialState } from 'redux/reducers/itemListReducerFor';
+import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
+import itemListFiltersReducerFor, { getInitialState as filtersInitialState }
+  from '../../reducers/itemListFiltersReducerFor';
 import { actionTypes } from './actions';
+import {
+  FILTERS_STATE_KEY_NAME
+} from './constants';
 
 // Initial state
-const initialState = Object.assign({}, itemListInitialState);
+const defaultFilters = {
+  date: '',
+  months: ''
+};
+
+// Initial state
+const initialState = Object.assign(
+  filtersInitialState(defaultFilters, FILTERS_STATE_KEY_NAME),
+  itemListInitialState
+);
 
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
-
-// Set the filters
-const setFilters = (state, action) => {
-  const newState = { ...state };
-  newState.date = action.date;
-  newState.months = action.months;
-  return newState;
-};
+const setFilters = itemListFiltersReducerFor(actionTypes, defaultFilters, FILTERS_STATE_KEY_NAME);
 
 /**
- * ETL procedure runtime chart data reducer.
+ * ETL DWH errors runtime chart data reducer.
  *
  * @param {Object} state
  * @param {Object} action

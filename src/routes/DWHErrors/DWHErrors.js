@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { Segment, Grid, Button } from 'semantic-ui-react';
-import tryCatchErrorsChart from 'redux/modules/tryCatchErrorsChart';
-import tryCatchErrors from 'redux/modules/tryCatchErrors';
-import withMainLayout from 'components/WithMainLayout';
-import globalCss from 'css/global';
+import tryCatchErrorsChart from '../../redux/modules/tryCatchErrorsChart';
+import tryCatchErrors from '../../redux/modules/tryCatchErrors';
+import withMainLayout from '../../components/WithMainLayout';
+import globalCss from '../../css/global';
 import ErrorsTable from './ErrorsTable';
 import DateChartFilter from './DateChartFilter';
 import DropdownFilters from './DropdownFilters';
+import Filters from './Filters';
 import { DEFAULT_DATE_FORMAT } from '../../constants';
 
 class DWHErrors extends Component {
@@ -23,7 +24,8 @@ class DWHErrors extends Component {
     tryCatchErrorsChartDataLoaded: PropTypes.bool.isRequired,
     tryCatchErrorsChartData: PropTypes.array.isRequired,
     fetchAllData: PropTypes.func.isRequired,
-    resetAllData: PropTypes.func.isRequired
+    resetAllData: PropTypes.func.isRequired,
+    setFilter: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -53,7 +55,8 @@ class DWHErrors extends Component {
       isTryCatchErrorsChartFetching,
       tryCatchErrorsChartDataLoaded,
       tryCatchErrorsChartData,
-      fetchAllData
+      fetchAllData,
+      setFilter
     } = this.props;
 
     const current = moment(tryCatchErrorsFilters.date, DEFAULT_DATE_FORMAT);
@@ -91,6 +94,16 @@ class DWHErrors extends Component {
             </Grid.Column>
           </Grid>
         </Segment>
+        <Segment>
+          <Grid>
+            <Grid.Column width={8}>
+              <Filters
+                {...tryCatchErrorsFilters}
+                onChange={setFilter}
+              />
+            </Grid.Column>
+          </Grid>
+        </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
           <ErrorsTable
             dataLoaded={tryCatchErrorsDataLoaded}
@@ -124,6 +137,9 @@ export default withMainLayout(connect(
     resetAllData: () => {
       dispatch(tryCatchErrors.actions.reset());
       dispatch(tryCatchErrorsChart.actions.reset());
+    },
+    setFilter: (key, value) => {
+      dispatch(tryCatchErrors.actions.setFilter(key, value));
     }
   })
 )(DWHErrors));

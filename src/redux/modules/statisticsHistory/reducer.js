@@ -51,8 +51,7 @@ const filterData = (state) => {
     const queryNormalized = query.toLowerCase();
     newData = allData.filter((item) => {
       const normalizedTableFull = `${item.table_full}`.toLowerCase();
-      const normalizedErrorMessage = `${item.error_message}`.toLowerCase();
-      return normalizedTableFull.indexOf(queryNormalized) > -1 || normalizedErrorMessage.indexOf(queryNormalized) > -1;
+      return normalizedTableFull.indexOf(queryNormalized) > -1;
     });
   }
 

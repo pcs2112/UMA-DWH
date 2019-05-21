@@ -3,9 +3,11 @@ import moment from 'moment/moment';
 import {
   createDataSelector,
   createGetItemsSelector,
-  createFetchingErrorSelector
+  createFetchingErrorSelector,
+  createGetPropertySelector
 } from 'javascript-utils/lib/selectors';
-import { DEFAULT_DATE_FORMAT, DEAULT_MONTHS_SIZE } from 'constants/index';
+import { DEFAULT_DATE_FORMAT, DEAULT_MONTHS_SIZE } from '../../../constants/index';
+import { FILTERS_STATE_KEY_NAME } from './constants';
 
 const _getData = createDataSelector('tryCatchErrors', 'dataLoaded', 'data');
 
@@ -13,10 +15,7 @@ const _getData = createDataSelector('tryCatchErrors', 'dataLoaded', 'data');
  * Returns the filters from the state.
  * @param {Object} state
  */
-const _getFilters = state => ({
-  date: state.tryCatchErrors.date,
-  months: state.tryCatchErrors.months
-});
+const _getFilters = createGetPropertySelector('tryCatchErrors', FILTERS_STATE_KEY_NAME);
 
 /**
  * Returns the fetching error.
@@ -48,6 +47,7 @@ export const getFilters = createSelector(
     }
 
     return {
+      ...filtersFromState,
       date,
       months
     };

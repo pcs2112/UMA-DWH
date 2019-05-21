@@ -1,3 +1,6 @@
+import { FILTERS_STATE_KEY_NAME } from './constants';
+import { createSetFilterAction, createSetFiltersAction } from '../../reducers/itemListFiltersReducerFor';
+
 export const actionTypes = {
   FETCH_BEGIN: 'tryCatchErrors/FETCH_BEGIN',
   FETCH_SUCCESS: 'tryCatchErrors/FETCH_SUCCESS',
@@ -34,10 +37,11 @@ export const reset = () => ({
 });
 
 /**
- * Sets the filters.
+ * Action to set a filter.
  */
-export const setFilters = (date, months) => ({
-  type: actionTypes.SET_FILTERS,
-  date,
-  months
-});
+export const setFilter = createSetFilterAction(actionTypes.SET_FILTERS, FILTERS_STATE_KEY_NAME);
+
+/**
+ * Action to set multiple filters.
+ */
+export const setFilters = createSetFiltersAction(actionTypes.SET_FILTERS, FILTERS_STATE_KEY_NAME);
