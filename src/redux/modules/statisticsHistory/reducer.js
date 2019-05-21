@@ -50,8 +50,16 @@ const filterData = (state) => {
   if (!isEmpty(query) && query.length >= 3) {
     const queryNormalized = query.toLowerCase();
     newData = allData.filter((item) => {
+      const normalizedServer = `${item.server}`.toLowerCase();
+      const normalizedDatabase = `${item.database}`.toLowerCase();
+      const normalizedSchema = `${item.schema}`.toLowerCase();
+      const normalizedTable = `${item.table}`.toLowerCase();
       const normalizedTableFull = `${item.table_full}`.toLowerCase();
-      return normalizedTableFull.indexOf(queryNormalized) > -1;
+      return normalizedServer.indexOf(queryNormalized) > -1
+        || normalizedDatabase.indexOf(queryNormalized) > -1
+        || normalizedSchema.indexOf(queryNormalized) > -1
+        || normalizedTable.indexOf(queryNormalized) > -1
+        || normalizedTableFull.indexOf(queryNormalized) > -1;
     });
   }
 
