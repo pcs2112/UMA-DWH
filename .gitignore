@@ -52,3 +52,5 @@ uma_dwh/static/run_books/
 logs/
 .app_cache
 venv/
+.venv/
+.vscode/
