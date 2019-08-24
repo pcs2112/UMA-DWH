@@ -38,6 +38,9 @@ class MainMenu extends Component {
         <Menu.Item as={Link} to="/management" active={isActive(pathname, '/management')}>
           ETL Management
         </Menu.Item>
+        <Menu.Item as={Link} to="/telecom" active={isActive(pathname, '/telecom')}>
+          Telecom
+        </Menu.Item>
         <Menu.Item as={Link} to="/reports/history" active={isActive(pathname, '/reports/history')}>
           DWH Report History
         </Menu.Item>
