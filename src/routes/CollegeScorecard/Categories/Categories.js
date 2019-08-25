@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { Segment, Button } from 'semantic-ui-react';
 import categoriesRdx from '../../../redux/modules/collegeScorecardCategories';
 import filesRdx from '../../../redux/modules/collegeScorecardFiles';
+import formulasRdx from '../../../redux/modules/collegeScorecardFormulas';
 import withMainLayout from '../../../components/WithMainLayout';
 import ListTable from './ListTable';
 import globalCss from '../../../css/global';
@@ -74,11 +75,13 @@ export default withMainLayout(connect(
     fetchData: () =>
       Promise.all([
         dispatch(categoriesRdx.actions.fetch()),
-        dispatch(filesRdx.actions.fetch())
+        dispatch(filesRdx.actions.fetch()),
+        dispatch(formulasRdx.actions.fetch())
       ]),
     resetData: () => {
       dispatch(categoriesRdx.actions.reset());
       dispatch(filesRdx.actions.reset());
+      dispatch(formulasRdx.actions.reset());
     },
     onCreateCategoryClick: () => {
     },
