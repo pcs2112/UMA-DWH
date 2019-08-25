@@ -49,7 +49,8 @@ export default connectModal(
     initialValues: categoriesRdx.selectors.getUpdatingCategoryInitialValues(state)
   }),
   dispatch => ({
-    onSubmit: data => dispatch(categoriesRdx.actions.update(data)),
+    onSubmit: data => dispatch(categoriesRdx.actions.update(data))
+      .then(() => dispatch(categoriesRdx.actions.fetch())),
     onClose: () => {
       dispatch(hideModal());
       dispatch(categoriesRdx.actions.updatingEnd());

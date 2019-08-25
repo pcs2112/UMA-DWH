@@ -430,3 +430,17 @@ def execute_categories_sp(*args, out_arg='sp_status_code'):
     return []
 
   return result
+
+
+def save_category(category_name, description, csv_file, where_unit_id_table, formula, category_id=''):
+  """ Creates/Updates a category. """
+  execute_categories_sp(
+    'MWH_FILES.MANAGE_COLLEGE_SCORECARD_D_CATEGORY',
+    'UPDATE_COLLEGE_SCORECARD_D_CATEGORY' if not is_empty(category_id) else 'SAVE_COLLEGE_SCORECARD_D_CATEGORY',
+    category_id,
+    category_name,
+    description,
+    formula,
+    csv_file,
+    where_unit_id_table
+  )

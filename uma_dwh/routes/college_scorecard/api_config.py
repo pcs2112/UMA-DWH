@@ -69,17 +69,13 @@ path_sp_args_map = {
     },
     'POST': {
       'module_name': 'uma_dwh.db.college_scorecard',
-      'module_func': 'create_category',
-      'sp_in_args': ['category', 'description', 'formula', 'file_name', 'where_unit_id_table'],
-      'sp_in_args_inject_user': 'user_id',
-      'sp_in_args_as_payload': True
+      'module_func': 'save_category',
+      'sp_in_args': ['category_name', 'csv_file', 'description', 'where_unit_id_table', 'formula']
     },
     'PUT': {
       'module_name': 'uma_dwh.db.college_scorecard',
-      'module_func': 'update_category',
-      'sp_in_args': ['category', 'description', 'formula', 'file_name', 'where_unit_id_table'],
-      'sp_in_args_inject_user': 'user_id',
-      'sp_in_args_as_payload': True
+      'module_func': 'save_category',
+      'sp_in_args': ['category_id', 'category_name', 'csv_file', 'description', 'where_unit_id_table', 'formula']
     }
   },
   'formula_tables': {

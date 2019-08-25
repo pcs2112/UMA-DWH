@@ -46,5 +46,6 @@ export default connectModal(
   null,
   dispatch => ({
     onSubmit: data => dispatch(categoriesRdx.actions.create(data))
+      .then(() => dispatch(categoriesRdx.actions.fetch()))
   })
 );

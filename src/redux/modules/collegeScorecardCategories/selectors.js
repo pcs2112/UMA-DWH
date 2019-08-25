@@ -42,9 +42,11 @@ export const getUpdatingCategoryInitialValues = createSelector(
     }
 
     return {
-      id: category.id,
+      category_id: category.id,
       category_name: category.category_name,
+      csv_file: category.csv_file,
       description: category.description,
+      where_unit_id_table: category.where_unit_id_table,
       formula: category.formula
     };
   }
