@@ -20,7 +20,7 @@ const columns = [
   },
   {
     Header: 'CATEGORY_NAME',
-    accessor: 'category',
+    accessor: 'category_name',
     width: 300
   },
   {
