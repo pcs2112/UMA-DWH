@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm, Field } from 'redux-form';
-import { Button, Message } from 'semantic-ui-react';
+import { Form, Button, Message } from 'semantic-ui-react';
 import withBasicForm from '../../../../components/WithBasicForm';
-import { TextField, SelectField } from '../../../../components/ReduxForm';
+import { TextField, SelectField, TextAreaField } from '../../../../components/ReduxForm';
 import { newCategoryValidator, existingCategoryValidator } from './validate';
 
 const withCategoryForm = (scenario) => {
@@ -17,22 +17,27 @@ const withCategoryForm = (scenario) => {
           content="The category was saved successfully."
         />
       )}
-      <Field name="category_name" type="text" component={TextField} label="Category name" required />
-      <Field name="description" type="text" component={TextField} label="Description" required />
-      <Field
-        name="csv_file"
-        component={SelectField}
-        label="CSV File"
-        required
-        options={files}
-      />
-      <Field
-        name="where_unit_id_table"
-        component={SelectField}
-        label="Table w/columns in formula"
-        required
-        options={tables}
-      />
+      <Form.Group widths="equal">
+        <Field name="category_name" type="text" component={TextField} label="Category name" required />
+        <Field
+          name="csv_file"
+          component={SelectField}
+          label="CSV File"
+          required
+          options={files}
+        />
+      </Form.Group>
+      <Form.Group widths="equal">
+        <Field name="description" type="text" component={TextField} label="Description" required />
+        <Field
+          name="where_unit_id_table"
+          component={SelectField}
+          label="Table w/columns in formula"
+          required
+          options={tables}
+        />
+      </Form.Group>
+      <Field name="formula" component={TextAreaField} label="Formula" required rows={10} />
       <div className="field">
         {!submitSucceeded && (
           <Button type="submit" fluid size="large" primary disabled={pristine || submitting}>
@@ -67,6 +72,7 @@ const withCategoryForm = (scenario) => {
   return reduxForm({
     validate,
     fields: [
+      'id',
       'category_name',
       'description',
       'csv_file',

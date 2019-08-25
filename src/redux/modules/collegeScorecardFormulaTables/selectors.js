@@ -27,12 +27,9 @@ export const getCollegeScorecardFormulaTables = createSelector(
  */
 export const getCollegeScorecardFormulaTablesDropdownOptions = createSelector(
   [_getData],
-  data => data.map((item) => {
-    const { schematable } = item;
-    return {
-      key: schematable,
-      value: schematable,
-      text: schematable
-    };
-  })
+  data => data.map(item => ({
+    key: item.schema_table,
+    value: item.schema_table,
+    text: item.schema_table
+  }))
 );

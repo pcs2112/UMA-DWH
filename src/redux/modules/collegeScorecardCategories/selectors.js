@@ -1,10 +1,16 @@
 import { createSelector } from 'reselect';
 import {
   createDataSelector,
-  createFetchingErrorSelector
+  createFetchingErrorSelector, createGetItemByIdSelector, createGetPropertySelector
 } from 'javascript-utils/lib/selectors';
 
 const _getData = createDataSelector('collegeScorecardCategories', 'dataLoaded', 'data');
+
+/**
+ * Returns the updating category id.
+ */
+const _getUpdatingCategoryId = createGetPropertySelector('collegeScorecardCategories', 'updating');
+
 
 /**
  * Returns the fetching error.
@@ -18,4 +24,28 @@ export const getFetchingError = createFetchingErrorSelector('collegeScorecardCat
 export const getCollegeScorecardCategories = createSelector(
   [_getData],
   data => data
+);
+
+/**
+ * Returns the current updating category.
+ */
+export const getUpdatingCategory = createGetItemByIdSelector(_getData, _getUpdatingCategoryId);
+
+/**
+ * Gets the initial form values for the updating user.
+ */
+export const getUpdatingCategoryInitialValues = createSelector(
+  [getUpdatingCategory],
+  (category) => {
+    if (!category) {
+      return {};
+    }
+
+    return {
+      id: category.id,
+      category_name: category.category_name,
+      description: category.description,
+      formula: category.formula
+    };
+  }
 );
