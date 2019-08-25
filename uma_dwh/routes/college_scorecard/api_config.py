@@ -82,7 +82,7 @@ path_sp_args_map = {
       'sp_in_args_as_payload': True
     }
   },
-  'formulas': {
+  'formula_tables': {
     'GET': {
       'module_name': 'uma_dwh.db.college_scorecard',
       'module_func': 'execute_categories_sp',

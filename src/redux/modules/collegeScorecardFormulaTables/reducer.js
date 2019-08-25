@@ -8,7 +8,7 @@ const initialState = Object.assign({}, itemListInitialState);
 const itemListReducer = itemListReducerFor(actionTypes);
 
 /**
- * College scorecard formulas reducer.
+ * College scorecard tables with formulas reducer.
  *
  * @param {Object} state
  * @param {Object} action
