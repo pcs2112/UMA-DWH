@@ -84,7 +84,7 @@ path_sp_args_map = {
   },
   'formulas': {
     'GET': {
-      'module_name': 'uma_dwh.db.etl',
+      'module_name': 'uma_dwh.db.college_scorecard',
       'module_func': 'execute_categories_sp',
       'sp_name': 'MWH_FILES.MANAGE_COLLEGE_SCORECARD_D_CATEGORY',
       'sp_message': 'LIST_COLLEGE_SCORECARD_FORMULA_TABLES'
