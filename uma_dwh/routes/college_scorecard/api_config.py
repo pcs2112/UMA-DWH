@@ -59,5 +59,35 @@ path_sp_args_map = {
       'sp_in_args_inject_user': 'user_id',
       'sp_in_args': ['column_name', 'uma_excel_column_name']
     }
+  },
+  'categories': {
+    'GET': {
+      'module_name': 'uma_dwh.db.college_scorecard',
+      'module_func': 'execute_categories_sp',
+      'sp_name': 'MWH_FILES.MANAGE_COLLEGE_SCORECARD_D_CATEGORY',
+      'sp_message': 'LIST_COLLEGE_SCORECARD_D_CATEGORIES'
+    },
+    'POST': {
+      'module_name': 'uma_dwh.db.college_scorecard',
+      'module_func': 'create_category',
+      'sp_in_args': ['category', 'description', 'formula', 'file_name', 'where_unit_id_table'],
+      'sp_in_args_inject_user': 'user_id',
+      'sp_in_args_as_payload': True
+    },
+    'PUT': {
+      'module_name': 'uma_dwh.db.college_scorecard',
+      'module_func': 'update_category',
+      'sp_in_args': ['category', 'description', 'formula', 'file_name', 'where_unit_id_table'],
+      'sp_in_args_inject_user': 'user_id',
+      'sp_in_args_as_payload': True
+    }
+  },
+  'formulas': {
+    'GET': {
+      'module_name': 'uma_dwh.db.etl',
+      'module_func': 'execute_categories_sp',
+      'sp_name': 'MWH_FILES.MANAGE_COLLEGE_SCORECARD_D_CATEGORY',
+      'sp_message': 'LIST_COLLEGE_SCORECARD_FORMULA_TABLES'
+    }
   }
 }
