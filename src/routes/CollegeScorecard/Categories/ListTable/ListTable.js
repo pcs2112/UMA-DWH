@@ -52,7 +52,7 @@ class ListTable extends Component {
     dataLoaded: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
     fetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
-    onEdit: PropTypes.array.isRequired
+    onEdit: PropTypes.func.isRequired
   };
 
   constructor(props) {

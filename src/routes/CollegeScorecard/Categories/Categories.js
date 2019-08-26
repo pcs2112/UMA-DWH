@@ -94,17 +94,8 @@ export default withMainLayout(connect(
     formulaTables: formulaTablesRdx.selectors.getCollegeScorecardFormulaTablesDropdownOptions(state)
   }),
   dispatch => ({
-    fetchData: () =>
-      Promise.all([
-        dispatch(categoriesRdx.actions.fetch()),
-        dispatch(filesRdx.actions.fetch()),
-        dispatch(formulaTablesRdx.actions.fetch())
-      ]),
-    resetData: () => {
-      dispatch(categoriesRdx.actions.reset());
-      dispatch(filesRdx.actions.reset());
-      dispatch(formulaTablesRdx.actions.reset());
-    },
+    fetchData: () => dispatch(categoriesRdx.actions.fetch()),
+    resetData: () => dispatch(categoriesRdx.actions.reset()),
     onCreateCategoryClick: () => {
       dispatch(showModal(CREATE_CATEGORY_MODAL));
     },
