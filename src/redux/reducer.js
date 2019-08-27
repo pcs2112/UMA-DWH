@@ -20,6 +20,7 @@ import reportRuntimeChart from './modules/reportRuntimeChart';
 import procedureRuntimeChart from './modules/procedureRuntimeChart';
 import user from './modules/user';
 import users from './modules/users';
+import telecomSkills from './modules/telecomSkills';
 import tryCatchErrors from './modules/tryCatchErrors';
 import tryCatchErrorsChart from './modules/tryCatchErrorsChart';
 import statisticsChart from './modules/statisticsChart';
@@ -49,6 +50,7 @@ export default () => combineReducers({
   procedureRuntimeChart: procedureRuntimeChart.reducer,
   user: user.reducer,
   users: users.reducer,
+  telecomSkills: telecomSkills.reducer,
   tryCatchErrors: tryCatchErrors.reducer,
   tryCatchErrorsChart: tryCatchErrorsChart.reducer,
   statisticsChart: statisticsChart.reducer,
