@@ -7,6 +7,7 @@ export const actionTypes = {
   FETCH_SUCCESS: 'collegeScorecardCategories/FETCH_SUCCESS',
   FETCH_FAIL: 'collegeScorecardCategories/FETCH_FAIL',
   RESET: 'collegeScorecardCategories/RESET',
+  SET_FILTERS: 'collegeScorecardCategories/SET_FILTERS',
   CREATE_BEGIN: 'collegeScorecardCategories/CREATE_BEGIN',
   CREATE_SUCCESS: 'collegeScorecardCategories/CREATE_SUCCESS',
   CREATE_FAIL: 'collegeScorecardCategories/CREATE_FAIL',
