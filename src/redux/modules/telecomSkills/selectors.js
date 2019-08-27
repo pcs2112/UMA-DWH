@@ -4,13 +4,13 @@ import {
   createGetItemsSelector
 } from 'javascript-utils/lib/selectors';
 
-const _getData = createDataSelector('errorTypeResolution', 'dataLoaded', 'data');
+const _getData = createDataSelector('telecomSkills', 'dataLoaded', 'data');
 
 /**
  * Returns the error from the state.
  * @param {Object} state
  */
-export const getFetchingError = createFetchingErrorSelector('errorTypeResolution', 'fetchingError', 'payload');
+export const getFetchingError = createFetchingErrorSelector('telecomSkills', 'fetchingError', 'payload');
 
 /**
  * Returns the Error type resolution data.

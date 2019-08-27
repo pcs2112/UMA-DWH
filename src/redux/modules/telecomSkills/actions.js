@@ -1,8 +1,8 @@
 
 export const actionTypes = {
-  FETCH_BEGIN: 'errorTypeResolution/FETCH_BEGIN',
-  FETCH_SUCCESS: 'errorTypeResolution/FETCH_SUCCESS',
-  FETCH_FAIL: 'errorTypeResolution/FETCH_FAIL'
+  FETCH_BEGIN: 'telecomSkills/FETCH_BEGIN',
+  FETCH_SUCCESS: 'telecomSkills/FETCH_SUCCESS',
+  FETCH_FAIL: 'telecomSkills/FETCH_FAIL'
 };
 
 /**
