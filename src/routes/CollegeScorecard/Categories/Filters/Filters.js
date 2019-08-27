@@ -22,7 +22,7 @@ class Filters extends Component {
           <Form.Field width={10}>
             <InputFilter
               defaultValue={query}
-              placeholder="Filter by CATEGORY_NAME and WHERE_TABLE"
+              placeholder="Filter by CATEGORY_NAME"
               onChange={this.handleQueryFilterOnChange}
             />
           </Form.Field>
