@@ -3,8 +3,11 @@ import {
   createDataSelector,
   createFetchingErrorSelector, createGetItemByIdSelector, createGetPropertySelector
 } from 'javascript-utils/lib/selectors';
+import { FILTERS_STATE_KEY_NAME } from './constants';
 
 const _getData = createDataSelector('collegeScorecardCategories', 'dataLoaded', 'data');
+
+const _getFilters = createGetPropertySelector('collegeScorecardCategories', FILTERS_STATE_KEY_NAME);
 
 /**
  * Returns the updating category id.
@@ -24,6 +27,19 @@ export const getFetchingError = createFetchingErrorSelector('collegeScorecardCat
 export const getCollegeScorecardCategories = createSelector(
   [_getData],
   data => data
+);
+
+/**
+ * Selector to get the filters.
+ */
+export const getFilters = createSelector(
+  [_getFilters],
+  (filtersFromState) => {
+    const { query } = filtersFromState;
+    return {
+      query
+    };
+  }
 );
 
 /**

@@ -1,4 +1,6 @@
 import { catchValidation } from '../../../helpers/redux';
+import { createSetFilterAction } from '../../reducers/itemListFiltersReducerFor';
+import { FILTERS_STATE_KEY_NAME } from './constants';
 
 export const actionTypes = {
   FETCH_BEGIN: 'collegeScorecardCategories/FETCH_BEGIN',
@@ -86,3 +88,8 @@ export const updatingStart = id => ({
 export const updatingEnd = () => ({
   type: actionTypes.UPDATING_END
 });
+
+/**
+ * Action to set a filter.
+ */
+export const setFilter = createSetFilterAction(actionTypes.SET_FILTERS, FILTERS_STATE_KEY_NAME);

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Segment, Button } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { Segment, Button, Grid } from 'semantic-ui-react';
 import { showModal } from 'redux-modal';
 import categoriesRdx from '../../../redux/modules/collegeScorecardCategories';
 import filesRdx from '../../../redux/modules/collegeScorecardFiles';
@@ -11,6 +12,7 @@ import ListTable from './ListTable';
 import globalCss from '../../../css/global';
 import CreateCategoryModal from './CreateCategoryModal';
 import UpdateCategoryModal from './UpdateCategoryModal';
+import Filters from './Filters';
 
 const CREATE_CATEGORY_MODAL = 'CREATE_CATEGORY_MODAL';
 const UPDATE_CATEGORY_MODAL = 'UPDATE_CATEGORY_MODAL';
@@ -21,10 +23,12 @@ class Categories extends Component {
     categoriesDataLoaded: PropTypes.bool.isRequired,
     categoriesData: PropTypes.array.isRequired,
     categoriesFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
+    filters: PropTypes.object.isRequired,
     files: PropTypes.array.isRequired,
     formulaTables: PropTypes.array.isRequired,
     fetchData: PropTypes.func.isRequired,
     resetData: PropTypes.func.isRequired,
+    setFilter: PropTypes.func.isRequired,
     onCreateCategoryClick: PropTypes.func.isRequired,
     onUpdateCategoryClick: PropTypes.func.isRequired
   };
@@ -45,8 +49,10 @@ class Categories extends Component {
       categoriesDataLoaded,
       categoriesData,
       categoriesFetchingError,
+      filters,
       files,
       formulaTables,
+      setFilter,
       onCreateCategoryClick,
       onUpdateCategoryClick
     } = this.props;
@@ -58,7 +64,14 @@ class Categories extends Component {
           </h1>
         </Segment>
         <Segment>
-          <Button primary onClick={onCreateCategoryClick}>Create Category</Button>
+          <Grid>
+            <Grid.Column width={8}>
+              <Filters
+                onQueryChange={setFilter}
+                {...filters}
+              />
+            </Grid.Column>
+          </Grid>
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
           <ListTable
@@ -68,6 +81,16 @@ class Categories extends Component {
             fetchingError={categoriesFetchingError}
             onEdit={onUpdateCategoryClick}
           />
+        </Segment>
+        <Segment>
+          <Button primary onClick={onCreateCategoryClick}>Create Category</Button>
+          <Button
+            size="small"
+            as={Link}
+            to="/college_scorecard/reporting"
+          >
+            View Reporting
+          </Button>
         </Segment>
         <CreateCategoryModal
           name={CREATE_CATEGORY_MODAL}
@@ -90,12 +113,14 @@ export default withMainLayout(connect(
     categoriesDataLoaded: state.collegeScorecardCategories.dataLoaded,
     categoriesData: categoriesRdx.selectors.getCollegeScorecardCategories(state),
     categoriesFetchingError: categoriesRdx.selectors.getFetchingError(state),
+    filters: categoriesRdx.selectors.getFilters(state),
     files: filesRdx.selectors.getCollegeScorecardFilesDropdownOptions(state),
     formulaTables: formulaTablesRdx.selectors.getCollegeScorecardFormulaTablesDropdownOptions(state)
   }),
   dispatch => ({
     fetchData: () => dispatch(categoriesRdx.actions.fetch()),
     resetData: () => dispatch(categoriesRdx.actions.reset()),
+    setFilter: (key, value) => dispatch(categoriesRdx.actions.setFilter(key, value)),
     onCreateCategoryClick: () => {
       dispatch(showModal(CREATE_CATEGORY_MODAL));
     },

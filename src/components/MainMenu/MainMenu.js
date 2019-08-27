@@ -56,16 +56,10 @@ class MainMenu extends Component {
           active={
             isActive(pathname, '/college_scorecard/reporting')
             || isActive(pathname, '/college_scorecard/groups')
+            || isActive(pathname, '/college_scorecard/categories')
           }
         >
-          College Scorecard Reporting
-        </Menu.Item>
-        <Menu.Item
-          as={Link}
-          to="/college_scorecard/categories"
-          active={isActive(pathname, '/college_scorecard/categories')}
-        >
-          College Scorecard Category List
+          College Scorecard
         </Menu.Item>
         <Menu.Item as={Link} to="/users" active={isActive(pathname, '/users')}>
           Users

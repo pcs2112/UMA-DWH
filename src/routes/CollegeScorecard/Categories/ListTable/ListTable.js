@@ -3,21 +3,13 @@ import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import ReactTable from 'react-table';
 import withResponsiveTable from '../../../../components/WithResponsiveTable';
-import ReactTableRowExpander from '../../../../components/ReactTableRowExpander';
-import RowDetails from './RowDetails';
 
 const keyName = 'id';
-const defaultExpanded = {};
 
 /**
  * Table columns
  */
 const columns = [
-  {
-    expander: true,
-    Expander: ReactTableRowExpander,
-    width: 30
-  },
   {
     Header: 'CATEGORY_NAME',
     accessor: 'category_name',
@@ -55,31 +47,13 @@ class ListTable extends Component {
     onEdit: PropTypes.func.isRequired
   };
 
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      expanded: defaultExpanded
-    };
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     return nextProps.tableHeight !== this.props.tableHeight
       || nextProps.isFetching !== this.props.isFetching
       || nextProps.dataLoaded !== this.props.dataLoaded
       || nextProps.data !== this.props.data
-      || nextProps.fetchingError !== this.props.fetchingError
-      || nextState.expanded !== this.state.expanded;
+      || nextProps.fetchingError !== this.props.fetchingError;
   }
-
-  onExpanded = (newExpanded, index) => {
-    const { expanded } = this.state;
-    this.setState({
-      expanded: {
-        [index[0]]: !expanded[index[0]]
-      }
-    });
-  };
 
   onEdit = (e) => {
     e.preventDefault();
@@ -139,13 +113,10 @@ class ListTable extends Component {
           noDataText={dataLoaded ? '0 records found.' : ''}
           getTrProps={this.getTrProps}
           keyField={keyName}
-          SubComponent={row => <RowDetails row={row} />}
-          expanded={this.state.expanded}
-          onExpandedChange={this.onExpanded}
         />
       </div>
     );
   }
 }
 
-export default withResponsiveTable(ListTable, 510, 200);
+export default withResponsiveTable(ListTable, 320, 300);
