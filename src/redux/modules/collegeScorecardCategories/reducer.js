@@ -32,7 +32,7 @@ const filterData = (state, action) => {
     allData = data;
   }
 
-  let newData = [];
+  let newData = allData;
 
   if (!isEmpty(query) && query.length >= 3) {
     const queryNormalized = query.toLowerCase();
