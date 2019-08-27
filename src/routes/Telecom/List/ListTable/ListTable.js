@@ -62,7 +62,7 @@ class ListTable extends Component {
   getLoadingText = () => {
     const { dataLoaded, fetchingError } = this.props;
     if (fetchingError) {
-      return 'There was an error loading the error type resolution files. Please refresh.';
+      return 'There was an error loading the telecom skills files. Please refresh.';
     }
 
     return dataLoaded ? '' : 'Loading...';
@@ -97,7 +97,7 @@ class ListTable extends Component {
         className="-striped"
         loading={isFetching || fetchingError}
         loadingText={this.getLoadingText()}
-        noDataText={dataLoaded ? '0 error type resolution files found.' : ''}
+        noDataText={dataLoaded ? '0 telecom skills files found.' : ''}
         keyField={keyName}
       />
     );
