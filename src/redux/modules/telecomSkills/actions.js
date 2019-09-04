@@ -14,5 +14,5 @@ export const fetchFiles = () => ({
     actionTypes.FETCH_SUCCESS,
     actionTypes.FETCH_FAIL
   ],
-  makeRequest: client => client.get('/api/telecom/skill')
+  makeRequest: client => client.get('/api/telecom/skills')
 });
