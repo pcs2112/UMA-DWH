@@ -56,9 +56,10 @@ class MainMenu extends Component {
           active={
             isActive(pathname, '/college_scorecard/reporting')
             || isActive(pathname, '/college_scorecard/groups')
+            || isActive(pathname, '/college_scorecard/categories')
           }
         >
-          College Scorecard Reporting
+          College Scorecard
         </Menu.Item>
         <Menu.Item as={Link} to="/telecom" active={isActive(pathname, '/telecom')}>
           UMA Telecom
