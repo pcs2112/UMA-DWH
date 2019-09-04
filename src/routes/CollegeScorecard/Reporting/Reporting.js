@@ -282,6 +282,14 @@ class Reporting extends Component {
           </Button>
           <Button
             size="small"
+            as={Link}
+            to="/college_scorecard/categories"
+            disabled={isDataFetching || isExporting}
+          >
+            View Categories
+          </Button>
+          <Button
+            size="small"
             primary
             loading={isExporting}
             disabled={

@@ -6,7 +6,7 @@ from pydash.predicates import is_empty
 from .mssql_db import execute_sp, get_sp_result_set, get_out_arg
 from uma_dwh.utils import is_float, is_int, is_datetime, list_chunks
 from .utils import execute_sp_with_required_in_args
-from .exceptions import DBException, DBValidationException
+from .exceptions import DBException, DBValidationException, SPException
 
 cell_width_padding = 4
 max_cell_width = 65535
@@ -411,3 +411,36 @@ def print_ws_export_data(ws, columns, file_name):
 
     # Print the excel data
     print_ws_data(ws, header, raw_data)
+
+
+def execute_categories_sp(*args, out_arg='sp_status_code'):
+  """
+  Helper function to execute the MWH_FILES.MANAGE_COLLEGE_SCORECARD_D_CATEGORY stored procedure.
+  :return: Stored procedure result sets and out argument
+  :rtype: list
+  """
+  results = execute_sp_with_required_in_args(*args, sp_args_length=11)
+  status_code = get_out_arg(results, out_arg)
+
+  if status_code < 0:
+    raise SPException(f'Stored Procedure call to "{args[0]}" failed.', status_code)
+
+  result = get_sp_result_set(results, 0, out_arg)
+  if not result:
+    return []
+
+  return result
+
+
+def save_category(category_name, description, csv_file, where_unit_id_table, formula, category_id=''):
+  """ Creates/Updates a category. """
+  execute_categories_sp(
+    'MWH_FILES.MANAGE_COLLEGE_SCORECARD_D_CATEGORY',
+    'UPDATE_COLLEGE_SCORECARD_D_CATEGORY' if not is_empty(category_id) else 'SAVE_COLLEGE_SCORECARD_D_CATEGORY',
+    category_id,
+    category_name,
+    description,
+    formula,
+    csv_file,
+    where_unit_id_table
+  )

@@ -15,6 +15,9 @@ const crudListReducerFor = ({
 }) => (state = initialState, action) => {
   switch (action.type) {
     case CREATE_SUCCESS: {
+      if (!action.response) {
+        return state;
+      }
       const newData = state.data.slice();
       newData.push({ ...action.response });
       return {
@@ -23,6 +26,9 @@ const crudListReducerFor = ({
       };
     }
     case UPDATE_SUCCESS:
+      if (!action.response) {
+        return state;
+      }
       return {
         ...state,
         data: replaceObjByValue(state.data, { ...action.response }, action.id)
