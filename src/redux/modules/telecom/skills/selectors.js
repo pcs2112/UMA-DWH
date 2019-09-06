@@ -13,6 +13,6 @@ const _getData = createDataSelector('telecomSkills', 'dataLoaded', 'data');
 export const getFetchingError = createFetchingErrorSelector('telecomSkills', 'fetchingError', 'payload');
 
 /**
- * Returns the Error type resolution data.
+ * Returns the skills data.
  */
-export const getFiles = createGetItemsSelector(_getData);
+export const getData = createGetItemsSelector(_getData);

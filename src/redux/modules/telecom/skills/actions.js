@@ -1,4 +1,3 @@
-
 export const actionTypes = {
   FETCH_BEGIN: 'telecomSkills/FETCH_BEGIN',
   FETCH_SUCCESS: 'telecomSkills/FETCH_SUCCESS',
@@ -6,9 +5,9 @@ export const actionTypes = {
 };
 
 /**
- * Action to load the error type resolution data.
+ * Action to load the skills.
  */
-export const fetchFiles = () => ({
+export const fetch = () => ({
   types: [
     actionTypes.FETCH_BEGIN,
     actionTypes.FETCH_SUCCESS,

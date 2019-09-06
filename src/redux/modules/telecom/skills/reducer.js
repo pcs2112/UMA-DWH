@@ -1,4 +1,4 @@
-import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
+import itemListReducerFor, { initialState as itemListInitialState } from '../../../reducers/itemListReducerFor';
 import { actionTypes } from './actions';
 
 // Initial state
@@ -7,9 +7,8 @@ const initialState = Object.assign({}, itemListInitialState);
 // Create helper reducers
 const itemListReducer = itemListReducerFor(actionTypes);
 
-
 /**
- * Error type management reducer.
+ * Skills reducer.
  *
  * @param {Object} state
  * @param {Object} action
