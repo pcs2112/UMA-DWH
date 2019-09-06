@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Segment } from 'semantic-ui-react';
+import { Segment, Grid } from 'semantic-ui-react';
 import globalCss from 'css/global';
 import withMainLayout from 'components/WithMainLayout';
 import telecomSkills from 'redux/modules/telecomSkills';
+import DropdownFilter from '../../../components/DropdownFilter';
 import ListTable from './ListTable';
 
 class List extends Component {
@@ -37,13 +38,31 @@ class List extends Component {
            UMA Telecom
           </h1>
         </Segment>
+        <Segment>
+          <Grid>
+            <Grid.Column width={4}>
+              <DropdownFilter />
+            </Grid.Column>
+          </Grid>
+        </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
           <ListTable
             isFetching={filesFetching}
             dataLoaded={filesDataLoaded}
             data={filesData}
             fetchingError={filesFetchingError}
+            tableHeight={600}
           />
+        </Segment>
+        <Segment>
+          <Grid>
+            <Grid.Column width={12}>
+              <h2>For Single data info</h2>
+            </Grid.Column>
+            <Grid.Column width={4}>
+              <DropdownFilter />
+            </Grid.Column>
+          </Grid>
         </Segment>
       </div>
     );
@@ -52,8 +71,8 @@ class List extends Component {
 
 export default withMainLayout(connect(
   state => ({
-    filesFetching: state.errorTypeResolution.isFetching,
-    filesDataLoaded: state.errorTypeResolution.dataLoaded,
+    filesFetching: state.telecomSkills.isFetching,
+    filesDataLoaded: state.telecomSkills.dataLoaded,
     filesData: telecomSkills.selectors.getFiles(state),
     filesFetchingError: telecomSkills.selectors.getFetchingError(state)
   }),
