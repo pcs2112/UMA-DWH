@@ -19,6 +19,7 @@ export default (state = initialState, action) => {
     case actionTypes.FETCH_BEGIN:
     case actionTypes.FETCH_FAIL:
     case actionTypes.FETCH_SUCCESS:
+    case actionTypes.RESET:
       return itemListReducer(state, action);
     default:
       return state;
