@@ -1,6 +1,7 @@
 import Reps from './Reps';
 import Roles from './Roles';
 import Skills from './Skills';
+import Workgroups from './Workgroups';
 
 export default () => [
   {
@@ -16,6 +17,11 @@ export default () => [
   {
     path: '/telecom/skills',
     component: Skills,
+    exact: true
+  },
+  {
+    path: '/telecom/workgroups',
+    component: Workgroups,
     exact: true
   }
 ];

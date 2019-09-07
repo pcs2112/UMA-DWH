@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Segment } from 'semantic-ui-react';
-import rolesRdx from '../../../redux/modules/telecom/roles';
+import workgroupsRdx from '../../../redux/modules/telecom/workgroups';
 import withMainLayout from '../../../components/WithMainLayout';
 import globalCss from '../../../css/global';
 import ListTable from './ListTable';
 import SwitchPageDropdown from '../SwitchPageDropdown';
 
-class Roles extends Component {
+class Workgroups extends Component {
   static propTypes = {
     isFetching: PropTypes.bool.isRequired,
     dataLoaded: PropTypes.bool.isRequired,
@@ -39,7 +39,7 @@ class Roles extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            UMA Telecom (Roles)
+            UMA Telecom (Workgroups)
           </h1>
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
@@ -60,13 +60,13 @@ class Roles extends Component {
 
 export default withMainLayout(connect(
   state => ({
-    isFetching: state.telecomRoles.isFetching,
-    dataLoaded: state.telecomRoles.dataLoaded,
-    data: rolesRdx.selectors.getData(state),
-    fetchingError: rolesRdx.selectors.getFetchingError(state)
+    isFetching: state.telecomWorkgroups.isFetching,
+    dataLoaded: state.telecomWorkgroups.dataLoaded,
+    data: workgroupsRdx.selectors.getData(state),
+    fetchingError: workgroupsRdx.selectors.getFetchingError(state)
   }),
   dispatch => ({
-    fetchData: () => dispatch(rolesRdx.actions.fetch()),
-    resetData: () => dispatch(rolesRdx.actions.reset())
+    fetchData: () => dispatch(workgroupsRdx.actions.fetch()),
+    resetData: () => dispatch(workgroupsRdx.actions.reset())
   })
-)(Roles));
+)(Workgroups));
