@@ -1,7 +1,8 @@
 export const actionTypes = {
   FETCH_BEGIN: 'telecomWorkgroups/FETCH_BEGIN',
   FETCH_SUCCESS: 'telecomWorkgroups/FETCH_SUCCESS',
-  FETCH_FAIL: 'telecomWorkgroups/FETCH_FAIL'
+  FETCH_FAIL: 'telecomWorkgroups/FETCH_FAIL',
+  RESET: 'telecomWorkgroups/RESET'
 };
 
 /**
@@ -14,4 +15,11 @@ export const fetch = () => ({
     actionTypes.FETCH_FAIL
   ],
   makeRequest: client => client.get('/api/telecom/workgroups')
+});
+
+/**
+ * Resets the state.
+ */
+export const reset = () => ({
+  type: actionTypes.RESET
 });
