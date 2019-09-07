@@ -24,6 +24,7 @@ import user from './modules/user';
 import users from './modules/users';
 import telecomSkills from './modules/telecom/skills';
 import telecomWorkgroups from './modules/telecom/workgroups';
+import telecomReps from './modules/telecom/reps';
 import tryCatchErrors from './modules/tryCatchErrors';
 import tryCatchErrorsChart from './modules/tryCatchErrorsChart';
 import statisticsChart from './modules/statisticsChart';
@@ -57,6 +58,7 @@ export default () => combineReducers({
   users: users.reducer,
   telecomSkills: telecomSkills.reducer,
   telecomWorkgroups: telecomWorkgroups.reducer,
+  telecomReps: telecomReps.reducer,
   tryCatchErrors: tryCatchErrors.reducer,
   tryCatchErrorsChart: tryCatchErrorsChart.reducer,
   statisticsChart: statisticsChart.reducer,
