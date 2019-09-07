@@ -11,6 +11,11 @@ const options = [
     text: 'Reps'
   },
   {
+    key: 'roles',
+    value: '/roles',
+    text: 'Roles'
+  },
+  {
     key: 'skills',
     value: '/skills',
     text: 'Skills'
@@ -19,11 +24,6 @@ const options = [
     key: 'workgroups',
     value: '/workgroups',
     text: 'Workgroups'
-  },
-  {
-    key: 'roles',
-    value: '/roles',
-    text: 'Roles'
   }
 ];
 
