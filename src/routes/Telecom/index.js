@@ -1,7 +1,9 @@
-import List from './List';
+import Skills from './Skills';
 
-export default () => [{
-  path: '/telecom',
-  component: List,
-  exact: true
-}];
+export default () => [
+  {
+    path: '/telecom/skills',
+    component: Skills,
+    exact: true
+  }
+];
