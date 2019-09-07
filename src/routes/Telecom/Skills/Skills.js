@@ -2,11 +2,16 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Segment } from 'semantic-ui-react';
+import { showModal } from 'redux-modal';
 import skillsRdx from '../../../redux/modules/telecom/skills';
 import withMainLayout from '../../../components/WithMainLayout';
 import globalCss from '../../../css/global';
 import ListTable from './ListTable';
 import SwitchPageDropdown from '../SwitchPageDropdown';
+import UpdateSkillModal from './UpdateSkillModal';
+
+const UPDATE_SKILL_MODAL = 'UPDATE_SKILL_MODAL';
+const updatingTypes = skillsRdx.selectors.getUpdatingTypesDropdownOptions();
 
 class Skills extends Component {
   static propTypes = {
@@ -15,7 +20,8 @@ class Skills extends Component {
     data: PropTypes.array.isRequired,
     fetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     fetchData: PropTypes.func.isRequired,
-    resetData: PropTypes.func.isRequired
+    resetData: PropTypes.func.isRequired,
+    onUpdateSkillClick: PropTypes.func.isRequired
   };
 
   componentDidMount() {
@@ -33,7 +39,8 @@ class Skills extends Component {
       isFetching,
       dataLoaded,
       data,
-      fetchingError
+      fetchingError,
+      onUpdateSkillClick
     } = this.props;
     return (
       <div>
@@ -48,12 +55,16 @@ class Skills extends Component {
             dataLoaded={dataLoaded}
             data={data}
             fetchingError={fetchingError}
-            onEdit={() => {}}
+            onEdit={onUpdateSkillClick}
           />
         </Segment>
         <Segment>
           <SwitchPageDropdown />
         </Segment>
+        <UpdateSkillModal
+          name={UPDATE_SKILL_MODAL}
+          updateTypes={updatingTypes}
+        />
       </div>
     );
   }
@@ -68,6 +79,10 @@ export default withMainLayout(connect(
   }),
   dispatch => ({
     fetchData: () => dispatch(skillsRdx.actions.fetch()),
-    resetData: () => dispatch(skillsRdx.actions.reset())
+    resetData: () => dispatch(skillsRdx.actions.reset()),
+    onUpdateSkillClick: (id) => {
+      dispatch(skillsRdx.actions.updatingStart(id));
+      dispatch(showModal(UPDATE_SKILL_MODAL));
+    }
   })
 )(Skills));
