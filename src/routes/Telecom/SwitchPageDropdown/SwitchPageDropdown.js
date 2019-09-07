@@ -6,6 +6,11 @@ const path = '/telecom';
 
 const options = [
   {
+    key: 'reps',
+    value: '/reps',
+    text: 'Reps'
+  },
+  {
     key: 'skills',
     value: '/skills',
     text: 'Skills'
@@ -19,11 +24,6 @@ const options = [
     key: 'roles',
     value: '/roles',
     text: 'Roles'
-  },
-  {
-    key: 'reps',
-    value: '/reps',
-    text: 'Reps'
   }
 ];
 
@@ -39,7 +39,7 @@ class SwitchPageDropdown extends Component {
   };
 
   render() {
-    let { location: { pathname = '/skills' } } = this.context.router.history;
+    let { location: { pathname = '/reps' } } = this.context.router.history;
     pathname = pathname.replace(path, '');
 
     return (
