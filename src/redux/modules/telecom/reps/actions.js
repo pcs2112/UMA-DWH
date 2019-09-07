@@ -1,7 +1,8 @@
 export const actionTypes = {
   FETCH_BEGIN: 'telecomReps/FETCH_BEGIN',
   FETCH_SUCCESS: 'telecomReps/FETCH_SUCCESS',
-  FETCH_FAIL: 'telecomReps/FETCH_FAIL'
+  FETCH_FAIL: 'telecomReps/FETCH_FAIL',
+  RESET: 'telecomReps/RESET'
 };
 
 /**
@@ -14,4 +15,11 @@ export const fetch = () => ({
     actionTypes.FETCH_FAIL
   ],
   makeRequest: client => client.get('/api/telecom/reps')
+});
+
+/**
+ * Resets the state.
+ */
+export const reset = () => ({
+  type: actionTypes.RESET
 });
