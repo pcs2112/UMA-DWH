@@ -12,6 +12,7 @@ export const newCategoryValidator = memoize(10)(createValidator({
 }));
 
 export const existingCategoryValidator = memoize(10)(createValidator({
+  category_id: required(),
   category_name: required(),
   description: required(),
   csv_file: required(),

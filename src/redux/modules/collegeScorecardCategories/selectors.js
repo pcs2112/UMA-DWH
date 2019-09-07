@@ -14,7 +14,6 @@ const _getFilters = createGetPropertySelector('collegeScorecardCategories', FILT
  */
 const _getUpdatingCategoryId = createGetPropertySelector('collegeScorecardCategories', 'updating');
 
-
 /**
  * Returns the fetching error.
  * @param {Object} state
@@ -48,7 +47,7 @@ export const getFilters = createSelector(
 export const getUpdatingCategory = createGetItemByIdSelector(_getData, _getUpdatingCategoryId);
 
 /**
- * Gets the initial form values for the updating user.
+ * Gets the initial form values for the updating category.
  */
 export const getUpdatingCategoryInitialValues = createSelector(
   [getUpdatingCategory],
