@@ -18,12 +18,6 @@ class Skills extends Component {
     resetData: PropTypes.func.isRequired
   };
 
-  static contextTypes = {
-    router: PropTypes.shape({
-      history: PropTypes.object.isRequired
-    })
-  };
-
   componentDidMount() {
     const { fetchData } = this.props;
     fetchData();
