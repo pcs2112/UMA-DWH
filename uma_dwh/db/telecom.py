@@ -7,7 +7,7 @@ def save_skill(skill_id, skill_update_type):
     """ Updates a skill. """
     execute_sp(
         'MWH_FILES.MANAGE_API_CONSOLE_DATA',
-        'UPDATE_SKILL',
+        'UPDATE_SKILLS',
         skill_id,
         skill_update_type
     )
