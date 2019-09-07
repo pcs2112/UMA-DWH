@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import 'react-table/react-table.css';
 import ReactTable from 'react-table';
-import withResponsiveTable from 'components/WithResponsiveTable';
+import withResponsiveTable from '../../../../components/WithResponsiveTable';
 
 const keyName = 'id';
 
@@ -11,24 +11,34 @@ const keyName = 'id';
  */
 const columns = [
   {
-    Header: 'INSERT_DTTM',
-    accessor: 'insert_dttm',
-    width: 110
-  },
-  {
-    Header: 'UPDATE_DTTM',
-    accessor: 'update_dttm',
-    width: 110
+    Header: 'TABLE_NAME',
+    accessor: 'table_name',
+    width: 150
   },
   {
     Header: 'REP_SKILL_DISPLAY_NAME',
     accessor: 'rep_skill_display_name',
-    width: 110
+    minWidth: 150
+  },
+  {
+    Header: 'REP_SKILL_SYSTEM',
+    accessor: 'rep_skill_system',
+    width: 150
   },
   {
     Header: 'REP_SKILL_UPDATE_TYPE',
     accessor: 'rep_skill_update_type',
-    width: 110
+    width: 150
+  },
+  {
+    Header: 'INSERT_DTTM',
+    accessor: 'insert_dttm',
+    width: 150
+  },
+  {
+    Header: 'UPDATE_DTTM',
+    accessor: 'update_dttm',
+    width: 150
   }
 ];
 
@@ -62,7 +72,7 @@ class ListTable extends Component {
   getLoadingText = () => {
     const { dataLoaded, fetchingError } = this.props;
     if (fetchingError) {
-      return 'There was an error loading the telecom skills files. Please refresh.';
+      return 'There was an error loading the data. Please refresh.';
     }
 
     return dataLoaded ? '' : 'Loading...';
@@ -97,7 +107,7 @@ class ListTable extends Component {
         className="-striped"
         loading={isFetching || fetchingError}
         loadingText={this.getLoadingText()}
-        noDataText={dataLoaded ? '0 telecom skills files found.' : ''}
+        noDataText={dataLoaded ? '0 records found.' : ''}
         keyField={keyName}
       />
     );
