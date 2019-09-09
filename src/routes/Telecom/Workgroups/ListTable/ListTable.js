@@ -13,7 +13,7 @@ const columns = [
   {
     Header: 'TABLE_NAME',
     accessor: 'table_name',
-    width: 100
+    width: 150
   },
   {
     Header: 'WORKGROUP_NAME',
