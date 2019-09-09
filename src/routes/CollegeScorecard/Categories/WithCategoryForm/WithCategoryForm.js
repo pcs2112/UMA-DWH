@@ -72,7 +72,7 @@ const withCategoryForm = (scenario) => {
   return reduxForm({
     validate,
     fields: [
-      'id',
+      'category_id',
       'category_name',
       'description',
       'csv_file',

@@ -5,6 +5,7 @@ import reportHistory from '../redux/modules/reportHistory';
 import getCollegeScorecardRoutes from './CollegeScorecard';
 import CycleHistory from './CycleHistory';
 import Management from './Management';
+import getTelecomRoutes from './Telecom';
 import DWHErrors from './DWHErrors';
 import Error from './Error';
 import ForgotPassword from './ForgotPassword';
@@ -50,6 +51,7 @@ export default ({ dispatch, getState }) => ([
   .concat(getStatisticsRoutes(dispatch))
   .concat(getUserRoutes(dispatch))
   .concat(getCollegeScorecardRoutes(dispatch))
+  .concat(getTelecomRoutes(dispatch))
   .concat([
     {
       path: '/login',

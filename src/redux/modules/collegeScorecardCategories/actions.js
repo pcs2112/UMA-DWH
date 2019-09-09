@@ -70,7 +70,7 @@ export const update = data => ({
   })
     .catch(catchValidation),
   payload: {
-    id: data.id
+    id: data.category_id
   }
 });
 

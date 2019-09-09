@@ -2,7 +2,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
-from uma_dwh.routes import college_scorecard, error_type_resolution, etl, users
+from uma_dwh.routes import college_scorecard, error_type_resolution, etl, users, telecom
 from uma_dwh.db.mssql_db import init_db
 from uma_dwh.extensions import cors
 from uma_dwh.exceptions import InvalidUsage, http_error_template
@@ -46,11 +46,13 @@ def register_blueprints(app):
     cors.init_app(error_type_resolution.views.blueprint, origins=origins)
     cors.init_app(etl.views.blueprint, origins=origins)
     cors.init_app(users.views.blueprint, origins=origins)
+    cors.init_app(telecom.views.blueprint, origins=origins)
 
     app.register_blueprint(college_scorecard.views.blueprint)
     app.register_blueprint(error_type_resolution.views.blueprint)
     app.register_blueprint(etl.views.blueprint)
     app.register_blueprint(users.views.blueprint)
+    app.register_blueprint(telecom.views.blueprint)
 
 
 def register_errorhandlers(app):
