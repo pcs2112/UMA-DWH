@@ -39,7 +39,8 @@ export const getUpdatingEntryInitialValues = createSelector(
     }
 
     return {
-      entry_id: entry.id
+      entry_id: entry.id,
+      ...entry
     };
   }
 );
