@@ -18,7 +18,7 @@ const columns = [
   {
     Header: 'DATA_TYPE',
     accessor: 'data_type',
-    minWidth: 150
+    width: 150
   },
   {
     Header: 'DATA_RANGE',
@@ -33,12 +33,12 @@ const columns = [
   {
     Header: 'URL',
     accessor: 'url',
-    width: 300
+    minWidth: 300
   },
   {
     Header: 'FILE_LOCATION',
     accessor: 'file_location',
-    width: 300
+    minWidth: 300
   },
   {
     Header: 'DATA_LAKE_TABLE',
