@@ -16,9 +16,10 @@ def get_entries():
             'primary_source': 'US Census Bureau',
             'data_type': 'Total Work Experience',
             'data_range': 'Yearly',
+            'data_format': 'CSV',
             'file': 'US Census Bureau.csv',
             'url': 'www.census.gov/stats',
-            'file_location': 'mnt/hgfs/UMA_DATA/UMA-DWH/US Census Bureau.cs',
+            'file_location': 'mnt/hgfs/UMA_DATA/UMA-DWH/US Census Bureau.csv',
             'data_lake_table': 'DLake.USCB_Wrk_Exp'
         }
     ]
