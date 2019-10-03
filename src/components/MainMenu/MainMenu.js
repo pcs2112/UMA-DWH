@@ -64,6 +64,9 @@ class MainMenu extends Component {
         <Menu.Item as={Link} to="/telecom/reps" active={isActive(pathname, '/telecom')}>
           UMA Telecom
         </Menu.Item>
+        <Menu.Item as={Link} to="/datalake" active={isActive(pathname, '/datalake')}>
+          UMA Data Lake
+        </Menu.Item>
         <Menu.Item as={Link} to="/users" active={isActive(pathname, '/users')}>
           Users
         </Menu.Item>
