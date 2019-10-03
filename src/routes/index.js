@@ -15,6 +15,7 @@ import getErrorTypeManagementRoutes from './ErrorTypeManagement';
 import ReportsHistory from './ReportsHistory';
 import getStatisticsRoutes from './Statistics';
 import getUserRoutes from './Users';
+import getDataLakeRoutes from './DataLake';
 
 export default ({ dispatch, getState }) => ([
   {
@@ -52,6 +53,7 @@ export default ({ dispatch, getState }) => ([
   .concat(getUserRoutes(dispatch))
   .concat(getCollegeScorecardRoutes(dispatch))
   .concat(getTelecomRoutes(dispatch))
+  .concat(getDataLakeRoutes(dispatch))
   .concat([
     {
       path: '/login',
