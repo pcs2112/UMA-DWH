@@ -33,12 +33,12 @@ const columns = [
   {
     Header: 'URL',
     accessor: 'url',
-    width: 150
+    width: 300
   },
   {
     Header: 'FILE_LOCATION',
     accessor: 'file_location',
-    width: 150
+    width: 300
   },
   {
     Header: 'DATA_LAKE_TABLE',
