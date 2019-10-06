@@ -13,8 +13,8 @@ class Cubes extends Component {
     cubesLoaded: PropTypes.bool.isRequired,
     cubes: PropTypes.array.isRequired,
     cubesFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
-    fetchData: PropTypes.func.isRequired,
-    resetData: PropTypes.func.isRequired
+    fetchData: PropTypes.func.isRequired
+    // resetData: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -30,8 +30,8 @@ class Cubes extends Component {
   }
 
   componentWillUnmount() {
-    const { resetData } = this.props;
-    resetData();
+    // const { resetData } = this.props;
+    // resetData();
   }
 
   render() {

@@ -33,7 +33,7 @@ class List extends Component {
           />
         </Segment>
         <Segment>
-          <CubeForm />
+          <CubeForm form="CubesForm" onSubmit={() => {}} />
         </Segment>
       </Fragment>
     );

@@ -9,7 +9,7 @@ import getRoutes from './routes';
 import App from './routes/App';
 
 // Disable contentEditable warning during development
-if (__DEVELOPMENT__) {
+/* if (__DEVELOPMENT__) {
   console.error = (() => {
     const { error } = console;
     return (exception) => {
@@ -18,7 +18,7 @@ if (__DEVELOPMENT__) {
       }
     };
   })();
-}
+} */
 
 const store = createStore(client, window.__data);
 
