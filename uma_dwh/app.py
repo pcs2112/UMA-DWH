@@ -3,7 +3,7 @@ from logging.handlers import RotatingFileHandler
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
 from uma_dwh.routes import (
-  college_scorecard, error_type_resolution, etl, users, telecom, data_lake
+  college_scorecard, error_type_resolution, etl, users, telecom, data_lake, data_cubes
 )
 from uma_dwh.db.mssql_db import init_db
 from uma_dwh.extensions import cors
@@ -57,6 +57,7 @@ def register_blueprints(app):
     app.register_blueprint(users.views.blueprint)
     app.register_blueprint(telecom.views.blueprint)
     app.register_blueprint(data_lake.views.blueprint)
+    app.register_blueprint(data_cubes.views.blueprint)
 
 
 def register_errorhandlers(app):
