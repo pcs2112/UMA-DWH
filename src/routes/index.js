@@ -16,6 +16,7 @@ import ReportsHistory from './ReportsHistory';
 import getStatisticsRoutes from './Statistics';
 import getUserRoutes from './Users';
 import getDataLakeRoutes from './DataLake';
+import getDataCubesRoutes from './DataCubes';
 
 export default ({ dispatch, getState }) => ([
   {
@@ -54,6 +55,7 @@ export default ({ dispatch, getState }) => ([
   .concat(getCollegeScorecardRoutes(dispatch))
   .concat(getTelecomRoutes(dispatch))
   .concat(getDataLakeRoutes(dispatch))
+  .concat(getDataCubesRoutes(dispatch))
   .concat([
     {
       path: '/login',
