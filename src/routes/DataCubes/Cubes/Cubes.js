@@ -5,16 +5,24 @@ import { Segment } from 'semantic-ui-react';
 import cubesRdx from '../../../redux/modules/dataCubes/cubes';
 import withMainLayout from '../../../components/WithMainLayout';
 import globalCss from '../../../css/global';
+import List from './List';
 
 class Cubes extends Component {
   static propTypes = {
-    isFetching: PropTypes.bool.isRequired,
-    dataLoaded: PropTypes.bool.isRequired,
-    data: PropTypes.array.isRequired,
-    fetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
+    isCubesFetching: PropTypes.bool.isRequired,
+    cubesLoaded: PropTypes.bool.isRequired,
+    cubes: PropTypes.array.isRequired,
+    cubesFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     fetchData: PropTypes.func.isRequired,
     resetData: PropTypes.func.isRequired
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      view: 'list'
+    };
+  }
 
   componentDidMount() {
     const { fetchData } = this.props;
@@ -28,12 +36,12 @@ class Cubes extends Component {
 
   render() {
     const {
-      isFetching,
-      dataLoaded,
-      data,
-      fetchingError
+      isCubesFetching,
+      cubesLoaded,
+      cubes,
+      cubesFetchingError
     } = this.props;
-    console.log(isFetching, dataLoaded, data, fetchingError);
+    const { view } = this.state;
     return (
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
@@ -41,9 +49,14 @@ class Cubes extends Component {
             UMA Data Cubes
           </h1>
         </Segment>
-        <Segment style={globalCss.pageHeaderSegment}>
-          Test
-        </Segment>
+        {view === 'list' && (
+          <List
+            isFetching={isCubesFetching}
+            dataLoaded={cubesLoaded}
+            data={cubes}
+            fetchingError={cubesFetchingError}
+          />
+        )}
       </div>
     );
   }
@@ -51,10 +64,10 @@ class Cubes extends Component {
 
 export default withMainLayout(connect(
   state => ({
-    isFetching: state.dataLakeEntries.isFetching,
-    dataLoaded: state.dataLakeEntries.dataLoaded,
-    data: cubesRdx.selectors.getData(state),
-    fetchingError: cubesRdx.selectors.getFetchingError(state)
+    isCubesFetching: state.dataCubes.isFetching,
+    cubesLoaded: state.dataCubes.dataLoaded,
+    cubes: cubesRdx.selectors.getData(state),
+    cubesFetchingError: cubesRdx.selectors.getFetchingError(state)
   }),
   dispatch => ({
     fetchData: () => dispatch(cubesRdx.actions.fetch()),
