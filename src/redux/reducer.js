@@ -33,6 +33,7 @@ import statisticsHistory from './modules/statisticsHistory';
 import statisticsManagement from './modules/statisticsManagement';
 import statisticsSchemas from './modules/statisticsSchemas';
 import dataLakeEntries from './modules/dataLake/entries';
+import dataCubes from './modules/dataCubes/cubes';
 
 export default () => combineReducers({
   [reduxPollingNamespace]: reduxPollingReducer,
@@ -68,5 +69,6 @@ export default () => combineReducers({
   statisticsHistory: statisticsHistory.reducer,
   statisticsManagement: statisticsManagement.reducer,
   statisticsSchemas: statisticsSchemas.reducer,
-  dataLakeEntries: dataLakeEntries.reducer
+  dataLakeEntries: dataLakeEntries.reducer,
+  dataCubes: dataCubes.reducer
 });
