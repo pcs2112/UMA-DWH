@@ -6,7 +6,7 @@ from uma_dwh.utils.nocache import nocache
 blueprint = Blueprint('data_cubes', __name__)
 
 
-@blueprint.route('/api/data_cubes', methods=('GET',))
+@blueprint.route('/api/data_cubes/cubes', methods=('GET',))
 @nocache
 @jwt_required
 def get_entries():
