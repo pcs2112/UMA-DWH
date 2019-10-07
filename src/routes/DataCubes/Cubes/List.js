@@ -1,8 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { reset } from 'redux-form';
+import { reset, getFormValues } from 'redux-form';
 import { Segment } from 'semantic-ui-react';
+import _ from 'lodash';
 import cubesRdx from '../../../redux/modules/dataCubes/cubes';
 import ListTable from './ListTable';
 import CubeForm from './CubeForm';
@@ -16,7 +17,8 @@ class List extends Component {
     dataLoaded: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
     fetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
-    cubeFormInitialValues: PropTypes.object,
+    cubeFormInitialValues: PropTypes.object.isRequired,
+    cubeFormValues: PropTypes.object.isRequired,
     onCubeEdit: PropTypes.func.isRequired,
     onCubeFormCancel: PropTypes.func.isRequired
   };
@@ -28,6 +30,7 @@ class List extends Component {
       data,
       fetchingError,
       cubeFormInitialValues,
+      cubeFormValues,
       onCubeEdit,
       onCubeFormCancel
     } = this.props;
@@ -47,9 +50,11 @@ class List extends Component {
             form={CUBE_FORM}
             initialValues={cubeFormInitialValues}
             enableReinitialize
+            destroyOnUnmount={false}
             isNewRecord={!cubeFormInitialValues.id}
             onSubmit={() => {}}
             onCancel={onCubeFormCancel}
+            scheduleDisabled={!_.get(cubeFormValues, 'cube_name')}
           />
         </Segment>
       </Fragment>
@@ -64,6 +69,7 @@ export default connect(
     data: cubesRdx.selectors.getData(state),
     fetchingError: cubesRdx.selectors.getFetchingError(state),
     cubeFormInitialValues: cubesRdx.selectors.getCubeFormInitialValues(state),
+    cubeFormValues: getFormValues(CUBE_FORM)(state)
   }),
   dispatch => ({
     onCubeEdit: id => dispatch(cubesRdx.actions.updatingStart(id)),

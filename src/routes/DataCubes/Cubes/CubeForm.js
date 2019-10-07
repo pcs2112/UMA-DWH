@@ -42,6 +42,7 @@ class CubeForm extends Component {
     pristine: PropTypes.bool,
     // submitSucceeded: PropTypes.bool,
     isNewRecord: PropTypes.bool.isRequired,
+    scheduleDisabled: PropTypes.bool.isRequired,
     onCancel: PropTypes.func.isRequired
   };
 
@@ -50,6 +51,7 @@ class CubeForm extends Component {
       submitting,
       pristine,
       isNewRecord,
+      scheduleDisabled,
       onCancel
     } = this.props;
     return (
@@ -109,9 +111,17 @@ class CubeForm extends Component {
           />
         </Form.Group>
         <Form.Group>
-          <Form.Button content="Save" primary disabled={submitting} />
+          <Form.Button
+            content="Define"
+          />
+          <Form.Button
+            content="Schedule"
+            disabled={scheduleDisabled || submitting}
+          />
+          <Form.Button content="Save" disabled={submitting} />
           <Form.Button
             content="Cancel"
+            secondary
             onClick={onCancel}
             disabled={(isNewRecord && (pristine || submitting)) || (!isNewRecord && submitting)}
           />
