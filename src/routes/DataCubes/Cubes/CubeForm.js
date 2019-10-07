@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { reduxForm, Field } from 'redux-form';
 import { Form } from 'semantic-ui-react';
 import { TextField, SelectField, CheckBoxField } from '../../../components/ReduxForm';
@@ -37,14 +37,21 @@ const scheduleTypes = [
 ];
 
 class CubeForm extends Component {
-  /* static propTypes = {
+  static propTypes = {
     submitting: PropTypes.bool,
     pristine: PropTypes.bool,
-    submitSucceeded: PropTypes.bool,
-    onClose: PropTypes.func.isRequired
-  }; */
+    // submitSucceeded: PropTypes.bool,
+    isNewRecord: PropTypes.bool.isRequired,
+    onCancel: PropTypes.func.isRequired
+  };
 
   render() {
+    const {
+      submitting,
+      pristine,
+      isNewRecord,
+      onCancel
+    } = this.props;
     return (
       <Form
         size="small"
@@ -56,7 +63,7 @@ class CubeForm extends Component {
             component={TextField}
             label="Cube Name"
             required
-            width={8}
+            width="eight"
           />
           <Field
             name="active_date"
@@ -64,7 +71,7 @@ class CubeForm extends Component {
             component={TextField}
             label="Active Date"
             required
-            width={4}
+            width="four"
           />
         </Form.Group>
         <Form.Group>
@@ -74,13 +81,13 @@ class CubeForm extends Component {
             label="Schedule Type"
             required
             options={scheduleTypes}
-            width={8}
+            width="eight"
           />
           <Field
             name="multi_fact"
             component={CheckBoxField}
             label="Multi-Fact"
-            width={4}
+            width="four"
             style={checkboxStyle}
           />
         </Form.Group>
@@ -91,14 +98,22 @@ class CubeForm extends Component {
             component={TextField}
             label="View/Table Name"
             required
-            width={8}
+            width="eight"
           />
           <Field
             name="materialize"
             component={CheckBoxField}
             label="Materialize"
-            width={4}
+            width="four"
             style={checkboxStyle}
+          />
+        </Form.Group>
+        <Form.Group>
+          <Form.Button content="Save" primary disabled={submitting} />
+          <Form.Button
+            content="Cancel"
+            onClick={onCancel}
+            disabled={(isNewRecord && (pristine || submitting)) || (!isNewRecord && submitting)}
           />
         </Form.Group>
       </Form>

@@ -29,9 +29,9 @@ export const getData = createGetItemsSelector(_getData);
 export const getUpdatingCube = createGetItemByIdSelector(_getData, _getUpdatingCubeId);
 
 /**
- * Gets the initial form values for the updating cube.
+ * Gets the initial form values for the cube form.
  */
-export const getUpdatingCubeInitialValues = createSelector(
+export const getCubeFormInitialValues = createSelector(
   [getUpdatingCube],
   (cube) => {
     if (!cube) {
