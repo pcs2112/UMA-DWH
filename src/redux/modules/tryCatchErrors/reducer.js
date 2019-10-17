@@ -11,7 +11,8 @@ import {
 const defaultFilters = {
   date: '',
   months: '',
-  query: ''
+  query: '',
+  hide911: true
 };
 
 // Initial state
@@ -30,7 +31,7 @@ const setFilters = itemListFiltersReducerFor(actionTypes, defaultFilters, FILTER
 // Filters the data by the filter values
 const filterData = (state) => {
   const {
-    allData, filters: { query }
+    allData, filters: { query, hide911 }
   } = state;
 
   if (!allData) {
@@ -44,9 +45,9 @@ const filterData = (state) => {
     };
   }
 
-  // Filter by query value
   let newData = allData.slice();
 
+  // Filter by query value
   if (!isEmpty(query) && query.length >= 3) {
     const queryNormalized = query.toLowerCase();
     newData = allData.filter((item) => {
@@ -55,6 +56,11 @@ const filterData = (state) => {
       return normalizedErrorProcedure.indexOf(queryNormalized) > -1
         || normalizedErrorMessage.indexOf(queryNormalized) > -1;
     });
+  }
+
+  // Filter by error_number
+  if (hide911) {
+    newData = newData.filter(item => `${item.error_number}` !== '911');
   }
 
   return {
