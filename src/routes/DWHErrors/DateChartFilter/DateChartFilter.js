@@ -12,12 +12,18 @@ class DateChartFilter extends Component {
     dataLoaded: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
     months: PropTypes.number.isRequired,
-    onClick: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired,
+    hide911: PropTypes.bool.isRequired
   };
 
   shouldComponentUpdate(nextProps) {
-    return nextProps.data !== this.props.data;
+    return nextProps.data !== this.props.data || nextProps.hide911 !== this.props.hide911;
   }
+
+  getItemKey = () => {
+    const { hide911 } = this.props;
+    return hide911 ? 'day_count_not_911' : 'day_count';
+  };
 
   onClick = (elems) => {
     const {
@@ -33,7 +39,8 @@ class DateChartFilter extends Component {
   getChartData = () => {
     const { data } = this.props;
     const labels = data.map(item => moment(item.date, DEFAULT_DATE_FORMAT).toDate());
-    const runCountsData = data.map(item => item.day_count);
+    const itemKey = this.getItemKey();
+    const runCountsData = data.map(item => item[itemKey]);
 
     return {
       labels,
@@ -58,8 +65,9 @@ class DateChartFilter extends Component {
   renderTooltipFooter = (tooltipItem) => {
     const { data } = this.props;
     const item = data[tooltipItem[0].index];
+    const itemKey = this.getItemKey();
     return [
-      `Day count: ${item.day_count}`
+      `Day count: ${item[itemKey]}`
     ];
   };
 
