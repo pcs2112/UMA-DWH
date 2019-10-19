@@ -27,6 +27,13 @@
     "react/prefer-stateless-function": 0,
     "react/destructuring-assignment": 0,
     "react/jsx-one-expression-per-line": 0,
+    "react/jsx-fragments": 0,
+    "react/static-property-placement": 0,
+    "react/jsx-props-no-spreading": 0,
+    "react/state-in-constructor": 0,
+    "react/jsx-curly-newline": 0,
+    "react/sort-comp": 0,
+    "react/no-deprecated": 0,
     "import/default": 0,
     "import/no-duplicates": 0,
     "import/named": 0,
@@ -53,7 +60,9 @@
     }],
     "jsx-a11y/label-has-associated-control": 0,
     "prefer-destructuring": ["error", { "object": true, "array": false }],
-    "implicit-arrow-linebreak": 0
+    "implicit-arrow-linebreak": 0,
+    "arrow-parens": 0,
+    "prefer-object-spread": 0
   },
   "plugins": [
     "react",
