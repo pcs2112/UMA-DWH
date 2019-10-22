@@ -9,7 +9,7 @@ def manage_cubes(*args):
 
 def save_cube(active_flag, cube_name, view_name, materialize, table_namey, cube_date_start, cube_date_end):
     """ Creates/updates a cube. """
-    execute_sp(
+    manage_cubes(
         'UMA_CUBEVIEW.MANAGE_CUBEVIEW_DATA',
         'SAVE_CUBE',
         active_flag,
