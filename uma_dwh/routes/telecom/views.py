@@ -10,6 +10,6 @@ blueprint = Blueprint('telecom', __name__)
 
 @blueprint.route('/api/telecom/<path:path>', methods=('GET', 'POST', 'PUT',))
 @nocache
-# @jwt_required # Uncoment this line when you're done
+@jwt_required
 def get_sp_data(path):
     return execute_sp_func_from_view(path, request.method, path_sp_args_map)
