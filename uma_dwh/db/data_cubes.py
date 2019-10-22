@@ -3,7 +3,15 @@ from .utils import execute_sp_with_required_in_args
 from .exceptions import SPException
 
 
-def execute_sp(*args, sp_args_length=17, out_arg='sp_status_code'):
+def manage_cubes(*args):
+    return execute_sp(*args, sp_args_length=9)
+
+
+def manage_cubes_schedule(*args):
+    return execute_sp(*args, sp_args_length=17)
+
+
+def execute_sp(*args, sp_args_length, out_arg='sp_status_code'):
     """
     Helper function to execute the [UMA_CUBEVIEW] stored procedures.
     :return: Stored procedure result sets and out argument
