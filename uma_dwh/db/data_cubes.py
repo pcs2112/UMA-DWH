@@ -26,6 +26,31 @@ def manage_cubes_schedule(*args):
     return execute_sp(*args, sp_args_length=17)
 
 
+def save_cube_schedule(cube_id, name, frequency, monday, tuesday, wednesday, thursday, friday, saturday, sunday, daily_frequency, daily_start, daily_end, daily_occurs_interval, duration_start, duration_end, xml):
+    """ Creates/updates a cube. """
+    manage_cubes_schedule(
+        'UMA_CUBEVIEW.MANAGE_CUBEVIEW_SCHEDULE',
+        'SAVE_SCHEDULE',
+        cube_id,
+        name,
+        frequency,
+        monday,
+        tuesday,
+        wednesday,
+        thursday,
+        friday,
+        saturday,
+        sunday,
+        daily_frequency,
+        daily_start,
+        daily_end,
+        daily_occurs_interval,
+        duration_start,
+        duration_end,
+        xml
+    )
+
+
 def execute_sp(*args, sp_args_length, out_arg='sp_status_code'):
     """
     Helper function to execute the [UMA_CUBEVIEW] stored procedures.
