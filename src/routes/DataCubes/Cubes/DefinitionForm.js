@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { change } from 'redux-form';
+import { Form } from 'semantic-ui-react';
 import VirtualMultiSelectBox from '../../../components/VirtualMultiSelectBox';
+import dimsRdx from '../../../redux/modules/dataCubes/dims';
 
 class DefineForm extends Component {
   static propTypes = {
@@ -13,8 +17,22 @@ class DefineForm extends Component {
     selectedDims: PropTypes.array.isRequired,
     onAddDim: PropTypes.func.isRequired,
     onRemoveDim: PropTypes.func.isRequired,
-    onRemoveAllDims: PropTypes.func.isRequired
+    onRemoveAllDims: PropTypes.func.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onChangeDefinition: PropTypes.func.isRequired,
+    definition: PropTypes.array.isRequired
   };
+
+  constructor(props) {
+    super(props);
+    this.definition = [...props.definition];
+  }
+
+  onClose = () => {
+    const { onChangeDefinition, onClose, definition } = this.props;
+    onChangeDefinition(definition);
+    onClose();
+  }
 
   render() {
     const {
@@ -57,9 +75,25 @@ class DefineForm extends Component {
           onRemoveAll={onRemoveAllDims}
           selectedLabel="Items"
         />
+        <br />
+        <Form.Button
+          type="button"
+          content="Done"
+          primary
+          onClick={this.onClose}
+        />
       </>
     );
   }
 }
 
-export default DefineForm;
+const ConnectedForm = connect(
+  state => ({
+    definition: dimsRdx.selectors.getSelectedFlat(state)
+  }),
+  (dispatch, props) => ({
+    onChangeDefinition: (value) => dispatch(change(props.form, 'definition', value))
+  })
+)(DefineForm);
+
+export default ConnectedForm;

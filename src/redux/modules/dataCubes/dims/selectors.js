@@ -39,7 +39,7 @@ export const getAllData = createSelector(
 );
 
 /**
- * Returns the dims data filtered selected fact tables.
+ * Returns the dims data filtered by selected fact tables.
  */
 export const getData = createSelector(
   [factsRdx.selectors.getSelected, getAllData],
@@ -47,8 +47,7 @@ export const getData = createSelector(
 );
 
 /**
- * Returns the selected items.
- * @param {Object} state
+ * Returns the selected dim ids.
  */
 export const getSelected = createSelector(
   [factsRdx.selectors.getSelected, _getSelected, _getSelectedOrder],
@@ -67,6 +66,33 @@ export const getSelected = createSelector(
     selectedOrder.forEach((id) => {
       if (selectedFlat[id]) {
         selected.push(id);
+      }
+    });
+
+    return selected;
+  }
+);
+
+/**
+ * Returns the selected dims.
+ */
+export const getSelectedFlat = createSelector(
+  [factsRdx.selectors.getSelected, _getSelected, _getSelectedOrder],
+  (selectedFacts, selectedDims, selectedOrder) => {
+    const selected = [];
+    const selectedFlat = {};
+
+    Object.keys(selectedFacts).forEach((fact) => {
+      if (selectedDims[fact]) {
+        Object.keys(selectedDims[fact]).forEach((dimId) => {
+          selectedFlat[dimId] = selectedDims[fact][dimId];
+        });
+      }
+    });
+
+    selectedOrder.forEach((dimId) => {
+      if (selectedFlat[dimId]) {
+        selected.push(selectedFlat[dimId]);
       }
     });
 

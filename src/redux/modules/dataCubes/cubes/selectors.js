@@ -49,3 +49,5 @@ export const getCubeFormInitialValues = createSelector(
     };
   }
 );
+
+export const _getCubeDefinition = createGetPropertySelector('dataCubesDims', 'selected');

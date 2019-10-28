@@ -127,6 +127,7 @@ class List extends Component {
           <Modal.Header content={<h1>DEFINE CUBE</h1>} />
           <Modal.Content>
             <DefinitionForm
+              form={CUBE_FORM}
               facts={facts}
               selectedFacts={selectedFacts}
               onAddFact={onAddFact}
@@ -137,6 +138,7 @@ class List extends Component {
               onAddDim={onAddDim}
               onRemoveDim={onRemoveDim}
               onRemoveAllDims={onRemoveAllDims}
+              onClose={onDefinitionClose}
             />
           </Modal.Content>
         </Modal>
@@ -180,6 +182,7 @@ export default connect(
     },
     onDefinitionClose: () => {
       dispatch(hideModal(DEFINITION_CUBE_MODAL));
+      // dispatch(change(CUBE_FORM, 'definition', ''));
     },
     onAddFact: (fact) => {
       dispatch(factsRdx.actions.select(fact));
