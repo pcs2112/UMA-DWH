@@ -46,8 +46,6 @@ export const getData = createSelector(
   (selectedFacts, data) => data.filter((item) => _.has(selectedFacts, item.fact_table))
 );
 
-export const getSelectedDimFactMap = createGetPropertySelector('dataCubesDims', SELECTED_STATE_KEY_NAME);
-
 /**
  * Returns the selected items.
  * @param {Object} state
