@@ -10,7 +10,7 @@ path_sp_args_map = {
       'module_name': 'uma_dwh.db.data_cubes',
       'module_func': 'save_cube',
       'sp_in_args': [
-        'active_flag', 'cube_name', 'view_name', 'materialize', 'table_namey', 'cube_date_start', 'cube_date_end'
+        'cube_name', 'active_flag', 'primary_fact_table', 'view_name', 'table_name', 'materialize', 'cube_date_start', 'cube_date_end', 'schedule', 'definition'
       ]
     }
   },

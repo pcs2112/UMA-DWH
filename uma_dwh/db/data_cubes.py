@@ -7,8 +7,21 @@ def manage_cubes(*args):
     return execute_sp(*args, sp_args_length=9)
 
 
-def save_cube(active_flag, cube_name, view_name, materialize, table_namey, cube_date_start, cube_date_end):
+def save_cube(cube_name, active_flag, primary_fact_table, view_name, table_name, materialize, cube_date_start, cube_date_end, schedule, definition):
     """ Creates/updates a cube. """
+    active_flag = '1' if active_flag is True else '0'
+    materialize = '1' if materialize is True else '0'
+
+    xml = '<CUBE>'
+    xml += f'<ELEMENT ACTIVE_FLAG="{active_flag}" />'
+    xml += f'<ELEMENT CUBE_NAME="{cube_name}" />'
+    xml += f'<ELEMENT VIEW_NAME="{view_name}" />'
+    xml += f'<ELEMENT MATERALIZE="{materialize}" />'
+    xml += f'<ELEMENT TABLE_NAME="{table_name}" />'
+    xml += f'<ELEMENT CUBE_DATE_START="{cube_date_start}" />'
+    xml += f'<ELEMENT CUBE_DATE_END="{cube_date_end}" />'
+    xml += '</CUBE>'
+
     manage_cubes(
         'UMA_CUBEVIEW.MANAGE_CUBEVIEW_DATA',
         'SAVE_CUBE',
@@ -16,9 +29,10 @@ def save_cube(active_flag, cube_name, view_name, materialize, table_namey, cube_
         cube_name,
         view_name,
         materialize,
-        table_namey,
+        table_name,
         cube_date_start,
-        cube_date_end
+        cube_date_end,
+        xml
     )
 
 
