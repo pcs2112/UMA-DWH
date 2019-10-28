@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm, Field } from 'redux-form';
-import { Form } from 'semantic-ui-react';
+import { Form, Message } from 'semantic-ui-react';
+import { isEmpty } from 'javascript-utils/lib/utils';
 import { TextField, /* SelectField, */CheckBoxField } from '../../../components/ReduxForm';
+import FormError from '../../../components/FormError';
 import { cubeValidator } from './validation';
 
 const checkboxStyle = {
@@ -13,7 +15,10 @@ class CubeForm extends Component {
   static propTypes = {
     submitting: PropTypes.bool,
     pristine: PropTypes.bool,
-    // submitSucceeded: PropTypes.bool,
+    error: PropTypes.string,
+    submitSucceeded: PropTypes.bool,
+    handleSubmit: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
     isNewRecord: PropTypes.bool.isRequired,
     definitionDisabled: PropTypes.bool.isRequired,
     onDefinition: PropTypes.func.isRequired,
@@ -26,6 +31,10 @@ class CubeForm extends Component {
     const {
       submitting,
       pristine,
+      error,
+      submitSucceeded,
+      handleSubmit,
+      onSubmit,
       isNewRecord,
       scheduleDisabled,
       definitionDisabled,
@@ -37,7 +46,17 @@ class CubeForm extends Component {
       <Form
         size="small"
         autoComplete="off"
+        onSubmit={handleSubmit(onSubmit)}
+        error={!isEmpty(error)}
+        success={submitSucceeded}
       >
+        {error && <FormError error={error} />}
+        {submitSucceeded && (
+          <Message
+            success
+            content="The cube was saved successfully."
+          />
+        )}
         <Form.Group>
           <Field
             name="cube_name"
@@ -110,21 +129,24 @@ class CubeForm extends Component {
         </Form.Group>
         <Form.Group>
           <Form.Button
+            type="button"
             content="Define"
-            disabled={definitionDisabled || submitting}
+            disabled={definitionDisabled || submitting || submitSucceeded}
             onClick={onDefinition}
           />
           <Form.Button
+            type="button"
             content="Schedule"
-            disabled={scheduleDisabled || submitting}
+            disabled={scheduleDisabled || submitting || submitSucceeded}
             onClick={onSchedule}
           />
           <Form.Button
             content="Save"
-            disabled={submitting}
+            disabled={submitting || submitSucceeded}
           />
           <Form.Button
-            content="Cancel"
+            type="button"
+            content={submitSucceeded ? 'Reset' : 'Cancel'}
             secondary
             onClick={onCancel}
             disabled={(isNewRecord && (pristine || submitting)) || (!isNewRecord && submitting)}
@@ -145,6 +167,7 @@ export default reduxForm({
     'table_name',
     'materialize',
     'cube_date_start',
-    'cube_date_end'
+    'cube_date_end',
+    'definition'
   ]
 })(CubeForm);

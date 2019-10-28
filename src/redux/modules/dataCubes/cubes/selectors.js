@@ -36,7 +36,10 @@ export const getCubeFormInitialValues = createSelector(
   (cube) => {
     if (!cube) {
       return {
+        active_flag: false,
+        materialize: false,
         schedule: {
+          active_flag: false,
           frequency: 'weekly',
           daily_frequency: 1
         }

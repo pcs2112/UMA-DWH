@@ -7,5 +7,6 @@ export const cubeValidator = memoize(10)(createValidator({
   view_name: required(),
   table_name: required(),
   cube_date_start: required(),
-  cube_date_end: required()
+  cube_date_end: required(),
+  definition: required()
 }));

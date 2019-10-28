@@ -26,6 +26,8 @@ class List extends Component {
     fetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     cubeFormInitialValues: PropTypes.object.isRequired,
     cubeFormValues: PropTypes.object.isRequired,
+    onSaveCube: PropTypes.func.isRequired,
+    onSaveCubeSuccess: PropTypes.func.isRequired,
     onCubeEdit: PropTypes.func.isRequired,
     onCubeFormCancel: PropTypes.func.isRequired,
     scheduleOpen: PropTypes.bool.isRequired,
@@ -54,6 +56,8 @@ class List extends Component {
       fetchingError,
       cubeFormInitialValues,
       cubeFormValues,
+      onSaveCube,
+      onSaveCubeSuccess,
       onCubeEdit,
       onCubeFormCancel,
       scheduleOpen,
@@ -91,9 +95,10 @@ class List extends Component {
             destroyOnUnmount={false}
             forceUnregisterOnUnmount
             isNewRecord={!cubeFormInitialValues.id}
-            onSubmit={() => {}}
+            onSubmit={onSaveCube}
             onCancel={onCubeFormCancel}
             onDefinition={onDefinition}
+            onSubmitSuccess={onSaveCubeSuccess}
             definitionDisabled={!_.get(cubeFormValues, 'cube_name')}
             onSchedule={onSchedule}
             scheduleDisabled={!_.get(cubeFormValues, 'cube_name')}
@@ -163,6 +168,12 @@ export default connect(
     selectedDims: dimsRdx.selectors.getSelected(state)
   }),
   dispatch => ({
+    onSaveCube: (data) => dispatch(cubesRdx.actions.create(data)),
+    onSaveCubeSuccess: () => {
+      dispatch(dimsRdx.actions.unselectAll());
+      dispatch(factsRdx.actions.unselectAll());
+      dispatch(cubesRdx.actions.fetch());
+    },
     onCubeEdit: (id) => {
       dispatch(cubesRdx.actions.fetchSchedule(id))
         .then(() => dispatch(cubesRdx.actions.updatingStart(id)));
@@ -182,7 +193,6 @@ export default connect(
     },
     onDefinitionClose: () => {
       dispatch(hideModal(DEFINITION_CUBE_MODAL));
-      // dispatch(change(CUBE_FORM, 'definition', ''));
     },
     onAddFact: (fact) => {
       dispatch(factsRdx.actions.select(fact));

@@ -32,6 +32,7 @@ def save_cube(cube_name, active_flag, primary_fact_table, view_name, table_name,
         table_name,
         cube_date_start,
         cube_date_end,
+        '',
         xml
     )
 
