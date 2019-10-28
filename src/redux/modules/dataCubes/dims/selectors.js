@@ -77,12 +77,13 @@ export const getSelected = createSelector(
  * Returns the selected dims.
  */
 export const getSelectedFlat = createSelector(
-  [factsRdx.selectors.getSelected, _getSelected, _getSelectedOrder],
-  (selectedFacts, selectedDims, selectedOrder) => {
+  [_getSelected, _getSelectedOrder],
+  (selectedDims, selectedOrder) => {
+    const selectedFacts = Object.keys(selectedDims);
     const selected = [];
     const selectedFlat = {};
 
-    Object.keys(selectedFacts).forEach((fact) => {
+    selectedFacts.forEach((fact) => {
       if (selectedDims[fact]) {
         Object.keys(selectedDims[fact]).forEach((dimId) => {
           selectedFlat[dimId] = selectedDims[fact][dimId];

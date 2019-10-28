@@ -20,6 +20,20 @@ def save_cube(cube_name, active_flag, primary_fact_table, view_name, table_name,
     xml += f'<ELEMENT TABLE_NAME="{table_name}" />'
     xml += f'<ELEMENT CUBE_DATE_START="{cube_date_start}" />'
     xml += f'<ELEMENT CUBE_DATE_END="{cube_date_end}" />'
+    
+    factsDimsMap = {}
+    for dim in definition:
+        if dim['fact_table'] not in factsDimsMap:
+            factsDimsMap[dim['fact_table']] = []
+
+        factsDimsMap[dim['fact_table']].append(dim)
+        
+    for fact, dims in factsDimsMap.items(): 
+        xml += f'<fact table="{fact}">'
+        for dim in dims:
+            xml += '<dimension>%s</dimension>' % dim['column_name']
+        xml += f'</fact>'
+
     xml += '</CUBE>'
 
     manage_cubes(
