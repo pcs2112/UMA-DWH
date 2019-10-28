@@ -68,7 +68,7 @@ class SaveReportTableForm extends Component {
     return (
       <Form
         onSubmit={handleSubmit(onSubmit)}
-        autoComplete="off"
+        autocomplete="off"
         disabled={submitSucceeded}
         success={submitSucceeded}
         error={!isEmpty(error)}
