@@ -36,12 +36,12 @@ const columns = [
     minWidth: 150
   },
   {
-    Header: 'CUBE_DATE_START',
+    Header: 'START_DATE',
     accessor: 'cube_date_start',
     width: 120
   },
   {
-    Header: 'CUBE_DATE_END',
+    Header: 'END_DATE',
     accessor: 'cube_date_end',
     width: 110
   },
@@ -134,4 +134,4 @@ class ListTable extends Component {
   }
 }
 
-export default withResponsiveTable(ListTable, 300, 400);
+export default withResponsiveTable(ListTable, 300, 560);

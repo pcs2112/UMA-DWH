@@ -12,7 +12,10 @@ export const actionTypes = {
   UPDATE_SUCCESS: 'dataCubes/UPDATE_SUCCESS',
   UPDATE_FAIL: 'dataCubes/UPDATE_FAIL',
   UPDATING_START: 'dataCubes/UPDATING_START',
-  UPDATING_END: 'dataCubes/UPDATING_END'
+  UPDATING_END: 'dataCubes/UPDATING_END',
+  FETCH_SCHEDULE_BEGIN: 'dataCubes/FETCH_SCHEDULE_BEGIN',
+  FETCH_SCHEDULE_SUCCESS: 'dataCubes/FETCH_SCHEDULE_SUCCESS',
+  FETCH_SCHEDULE_FAIL: 'dataCubes/FETCH_SCHEDULE_FAIL',
 };
 
 /**
@@ -85,4 +88,21 @@ export const updatingStart = id => ({
  */
 export const updatingEnd = () => ({
   type: actionTypes.UPDATING_END
+});
+
+
+/**
+ * Action to load a cube's schedule.
+ */
+export const fetchSchedule = (id) => ({
+  types: [
+    actionTypes.FETCH_SCHEDULE_BEGIN,
+    actionTypes.FETCH_SCHEDULE_SUCCESS,
+    actionTypes.FETCH_SCHEDULE_FAIL
+  ],
+  makeRequest: client => client.get('/api/data_cubes/schedule', {
+    params: {
+      cube_id: id
+    }
+  })
 });
