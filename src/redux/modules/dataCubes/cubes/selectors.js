@@ -35,7 +35,12 @@ export const getCubeFormInitialValues = createSelector(
   [getUpdatingCube],
   (cube) => {
     if (!cube) {
-      return {};
+      return {
+        schedule: {
+          frequency: 'weekly',
+          daily_frequency: 1
+        }
+      };
     }
 
     return {
