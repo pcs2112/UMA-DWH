@@ -35,11 +35,3 @@ export const getData = createSelector(
  * @param {Object} state
  */
 export const getSelected = createGetPropertySelector('dataCubesFacts', SELECTED_STATE_KEY_NAME);
-
-/**
- * Selector to get the total count of selected items.
- */
-export const getSelectedCount = createSelector(
-  [getSelected],
-  selected => Object.keys(selected).length
-);

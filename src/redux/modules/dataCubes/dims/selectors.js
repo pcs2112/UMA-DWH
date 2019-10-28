@@ -38,6 +38,9 @@ export const getAllData = createSelector(
   }
 );
 
+/**
+ * Returns the dims data filtered selected fact tables.
+ */
 export const getData = createSelector(
   [factsRdx.selectors.getSelected, getAllData],
   (selectedFacts, data) => data.filter((item) => _.has(selectedFacts, item.fact_table))
@@ -71,12 +74,4 @@ export const getSelected = createSelector(
 
     return selected;
   }
-);
-
-/**
- * Selector to get the total count of selected items.
- */
-export const getSelectedCount = createSelector(
-  [getSelected],
-  selected => selected.length
 );
