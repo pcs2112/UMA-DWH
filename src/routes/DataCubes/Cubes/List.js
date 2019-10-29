@@ -15,6 +15,7 @@ import ScheduleCubeForm from './ScheduleCubeForm';
 import globalCss from '../../../css/global';
 
 const CUBE_FORM = 'CubeForm';
+const CUBE_SCHEDULE_FORM = 'CubeScheduleForm';
 const SCHEDULE_CUBE_MODAL = 'ScheduleCubeModal';
 const DEFINITION_CUBE_MODAL = 'DefinitionCubeModal';
 
@@ -93,10 +94,6 @@ class List extends Component {
             form={CUBE_FORM}
             initialValues={cubeFormInitialValues}
             enableReinitialize
-            destroyOnUnmount={false}
-            forceUnregisterOnUnmount
-            keepDirtyOnReinitialize
-            isNewRecord={!cubeFormInitialValues.id}
             onSubmit={onSaveCube}
             onCancel={onCubeFormCancel}
             onDefinition={onDefinition}
@@ -116,12 +113,10 @@ class List extends Component {
           <Modal.Header content={<h1>SCHEDULE CUBE</h1>} />
           <Modal.Content>
             <ScheduleCubeForm
-              form={CUBE_FORM}
-              initialValues={cubeFormInitialValues}
+              form={CUBE_SCHEDULE_FORM}
+              initialValues={cubeFormInitialValues.schedule}
               enableReinitialize
               destroyOnUnmount={false}
-              forceUnregisterOnUnmount
-              keepDirtyOnReinitialize
               onClose={onScheduleClose}
             />
           </Modal.Content>
@@ -172,11 +167,10 @@ export default connect(
     selectedDims: dimsRdx.selectors.getSelected(state)
   }),
   dispatch => ({
-    onSaveCube: (data) => dispatch(cubesRdx.actions.create(data)),
+    onSaveCube: (data) => dispatch(cubesRdx.actions.save(data)),
     onSaveCubeSuccess: () => {
       dispatch(dimsRdx.actions.unselectAll());
       dispatch(factsRdx.actions.unselectAll());
-      dispatch(cubesRdx.actions.fetch());
     },
     onCubeEdit: (id) => dispatch(cubesRdx.actions.fetchSchedule(id))
       .then(() => Promise.resolve(dispatch(cubesRdx.actions.updatingStart(id))))

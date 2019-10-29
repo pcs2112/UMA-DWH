@@ -72,9 +72,9 @@ export const getCubeFormInitialValues = createSelector(
       ...cube,
       cube_id: cube.id,
       active_flag: cube.active_flag === 1,
-      materalize: cube.materalize === 1,
+      materialize: cube.materialize === 1,
       cube_date_start: cube.cube_date_start.substring(0, 10),
-      cube_date_end: cube.cube_date_start.substring(0, 10),
+      cube_date_end: cube.cube_date_end.substring(0, 10),
       definition,
       schedule: {
         ..._.get(cube, 'schedule', {}),

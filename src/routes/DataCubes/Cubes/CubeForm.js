@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { reduxForm, Field, getFormSyncErrors } from 'redux-form';
+import {
+  reduxForm, Field, getFormSyncErrors, FormSection
+} from 'redux-form';
 import { Form, Message } from 'semantic-ui-react';
 import _ from 'lodash';
 import { isEmpty } from 'javascript-utils/lib/utils';
-import { TextField, /* SelectField, */CheckBoxField } from '../../../components/ReduxForm';
+import { TextField, CheckBoxField } from '../../../components/ReduxForm';
 import FormError from '../../../components/FormError';
 import { cubeValidator } from './validation';
 
@@ -15,14 +17,15 @@ const checkboxStyle = {
 
 class CubeForm extends Component {
   static propTypes = {
+    // eslint-disable-next-line react/no-unused-prop-types
+    form: PropTypes.string.isRequired,
+    values: PropTypes.object,
     submitting: PropTypes.bool,
-    pristine: PropTypes.bool,
     submitFailed: PropTypes.bool,
     error: PropTypes.string,
     submitSucceeded: PropTypes.bool,
     handleSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
-    isNewRecord: PropTypes.bool.isRequired,
     definitionDisabled: PropTypes.bool.isRequired,
     onDefinition: PropTypes.func.isRequired,
     scheduleDisabled: PropTypes.bool.isRequired,
@@ -32,14 +35,13 @@ class CubeForm extends Component {
 
   render() {
     const {
+      values,
       submitting,
-      pristine,
       submitFailed,
       error,
       submitSucceeded,
       handleSubmit,
       onSubmit,
-      isNewRecord,
       scheduleDisabled,
       definitionDisabled,
       onDefinition,
@@ -53,6 +55,7 @@ class CubeForm extends Component {
         onSubmit={handleSubmit(onSubmit)}
         error={submitFailed && !isEmpty(error)}
         success={submitSucceeded}
+        disabled={submitSucceeded}
       >
         {submitFailed && error && <FormError error={error} />}
         {submitSucceeded && (
@@ -92,7 +95,7 @@ class CubeForm extends Component {
             type="text"
             component={TextField}
             label="Table Name"
-            required
+            required={_.get(values, 'materialize', false)}
             width="four"
           />
           <Field
@@ -117,11 +120,13 @@ class CubeForm extends Component {
             type="date"
             component={TextField}
             label="End Date"
-            required
             width="four"
           />
         </Form.Group>
         <Field name="definition" type="hidden" component="input" />
+        <FormSection name="schedule">
+          <Field name="name" type="hidden" component="input" />
+        </FormSection>
         <Form.Group>
           <Form.Button
             type="button"
@@ -144,7 +149,7 @@ class CubeForm extends Component {
             content={submitSucceeded ? 'Reset' : 'Cancel'}
             secondary
             onClick={onCancel}
-            disabled={(isNewRecord && (pristine || submitting)) || (!isNewRecord && submitting)}
+            disabled={submitting}
           />
         </Form.Group>
       </Form>
@@ -153,9 +158,20 @@ class CubeForm extends Component {
 }
 
 const ConnectedForm = connect(
-  (state, props) => ({
-    error: _.has(getFormSyncErrors(props.form)(state), 'definition') ? 'The definition must be set.' : undefined
-  })
+  (state, props) => {
+    const errors = getFormSyncErrors(props.form)(state);
+    let error;
+    if (_.has(errors, 'definition')) {
+      error = 'The definition must be set.';
+    } else if (_.has(errors, 'schedule.name')) {
+      error = 'The schedule must be set.';
+    }
+
+    return {
+      values: _.get(state, `form.${props.form}.values`, {}),
+      error
+    };
+  }
 )(CubeForm);
 
 export default reduxForm({
@@ -168,6 +184,7 @@ export default reduxForm({
     'materialize',
     'cube_date_start',
     'cube_date_end',
-    'definition'
+    'definition',
+    'schedule.name'
   ]
 })(ConnectedForm);

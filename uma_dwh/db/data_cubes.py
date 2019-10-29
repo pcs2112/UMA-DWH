@@ -79,6 +79,8 @@ def save_cube(cube_name, active_flag, view_name, table_name, materialize, cube_d
         xml
     )
 
+    return result[0]
+    
 
 def manage_cubes_schedule(*args):
     return execute_sp(*args, sp_args_length=17)

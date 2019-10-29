@@ -19,7 +19,7 @@ path_sp_args_map = {
       'module_name': 'uma_dwh.db.data_cubes',
       'module_func': 'manage_cubes_schedule',
       'sp_name': 'UMA_CUBEVIEW.MANAGE_CUBEVIEW_SCHEDULE',
-      'sp_message': 'Get_SCHEDULE',
+      'sp_message': 'GET_SCHEDULE',
       'sp_in_args': ['cube_id']
     },
     'POST': {

@@ -29,8 +29,25 @@ export default (state = initialState, action) => {
     case actionTypes.RESET:
     case actionTypes.FETCH_SUCCESS:
       return itemListReducer(state, action);
-    case actionTypes.CREATE_SUCCESS:
-    case actionTypes.UPDATE_SUCCESS:
+    case actionTypes.SAVE_SUCCESS: {
+      if (!action.response) {
+        return state;
+      }
+      const cube = state.data.find((c) => c.id === action.response.id);
+      if (cube) {
+        return {
+          ...state,
+          data: replaceObjByValue(state.data, { ...cube, ...action.response }, cube.id)
+        };
+      }
+
+      const newData = state.data.slice();
+      newData.push({ ...action.response });
+      return {
+        ...state,
+        data: newData
+      };
+    }
     case actionTypes.UPDATING_START:
     case actionTypes.UPDATING_END:
       return crudListReducer(state, action);
@@ -47,6 +64,10 @@ export default (state = initialState, action) => {
         scheduleFetchingError: action.error
       };
     case actionTypes.FETCH_SCHEDULE_SUCCESS: {
+      if (!action.response || action.response.length < 1) {
+        return state;
+      }
+
       const { data } = state;
       const cube = data.find((item) => item.id === action.response[0].r_cube_definition_id);
       return {

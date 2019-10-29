@@ -5,12 +5,9 @@ export const actionTypes = {
   FETCH_SUCCESS: 'dataCubes/FETCH_SUCCESS',
   FETCH_FAIL: 'dataCubes/FETCH_FAIL',
   RESET: 'dataCubes/RESET',
-  CREATE_BEGIN: 'dataCubes/CREATE_BEGIN',
-  CREATE_SUCCESS: 'dataCubes/CREATE_SUCCESS',
-  CREATE_FAIL: 'dataCubes/CREATE_FAIL',
-  UPDATE_BEGIN: 'dataCubes/UPDATE_BEGIN',
-  UPDATE_SUCCESS: 'dataCubes/UPDATE_SUCCESS',
-  UPDATE_FAIL: 'dataCubes/UPDATE_FAIL',
+  SAVE_BEGIN: 'dataCubes/SAVE_BEGIN',
+  SAVE_SUCCESS: 'dataCubes/SAVE_SUCCESS',
+  SAVE_FAIL: 'dataCubes/SAVE_FAIL',
   UPDATING_START: 'dataCubes/UPDATING_START',
   UPDATING_END: 'dataCubes/UPDATING_END',
   FETCH_SCHEDULE_BEGIN: 'dataCubes/FETCH_SCHEDULE_BEGIN',
@@ -42,36 +39,16 @@ export const reset = () => ({
  *
  * @param {Object} data
  */
-export const create = data => ({
+export const save = data => ({
   types: [
-    actionTypes.CREATE_BEGIN,
-    actionTypes.CREATE_SUCCESS,
-    actionTypes.CREATE_FAIL
+    actionTypes.SAVE_BEGIN,
+    actionTypes.SAVE_SUCCESS,
+    actionTypes.SAVE_FAIL
   ],
   makeRequest: client => client.post('/api/data_cubes/cubes', {
     data
   })
     .catch(catchValidation)
-});
-
-/**
- * Action to update an existing cube.
- *
- * @param {Object} data
- */
-export const update = data => ({
-  types: [
-    actionTypes.UPDATE_BEGIN,
-    actionTypes.UPDATE_SUCCESS,
-    actionTypes.UPDATE_FAIL
-  ],
-  makeRequest: client => client.put('/api/data_cubes/cubes', {
-    data
-  })
-    .catch(catchValidation),
-  payload: {
-    id: data.cube_id
-  }
 });
 
 /**
