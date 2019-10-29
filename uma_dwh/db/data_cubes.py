@@ -7,7 +7,7 @@ def manage_cubes(*args):
     return execute_sp(*args, sp_args_length=9)
 
 
-def save_cube(cube_name, active_flag, primary_fact_table, view_name, table_name, materialize, cube_date_start, cube_date_end, schedule, definition):
+def save_cube(cube_name, active_flag, view_name, table_name, materialize, cube_date_start, cube_date_end, schedule, definition):
     """ Creates/updates a cube. """
     active_flag = '1' if active_flag is True else '0'
     materialize = '1' if materialize is True else '0'

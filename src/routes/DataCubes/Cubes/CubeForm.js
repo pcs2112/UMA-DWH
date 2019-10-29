@@ -76,16 +76,6 @@ class CubeForm extends Component {
         </Form.Group>
         <Form.Group>
           <Field
-            name="primary_fact_table"
-            type="text"
-            component={TextField}
-            label="Primary Fact Table"
-            required
-            width="eight"
-          />
-        </Form.Group>
-        <Form.Group>
-          <Field
             name="view_name"
             type="text"
             component={TextField}
@@ -162,7 +152,6 @@ export default reduxForm({
   fields: [
     'cube_name',
     'active_flag',
-    'primary_fact_table',
     'view_name',
     'table_name',
     'materialize',

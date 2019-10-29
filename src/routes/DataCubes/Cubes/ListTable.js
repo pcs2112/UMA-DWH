@@ -46,11 +46,6 @@ const columns = [
     width: 110
   },
   {
-    Header: 'PRIMARY_FACT_TBL',
-    accessor: 'primary_fact_table',
-    width: 120
-  },
-  {
     Header: 'FACT_TBL_CT',
     accessor: 'fact_table_count',
     width: 100
