@@ -26,8 +26,8 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.FETCH_BEGIN:
     case actionTypes.FETCH_FAIL:
-    case actionTypes.FETCH_SUCCESS:
     case actionTypes.RESET:
+    case actionTypes.FETCH_SUCCESS:
       return itemListReducer(state, action);
     case actionTypes.CREATE_SUCCESS:
     case actionTypes.UPDATE_SUCCESS:
@@ -47,15 +47,18 @@ export default (state = initialState, action) => {
         scheduleFetchingError: action.error
       };
     case actionTypes.FETCH_SCHEDULE_SUCCESS: {
-      const { data, updating } = state;
-      const cube = data.find((item) => item.id === updating);
+      const { data } = state;
+      const cube = data.find((item) => item.id === action.response[0].r_cube_definition_id);
       return {
         ...state,
         isScheduleFetching: false,
         scheduleLoaded: true,
-        schedule: action.response,
         scheduleFetchingError: false,
-        data: replaceObjByValue(state.data, { ...cube }, cube.id)
+        data: replaceObjByValue(
+          state.data,
+          { ...cube, schedule: action.response[0] },
+          action.response[0].r_cube_definition_id
+        )
       };
     }
     default:

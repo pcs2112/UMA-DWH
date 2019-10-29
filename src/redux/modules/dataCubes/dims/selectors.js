@@ -9,7 +9,7 @@ import {
   SELECTED_STATE_KEY_NAME,
   SELECTED_ORDER_STATE_KEY_NAME
 } from './constants';
-import factsRdx from '../facts';
+import { getSelected as factsSelected } from '../facts/selectors';
 
 const _getData = createDataSelector('dataCubesDims', 'dataLoaded', 'data');
 
@@ -42,7 +42,7 @@ export const getAllData = createSelector(
  * Returns the dims data filtered by selected fact tables.
  */
 export const getData = createSelector(
-  [factsRdx.selectors.getSelected, getAllData],
+  [factsSelected, getAllData],
   (selectedFacts, data) => data.filter((item) => _.has(selectedFacts, item.fact_table))
 );
 
@@ -50,7 +50,7 @@ export const getData = createSelector(
  * Returns the selected dim ids.
  */
 export const getSelected = createSelector(
-  [factsRdx.selectors.getSelected, _getSelected, _getSelectedOrder],
+  [factsSelected, _getSelected, _getSelectedOrder],
   (selectedFacts, selectedDims, selectedOrder) => {
     const selected = [];
     const selectedFlat = {};
@@ -100,3 +100,8 @@ export const getSelectedFlat = createSelector(
     return selected;
   }
 );
+
+/**
+ * Returns the DIM index by column name.
+ */
+export const getDimColumnNameIdx = createGetPropertySelector('dataCubesDims', 'dimColumnNameIdx');

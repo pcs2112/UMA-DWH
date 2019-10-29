@@ -7,9 +7,7 @@ import {
 
 // Initial state
 const initialState = Object.assign(
-  {
-    selectedTableMap: {}
-  },
+  {},
   itemListInitialState,
   itemListSelectInitialState(SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME)
 );
@@ -28,9 +26,19 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.FETCH_BEGIN:
     case actionTypes.FETCH_FAIL:
-    case actionTypes.FETCH_SUCCESS:
     case actionTypes.RESET:
       return itemListReducer(state, action);
+    case actionTypes.FETCH_SUCCESS: {
+      const newState = itemListReducer(state, action);
+      const dimColumnNameIdx = {};
+      newState.data.forEach((dim, i) => {
+        dimColumnNameIdx[dim.column_name] = i;
+      });
+      return {
+        ...newState,
+        dimColumnNameIdx
+      };
+    }
     case actionTypes.SELECT: {
       // Add the selected item
       const selected = {
@@ -78,6 +86,14 @@ export default (state = initialState, action) => {
         selected: {},
         selectedOrder: []
       };
+    case actionTypes.INIT_SELECTED: {
+      const { selected, selectedOrder } = action;
+      return {
+        ...state,
+        selected,
+        selectedOrder
+      };
+    }
     default:
       return state;
   }

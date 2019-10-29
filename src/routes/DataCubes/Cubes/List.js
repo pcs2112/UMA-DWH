@@ -92,8 +92,10 @@ class List extends Component {
           <CubeForm
             form={CUBE_FORM}
             initialValues={cubeFormInitialValues}
+            enableReinitialize
             destroyOnUnmount={false}
             forceUnregisterOnUnmount
+            keepDirtyOnReinitialize
             isNewRecord={!cubeFormInitialValues.id}
             onSubmit={onSaveCube}
             onCancel={onCubeFormCancel}
@@ -116,8 +118,10 @@ class List extends Component {
             <ScheduleCubeForm
               form={CUBE_FORM}
               initialValues={cubeFormInitialValues}
+              enableReinitialize
               destroyOnUnmount={false}
               forceUnregisterOnUnmount
+              keepDirtyOnReinitialize
               onClose={onScheduleClose}
             />
           </Modal.Content>
@@ -174,10 +178,9 @@ export default connect(
       dispatch(factsRdx.actions.unselectAll());
       dispatch(cubesRdx.actions.fetch());
     },
-    onCubeEdit: (id) => {
-      dispatch(cubesRdx.actions.fetchSchedule(id))
-        .then(() => dispatch(cubesRdx.actions.updatingStart(id)));
-    },
+    onCubeEdit: (id) => dispatch(cubesRdx.actions.fetchSchedule(id))
+      .then(() => Promise.resolve(dispatch(cubesRdx.actions.updatingStart(id))))
+      .then(() => Promise.resolve(dispatch(dimsRdx.actions.initSelected(id)))),
     onCubeFormCancel: () => {
       dispatch(cubesRdx.actions.updatingEnd());
       dispatch(reset(CUBE_FORM));
