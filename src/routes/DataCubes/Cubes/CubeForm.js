@@ -23,6 +23,7 @@ class CubeForm extends Component {
     submitting: PropTypes.bool,
     submitFailed: PropTypes.bool,
     error: PropTypes.string,
+    internalError: PropTypes.string,
     submitSucceeded: PropTypes.bool,
     handleSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
@@ -39,6 +40,7 @@ class CubeForm extends Component {
       submitting,
       submitFailed,
       error,
+      internalError,
       submitSucceeded,
       handleSubmit,
       onSubmit,
@@ -48,16 +50,17 @@ class CubeForm extends Component {
       onSchedule,
       onCancel
     } = this.props;
+    console.log(error);
     return (
       <Form
         size="small"
         autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
-        error={submitFailed && !isEmpty(error)}
+        error={!isEmpty(error) || (submitFailed && !isEmpty(internalError))}
         success={submitSucceeded}
         disabled={submitSucceeded}
       >
-        {submitFailed && error && <FormError error={error} />}
+        {(error || internalError) && <FormError error={error || internalError} />}
         {submitSucceeded && (
           <Message
             success
@@ -169,7 +172,7 @@ const ConnectedForm = connect(
 
     return {
       values: _.get(state, `form.${props.form}.values`, {}),
-      error
+      internalError: error
     };
   }
 )(CubeForm);

@@ -33,7 +33,8 @@ export default client => ({ dispatch, getState }) => next => (action) => {
     type: requestType
   }));
 
-  return makeRequest(client)
+  const actionPromise = makeRequest(client);
+  actionPromise
     .then(
       response => dispatch(Object.assign({}, payload, {
         response,
@@ -44,4 +45,6 @@ export default client => ({ dispatch, getState }) => next => (action) => {
         type: failureType
       }))
     );
+
+  return actionPromise;
 };

@@ -12,6 +12,9 @@ def save_cube(cube_name, active_flag, view_name, table_name, materialize, cube_d
     active_flag = '1' if active_flag is True else '0'
     materialize = '1' if materialize is True else '0'
 
+    if materialize == '0':
+        table_name = '' 
+
     xml = '<CUBE>'
     xml += f'<ELEMENT ACTIVE_FLAG="{active_flag}" />'
     xml += f'<ELEMENT CUBE_NAME="{cube_name}" />'
