@@ -199,7 +199,7 @@ def execute_sp(sp_name, in_args, out_arg=None, as_dict=True):
 
     if out_arg is not None:
         sql += f'SELECT @{out_arg} AS {out_arg};'
-    print(in_params)
+
     cursor = get_db().cursor()
     cursor.execute(sql, in_params)
 

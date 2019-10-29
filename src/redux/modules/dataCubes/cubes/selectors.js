@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
   createDataSelector,
   createFetchingErrorSelector, createGetItemByIdSelector,
@@ -34,14 +35,20 @@ export const getUpdatingCube = createGetItemByIdSelector(_getData, _getUpdatingC
 export const getCubeFormInitialValues = createSelector(
   [getUpdatingCube],
   (cube) => {
+    const now = moment();
     if (!cube) {
       return {
         active_flag: false,
         materialize: false,
+        cube_date_start: now.format('YYYY-MM-DD'),
+        cube_date_end: now.add(1, 'days').format('YYYY-MM-DD'),
         schedule: {
           active_flag: false,
-          frequency: 'weekly',
-          daily_frequency: 1
+          frequency: 'daily',
+          daily_frequency: 1,
+          daily_start: '05:00',
+          duration_start: now.format('YYYY-MM-DD'),
+          duration_end: now.add(1, 'days').format('YYYY-MM-DD')
         }
       };
     }

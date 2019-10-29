@@ -26,14 +26,14 @@ const columns = [
     minWidth: 150
   },
   {
-    Header: 'MATERALIZE',
-    accessor: 'materialize',
-    width: 100
-  },
-  {
     Header: 'TABLE_NAME',
     accessor: 'table_name',
     minWidth: 150
+  },
+  {
+    Header: 'MATERALIZE',
+    accessor: 'materialize',
+    width: 100
   },
   {
     Header: 'START_DATE',

@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { reduxForm, Field } from 'redux-form';
+import { connect } from 'react-redux';
+import { reduxForm, Field, getFormSyncErrors } from 'redux-form';
 import { Form, Message } from 'semantic-ui-react';
+import _ from 'lodash';
 import { isEmpty } from 'javascript-utils/lib/utils';
 import { TextField, /* SelectField, */CheckBoxField } from '../../../components/ReduxForm';
 import FormError from '../../../components/FormError';
@@ -15,6 +17,7 @@ class CubeForm extends Component {
   static propTypes = {
     submitting: PropTypes.bool,
     pristine: PropTypes.bool,
+    submitFailed: PropTypes.bool,
     error: PropTypes.string,
     submitSucceeded: PropTypes.bool,
     handleSubmit: PropTypes.func.isRequired,
@@ -31,6 +34,7 @@ class CubeForm extends Component {
     const {
       submitting,
       pristine,
+      submitFailed,
       error,
       submitSucceeded,
       handleSubmit,
@@ -47,10 +51,10 @@ class CubeForm extends Component {
         size="small"
         autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
-        error={!isEmpty(error)}
+        error={submitFailed && !isEmpty(error)}
         success={submitSucceeded}
       >
-        {error && <FormError error={error} />}
+        {submitFailed && error && <FormError error={error} />}
         {submitSucceeded && (
           <Message
             success
@@ -117,6 +121,7 @@ class CubeForm extends Component {
             width="four"
           />
         </Form.Group>
+        <Field name="definition" type="hidden" component="input" />
         <Form.Group>
           <Form.Button
             type="button"
@@ -147,6 +152,12 @@ class CubeForm extends Component {
   }
 }
 
+const ConnectedForm = connect(
+  (state, props) => ({
+    error: _.has(getFormSyncErrors(props.form)(state), 'definition') ? 'The definition must be set.' : undefined
+  })
+)(CubeForm);
+
 export default reduxForm({
   validate: cubeValidator,
   fields: [
@@ -159,4 +170,4 @@ export default reduxForm({
     'cube_date_end',
     'definition'
   ]
-})(CubeForm);
+})(ConnectedForm);

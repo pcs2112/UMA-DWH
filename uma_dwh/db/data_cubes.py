@@ -36,7 +36,7 @@ def save_cube(cube_name, active_flag, view_name, table_name, materialize, cube_d
 
     xml += '</CUBE>'
 
-    manage_cubes(
+    result = manage_cubes(
         'UMA_CUBEVIEW.MANAGE_CUBEVIEW_DATA',
         'SAVE_CUBE',
         active_flag,
@@ -47,6 +47,35 @@ def save_cube(cube_name, active_flag, view_name, table_name, materialize, cube_d
         cube_date_start,
         cube_date_end,
         '',
+        xml
+    )
+
+    daily_start = schedule['daily_start']
+    daily_occurs_interval = schedule.get('daily_occurs_interval', 0)
+
+    if schedule['daily_frequency'] == 1:
+        daily_end = daily_start
+        daily_occurs_interval = 0
+    else:
+        daily_end = schedule['daily_end']
+
+    save_cube_schedule(
+        result[0]['id'],
+        schedule.get('name', ''),
+        schedule.get('frequency'),
+        '1' if schedule.get('monday', False) is True else '0',
+        '1' if schedule.get('tuesday', False) is True else '0',
+        '1' if schedule.get('wednesday', False) is True else '0',
+        '1' if schedule.get('thursday', False) is True else '0',
+        '1' if schedule.get('friday', False) is True else '0',
+        '1' if schedule.get('saturday', False) is True else '0',
+        '1' if schedule.get('sunday', False) is True else '0',
+        schedule['daily_frequency'],
+        daily_start,
+        daily_end,
+        daily_occurs_interval,
+        schedule['duration_start'],
+        schedule['duration_end'],
         xml
     )
 
@@ -61,7 +90,7 @@ def save_cube_schedule(cube_id, name, frequency, monday, tuesday, wednesday, thu
         'UMA_CUBEVIEW.MANAGE_CUBEVIEW_SCHEDULE',
         'SAVE_SCHEDULE',
         cube_id,
-        name,
+        name if name else f'CUBE_{cube_id}_SCHEDULE',
         frequency,
         monday,
         tuesday,
