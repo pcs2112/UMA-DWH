@@ -118,7 +118,7 @@ def execute_sp(*args, sp_args_length, out_arg='sp_status_code'):
     results = execute_sp_with_required_in_args(*args, sp_args_length, sp_in_arg_prefix='VARIABLE_')
     status_code = get_out_arg(results, out_arg)
 
-    if status_code != 0:
+    if status_code != 0 and status_code != -2:
         raise SPException(f'Stored Procedure call to "{args[0]}" failed.', status_code)
 
     result = get_sp_result_set(results, 0, out_arg)
