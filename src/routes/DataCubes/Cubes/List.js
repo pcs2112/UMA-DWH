@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { reset, getFormValues } from 'redux-form';
-import { Segment, Modal } from 'semantic-ui-react';
+import { Segment, Modal, Header } from 'semantic-ui-react';
 import _ from 'lodash';
 import { showModal, hideModal } from 'redux-modal';
 import cubesRdx from '../../../redux/modules/dataCubes/cubes';
@@ -90,6 +90,9 @@ class List extends Component {
           />
         </Segment>
         <Segment>
+          <Header as="h3" dividing>
+            {cubeFormInitialValues && cubeFormInitialValues.id ? 'UPDATE CUBE' : 'CREATE A NEW CUBE'}
+          </Header>
           <CubeForm
             form={CUBE_FORM}
             initialValues={cubeFormInitialValues}
