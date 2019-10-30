@@ -38,7 +38,7 @@ class List extends Component {
     onDefinition: PropTypes.func.isRequired,
     onDefinitionClose: PropTypes.func.isRequired,
     facts: PropTypes.array.isRequired,
-    selectedFacts: PropTypes.object.isRequired,
+    selectedFacts: PropTypes.array.isRequired,
     onAddFact: PropTypes.func.isRequired,
     onRemoveFact: PropTypes.func.isRequired,
     onRemoveAllFacts: PropTypes.func.isRequired,
@@ -166,9 +166,9 @@ export default connect(
     scheduleOpen: state.modal.modalName === SCHEDULE_CUBE_MODAL,
     definitionOpen: state.modal.modalName === DEFINITION_CUBE_MODAL,
     facts: factsRdx.selectors.getData(state),
-    selectedFacts: factsRdx.selectors.getSelected(state),
+    selectedFacts: factsRdx.selectors.getSelectedIds(state),
     dims: dimsRdx.selectors.getData(state),
-    selectedDims: dimsRdx.selectors.getSelected(state)
+    selectedDims: dimsRdx.selectors.getSelectedIds(state)
   }),
   dispatch => ({
     onSaveCube: (data) => dispatch(cubesRdx.actions.save(data)),
@@ -178,7 +178,7 @@ export default connect(
     },
     onCubeEdit: (id) => dispatch(cubesRdx.actions.fetchSchedule(id))
       .then(() => Promise.resolve(dispatch(cubesRdx.actions.updatingStart(id))))
-      .then(() => Promise.resolve(dispatch(dimsRdx.actions.initSelected(id)))),
+      .then(() => Promise.resolve(dispatch(factsRdx.actions.initSelected()))),
     onCubeFormCancel: () => {
       dispatch(cubesRdx.actions.updatingEnd());
       dispatch(reset(CUBE_FORM));

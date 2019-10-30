@@ -6,7 +6,7 @@ import {
   createGetItemsSelector, createGetPropertySelector
 } from 'javascript-utils/lib/selectors';
 import { createSelector } from 'reselect/lib/index';
-import { getDimColumnNameIdx, getAllData } from '../dims/selectors';
+import { getDimIdx, getAllData } from '../dims/selectors';
 
 const now = moment();
 const defaultValues = {
@@ -63,8 +63,8 @@ export const getUpdatingCube = createGetItemByIdSelector(_getData, _getUpdatingC
  * Gets the initial form values for the cube form.
  */
 export const getCubeFormInitialValues = createSelector(
-  [getUpdatingCube, getAllData, getDimColumnNameIdx],
-  (cube, dims, dimColumnNameIdx) => {
+  [getUpdatingCube, getAllData, getDimIdx],
+  (cube, dims, dimIdx) => {
     if (!cube) {
       return defaultValues;
     }
@@ -74,9 +74,10 @@ export const getCubeFormInitialValues = createSelector(
     const factElements = xmlDoc.getElementsByTagName('fact');
     const definition = [];
     factElements.forEach((factEl) => {
+      const fact = factEl.getAttribute('table').toUpperCase();
       const dimsElements = factEl.getElementsByTagName('dimension');
       dimsElements.forEach((dimEl) => {
-        definition.push(dims[dimColumnNameIdx[dimEl.textContent]]);
+        definition.push(dims[dimIdx[`${fact}.${dimEl.textContent.toUpperCase()}`]]);
       });
     });
 

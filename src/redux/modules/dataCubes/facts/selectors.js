@@ -9,8 +9,7 @@ import {
 } from './constants';
 
 const _getData = createDataSelector('dataCubesFacts', 'dataLoaded', 'data');
-
-const _getSelectedFactDimIdx = createGetPropertySelector('dataCubesDims', SELECTED_STATE_KEY_NAME);
+const _getSelectedDims = createGetPropertySelector('dataCubesDims', SELECTED_STATE_KEY_NAME);
 
 /**
  * Returns the error from the state.
@@ -22,7 +21,7 @@ export const getFetchingError = createFetchingErrorSelector('dataCubesFacts', 'f
  * Returns the facts data.
  */
 export const getData = createSelector(
-  [_getData, _getSelectedFactDimIdx],
+  [_getData, _getSelectedDims],
   (data, factDimIdx) => data.map((fact) => ({
     ...fact,
     label: fact.fact_table + (factDimIdx[fact.fact_table]
@@ -31,7 +30,21 @@ export const getData = createSelector(
 );
 
 /**
- * Returns the selected items.
+ * Returns the selected facts.
  * @param {Object} state
  */
 export const getSelected = createGetPropertySelector('dataCubesFacts', SELECTED_STATE_KEY_NAME);
+
+/**
+ * Returns the selected fact ids.
+ * @param {Object} state
+ */
+export const getSelectedIds = createSelector(
+  [getSelected],
+  (selected) => Object.keys(selected)
+);
+
+/**
+ * Returns the Fact index by fact table.
+ */
+export const getFactIdx = createGetPropertySelector('dataCubesFacts', 'factIdx');

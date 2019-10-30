@@ -9,7 +9,7 @@ import dimsRdx from '../../../redux/modules/dataCubes/dims';
 class DefineForm extends Component {
   static propTypes = {
     facts: PropTypes.array.isRequired,
-    selectedFacts: PropTypes.object.isRequired,
+    selectedFacts: PropTypes.array.isRequired,
     onAddFact: PropTypes.func.isRequired,
     onRemoveFact: PropTypes.func.isRequired,
     onRemoveAllFacts: PropTypes.func.isRequired,
@@ -54,7 +54,7 @@ class DefineForm extends Component {
           labelKey="label"
           valueKey="fact_table"
           options={facts}
-          valueArray={Object.keys(selectedFacts)}
+          valueArray={selectedFacts}
           onAdd={onAddFact}
           onRemove={(removedItem) => {
             onRemoveFact(removedItem.fact_table, removedItem);
@@ -64,7 +64,7 @@ class DefineForm extends Component {
         />
         <h3>DIMENSION TABLES</h3>
         <VirtualMultiSelectBox
-          labelKey="id"
+          labelKey="label"
           valueKey="id"
           options={dims}
           valueArray={selectedDims}

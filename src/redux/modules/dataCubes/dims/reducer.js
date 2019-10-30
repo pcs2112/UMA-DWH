@@ -1,6 +1,7 @@
 import itemListReducerFor, { initialState as itemListInitialState } from '../../../reducers/itemListReducerFor';
 import { getInitialState as itemListSelectInitialState } from '../../../reducers/itemListSelectReducerFor';
 import { actionTypes } from './actions';
+import { actionTypes as factsActionTypes } from '../facts/actions';
 import {
   SELECTED_STATE_KEY_NAME, SELECTED_ORDER_STATE_KEY_NAME
 } from './constants';
@@ -30,13 +31,28 @@ export default (state = initialState, action) => {
       return itemListReducer(state, action);
     case actionTypes.FETCH_SUCCESS: {
       const newState = itemListReducer(state, action);
-      const dimColumnNameIdx = {};
-      newState.data.forEach((dim, i) => {
-        dimColumnNameIdx[dim.column_name] = i;
+      const { data } = newState;
+      const dimIdx = {};
+
+      const newData = data.map((dim, i) => {
+        const fact = dim.fact_table.toUpperCase();
+        const column = dim.column_name.toUpperCase();
+        const id = `${fact}.${column}`;
+        const label = `${fact}.${dim.dimension_name}`;
+        dimIdx[id] = i;
+        return {
+          ...dim,
+          id,
+          label,
+          column_name: column,
+          fact_table: fact
+        };
       });
+
       return {
         ...newState,
-        dimColumnNameIdx
+        data: newData,
+        dimIdx
       };
     }
     case actionTypes.SELECT: {
@@ -86,12 +102,12 @@ export default (state = initialState, action) => {
         selected: {},
         selectedOrder: []
       };
-    case actionTypes.INIT_SELECTED: {
-      const { selected, selectedOrder } = action;
+    case factsActionTypes.INIT_SELECTED: {
+      const { selectedDims, selectedDimsOrder } = action;
       return {
         ...state,
-        selected,
-        selectedOrder
+        selected: selectedDims,
+        selectedOrder: selectedDimsOrder
       };
     }
     default:

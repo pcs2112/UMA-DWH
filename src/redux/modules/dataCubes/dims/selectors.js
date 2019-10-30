@@ -9,11 +9,9 @@ import {
   SELECTED_STATE_KEY_NAME,
   SELECTED_ORDER_STATE_KEY_NAME
 } from './constants';
-import { getSelected as factsSelected } from '../facts/selectors';
+import { getSelected as getSelectedFacts } from '../facts/selectors';
 
 const _getData = createDataSelector('dataCubesDims', 'dataLoaded', 'data');
-
-const _getSelected = createGetPropertySelector('dataCubesDims', SELECTED_STATE_KEY_NAME);
 
 const _getSelectedOrder = createGetPropertySelector('dataCubesDims', SELECTED_ORDER_STATE_KEY_NAME);
 
@@ -28,29 +26,24 @@ export const getFetchingError = createFetchingErrorSelector('dataCubesDims', 'fe
  */
 export const getAllData = createSelector(
   [_getData],
-  (data) => {
-    const newData = data.map((item) => ({
-      ...item,
-      id: `${item.fact_table}.${item.dimension_name}`
-    }));
-
-    return newData;
-  }
+  (data) => data
 );
 
 /**
  * Returns the dims data filtered by selected fact tables.
  */
 export const getData = createSelector(
-  [factsSelected, getAllData],
+  [getSelectedFacts, getAllData],
   (selectedFacts, data) => data.filter((item) => _.has(selectedFacts, item.fact_table))
 );
+
+export const getSelected = createGetPropertySelector('dataCubesDims', SELECTED_STATE_KEY_NAME);
 
 /**
  * Returns the selected dim ids.
  */
-export const getSelected = createSelector(
-  [factsSelected, _getSelected, _getSelectedOrder],
+export const getSelectedIds = createSelector(
+  [getSelectedFacts, getSelected, _getSelectedOrder],
   (selectedFacts, selectedDims, selectedOrder) => {
     const selected = [];
     const selectedFlat = {};
@@ -77,7 +70,7 @@ export const getSelected = createSelector(
  * Returns the selected dims.
  */
 export const getSelectedFlat = createSelector(
-  [_getSelected, _getSelectedOrder],
+  [getSelected, _getSelectedOrder],
   (selectedDims, selectedOrder) => {
     const selectedFacts = Object.keys(selectedDims);
     const selected = [];
@@ -102,6 +95,6 @@ export const getSelectedFlat = createSelector(
 );
 
 /**
- * Returns the DIM index by column name.
+ * Returns the DIM index by id.
  */
-export const getDimColumnNameIdx = createGetPropertySelector('dataCubesDims', 'dimColumnNameIdx');
+export const getDimIdx = createGetPropertySelector('dataCubesDims', 'dimIdx');
