@@ -12,6 +12,29 @@ const validateTableName = (value, data) => {
   return error;
 };
 
+const validateFrequency = (value, data) => {
+  let error = '';
+
+  if (data) {
+    if (isEmpty(value)) {
+      error = 'Required.';
+    } else if (value === 'weekly') {
+      let daysSelected = 0;
+      ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'].forEach((day) => {
+        if (data[day]) {
+          daysSelected++;
+        }
+      });
+
+      if (daysSelected < 1) {
+        error = 'At least one day is required.';
+      }
+    }
+  }
+
+  return error;
+};
+
 export const cubeValidator = memoize(10)(createValidator({
   cube_name: required(),
   view_name: required(),
@@ -22,5 +45,7 @@ export const cubeValidator = memoize(10)(createValidator({
 }));
 
 export const scheduleValidator = memoize(10)(createValidator({
-  name: required()
+  name: required(),
+  frequency: validateFrequency,
+  duration_start: required()
 }));

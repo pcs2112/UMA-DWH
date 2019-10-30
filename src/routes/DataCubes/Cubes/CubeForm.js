@@ -20,37 +20,38 @@ class CubeForm extends Component {
     // eslint-disable-next-line react/no-unused-prop-types
     form: PropTypes.string.isRequired,
     values: PropTypes.object,
+    pristine: PropTypes.bool,
     submitting: PropTypes.bool,
+    submitSucceeded: PropTypes.bool,
     submitFailed: PropTypes.bool,
     error: PropTypes.string,
     internalError: PropTypes.string,
-    submitSucceeded: PropTypes.bool,
     handleSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
     definitionDisabled: PropTypes.bool.isRequired,
     onDefinition: PropTypes.func.isRequired,
     scheduleDisabled: PropTypes.bool.isRequired,
-    onSchedule: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired
+    onSchedule: PropTypes.func.isRequired
   };
 
   render() {
     const {
       values,
+      pristine,
       submitting,
+      submitSucceeded,
       submitFailed,
       error,
       internalError,
-      submitSucceeded,
       handleSubmit,
       onSubmit,
+      onCancel,
       scheduleDisabled,
       definitionDisabled,
       onDefinition,
-      onSchedule,
-      onCancel
+      onSchedule
     } = this.props;
-    console.log(error);
     return (
       <Form
         size="small"
@@ -145,7 +146,7 @@ class CubeForm extends Component {
           />
           <Form.Button
             content="Save"
-            disabled={submitting || submitSucceeded}
+            disabled={pristine || submitting || submitSucceeded}
           />
           <Form.Button
             type="button"
@@ -166,7 +167,7 @@ const ConnectedForm = connect(
     let error;
     if (_.has(errors, 'definition')) {
       error = 'The definition must be set.';
-    } else if (_.has(errors, 'schedule.name')) {
+    } else if (_.has(errors, 'schedule')) {
       error = 'The schedule must be set.';
     }
 

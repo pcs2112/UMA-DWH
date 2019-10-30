@@ -33,7 +33,8 @@ class ScheduleCubeForm extends Component {
     // eslint-disable-next-line react/no-unused-prop-types
     form: PropTypes.string.isRequired,
     values: PropTypes.object,
-    onDone: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    handleSubmit: PropTypes.func.isRequired,
     // eslint-disable-next-line react/no-unused-prop-types
     onClose: PropTypes.func.isRequired,
     onCancel: PropTypes.func.isRequired,
@@ -45,20 +46,18 @@ class ScheduleCubeForm extends Component {
     onChangeDailyFrequency(parseInt(value, 10));
   }
 
-  handleDone = () => {
-    const { values, onDone } = this.props;
-    onDone(values);
-  }
-
   render() {
     const {
       values,
+      onSubmit,
+      handleSubmit,
       onCancel
     } = this.props;
     return (
       <Form
         size="small"
         autoComplete="off"
+        onSubmit={handleSubmit(onSubmit)}
       >
         <Form.Group>
           <Field
@@ -210,6 +209,7 @@ class ScheduleCubeForm extends Component {
             component={TextField}
             label="Start Date"
             width="five"
+            required
           />
           <Field
             name="duration_end"
@@ -221,10 +221,8 @@ class ScheduleCubeForm extends Component {
         </Form.Group>
         <Form.Group>
           <Form.Button
-            type="button"
             content="Done"
             primary
-            onClick={this.handleDone}
           />
           <Form.Button
             type="button"
@@ -243,7 +241,7 @@ const ConnectedForm = connect(
   }),
   (dispatch, props) => ({
     onChangeDailyFrequency: (value) => dispatch(change(props.form, 'daily_frequency', value)),
-    onDone: (schedule) => {
+    onSubmit: (schedule) => {
       props.onClose();
       dispatch(change(props.form.replace('Schedule', ''), 'schedule', schedule));
     },

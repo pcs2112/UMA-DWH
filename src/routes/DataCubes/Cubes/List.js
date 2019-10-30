@@ -117,6 +117,7 @@ class List extends Component {
               initialValues={cubeFormInitialValues.schedule}
               enableReinitialize
               destroyOnUnmount={false}
+              keepDirtyOnReinitialize
               onClose={onScheduleClose}
             />
           </Modal.Content>
@@ -178,6 +179,9 @@ export default connect(
     onCubeFormCancel: () => {
       dispatch(cubesRdx.actions.updatingEnd());
       dispatch(reset(CUBE_FORM));
+      dispatch(reset(CUBE_SCHEDULE_FORM));
+      dispatch(dimsRdx.actions.unselectAll());
+      dispatch(factsRdx.actions.unselectAll());
     },
     onSchedule: () => {
       dispatch(showModal(SCHEDULE_CUBE_MODAL));

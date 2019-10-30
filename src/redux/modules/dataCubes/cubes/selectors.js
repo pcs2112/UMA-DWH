@@ -69,6 +69,11 @@ export const getCubeFormInitialValues = createSelector(
     });
 
     const schedule = _.get(cube, 'schedule', { ...defaultValues.schedule });
+    const newSchedule = {
+      ...schedule,
+      daily_frequency: schedule.daily_frequency ? 1 : 0,
+      active_flag: schedule.active_flag === 1
+    };
 
     return {
       ...cube,
@@ -79,9 +84,7 @@ export const getCubeFormInitialValues = createSelector(
       cube_date_end: cube.cube_date_end.substring(0, 10),
       definition,
       schedule: {
-        ...schedule,
-        daily_frequency: schedule.daily_frequency ? 1 : 0,
-        active_flag: schedule.active_flag === 1
+        ...newSchedule
       }
     };
   }
