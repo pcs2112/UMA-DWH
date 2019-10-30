@@ -21,14 +21,6 @@ path_sp_args_map = {
       'sp_name': 'UMA_CUBEVIEW.MANAGE_CUBEVIEW_SCHEDULE',
       'sp_message': 'GET_SCHEDULE',
       'sp_in_args': ['cube_id']
-    },
-    'POST': {
-      'module_name': 'uma_dwh.db.data_cubes',
-      'module_func': 'save_cube_schedule',
-      'sp_in_args': [
-        'cube_id', 'name', 'frequency', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'daily_frequency', 'daily_start', 'daily_end',
-        'daily_occurs_interval', 'duration_start', 'duration_end', 'xml'
-      ]
     }
   },
   'facts': {

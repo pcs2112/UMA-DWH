@@ -10,14 +10,26 @@ import { getDimColumnNameIdx, getAllData } from '../dims/selectors';
 
 const now = moment();
 const defaultValues = {
+  cube_name: '',
   active_flag: false,
   materialize: false,
+  view_name: '',
+  table_name: '',
   cube_date_start: now.format('YYYY-MM-DD'),
   cube_date_end: now.add(1, 'days').format('YYYY-MM-DD'),
   schedule: {
+    name: '',
     active_flag: false,
     frequency: 'daily',
+    monday: false,
+    tuesday: false,
+    wednesday: false,
+    thursday: false,
+    friday: false,
+    saturday: false,
+    sunday: false,
     daily_frequency: 1,
+    daily_occurs_interval: 0,
     daily_start: '05:00',
     duration_start: now.format('YYYY-MM-DD'),
     duration_end: now.add(1, 'days').format('YYYY-MM-DD')
