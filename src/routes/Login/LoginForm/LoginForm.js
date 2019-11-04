@@ -11,7 +11,13 @@ const LoginForm = ({
   pristine, submitting
 }) => (
   <Fragment>
-    <Field name="email" type="text" component={TextField} label="Email" required />
+    <Field
+      name="email"
+      type="text"
+      component={TextField}
+      label="Email"
+      required
+    />
     <Field name="password" type="password" component={TextField} label="Password" required />
     <div className="field">
       <Button type="submit" fluid size="large" primary disabled={pristine || submitting}>

@@ -46,14 +46,15 @@ module.exports = {
           {
             loader: 'style-loader',
             options: {
-              sourceMap: true
+              injectType: 'singletonStyleTag'
             }
           },
           {
             loader: 'css-loader',
             options: {
-              modules: true,
-              localIdentName: '[local]___[hash:base64:5]',
+              modules: {
+                localIdentName: '[local]___[hash:base64:5]',
+              },
               sourceMap: true
             }
           },
@@ -72,7 +73,7 @@ module.exports = {
           {
             loader: 'style-loader',
             options: {
-              sourceMap: true
+              injectType: 'singletonStyleTag'
             }
           },
           {
@@ -100,7 +101,7 @@ module.exports = {
           {
             loader: 'style-loader',
             options: {
-              sourceMap: true
+              injectType: 'singletonStyleTag'
             }
           },
           {

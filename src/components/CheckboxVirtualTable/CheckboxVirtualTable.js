@@ -4,7 +4,7 @@ import AutoSizer from 'react-virtualized/dist/es/AutoSizer';
 import Grid from 'react-virtualized/dist/es/Grid';
 import ScrollSync from 'react-virtualized/dist/es/ScrollSync';
 import clsx from 'clsx';
-import scrollbarSize from 'dom-helpers/util/scrollbarSize';
+import scrollbarSize from 'dom-helpers/scrollbarSize';
 import { Dimmer, Loader } from 'semantic-ui-react';
 import { objectHasOwnProperty } from 'javascript-utils/lib/utils';
 import { ROW_HEIGHT, OVERSCAN_COL_COUNT, OVERSCAN_ROW_COUNT } from '../../constants/reactVirtualized';

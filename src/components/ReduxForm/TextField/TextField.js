@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Label, Input } from 'semantic-ui-react';
+import { Form, Label } from 'semantic-ui-react';
 import { fieldProps } from '../FieldPropTypes';
 
 const TextField = ({
@@ -18,7 +18,7 @@ const TextField = ({
     inline={inline}
   >
     {label && <label>{label}</label>}
-    <Input {...input} {...rest} />
+    <input {...input} {...rest} />
     {touched && error ? (
       <Label basic color="red" pointing>
         {error}

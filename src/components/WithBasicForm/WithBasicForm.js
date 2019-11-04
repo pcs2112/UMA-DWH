@@ -7,7 +7,7 @@ import FormError from '../FormError';
 
 const withBasicForm = (WrappedComponent) => {
   const WithBasicForm = ({
-    submitting, submitSucceeded, error, handleSubmit, onSubmit, formSize, ...rest
+    submitting, submitSucceeded, error, handleSubmit, onSubmit, formSize, autocomplete, ...rest
   }) => (
     <Form
       onSubmit={handleSubmit(onSubmit)}
@@ -15,7 +15,7 @@ const withBasicForm = (WrappedComponent) => {
       error={!isEmpty(error)}
       success={submitSucceeded}
       disabled={submitSucceeded}
-      autoComplete="off"
+      autocomplete={autocomplete}
     >
       {error && <FormError error={error} />}
       <WrappedComponent
@@ -36,12 +36,14 @@ const withBasicForm = (WrappedComponent) => {
     onSubmit: PropTypes.func.isRequired,
     onCancel: PropTypes.func,
     formSize: PropTypes.string,
-    formButtonSize: PropTypes.string
+    formButtonSize: PropTypes.string,
+    autocomplete: PropTypes.string
   };
 
   WithBasicForm.defaultProps = {
     formSize: 'small',
-    formButtonSize: 'small'
+    formButtonSize: 'small',
+    autocomplete: 'off'
   };
 
   WithBasicForm.displayName = `WithBasicForm(${getDisplayName(WrappedComponent)})`;

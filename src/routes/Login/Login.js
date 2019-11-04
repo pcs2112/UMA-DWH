@@ -25,6 +25,7 @@ class Login extends Component {
             formSize="large"
             onSubmit={onLogin}
             onSubmitSuccess={onLoginSuccess}
+            autocomplete="on"
           />
         </Segment>
       </Fragment>

@@ -34,6 +34,8 @@ import statisticsManagement from './modules/statisticsManagement';
 import statisticsSchemas from './modules/statisticsSchemas';
 import dataLakeEntries from './modules/dataLake/entries';
 import dataCubes from './modules/dataCubes/cubes';
+import dataCubesFacts from './modules/dataCubes/facts';
+import dataCubesDims from './modules/dataCubes/dims';
 
 export default () => combineReducers({
   [reduxPollingNamespace]: reduxPollingReducer,
@@ -70,5 +72,7 @@ export default () => combineReducers({
   statisticsManagement: statisticsManagement.reducer,
   statisticsSchemas: statisticsSchemas.reducer,
   dataLakeEntries: dataLakeEntries.reducer,
-  dataCubes: dataCubes.reducer
+  dataCubes: dataCubes.reducer,
+  dataCubesFacts: dataCubesFacts.reducer,
+  dataCubesDims: dataCubesDims.reducer
 });

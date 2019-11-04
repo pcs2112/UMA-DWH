@@ -12,33 +12,48 @@ const keyName = 'id';
 const columns = [
   {
     Header: 'ACTIVE',
-    accessor: 'active',
-    width: 150
+    accessor: 'active_flag',
+    width: 50
   },
   {
     Header: 'CUBE_NAME',
     accessor: 'cube_name',
-    minWidth: 250
+    minWidth: 150
   },
   {
-    Header: 'MULTI_FACT',
-    accessor: 'multi_fact',
+    Header: 'VIEW_NAME',
+    accessor: 'view_name',
+    minWidth: 150
+  },
+  {
+    Header: 'TABLE_NAME',
+    accessor: 'table_name',
+    minWidth: 150
+  },
+  {
+    Header: 'MATERALIZE',
+    accessor: 'materialize',
+    width: 100
+  },
+  {
+    Header: 'START_DATE',
+    accessor: 'cube_date_start',
     width: 120
   },
   {
-    Header: 'PRIMARY_FACT_TABLE',
-    accessor: 'primary_fact_table',
-    width: 150
+    Header: 'END_DATE',
+    accessor: 'cube_date_end',
+    width: 110
   },
   {
-    Header: 'SCHEDULE_TYPE',
-    accessor: 'schedule_type',
-    minWidth: 200
+    Header: 'FACT_TBL_CT',
+    accessor: 'fact_table_count',
+    width: 100
   },
   {
-    Header: 'FACTS_DATE_RANGE',
-    accessor: 'facts_date_range',
-    minWidth: 150
+    Header: 'DIM_TBL_CT',
+    accessor: 'dimension_table_count',
+    width: 100
   }
 ];
 
@@ -114,4 +129,4 @@ class ListTable extends Component {
   }
 }
 
-export default withResponsiveTable(ListTable, 300, 400);
+export default withResponsiveTable(ListTable, 300, 560);

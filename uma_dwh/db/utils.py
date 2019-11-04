@@ -38,12 +38,22 @@ def execute_sp_with_required_in_args(*args, sp_args_length=10, out_arg='sp_statu
     in_args = {
         'message': sp_message
     }
-    
-    for x in range(2, len(args)):
-        in_arg_prefix = '0' if x < 10 else ''
+
+    in_args_len = len(args)
+    if sp_args_length != 10:
+        in_args_len = in_args_len - 1
+
+    if out_arg != 'sp_status_code':
+        in_args_len = in_args_len - 1
+
+    if sp_in_arg_prefix != 'VARCHAR_':
+        in_args_len = in_args_len - 1
+
+    for x in range(2, in_args_len):
+        in_arg_prefix = '0' if x <= 10 else ''
         in_arg = f'{sp_in_arg_prefix}{in_arg_prefix}{x - 1}'
         in_args[in_arg] = str(args[x])
-    
+        
     results = execute_sp(sp_name, fill_in_sp_in_args(in_args, sp_args_length, sp_in_arg_prefix), out_arg)
     
     get_out_arg(results, out_arg)

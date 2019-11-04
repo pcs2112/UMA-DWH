@@ -17,8 +17,22 @@ const withUserForm = (scenario) => {
           content="The user account was saved successfully."
         />
       )}
-      <Field name="employee_first_name" type="text" component={TextField} label="First Name" required />
-      <Field name="employee_last_name" type="text" component={TextField} label="Last Name" required />
+      <Field
+        name="employee_first_name"
+        type="text"
+        component={TextField}
+        label="First Name"
+        required
+        autocomplete="new-password"
+      />
+      <Field
+        name="employee_last_name"
+        type="text"
+        component={TextField}
+        label="Last Name"
+        required
+        autocomplete="new-password"
+      />
       <Field
         name="employee_email"
         type="text"
@@ -26,15 +40,29 @@ const withUserForm = (scenario) => {
         label="Email"
         required
         readOnly={scenario !== 'create'}
+        autocomplete="new-password"
       />
-      <Field name="employee_phone" type="text" component={TextField} label="Phone" />
-      <Field name="employee_cellphone" type="text" component={TextField} label="Cell Phone" />
+      <Field
+        name="employee_phone"
+        type="text"
+        component={TextField}
+        label="Phone"
+        autocomplete="new-password"
+      />
+      <Field
+        name="employee_cellphone"
+        type="text"
+        component={TextField}
+        label="Cell Phone"
+        autocomplete="new-password"
+      />
       <Field
         name="employee_password"
         type="password"
         component={TextField}
         label="Password"
         required={scenario === 'create'}
+        autocomplete="new-password"
       />
       <div className="field">
         {!submitSucceeded && (

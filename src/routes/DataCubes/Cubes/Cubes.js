@@ -3,16 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Segment } from 'semantic-ui-react';
 import cubesRdx from '../../../redux/modules/dataCubes/cubes';
+import factsRdx from '../../../redux/modules/dataCubes/facts';
+import dimsRdx from '../../../redux/modules/dataCubes/dims';
 import withMainLayout from '../../../components/WithMainLayout';
 import globalCss from '../../../css/global';
 import List from './List';
 
 class Cubes extends Component {
   static propTypes = {
-    isCubesFetching: PropTypes.bool.isRequired,
-    cubesLoaded: PropTypes.bool.isRequired,
-    cubes: PropTypes.array.isRequired,
-    cubesFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
     fetchData: PropTypes.func.isRequired
     // resetData: PropTypes.func.isRequired
   };
@@ -35,12 +33,6 @@ class Cubes extends Component {
   }
 
   render() {
-    const {
-      isCubesFetching,
-      cubesLoaded,
-      cubes,
-      cubesFetchingError
-    } = this.props;
     const { view } = this.state;
     return (
       <div>
@@ -50,12 +42,7 @@ class Cubes extends Component {
           </h1>
         </Segment>
         {view === 'list' && (
-          <List
-            isFetching={isCubesFetching}
-            dataLoaded={cubesLoaded}
-            data={cubes}
-            fetchingError={cubesFetchingError}
-          />
+          <List />
         )}
       </div>
     );
@@ -63,14 +50,19 @@ class Cubes extends Component {
 }
 
 export default withMainLayout(connect(
-  state => ({
-    isCubesFetching: state.dataCubes.isFetching,
-    cubesLoaded: state.dataCubes.dataLoaded,
-    cubes: cubesRdx.selectors.getData(state),
-    cubesFetchingError: cubesRdx.selectors.getFetchingError(state)
-  }),
+  null,
   dispatch => ({
-    fetchData: () => dispatch(cubesRdx.actions.fetch()),
-    resetData: () => dispatch(cubesRdx.actions.reset())
+    fetchData: () => {
+      Promise.all([
+        dispatch(cubesRdx.actions.fetch()),
+        dispatch(factsRdx.actions.fetch()),
+        dispatch(dimsRdx.actions.fetch())
+      ]);
+    },
+    resetData: () => {
+      dispatch(cubesRdx.actions.reset());
+      dispatch(factsRdx.actions.reset());
+      dispatch(dimsRdx.actions.reset());
+    }
   })
 )(Cubes));
