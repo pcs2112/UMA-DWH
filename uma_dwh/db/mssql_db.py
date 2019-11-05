@@ -2,23 +2,22 @@
 import sys
 import pyodbc
 import re
-from flask import g
+
 
 this = sys.modules[__name__]
-this.config = None   # Reference to the DB configuration settings
+this._database = None
+this._config = None
 
 
-def init_db(app):
-    this.config = {
-        'DB_DRIVER': app.config['DB_DRIVER'],
-        'DB_SERVER': app.config['DB_SERVER'],
-        'DB_NAME': app.config['DB_NAME'],
-        'DB_USER': app.config['DB_USER'],
-        'DB_PASSWORD': app.config['DB_PASSWORD'],
-        'DB_TRUSTED_CONNECTION': app.config['DB_TRUSTED_CONNECTION']
+def init_db(config):
+    this._config = {
+        'DB_DRIVER': config['DB_DRIVER'],
+        'DB_SERVER': config['DB_SERVER'],
+        'DB_NAME': config['DB_NAME'],
+        'DB_USER': config['DB_USER'],
+        'DB_PASSWORD': config['DB_PASSWORD'],
+        'DB_TRUSTED_CONNECTION': config['DB_TRUSTED_CONNECTION']
     }
-
-    app.teardown_request(close)
 
 
 def get_db():
@@ -26,27 +25,28 @@ def get_db():
     Returns the current DB connection. This function makes sure there only
     exists one connection per request.
     """
-    db = getattr(g, '_database', None)
+    config = getattr(this, '_config', None)
+    db = getattr(this, '_database', None)
     if db is None:
-        if this.config['DB_TRUSTED_CONNECTION']:
+        if config['DB_TRUSTED_CONNECTION']:
             cnxn_str = 'Driver=%s;Server=%s;DATABASE=%s;Trusted_Connection=yes;' % (
-                this.config['DB_DRIVER'],
-                this.config['DB_SERVER'],
-                this.config['DB_NAME']
+                config['DB_DRIVER'],
+                config['DB_SERVER'],
+                config['DB_NAME']
             )
 
-            db = g._database = pyodbc.connect(
+            db = this._database = pyodbc.connect(
                 cnxn_str,
                 autocommit=True
             )
         else:
-            db = g._database = pyodbc.connect(
+            db = this._database = pyodbc.connect(
                 p_str=None,
-                driver=this.config['DB_DRIVER'],
-                server=this.config['DB_SERVER'],
-                database=this.config['DB_NAME'],
-                uid=this.config['DB_USER'],
-                pwd=this.config['DB_PASSWORD'],
+                driver=config['DB_DRIVER'],
+                server=config['DB_SERVER'],
+                database=config['DB_NAME'],
+                uid=config['DB_USER'],
+                pwd=config['DB_PASSWORD'],
                 autocommit=True
             )
     return db
@@ -56,9 +56,10 @@ def close(*varargs):
     """
     Closes the current DB connection if any.
     """
-    db = getattr(g, '_database', None)
+    db = getattr(this, '_database', None)
     if db is not None:
         db.close()
+        this._database = None
 
 
 def result_as_dict(schema, row):
@@ -160,7 +161,7 @@ def fetch_row(sql, in_args=()):
     return result_as_dict(column_names, row)
 
 
-def execute_sp(sp_name, in_args, out_arg=None, as_dict=True):
+def execute_sp(sp_name, in_args={}, out_arg=None, as_dict=True):
     """
     Executes a stored procedure and returns the result sets.
     The 0 index in the return value contains the value for the out_arg if an out_arg is specified.

@@ -5,7 +5,7 @@ from flask_jwt_extended import JWTManager
 from uma_dwh.routes import (
   college_scorecard, error_type_resolution, etl, users, telecom, data_lake, data_cubes
 )
-from uma_dwh.db.mssql_db import init_db
+from uma_dwh.db.mssql_db import init_db, close
 from uma_dwh.extensions import cors
 from uma_dwh.exceptions import InvalidUsage, http_error_template
 from uma_dwh.json import JSONEnhanced
@@ -34,11 +34,12 @@ def create_app(config_object):
 
 
 def register_db(app):
-    init_db(app)
+    init_db(app.config)
+    app.teardown_request(close)
 
 
 def register_opsgenie(app):
-    init_opsgenie(app)
+    init_opsgenie(app.config)
 
 
 def register_blueprints(app):

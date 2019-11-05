@@ -1,3 +1,4 @@
+import json
 import uma_dwh.utils.opsgenie as opsgenie
 from uma_dwh.utils import date_diff_in_seconds
 from datetime import datetime
@@ -69,7 +70,19 @@ def check_current_status():
 
                 if len(last_alert_result) > 0 and last_alert_result[0]['insert_dttm'].date() < datetime.today().date():
                     alerts_sent.append(data_mart)
-                    opsgenie.send_etl_status_alert(data_mart)
+                    res = opsgenie.send_etl_status_alert(data_mart)
+                    execute_admin_console_sp(
+                        'MWH.MANAGE_OPS_GENIE_ALERT',
+                        'NEW',
+                        res['id'],
+                        'OPENED',
+                        res['priority'],
+                        datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                        '',
+                        res['title'],
+                        json.dumps(res['details']),
+                        data_mart['data_mart_name']
+                    )
 
     return alerts_sent
 
