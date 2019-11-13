@@ -17,6 +17,7 @@ import getStatisticsRoutes from './Statistics';
 import getUserRoutes from './Users';
 import getDataLakeRoutes from './DataLake';
 import getDataCubesRoutes from './DataCubes';
+import getEtlRoutes from './Etl';
 
 export default ({ dispatch, getState }) => ([
   {
@@ -56,6 +57,7 @@ export default ({ dispatch, getState }) => ([
   .concat(getTelecomRoutes(dispatch))
   .concat(getDataLakeRoutes(dispatch))
   .concat(getDataCubesRoutes(dispatch))
+  .contact(getEtlRoutes())
   .concat([
     {
       path: '/login',
