@@ -57,7 +57,7 @@ export default ({ dispatch, getState }) => ([
   .concat(getTelecomRoutes(dispatch))
   .concat(getDataLakeRoutes(dispatch))
   .concat(getDataCubesRoutes(dispatch))
-  .contact(getEtlRoutes())
+  .concat(getEtlRoutes())
   .concat([
     {
       path: '/login',
