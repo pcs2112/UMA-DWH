@@ -140,7 +140,7 @@ path_sp_args_map = {
       'module_func': 'execute_admin_console_sp',
       'sp_name': 'MWH.CALL_ETL_MANUAL_RUN',
       'sp_message': 'UPDATE_STATUS_CODE',
-      'sp_in_args': ['procedure_name', 'status_code', 'run_entry_code', 'from_dttm', 'to_dttm']
+      'sp_in_args': ['stored_procedure', 'status', 'run_request', 'from_dttm', 'to_dttm']
     }
   },
   'runs/manual/clear': {
