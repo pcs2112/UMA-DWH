@@ -23,7 +23,7 @@ def get_error(error_id):
     raise InvalidUsage.etl_error(f'get_error({error_id})', error)
 
 
-@blueprint.route('/api/etl/<path:path>', methods=('GET', 'POST'))
+@blueprint.route('/api/etl/<path:path>', methods=('GET', 'POST', 'DELETE', 'PUT',))
 @nocache
 @jwt_required
 def get_sp_data(path):

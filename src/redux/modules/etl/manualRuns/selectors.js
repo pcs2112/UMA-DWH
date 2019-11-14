@@ -54,6 +54,7 @@ export const getManualRunFormInitialValues = createSelector(
     return {
       ...manualRun,
       manual_run_id: manualRun.id,
+      status: manualRun.status === 'SCHEDULE' ? 'CANCEL' : 'SCHEDULE',
       from_dttm: manualRun.from_dttm
         ? moment(manualRun.from_dttm, DEFAULT_DATETIME_FORMAT).format(DEFAULT_DATETIME_LOCAL_FORMAT) : '',
       to_dttm: manualRun.to_dttm

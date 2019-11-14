@@ -26,7 +26,7 @@ export const fetch = () => ({
     actionTypes.FETCH_SUCCESS,
     actionTypes.FETCH_FAIL
   ],
-  makeRequest: client => client.get('/api/etl/runs/manual')
+  makeRequest: client => client.get('/api/etl/procedure/runs/manual')
 });
 
 /**
@@ -50,7 +50,7 @@ export const clearAll = () => ({
     actionTypes.CLEARALL_SUCCESS,
     actionTypes.CLEARALL_FAIL
   ],
-  makeRequest: client => client.post('/api/etl/runs/manual/clear')
+  makeRequest: client => client.del('/api/etl/procedure/runs/manual')
 });
 
 /**
@@ -64,7 +64,7 @@ export const save = data => ({
     actionTypes.SAVE_SUCCESS,
     actionTypes.SAVE_FAIL
   ],
-  makeRequest: client => client.post('/api/etl/runs/manual', {
+  makeRequest: client => client.post('/api/etl/procedure/runs/manual', {
     data
   })
     .catch(catchValidation)

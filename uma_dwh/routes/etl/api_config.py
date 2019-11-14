@@ -128,7 +128,7 @@ path_sp_args_map = {
     'sp_message': 'LOAD_TryCatch_Search_Chart',
     'sp_in_args': ['date', 'months']
   },
-  'runs/manual': {
+  'procedure/runs/manual': {
     'GET': {
       'module_name': 'uma_dwh.db.etl',
       'module_func': 'execute_admin_console_sp',
@@ -141,10 +141,8 @@ path_sp_args_map = {
       'sp_name': 'MWH.CALL_ETL_MANUAL_RUN',
       'sp_message': 'UPDATE_STATUS_CODE',
       'sp_in_args': ['stored_procedure', 'status', 'run_request', 'from_dttm', 'to_dttm']
-    }
-  },
-  'runs/manual/clear': {
-    'POST': {
+    },
+    'DELETE': {
       'module_name': 'uma_dwh.db.etl',
       'module_func': 'execute_admin_console_sp',
       'sp_name': 'MWH.CALL_ETL_MANUAL_RUN',

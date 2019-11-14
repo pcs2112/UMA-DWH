@@ -24,7 +24,6 @@ const itemListReducer = itemListReducerFor(actionTypes);
 const crudListReducer = crudListReducerFor(actionTypes);
 const setFilters = itemListFiltersReducerFor(actionTypes, defaultFilters, 'filters');
 
-
 // Filters the data
 const filterData = (state, action) => {
   const { data, filters: { domain }, domains } = state;

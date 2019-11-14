@@ -2,7 +2,7 @@ import ManualRuns from './ManualRuns';
 
 export default () => [
   {
-    path: '/etl/runs/manual',
+    path: '/procedures/runs/manual',
     component: ManualRuns,
     exact: true
   }
