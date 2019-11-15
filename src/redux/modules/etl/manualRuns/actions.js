@@ -58,17 +58,24 @@ export const clearAll = () => ({
  *
  * @param {Object} data
  */
-export const save = data => ({
-  types: [
-    actionTypes.SAVE_BEGIN,
-    actionTypes.SAVE_SUCCESS,
-    actionTypes.SAVE_FAIL
-  ],
-  makeRequest: client => client.post('/api/etl/procedure/runs/manual', {
-    data
-  })
-    .catch(catchValidation)
-});
+export const save = (data) => {
+  const newData = {
+    ...data,
+    from_dttm: data.from_dttm.replace('T', ' '),
+    to_dttm: data.to_dttm.replace('T', ' ')
+  };
+  return {
+    types: [
+      actionTypes.SAVE_BEGIN,
+      actionTypes.SAVE_SUCCESS,
+      actionTypes.SAVE_FAIL
+    ],
+    makeRequest: client => client.post('/api/etl/procedure/runs/manual', {
+      data: newData
+    })
+      .catch(catchValidation)
+  };
+};
 
 /**
  * Action to mark a manual run as being updating.

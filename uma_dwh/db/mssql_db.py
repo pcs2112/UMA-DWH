@@ -2,6 +2,7 @@
 import sys
 import pyodbc
 import re
+from flask import current_app as app
 
 
 this = sys.modules[__name__]
@@ -178,11 +179,13 @@ def execute_sp(sp_name, in_args={}, out_arg=None, as_dict=True):
     :rtype: list
     """
     sql = ''
+    exec_sql = ''
     
     if out_arg:
         out_arg = out_arg.lower()
         sql = f'DECLARE @{out_arg} INTEGER;'
         sql += f'EXEC @{out_arg} = {sp_name} '
+        exec_sql = f'EXEC {sp_name} '
     else:
         sql += f'EXEC {sp_name} '
 
@@ -194,15 +197,19 @@ def execute_sp(sp_name, in_args={}, out_arg=None, as_dict=True):
             in_param = str(in_param)
   
         in_params.append(in_param)  # Convert all in args to string
+        exec_sql += f"'{in_param}', "
 
     sql = sql.rstrip(', ')
     sql += f';'
+
+    exec_sql = exec_sql.rstrip(', ')
+    exec_sql += f';'
 
     if out_arg is not None:
         sql += f'SELECT @{out_arg} AS {out_arg};'
 
     cursor = get_db().cursor()
-    print(sql, in_params)
+    app.logger.info(exec_sql)
     cursor.execute(sql, in_params)
 
     results = []
