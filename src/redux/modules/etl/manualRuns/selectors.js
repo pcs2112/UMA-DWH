@@ -1,5 +1,4 @@
 import moment from 'moment';
-import _ from 'lodash';
 import { createSelector } from 'reselect';
 import { isEmpty } from 'javascript-utils/lib/utils';
 import {
@@ -51,15 +50,17 @@ export const getManualRunFormInitialValues = createSelector(
   (manualRun) => {
     if (!manualRun) {
       return {
-        status: 'SCHEDULE'
+        status: 'SCHEDULE',
+        run_request: 'NEXT'
       };
     }
 
-    const status = isEmpty(manualRun.status) ? 'SCHEDULE' : manualRun.status.toUpperCase();
+    const status = manualRun.status ? manualRun.status.toUpperCase() : 'SCHEDULE';
+    const runRequest = manualRun.run_request ? manualRun.run_request.toUpperCase() : 'NEXT';
     return {
       ...manualRun,
       status: status === 'CANCELED' ? 'CANCEL' : status,
-      run_request: (manualRun.run_request || '').toUpperCase(),
+      run_request: runRequest,
       from_dttm: manualRun.from_dttm
         ? moment(manualRun.from_dttm, DEFAULT_DATETIME_FORMAT).format(DEFAULT_DATETIME_LOCAL_FORMAT) : '',
       to_dttm: manualRun.to_dttm
