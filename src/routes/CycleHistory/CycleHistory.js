@@ -219,7 +219,7 @@ class Home extends Component {
                 size="small"
                 style={runCheckButtonCss}
                 as={Link}
-                to="/etl/runs/manual"
+                to="/procedures/runs/manual"
               >
                 Manual Runs
               </Button>

@@ -91,6 +91,7 @@ class ManualRunForm extends Component {
             type="datetime-local"
             component={TextField}
             label="To DTTM"
+            required
             width="four"
           />
         </Form.Group>
@@ -143,6 +144,7 @@ export default reduxForm({
     'to_dttm'
   ],
   onSubmitSuccess: (result, dispatch) => {
+    dispatch(manualRunsRdx.actions.updatingEnd());
     dispatch(manualRunsRdx.actions.fetch());
   }
 })(ConnectedForm);
