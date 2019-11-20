@@ -1,6 +1,5 @@
 import moment from 'moment';
 import { createSelector } from 'reselect';
-import { isEmpty } from 'javascript-utils/lib/utils';
 import {
   createDataSelector,
   createFetchingErrorSelector,
