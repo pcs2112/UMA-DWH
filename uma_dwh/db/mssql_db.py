@@ -188,6 +188,7 @@ def execute_sp(sp_name, in_args={}, out_arg=None, as_dict=True):
         exec_sql = f'EXEC {sp_name} '
     else:
         sql += f'EXEC {sp_name} '
+        exec_sql = f'EXEC {sp_name} '
 
     in_params = []
     for key in in_args:
@@ -209,7 +210,8 @@ def execute_sp(sp_name, in_args={}, out_arg=None, as_dict=True):
         sql += f'SELECT @{out_arg} AS {out_arg};'
 
     cursor = get_db().cursor()
-    app.logger.info(exec_sql)
+    if app:
+        app.logger.info(exec_sql)
     cursor.execute(sql, in_params)
 
     results = []
