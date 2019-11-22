@@ -120,7 +120,7 @@ def execute_sp(*args, sp_args_length, out_arg='sp_status_code'):
     :return: Stored procedure result sets and out argument
     :rtype: list
     """
-    results = execute_sp_with_required_in_args(*args, sp_args_length, sp_in_arg_prefix='VARIABLE_')
+    results = execute_sp_with_required_in_args(*args, sp_args_length=sp_args_length, sp_in_arg_prefix='VARIABLE_', out_arg=out_arg)
     status_code = get_out_arg(results, out_arg)
 
     if status_code > 10:

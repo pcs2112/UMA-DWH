@@ -2,7 +2,7 @@ import xlsxwriter
 import io
 import xml.etree.ElementTree as ET
 from pydash.objects import pick, assign
-from pydash.predicates import is_empty
+from pydash.predicates import is_blank
 from .mssql_db import execute_sp, get_sp_result_set, get_out_arg
 from uma_dwh.utils import is_float, is_int, is_datetime, list_chunks
 from .utils import execute_sp_with_required_in_args
@@ -114,7 +114,7 @@ def create_report(data):
     :param data: Report data
     :type data: dict
     """
-    if not is_empty(data['report_name']) and report_exists(data['user_id'], data['report_name']):
+    if not is_blank(data['report_name']) and report_exists(data['user_id'], data['report_name']):
         raise DBValidationException(f"The report \"{data['report_name']}\" already exists.", 'report_name')
 
     required_data = {
@@ -262,7 +262,6 @@ def save_uma_column_title(user_id, column_name, uma_excel_column_name):
         str(user_id),
         out_arg=out_arg
     )
-
     status_code = get_out_arg(results, out_arg)
     if status_code < 0:
         raise DBException(f'"{column_name}" could not be saved.')
@@ -419,7 +418,7 @@ def execute_categories_sp(*args, out_arg='sp_status_code'):
   :return: Stored procedure result sets and out argument
   :rtype: list
   """
-  results = execute_sp_with_required_in_args(*args, sp_args_length=11)
+  results = execute_sp_with_required_in_args(*args, sp_args_length=11, out_arg=out_arg)
   status_code = get_out_arg(results, out_arg)
 
   if status_code < 0:
@@ -436,7 +435,7 @@ def save_category(category_name, description, csv_file, where_unit_id_table, for
   """ Creates/Updates a category. """
   execute_categories_sp(
     'MWH_FILES.MANAGE_COLLEGE_SCORECARD_D_CATEGORY',
-    'UPDATE_COLLEGE_SCORECARD_D_CATEGORY' if not is_empty(category_id) else 'SAVE_COLLEGE_SCORECARD_D_CATEGORY',
+    'UPDATE_COLLEGE_SCORECARD_D_CATEGORY' if not is_blank(category_id) else 'SAVE_COLLEGE_SCORECARD_D_CATEGORY',
     category_id,
     category_name,
     description,
