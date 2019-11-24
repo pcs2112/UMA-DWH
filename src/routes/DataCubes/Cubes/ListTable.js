@@ -32,8 +32,14 @@ const columns = [
   },
   {
     Header: 'MATERALIZE',
-    accessor: 'materialize',
-    width: 100
+    Cell: row => `${row.original.materalize === 1 ? 'Yes' : 'No'}`,
+    accessor: 'materalize',
+    width: 100,
+    getProps: () => ({
+      style: {
+        textAlign: 'right'
+      }
+    })
   },
   {
     Header: 'START_DATE',
@@ -48,12 +54,22 @@ const columns = [
   {
     Header: 'FACT_TBL_CT',
     accessor: 'fact_table_count',
-    width: 100
+    width: 100,
+    getProps: () => ({
+      style: {
+        textAlign: 'right'
+      }
+    })
   },
   {
     Header: 'DIM_TBL_CT',
     accessor: 'dimension_table_count',
-    width: 100
+    width: 100,
+    getProps: () => ({
+      style: {
+        textAlign: 'right'
+      }
+    })
   }
 ];
 

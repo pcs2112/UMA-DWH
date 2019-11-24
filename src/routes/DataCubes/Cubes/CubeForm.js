@@ -99,13 +99,13 @@ class CubeForm extends Component {
             type="text"
             component={TextField}
             label="Table Name"
-            required={_.get(values, 'materialize', false)}
+            required={_.get(values, 'materalize', false)}
             width="four"
           />
           <Field
-            name="materialize"
+            name="materalize"
             component={CheckBoxField}
-            label="Materialize"
+            label="Materalize"
             width="four"
             style={checkboxStyle}
           />
@@ -185,7 +185,7 @@ export default reduxForm({
     'active_flag',
     'view_name',
     'table_name',
-    'materialize',
+    'materalize',
     'cube_date_start',
     'cube_date_end',
     'definition',
