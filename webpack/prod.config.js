@@ -100,7 +100,12 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        include: [resolve('node_modules/react-table/react-table.css')],
+        include: [
+          resolve('node_modules/react-table/react-table.css'),
+          resolve('node_modules/react-virtualized/styles.css'),
+          resolve('node_modules/react-virtualized-tree/lib/main.css'),
+          resolve('node_modules/react-semantic-toasts/styles/react-semantic-alert.css')
+        ],
         use: [
           {
             loader: MiniCssExtractPlugin.loader

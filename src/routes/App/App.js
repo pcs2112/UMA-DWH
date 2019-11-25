@@ -5,9 +5,11 @@ import { connect } from 'react-redux';
 import { renderRoutes } from 'react-router-config';
 import { reactRouterFetch } from 'javascript-utils/lib/react-router';
 import { Dimmer, Loader } from 'semantic-ui-react';
+import { SemanticToastContainer } from 'react-semantic-toasts';
 import userModule from '../../redux/modules/user';
 import Error from '../Error';
 import NProgress from '../../components/NProgress';
+import 'react-semantic-toasts/styles/react-semantic-alert.css';
 
 class App extends Component {
   static propTypes = {
@@ -117,6 +119,7 @@ class App extends Component {
 
     return (
       <Fragment>
+        <SemanticToastContainer />
         {renderRoutes(routes)}
       </Fragment>
     );

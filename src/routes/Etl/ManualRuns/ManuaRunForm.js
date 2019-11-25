@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import {
   reduxForm, Field, change, reset
 } from 'redux-form';
-import { Form, Message } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
+import { toast } from 'react-semantic-toasts';
 import _ from 'lodash';
 import { isEmpty } from 'javascript-utils/lib/utils';
 import manualRunsRdx from '../../../redux/modules/etl/manualRuns';
@@ -18,7 +19,6 @@ class ManualRunForm extends Component {
     values: PropTypes.object,
     pristine: PropTypes.bool,
     submitting: PropTypes.bool,
-    submitSucceeded: PropTypes.bool,
     error: PropTypes.string,
     handleSubmit: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
@@ -31,7 +31,6 @@ class ManualRunForm extends Component {
       values,
       pristine,
       submitting,
-      submitSucceeded,
       error,
       handleSubmit,
       onSubmit,
@@ -44,16 +43,8 @@ class ManualRunForm extends Component {
         autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
         error={!isEmpty(error)}
-        success={submitSucceeded}
-        disabled={submitSucceeded}
       >
         {error && <FormError error={error} />}
-        {submitSucceeded && (
-          <Message
-            success
-            content="The form was submitted successfully."
-          />
-        )}
         <Field
           name="stored_procedure"
           type="text"
@@ -98,7 +89,7 @@ class ManualRunForm extends Component {
         <Form.Group width="eight">
           <Form.Button
             content="Enter"
-            disabled={pristine || submitting || submitSucceeded}
+            disabled={pristine || submitting}
           />
           <Form.Button
             type="button"
@@ -143,8 +134,16 @@ export default reduxForm({
     'from_dttm',
     'to_dttm'
   ],
-  onSubmitSuccess: (result, dispatch) => {
+  onSubmitSuccess: (res, dispatch) => {
     dispatch(manualRunsRdx.actions.updatingEnd());
     dispatch(manualRunsRdx.actions.fetch());
+    toast(
+      {
+        type: 'success',
+        title: 'Thank you',
+        description: <p>The stored procedure was saved successfully.</p>,
+        time: 5000
+      }
+    );
   }
 })(ConnectedForm);
