@@ -43,3 +43,5 @@ class Settings(object):
     ADMINS = [
       'cmatula@ultimatemedical.edu'
     ]
+    LOGGING_ENABLED = True if os.getenv('LOGGING_ENABLED') == '1' else False
+    LOGGING_LEVEL = 40 if not os.getenv('LOGGING_LEVEL') else int(os.getenv('LOGGING_LEVEL'))

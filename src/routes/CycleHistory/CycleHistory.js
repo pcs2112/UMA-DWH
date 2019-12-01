@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 import {
   Segment, Grid, Dropdown, Button, Form, Input
 } from 'semantic-ui-react';
@@ -213,6 +214,14 @@ class Home extends Component {
                 onClick={this.handleViewHistoryOnClick}
               >
                 View History
+              </Button>
+              <Button
+                size="small"
+                style={runCheckButtonCss}
+                as={Link}
+                to="/procedures/runs/manual"
+              >
+                Manual Runs
               </Button>
               <Button
                 size="small"

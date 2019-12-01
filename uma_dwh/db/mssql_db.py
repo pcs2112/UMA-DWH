@@ -2,6 +2,7 @@
 import sys
 import pyodbc
 import re
+from flask import current_app as app
 
 
 this = sys.modules[__name__]
@@ -95,7 +96,7 @@ def result_set_as_dicts(schema, rows):
 def normalize_column_name(name):
     """Function to convert column names to snake case"""
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).replace(' ', '_').lower()
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).replace(' ', '_').replace('__', '_').lower()
 
 
 def get_column_names(result_set_description):
@@ -178,13 +179,16 @@ def execute_sp(sp_name, in_args={}, out_arg=None, as_dict=True):
     :rtype: list
     """
     sql = ''
+    exec_sql = ''
     
     if out_arg:
         out_arg = out_arg.lower()
         sql = f'DECLARE @{out_arg} INTEGER;'
         sql += f'EXEC @{out_arg} = {sp_name} '
+        exec_sql = f'EXEC {sp_name} '
     else:
         sql += f'EXEC {sp_name} '
+        exec_sql = f'EXEC {sp_name} '
 
     in_params = []
     for key in in_args:
@@ -194,14 +198,20 @@ def execute_sp(sp_name, in_args={}, out_arg=None, as_dict=True):
             in_param = str(in_param)
   
         in_params.append(in_param)  # Convert all in args to string
+        exec_sql += f"'{in_param}', "
 
     sql = sql.rstrip(', ')
     sql += f';'
+
+    exec_sql = exec_sql.rstrip(', ')
+    exec_sql += f';'
 
     if out_arg is not None:
         sql += f'SELECT @{out_arg} AS {out_arg};'
 
     cursor = get_db().cursor()
+    if app:
+        app.logger.info(exec_sql)
     cursor.execute(sql, in_params)
 
     results = []

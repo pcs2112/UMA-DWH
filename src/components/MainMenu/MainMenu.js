@@ -35,6 +35,9 @@ class MainMenu extends Component {
         <Menu.Item as={Link} to="/procedures/history" active={isActive(pathname, '/procedures/history')}>
           ETL Procedure History
         </Menu.Item>
+        <Menu.Item as={Link} to="/procedures/runs/manual" active={isActive(pathname, '/procedures/runs/manual')}>
+          ETL Procedure Manual Runs
+        </Menu.Item>
         <Menu.Item as={Link} to="/management" active={pathname === '/management'}>
           ETL Management
         </Menu.Item>

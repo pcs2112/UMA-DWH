@@ -2,11 +2,15 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  reduxForm, Field, getFormSyncErrors, FormSection
+  reduxForm, Field, getFormSyncErrors, FormSection, reset
 } from 'redux-form';
-import { Form, Message } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
+import { toast } from 'react-semantic-toasts';
 import _ from 'lodash';
 import { isEmpty } from 'javascript-utils/lib/utils';
+import cubesRdx from '../../../redux/modules/dataCubes/cubes';
+import factsRdx from '../../../redux/modules/dataCubes/facts';
+import dimsRdx from '../../../redux/modules/dataCubes/dims';
 import { TextField, CheckBoxField } from '../../../components/ReduxForm';
 import FormError from '../../../components/FormError';
 import { cubeValidator } from './validation';
@@ -22,7 +26,6 @@ class CubeForm extends Component {
     values: PropTypes.object,
     pristine: PropTypes.bool,
     submitting: PropTypes.bool,
-    submitSucceeded: PropTypes.bool,
     submitFailed: PropTypes.bool,
     error: PropTypes.string,
     internalError: PropTypes.string,
@@ -40,7 +43,6 @@ class CubeForm extends Component {
       values,
       pristine,
       submitting,
-      submitSucceeded,
       submitFailed,
       error,
       internalError,
@@ -58,16 +60,8 @@ class CubeForm extends Component {
         autoComplete="off"
         onSubmit={handleSubmit(onSubmit)}
         error={!isEmpty(error) || (submitFailed && !isEmpty(internalError))}
-        success={submitSucceeded}
-        disabled={submitSucceeded}
       >
         {(error || internalError) && <FormError error={error || internalError} />}
-        {submitSucceeded && (
-          <Message
-            success
-            content="The cube was saved successfully."
-          />
-        )}
         <Form.Group>
           <Field
             name="cube_name"
@@ -99,13 +93,13 @@ class CubeForm extends Component {
             type="text"
             component={TextField}
             label="Table Name"
-            required={_.get(values, 'materialize', false)}
+            required={_.get(values, 'materalize', false)}
             width="four"
           />
           <Field
-            name="materialize"
+            name="materalize"
             component={CheckBoxField}
-            label="Materialize"
+            label="Materalize"
             width="four"
             style={checkboxStyle}
           />
@@ -135,22 +129,22 @@ class CubeForm extends Component {
           <Form.Button
             type="button"
             content="Define"
-            disabled={definitionDisabled || submitting || submitSucceeded}
+            disabled={definitionDisabled || submitting}
             onClick={onDefinition}
           />
           <Form.Button
             type="button"
             content="Schedule"
-            disabled={scheduleDisabled || submitting || submitSucceeded}
+            disabled={scheduleDisabled || submitting}
             onClick={onSchedule}
           />
           <Form.Button
             content="Save"
-            disabled={pristine || submitting || submitSucceeded}
+            disabled={pristine || submitting}
           />
           <Form.Button
             type="button"
-            content={submitSucceeded ? 'Reset' : 'Cancel'}
+            content="Cancel"
             secondary
             onClick={onCancel}
             disabled={submitting}
@@ -175,7 +169,20 @@ const ConnectedForm = connect(
       values: _.get(state, `form.${props.form}.values`, {}),
       internalError: error
     };
-  }
+  },
+  (dispatch, props) => ({
+    onSubmit: (data) => {
+      console.log(data);
+      return dispatch(cubesRdx.actions.save(data));
+    },
+    onCancel: () => {
+      dispatch(cubesRdx.actions.updatingEnd());
+      dispatch(reset(props.form));
+      dispatch(reset(`Schedule${props.form}`));
+      dispatch(dimsRdx.actions.unselectAll());
+      dispatch(factsRdx.actions.unselectAll());
+    }
+  })
 )(CubeForm);
 
 export default reduxForm({
@@ -185,10 +192,23 @@ export default reduxForm({
     'active_flag',
     'view_name',
     'table_name',
-    'materialize',
+    'materalize',
     'cube_date_start',
     'cube_date_end',
     'definition',
     'schedule.name'
-  ]
+  ],
+  onSubmitSuccess: (res, dispatch) => {
+    dispatch(cubesRdx.actions.updatingEnd());
+    dispatch(dimsRdx.actions.unselectAll());
+    dispatch(factsRdx.actions.unselectAll());
+    toast(
+      {
+        type: 'success',
+        title: 'Thank you',
+        description: <p>The cube was saved successfully.</p>,
+        time: 5000
+      }
+    );
+  }
 })(ConnectedForm);

@@ -35,7 +35,7 @@ export const reset = () => ({
 });
 
 /**
- * Action to create a new cube.
+ * Action to create/update a cube.
  *
  * @param {Object} data
  */
@@ -61,7 +61,7 @@ export const updatingStart = id => ({
 });
 
 /**
- * Action to remove current cube as being updating.
+ * Action to remove the current cube as being updating.
  */
 export const updatingEnd = () => ({
   type: actionTypes.UPDATING_END

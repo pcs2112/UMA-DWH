@@ -5,7 +5,7 @@ import { isEmpty } from 'javascript-utils/lib/utils';
 const validateTableName = (value, data) => {
   let error = '';
 
-  if (data && data.materialize && isEmpty(value)) {
+  if (data && data.materalize && isEmpty(value)) {
     error = 'Required.';
   }
 

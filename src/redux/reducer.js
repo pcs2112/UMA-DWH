@@ -36,6 +36,7 @@ import dataLakeEntries from './modules/dataLake/entries';
 import dataCubes from './modules/dataCubes/cubes';
 import dataCubesFacts from './modules/dataCubes/facts';
 import dataCubesDims from './modules/dataCubes/dims';
+import etlManualRuns from './modules/etl/manualRuns';
 
 export default () => combineReducers({
   [reduxPollingNamespace]: reduxPollingReducer,
@@ -74,5 +75,6 @@ export default () => combineReducers({
   dataLakeEntries: dataLakeEntries.reducer,
   dataCubes: dataCubes.reducer,
   dataCubesFacts: dataCubesFacts.reducer,
-  dataCubesDims: dataCubesDims.reducer
+  dataCubesDims: dataCubesDims.reducer,
+  etlManualRuns: etlManualRuns.reducer
 });

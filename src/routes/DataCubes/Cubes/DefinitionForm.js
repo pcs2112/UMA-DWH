@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import { Form } from 'semantic-ui-react';
 import VirtualMultiSelectBox from '../../../components/VirtualMultiSelectBox';
+import factsRdx from '../../../redux/modules/dataCubes/facts';
 import dimsRdx from '../../../redux/modules/dataCubes/dims';
 
 class DefineForm extends Component {
@@ -89,10 +90,32 @@ class DefineForm extends Component {
 
 const ConnectedForm = connect(
   state => ({
-    definition: dimsRdx.selectors.getSelectedFlat(state)
+    definition: dimsRdx.selectors.getSelectedFlat(state),
+    facts: factsRdx.selectors.getData(state),
+    selectedFacts: factsRdx.selectors.getSelectedIds(state),
+    dims: dimsRdx.selectors.getData(state),
+    selectedDims: dimsRdx.selectors.getSelectedIds(state)
   }),
   (dispatch, props) => ({
-    onChangeDefinition: (value) => dispatch(change(props.form, 'definition', value))
+    onChangeDefinition: (value) => dispatch(change(props.form, 'definition', value)),
+    onAddFact: (fact) => {
+      dispatch(factsRdx.actions.select(fact));
+    },
+    onRemoveFact: (id, fact) => {
+      dispatch(factsRdx.actions.unselect(id, fact));
+    },
+    onRemoveAllFacts: () => {
+      dispatch(factsRdx.actions.unselectAll());
+    },
+    onAddDim: (dim) => {
+      dispatch(dimsRdx.actions.select(dim));
+    },
+    onRemoveDim: (id, dim) => {
+      dispatch(dimsRdx.actions.unselect(id, dim));
+    },
+    onRemoveAllDims: () => {
+      dispatch(dimsRdx.actions.unselectAll());
+    }
   })
 )(DefineForm);
 

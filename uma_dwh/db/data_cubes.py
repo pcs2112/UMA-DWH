@@ -7,19 +7,19 @@ def manage_cubes(*args):
     return execute_sp(*args, sp_args_length=9)
 
 
-def save_cube(cube_name, active_flag, view_name, table_name, materialize, cube_date_start, cube_date_end, schedule, definition):
+def save_cube(cube_name, active_flag, view_name, table_name, materalize, cube_date_start, cube_date_end, schedule, definition):
     """ Creates/updates a cube. """
     active_flag = '1' if active_flag is True else '0'
-    materialize = '1' if materialize is True else '0'
+    materalize = '1' if materalize is True else '0'
 
-    if materialize == '0':
+    if materalize == '0':
         table_name = '' 
 
     xml = '<CUBE>'
     xml += f'<ELEMENT ACTIVE_FLAG="{active_flag}" />'
     xml += f'<ELEMENT CUBE_NAME="{cube_name}" />'
     xml += f'<ELEMENT VIEW_NAME="{view_name}" />'
-    xml += f'<ELEMENT MATERALIZE="{materialize}" />'
+    xml += f'<ELEMENT MATERALIZE="{materalize}" />'
     xml += f'<ELEMENT TABLE_NAME="{table_name}" />'
     xml += f'<ELEMENT CUBE_DATE_START="{cube_date_start}" />'
     xml += f'<ELEMENT CUBE_DATE_END="{cube_date_end}" />'
@@ -45,7 +45,7 @@ def save_cube(cube_name, active_flag, view_name, table_name, materialize, cube_d
         active_flag,
         cube_name,
         view_name,
-        materialize,
+        materalize,
         table_name,
         cube_date_start,
         cube_date_end,
@@ -120,7 +120,7 @@ def execute_sp(*args, sp_args_length, out_arg='sp_status_code'):
     :return: Stored procedure result sets and out argument
     :rtype: list
     """
-    results = execute_sp_with_required_in_args(*args, sp_args_length, sp_in_arg_prefix='VARIABLE_')
+    results = execute_sp_with_required_in_args(*args, sp_args_length=sp_args_length, sp_in_arg_prefix='VARIABLE_', out_arg=out_arg)
     status_code = get_out_arg(results, out_arg)
 
     if status_code > 10:

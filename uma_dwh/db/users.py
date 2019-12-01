@@ -1,5 +1,5 @@
 from pydash.objects import pick, assign
-from pydash.predicates import is_empty
+from pydash.predicates import is_blank
 from passlib.hash import pbkdf2_sha256 as sha256
 from .exceptions import DBException
 from .etl import execute_admin_console_sp
@@ -79,7 +79,7 @@ def create_user(data):
         )
     )
 
-    if is_empty(new_data['employee_email']):
+    if is_blank(new_data['employee_email']):
         raise DBException(f'"employee_email" is required.')
 
     existing_user = fetch_user_by_email(new_data['employee_email'])
@@ -150,7 +150,7 @@ def update_user(id_, data):
         new_data['employee_phone'],
         new_data['employee_cellphone'],
         user['employee_password'],
-        new_data['employee_password'] if is_empty(new_data['employee_password']) else ''
+        new_data['employee_password'] if is_blank(new_data['employee_password']) else ''
     )
 
     return fetch_user_by_id(id_)

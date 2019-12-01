@@ -11,66 +11,30 @@ const keyName = 'id';
  */
 const columns = [
   {
-    Header: 'ACTIVE',
-    accessor: 'active_flag',
-    width: 50
+    Header: 'DOMAIN',
+    accessor: 'domain',
+    width: 150
   },
   {
-    Header: 'CUBE_NAME',
-    accessor: 'cube_name',
-    minWidth: 150
+    Header: 'STATUS',
+    accessor: 'status',
+    minWidth: 120
   },
   {
-    Header: 'VIEW_NAME',
-    accessor: 'view_name',
-    minWidth: 150
+    Header: 'STORED_PROCEDURE',
+    accessor: 'stored_procedure',
+    minWidth: 200
   },
   {
-    Header: 'TABLE_NAME',
-    accessor: 'table_name',
-    minWidth: 150
+    Header: 'FROM_DTTM',
+    accessor: 'from_dttm',
+    minWidth: 120
   },
   {
-    Header: 'MATERALIZE',
-    Cell: row => `${row.original.materalize === 1 ? 'Yes' : 'No'}`,
-    accessor: 'materalize',
-    width: 100,
-    getProps: () => ({
-      style: {
-        textAlign: 'right'
-      }
-    })
+    Header: 'TO_DTTM',
+    accessor: 'to_dttm',
+    minWidth: 120
   },
-  {
-    Header: 'START_DATE',
-    accessor: 'cube_date_start',
-    width: 120
-  },
-  {
-    Header: 'END_DATE',
-    accessor: 'cube_date_end',
-    width: 110
-  },
-  {
-    Header: 'FACT_TBL_CT',
-    accessor: 'fact_table_count',
-    width: 100,
-    getProps: () => ({
-      style: {
-        textAlign: 'right'
-      }
-    })
-  },
-  {
-    Header: 'DIM_TBL_CT',
-    accessor: 'dimension_table_count',
-    width: 100,
-    getProps: () => ({
-      style: {
-        textAlign: 'right'
-      }
-    })
-  }
 ];
 
 class ListTable extends Component {
@@ -85,7 +49,7 @@ class ListTable extends Component {
 
   onEdit = (e) => {
     e.preventDefault();
-    this.props.onEdit(parseInt(e.currentTarget.getAttribute('data-id'), 10));
+    this.props.onEdit(e.currentTarget.getAttribute('data-id'));
   };
 
   getActionsCell = row => (
@@ -145,4 +109,4 @@ class ListTable extends Component {
   }
 }
 
-export default withResponsiveTable(ListTable, 300, 560);
+export default withResponsiveTable(ListTable, 300, 590);
