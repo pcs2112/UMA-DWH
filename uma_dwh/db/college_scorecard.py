@@ -7,6 +7,8 @@ from .mssql_db import execute_sp, get_sp_result_set, get_out_arg
 from uma_dwh.utils import is_float, is_int, is_datetime, list_chunks
 from .utils import execute_sp_with_required_in_args
 from .exceptions import DBException, DBValidationException, SPException
+from .utils import execute_admin_console_sp
+
 
 cell_width_padding = 4
 max_cell_width = 65535
@@ -415,8 +417,6 @@ def print_ws_export_data(ws, columns, file_name):
 def execute_categories_sp(*args, out_arg='sp_status_code'):
   """
   Helper function to execute the MWH_FILES.MANAGE_COLLEGE_SCORECARD_D_CATEGORY stored procedure.
-  :return: Stored procedure result sets and out argument
-  :rtype: list
   """
   results = execute_sp_with_required_in_args(*args, sp_args_length=11, out_arg=out_arg)
   status_code = get_out_arg(results, out_arg)
@@ -443,3 +443,10 @@ def save_category(category_name, description, csv_file, where_unit_id_table, for
     csv_file,
     where_unit_id_table
   )
+
+
+def execute_scheduled_jobs_sp(*args):
+  """
+  Helper function to execute the MWH.MANAGE_SCHEDULE_TASK_JOBS stored procedure.
+  """
+  return execute_admin_console_sp(*args)

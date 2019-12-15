@@ -1,4 +1,5 @@
-from .mssql_db import execute_sp, get_out_arg
+from .mssql_db import execute_sp, get_out_arg, get_sp_result_set
+from .exceptions import SPException
 
 
 def fill_in_sp_in_args(in_args, sp_args_length=10, sp_in_arg_prefix='VARCHAR_'):
@@ -50,3 +51,24 @@ def execute_sp_with_required_in_args(*args, sp_args_length=10, out_arg='sp_statu
     get_out_arg(results, out_arg)
     
     return results
+
+
+def execute_admin_console_sp(*args, sp_args_length=10, out_arg='sp_status_code', sp_in_arg_prefix='VARCHAR_'):
+    """
+    Helper function to execute the stored procedures.
+    :return: Stored procedure result sets and out argument
+    :rtype: list
+    """
+    results = execute_sp_with_required_in_args(*args, sp_args_length=sp_args_length, out_arg=out_arg, sp_in_arg_prefix=sp_in_arg_prefix)
+    status_code = get_out_arg(results, out_arg)
+    
+    if status_code > 1:
+        raise SPException(f'Stored Procedure call to "{args[0]}" failed.', status_code)
+    elif status_code == 0:
+        raise SPException(f'Stored Procedure call to "{args[0]}" failed.', -1)
+    
+    result = get_sp_result_set(results, 0, out_arg)
+    if not result:
+        return []
+
+    return result

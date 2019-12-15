@@ -85,5 +85,20 @@ path_sp_args_map = {
       'sp_name': 'MWH_FILES.MANAGE_COLLEGE_SCORECARD_D_CATEGORY',
       'sp_message': 'LIST_COLLEGE_SCORECARD_FORMULA_TABLES'
     }
+  },
+  'tasks': {
+    'GET': {
+      'module_name': 'uma_dwh.db.college_scorecard',
+      'module_func': 'execute_scheduled_jobs_sp',
+      'sp_name': 'MWH.MANAGE_SCHEDULE_TASK_JOBS',
+      'sp_message': 'LIST_HISTORY'
+    },
+    'POST': {
+      'module_name': 'uma_dwh.db.college_scorecard',
+      'module_func': 'execute_scheduled_jobs_sp',
+      'sp_name': 'MWH.MANAGE_SCHEDULE_TASK_JOBS',
+      'sp_message': 'PUSH_TASK',
+      'sp_in_args': ['job_name', 'original_filename', 'filename']
+    }
   }
 }
