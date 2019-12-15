@@ -445,8 +445,23 @@ def save_category(category_name, description, csv_file, where_unit_id_table, for
   )
 
 
-def execute_scheduled_jobs_sp(*args):
+def execute_scheduled_tasks_sp(*args):
   """
   Helper function to execute the MWH.MANAGE_SCHEDULE_TASK_JOBS stored procedure.
   """
   return execute_admin_console_sp(*args, sp_args_length=11)
+
+
+def schedule_task(filename):
+    job_name = ''
+    if 'MERGED' in filename:
+        job_name = 'COLLEGE SCORECARD COHORTS DATA'
+    elif 'STUDY' in filename: 
+        job_name = 'COLLEGE SCORECARD FIELDS OF STUDY'
+    elif '.yaml' in filename:
+        job_name = 'COLLEGE SCORECARD FIELDS DICTIONARY'
+    else:
+        raise SPException(f'"{job_name}" is an invalid filename.', -1)
+
+    return execute_scheduled_tasks_sp('MWH.MANAGE_SCHEDULE_TASK_JOBS', 'SCHEDULE_TASK_JOB', job_name, filename, 'C:\Users\cmatula\UMA_TELECOM\in'):
+ 
