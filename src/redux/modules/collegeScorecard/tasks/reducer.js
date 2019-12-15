@@ -1,4 +1,4 @@
-import itemListReducerFor, { initialState as itemListInitialState } from '../../reducers/itemListReducerFor';
+import itemListReducerFor, { initialState as itemListInitialState } from '../../../reducers/itemListReducerFor';
 import { actionTypes } from './actions';
 
 // Initial state
