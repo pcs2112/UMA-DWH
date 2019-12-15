@@ -15,7 +15,7 @@ export const getFetchingError = createFetchingErrorSelector('collegeScorecardTas
 /**
  * Returns the college scorecard tasks from the state.
  */
-export const getTasksData = createSelector(
+export const getData = createSelector(
   [_getData],
   data => data
 );

@@ -449,4 +449,4 @@ def execute_scheduled_jobs_sp(*args):
   """
   Helper function to execute the MWH.MANAGE_SCHEDULE_TASK_JOBS stored procedure.
   """
-  return execute_admin_console_sp(*args)
+  return execute_admin_console_sp(*args, sp_args_length=11)

@@ -1,146 +1,65 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import {
-  Segment, Button, Grid
-} from 'semantic-ui-react';
-import collegeScorecardRdx from '../../../redux/modules/collegeScorecard';
-import collegeScorecardGroupsRdx from '../../../redux/modules/collegeScorecardGroups';
-import collegeScorecardFilesRdx from '../../../redux/modules/collegeScorecardFiles';
+import { Segment } from 'semantic-ui-react';
+import tasksRdx from '../../../redux/modules/collegeScorecard/tasks';
 import withMainLayout from '../../../components/WithMainLayout';
-import withResponsiveContainer from '../../../components/WithResponsiveContainer';
-import CheckboxVirtualTable from '../../../components/CheckboxVirtualTable';
+import ListTable from './ListTable';
 import globalCss from '../../../css/global';
-import Filters from './Filters';
-import columns from './columns';
-
-const Table = withResponsiveContainer(CheckboxVirtualTable, 320, 300);
 
 class Tasks extends Component {
   static propTypes = {
-    isDataFetching: PropTypes.bool.isRequired,
-    isAllDataLoaded: PropTypes.bool.isRequired,
-    collegeScorecardFilesData: PropTypes.array.isRequired,
-    collegeScorecardGroupsData: PropTypes.array.isRequired,
-    collegeScorecardGroupsFetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
-    collegeScorecardSelectedData: PropTypes.object.isRequired,
-    collegeScorecardSelectedCount: PropTypes.number.isRequired,
-    collegeScorecardFilters: PropTypes.object.isRequired,
-    fetchAllData: PropTypes.func.isRequired,
-    resetAllData: PropTypes.func.isRequired,
-    selectData: PropTypes.func.isRequired,
-    selectAllData: PropTypes.func.isRequired,
-    unselectData: PropTypes.func.isRequired,
-    unselectAllData: PropTypes.func.isRequired
+    isFetching: PropTypes.bool.isRequired,
+    dataLoaded: PropTypes.bool.isRequired,
+    data: PropTypes.array.isRequired,
+    fetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
+    fetchData: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
-    const {
-      isDataFetching,
-      isAllDataLoaded,
-      fetchAllData,
-      collegeScorecardFilters
-    } = this.props;
-    if (!isDataFetching && !isAllDataLoaded) {
-      const { fileName } = collegeScorecardFilters;
-      fetchAllData(fileName);
-    }
+    const { fetchData } = this.props;
+    fetchData();
   }
 
   render() {
     const {
-      isDataFetching,
-      isAllDataLoaded,
-      collegeScorecardFilesData,
-      collegeScorecardGroupsData,
-      collegeScorecardGroupsFetchingError,
-      collegeScorecardSelectedData,
-      collegeScorecardSelectedCount,
-      collegeScorecardFilters,
-      fetchAllData,
-      selectData,
-      selectAllData,
-      unselectData,
-      unselectAllData
+      isFetching,
+      dataLoaded,
+      data,
+      fetchingError,
     } = this.props;
     return (
-      <div>
+      <Fragment>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            College Scorecard Groups
+            College Scorecard - Queued History
           </h1>
         </Segment>
-        <Segment>
-          <Grid>
-            <Grid.Column width={8}>
-              <Filters
-                fileOptions={collegeScorecardFilesData}
-                onFileChange={fetchAllData}
-                {...collegeScorecardFilters}
-              />
-            </Grid.Column>
-          </Grid>
-        </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
-          <Table
-            dataLoaded={isAllDataLoaded}
-            data={collegeScorecardGroupsData}
-            isFetching={isDataFetching}
-            fetchingError={collegeScorecardGroupsFetchingError}
-            selectedData={collegeScorecardSelectedData}
-            selectedDataCount={collegeScorecardSelectedCount}
-            selectData={selectData}
-            unselectData={unselectData}
-            columns={columns}
-            keyName={collegeScorecardGroupsRdx.constants.LIST_ITEM_KEY_NAME}
+          <ListTable
+            isFetching={isFetching}
+            dataLoaded={dataLoaded}
+            data={data}
+            fetchingError={fetchingError}
           />
         </Segment>
-        <Segment>
-          <Button
-            size="small"
-            disabled={isDataFetching}
-            onClick={collegeScorecardSelectedCount < 1 ? selectAllData : unselectAllData}
-          >
-            {collegeScorecardSelectedCount < 1 ? 'Check All' : 'Uncheck All'}
-          </Button>
-          <Button
-            size="small"
-            as={Link}
-            to="/college_scorecard/reporting"
-          >
-            Reporting
-          </Button>
-        </Segment>
-      </div>
+      </Fragment>
     );
   }
 }
 
 export default withMainLayout(connect(
   state => ({
-    isDataFetching: state.collegeScorecard.isFetching || state.collegeScorecardGroups.isFetching,
-    isAllDataLoaded: state.collegeScorecard.dataLoaded && state.collegeScorecardGroups.dataLoaded,
-    collegeScorecardFilesData: collegeScorecardFilesRdx.selectors
-      .getCollegeScorecardFilesDropdownOptions(state),
-    collegeScorecardGroupsData: collegeScorecardGroupsRdx.selectors.getCollegeScorecardGroupsData(state),
-    collegeScorecardGroupsFetchingError: collegeScorecardGroupsRdx.selectors.getFetchingError(state),
-    collegeScorecardSelectedData: collegeScorecardGroupsRdx.selectors.getSelected(state),
-    collegeScorecardSelectedCount: collegeScorecardGroupsRdx.selectors.getSelectedCount(state),
-    collegeScorecardFilters: collegeScorecardGroupsRdx.selectors.getFilters(state),
+    isFetching: state.dataLakeEntries.isFetching,
+    dataLoaded: state.dataLakeEntries.dataLoaded,
+    data: tasksRdx.selectors.getData(state),
+    fetchingError: tasksRdx.selectors.getFetchingError(state),
   }),
   dispatch => ({
-    fetchAllData: fileName => Promise.all([
-      dispatch(collegeScorecardRdx.actions.fetch(fileName)),
-      dispatch(collegeScorecardGroupsRdx.actions.fetch(fileName))
-    ]),
-    resetAllData: () => {
-      dispatch(collegeScorecardRdx.actions.reset());
-      dispatch(collegeScorecardGroupsRdx.actions.reset());
+    fetchData: () => {
+      Promise.all([
+        dispatch(tasksRdx.actions.fetch()),
+      ]);
     },
-    selectData: data => dispatch(collegeScorecardGroupsRdx.actions.select(data)),
-    selectAllData: () => dispatch(collegeScorecardGroupsRdx.actions.selectAll()),
-    unselectData: (id, data) => dispatch(collegeScorecardGroupsRdx.actions.unselect(id, data)),
-    unselectAllData: () => dispatch(collegeScorecardGroupsRdx.actions.unselectAll()),
   })
 )(Tasks));

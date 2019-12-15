@@ -91,7 +91,7 @@ path_sp_args_map = {
       'module_name': 'uma_dwh.db.college_scorecard',
       'module_func': 'execute_scheduled_jobs_sp',
       'sp_name': 'MWH.MANAGE_SCHEDULE_TASK_JOBS',
-      'sp_message': 'LIST_HISTORY'
+      'sp_message': 'LIST_QUEUED_HISTORY'
     },
     'POST': {
       'module_name': 'uma_dwh.db.college_scorecard',
