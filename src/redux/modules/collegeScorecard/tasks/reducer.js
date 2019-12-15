@@ -3,7 +3,9 @@ import { actionTypes } from './actions';
 
 // Initial state
 const initialState = Object.assign(
-  {},
+  {
+    isScheduling: false,
+  },
   itemListInitialState,
 );
 
@@ -24,6 +26,17 @@ export default (state = initialState, action) => {
     case actionTypes.FETCH_SUCCESS:
     case actionTypes.RESET:
       return itemListReducer(state, action);
+    case actionTypes.SCHEDULE_BEGIN:
+      return {
+        ...state,
+        isScheduling: true,
+      };
+    case actionTypes.SCHEDULE_SUCCESS:
+    case actionTypes.SCHEDULE_FAIL:
+      return {
+        ...state,
+        isScheduling: false,
+      };
     default:
       return state;
   }

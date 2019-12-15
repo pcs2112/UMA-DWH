@@ -456,12 +456,12 @@ def schedule_task(filename):
     job_name = ''
     if 'MERGED' in filename:
         job_name = 'COLLEGE SCORECARD COHORTS DATA'
-    elif 'STUDY' in filename: 
+    elif 'FieldOfStudyData' in filename: 
         job_name = 'COLLEGE SCORECARD FIELDS OF STUDY'
     elif '.yaml' in filename:
         job_name = 'COLLEGE SCORECARD FIELDS DICTIONARY'
     else:
-        raise SPException(f'"{job_name}" is an invalid filename.', -1)
+        raise SPException(f'"{filename}" is an invalid filename.', -1)
 
-    return execute_scheduled_tasks_sp('MWH.MANAGE_SCHEDULE_TASK_JOBS', 'SCHEDULE_TASK_JOB', job_name, filename, 'C:\Users\cmatula\UMA_TELECOM\in'):
+    return execute_scheduled_tasks_sp('MWH.MANAGE_SCHEDULE_TASK_JOBS', 'SCHEDULE_TASK_JOB', job_name, filename, 'UMA_TELECOM\\in')
  

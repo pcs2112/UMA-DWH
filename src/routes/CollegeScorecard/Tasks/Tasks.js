@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Segment } from 'semantic-ui-react';
+import { Segment, Grid } from 'semantic-ui-react';
 import tasksRdx from '../../../redux/modules/collegeScorecard/tasks';
 import withMainLayout from '../../../components/WithMainLayout';
 import ListTable from './ListTable';
+import ScheduleTaskForm from './ScheduleTaskForm';
 import globalCss from '../../../css/global';
 
 class Tasks extends Component {
@@ -34,6 +35,13 @@ class Tasks extends Component {
           <h1 style={globalCss.pageHeaderSegmentH1}>
             College Scorecard - Queued History
           </h1>
+        </Segment>
+        <Segment>
+          <Grid>
+            <Grid.Column width={8}>
+              <ScheduleTaskForm />
+            </Grid.Column>
+          </Grid>
         </Segment>
         <Segment style={globalCss.pageHeaderSegment}>
           <ListTable

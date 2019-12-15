@@ -3,6 +3,9 @@ export const actionTypes = {
   FETCH_SUCCESS: 'collegeScorecardTasks/FETCH_SUCCESS',
   FETCH_FAIL: 'collegeScorecardTasks/FETCH_FAIL',
   RESET: 'collegeScorecardTasks/RESET',
+  SCHEDULE_BEGIN: 'collegeScorecardTasks/SCHEDULE_BEGIN',
+  SCHEDULE_SUCCESS: 'collegeScorecardTasks/SCHEDULE_SUCCESS',
+  SCHEDULE_FAIL: 'collegeScorecardTasks/SCHEDULE_FAIL',
 };
 
 /**
@@ -22,4 +25,18 @@ export const fetch = () => ({
  */
 export const reset = () => ({
   type: actionTypes.RESET,
+});
+
+/**
+ * Action to schedule a College scorecard task.
+ */
+export const scheduleTask = (data) => ({
+  types: [
+    actionTypes.SCHEDULE_BEGIN,
+    actionTypes.SCHEDULE_SUCCESS,
+    actionTypes.SCHEDULE_FAIL
+  ],
+  makeRequest: client => client.post('/api/college_scorecard/tasks', {
+    data,
+  }),
 });

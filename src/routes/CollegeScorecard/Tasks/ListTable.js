@@ -21,12 +21,12 @@ const columns = [
   {
     Header: 'JOB',
     accessor: 'python_job',
-    width: 200,
+    width: 300,
   },
   {
     Header: 'STATUS',
     accessor: 'status',
-    width: 150,
+    width: 200,
   },
   {
     Header: 'STEP',
@@ -41,12 +41,12 @@ const columns = [
   {
     Header: 'FILENAME',
     accessor: 'ftp_site',
-    width: 150,
+    width: 250,
   },
   {
     Header: 'PATH',
     accessor: 'ftp_download_file_path',
-    width: 150,
+    width: 250,
   },
   {
     Header: 'REQUEST_DTTM',
@@ -139,4 +139,4 @@ class ListTable extends Component {
   }
 }
 
-export default withResponsiveTable(ListTable, 510, 200);
+export default withResponsiveTable(ListTable, 510, 220);
