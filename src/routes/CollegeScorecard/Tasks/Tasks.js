@@ -17,7 +17,7 @@ import columns from './columns';
 
 const Table = withResponsiveContainer(CheckboxVirtualTable, 320, 300);
 
-class Groups extends Component {
+class Tasks extends Component {
   static propTypes = {
     isDataFetching: PropTypes.bool.isRequired,
     isAllDataLoaded: PropTypes.bool.isRequired,
@@ -143,4 +143,4 @@ export default withMainLayout(connect(
     unselectData: (id, data) => dispatch(collegeScorecardGroupsRdx.actions.unselect(id, data)),
     unselectAllData: () => dispatch(collegeScorecardGroupsRdx.actions.unselectAll()),
   })
-)(Groups));
+)(Tasks));

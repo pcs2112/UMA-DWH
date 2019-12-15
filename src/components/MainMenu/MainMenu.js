@@ -60,6 +60,7 @@ class MainMenu extends Component {
             isActive(pathname, '/college_scorecard/reporting')
             || isActive(pathname, '/college_scorecard/groups')
             || isActive(pathname, '/college_scorecard/categories')
+            || isActive(pathname, '/college_scorecard/tasks')
           }
         >
           College Scorecard

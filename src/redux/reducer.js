@@ -3,6 +3,7 @@ import { reduxPollingNamespace, reduxPollingReducer } from 'redux-polling';
 import { reducer as form } from 'redux-form';
 import { reducer as modal } from 'redux-modal';
 import collegeScorecard from './modules/collegeScorecard';
+import collegeScorecardTasks from './modules/collegeScorecard/tasks';
 import collegeScorecardFiles from './modules/collegeScorecardFiles';
 import collegeScorecardGroups from './modules/collegeScorecardGroups';
 import collegeScorecardReports from './modules/collegeScorecardReports';
@@ -43,6 +44,7 @@ export default () => combineReducers({
   form,
   modal,
   collegeScorecard: collegeScorecard.reducer,
+  collegeScorecardTasks: collegeScorecardTasks.reducer,
   collegeScorecardFiles: collegeScorecardFiles.reducer,
   collegeScorecardGroups: collegeScorecardGroups.reducer,
   collegeScorecardReports: collegeScorecardReports.reducer,
@@ -76,5 +78,5 @@ export default () => combineReducers({
   dataCubes: dataCubes.reducer,
   dataCubesFacts: dataCubesFacts.reducer,
   dataCubesDims: dataCubesDims.reducer,
-  etlManualRuns: etlManualRuns.reducer
+  etlManualRuns: etlManualRuns.reducer,
 });

@@ -83,13 +83,13 @@ class Categories extends Component {
           />
         </Segment>
         <Segment>
-          <Button primary onClick={onCreateCategoryClick}>Create Category</Button>
+          <Button size="small" primary onClick={onCreateCategoryClick}>Create Category</Button>
           <Button
             size="small"
             as={Link}
             to="/college_scorecard/reporting"
           >
-            View Reporting
+            Reporting
           </Button>
         </Segment>
         <CreateCategoryModal

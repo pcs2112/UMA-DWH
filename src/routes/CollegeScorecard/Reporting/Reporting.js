@@ -278,7 +278,7 @@ class Reporting extends Component {
             to="/college_scorecard/groups"
             disabled={isDataFetching || isExporting}
           >
-            View Groups
+            Groups
           </Button>
           <Button
             size="small"
@@ -286,7 +286,15 @@ class Reporting extends Component {
             to="/college_scorecard/categories"
             disabled={isDataFetching || isExporting}
           >
-            View Categories
+            Categories
+          </Button>
+          <Button
+            size="small"
+            as={Link}
+            to="/college_scorecard/tasks"
+            disabled={isDataFetching || isExporting}
+          >
+           Tasks
           </Button>
           <Button
             size="small"
