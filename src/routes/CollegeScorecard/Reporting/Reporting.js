@@ -119,7 +119,7 @@ class Reporting extends Component {
 
   getPageTitle = () => {
     const { collegeScorecardCurrentReport } = this.props;
-    let pageTitle = 'College Scorecard Reporting';
+    let pageTitle = 'College Scorecard - Reporting';
     if (collegeScorecardCurrentReport) {
       pageTitle += ` (${collegeScorecardCurrentReport.report_name})`;
     }

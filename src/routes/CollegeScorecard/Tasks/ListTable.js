@@ -5,9 +5,11 @@ import ReactTable from 'react-table';
 import withResponsiveTable from '../../../components/WithResponsiveTable';
 import ReactTableRowExpander from '../../../components/ReactTableRowExpander';
 import RowDetails from './RowDetails';
+import globalCss from '../../../css/global';
 
 const keyName = 'id';
 const defaultExpanded = {};
+const noTrProps = {};
 
 /**
  * Table columns
@@ -44,11 +46,6 @@ const columns = [
     width: 250,
   },
   {
-    Header: 'PATH',
-    accessor: 'ftp_download_file_path',
-    width: 250,
-  },
-  {
     Header: 'REQUEST_DTTM',
     accessor: 'request_dttm',
     width: 120,
@@ -62,6 +59,11 @@ const columns = [
     Header: 'START_DTTM',
     accessor: 'start_dttm',
     width: 120,
+  },
+  {
+    Header: '',
+    value: '',
+    minWidth: 120,
   },
 ];
 
@@ -109,6 +111,32 @@ class ListTable extends Component {
     return dataLoaded ? '' : 'Loading...';
   };
 
+  getTrProps = (state, row) => {
+    if (!row) {
+      return noTrProps;
+    }
+
+    let bgColor = 'none';
+    let textColor = '#000';
+    if (row.original.step === 1) {
+      bgColor = globalCss.colors.warning;
+    } else if (row.original.step > 1) {
+      bgColor = globalCss.colors.success;
+      textColor = '#FFF';
+    }
+
+    if (bgColor === 'none') {
+      return noTrProps;
+    }
+
+    return {
+      style: {
+        backgroundColor: bgColor,
+        color: textColor,
+      }
+    };
+  };
+
   render() {
     const {
       tableHeight, isFetching, dataLoaded, data, fetchingError
@@ -129,6 +157,7 @@ class ListTable extends Component {
           loading={isFetching || fetchingError}
           loadingText={this.getLoadingText()}
           noDataText={dataLoaded ? '0 records found.' : ''}
+          getTrProps={this.getTrProps}
           keyField={keyName}
           SubComponent={row => <RowDetails row={row} />}
           expanded={this.state.expanded}
@@ -139,4 +168,4 @@ class ListTable extends Component {
   }
 }
 
-export default withResponsiveTable(ListTable, 510, 220);
+export default withResponsiveTable(ListTable, 510, 280);

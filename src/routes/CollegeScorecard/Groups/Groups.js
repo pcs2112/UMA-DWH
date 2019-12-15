@@ -68,7 +68,7 @@ class Groups extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            College Scorecard Groups
+            College Scorecard - Groups
           </h1>
         </Segment>
         <Segment>

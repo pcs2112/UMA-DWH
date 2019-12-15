@@ -60,7 +60,7 @@ class Categories extends Component {
       <div>
         <Segment style={globalCss.pageHeaderSegment}>
           <h1 style={globalCss.pageHeaderSegmentH1}>
-            College Scorecard Category List
+            College Scorecard - Category List
           </h1>
         </Segment>
         <Segment>

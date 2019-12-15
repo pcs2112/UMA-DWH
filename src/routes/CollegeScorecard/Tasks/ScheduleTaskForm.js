@@ -89,6 +89,7 @@ class ScheduleTaskForm extends Component {
               onChange={this.onChange}
               value={isEmpty(value) ? '' : value}
               disabled={isScheduling}
+              placeholder="Select One"
             />
           </Form.Field>
           <Form.Field width={4}>

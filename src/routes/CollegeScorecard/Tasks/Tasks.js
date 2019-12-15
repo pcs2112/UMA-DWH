@@ -1,7 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Segment, Grid } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { Segment, Grid, Button } from 'semantic-ui-react';
 import tasksRdx from '../../../redux/modules/collegeScorecard/tasks';
 import withMainLayout from '../../../components/WithMainLayout';
 import ListTable from './ListTable';
@@ -50,6 +51,15 @@ class Tasks extends Component {
             data={data}
             fetchingError={fetchingError}
           />
+        </Segment>
+        <Segment>
+          <Button
+            size="small"
+            as={Link}
+            to="/college_scorecard/reporting"
+          >
+            Reporting
+          </Button>
         </Segment>
       </Fragment>
     );
