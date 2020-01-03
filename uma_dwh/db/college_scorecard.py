@@ -1,6 +1,8 @@
 import xlsxwriter
 import io
 import xml.etree.ElementTree as ET
+import requests
+import datetime
 from pydash.objects import pick, assign
 from pydash.predicates import is_blank
 from .mssql_db import execute_sp, get_sp_result_set, get_out_arg
@@ -9,7 +11,8 @@ from .utils import execute_sp_with_required_in_args
 from .exceptions import DBException, DBValidationException, SPException
 from .utils import execute_admin_console_sp
 
-
+LATEST_COHORTS_DATA_URL = 'https://ed-public-download.app.cloud.gov/downloads/Most-Recent-Cohorts-All-Data-Elements.csv'
+LATEST_FIELDS_OF_STUDY_DATA_URL = 'https://ed-public-download.app.cloud.gov/downloads/Most-Recent-Field-Data-Elements.csv'
 cell_width_padding = 4
 max_cell_width = 65535
 
@@ -452,12 +455,24 @@ def execute_scheduled_tasks_sp(*args):
   return execute_admin_console_sp(*args, sp_args_length=11)
 
 
-def schedule_task(filename):
+def schedule_task(filename, new_filename=''):
     job_name = ''
     if 'MERGED' in filename:
         job_name = 'COLLEGE SCORECARD COHORTS DATA'
     elif 'FieldOfStudyData' in filename: 
         job_name = 'COLLEGE SCORECARD FIELDS OF STUDY'
+    elif filename == 'Most Recent Institution-Level Data': 
+        job_name = 'MOST RECENT COLLEGE SCORECARD COHORTS DATA'
+        res = requests.head(LATEST_COHORTS_DATA_URL)
+        last_modified = datetime.datetime.strptime(res.headers['Last-Modified'], '%a, %d %b %Y %H:%M:%S %Z')
+        new_filename = new_filename.split('.', 1)[0]
+        filename = f"{new_filename}_{last_modified.strftime('%Y-%m-%d')}.csv"
+    elif filename == 'Most Recent Data by Field of Study': 
+        job_name = 'MOST RECENT COLLEGE SCORECARD FIELDS OF STUDY'
+        res = requests.head(LATEST_FIELDS_OF_STUDY_DATA_URL)
+        last_modified = datetime.datetime.strptime(res.headers['Last-Modified'], '%a, %d %b %Y %H:%M:%S %Z')
+        new_filename = new_filename.split('.', 1)[0]
+        filename = f"{new_filename}_{last_modified.strftime('%Y-%m-%d')}.csv"
     elif '.yaml' in filename:
         job_name = 'COLLEGE SCORECARD FIELDS DICTIONARY'
     else:

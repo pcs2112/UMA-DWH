@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Form, Dropdown, Button } from 'semantic-ui-react';
+import {
+  Form, Dropdown, Button, Label
+} from 'semantic-ui-react';
 import { toast } from 'react-semantic-toasts';
 import { isEmpty } from 'javascript-utils/lib/utils';
 import tasksRdx from '../../../redux/modules/collegeScorecard/tasks';
 
 const files = [
+  'Most Recent Institution-Level Data',
+  'Most Recent Data by Field of Study',
   'Data.yaml',
   'FieldOfStudyData1415_1516_PP.csv',
   'FieldOfStudyData1516_1617_PP.csv',
@@ -49,6 +53,14 @@ files.forEach((file) => {
   });
 });
 
+const shouldProvideFilename = (value) => value.includes('Institution-Level') || value.includes('Field of Study');
+
+const initialState = {
+  selectedFilename: '',
+  newFilename: '',
+  newFilenameError: '',
+};
+
 class ScheduleTaskForm extends Component {
   static propTypes = {
     isScheduling: PropTypes.bool.isRequired,
@@ -56,26 +68,55 @@ class ScheduleTaskForm extends Component {
   };
 
   state = {
-    value: '',
+    ...initialState,
   }
 
-  onChange = (e, { value }) => {
+  onSelectedFilenameChange = (e, { value }) => {
     this.setState({
-      value,
+      selectedFilename: value,
+      newFilename: value.includes('Institution-Level') ? 'MERGED' : 'FieldOfStudyData',
+      newFilenameError: '',
+    });
+  }
+
+  onFilenameChange = (e) => {
+    this.setState({
+      newFilename: e.target.value,
+      newFilenameError: '',
     });
   }
 
   onSchedule = () => {
-    const { value } = this.state;
-    if (!isEmpty(value)) {
+    const { selectedFilename, newFilename } = this.state;
+    if (!isEmpty(selectedFilename)) {
       const { onSchedule } = this.props;
-      onSchedule(value);
+      if (!shouldProvideFilename(selectedFilename)) {
+        onSchedule(selectedFilename, '');
+      } else if (!isEmpty(newFilename)) {
+        if (selectedFilename.includes('Institution-Level') && !newFilename.startsWith('MERGED')) {
+          this.setState({
+            newFilenameError: 'Filename must begin with "MERGED"',
+          });
+        } else if (selectedFilename.includes('Field of Study') && !newFilename.startsWith('FieldOfStudyData')) {
+          this.setState({
+            newFilenameError: 'Filename must begin with "FieldOfStudyData"',
+          });
+        } else {
+          onSchedule(selectedFilename, newFilename);
+        }
+      }
     }
+  }
+
+  onReset = () => {
+    this.setState({
+      ...initialState,
+    });
   }
 
   render() {
     const { isScheduling } = this.props;
-    const { value } = this.state;
+    const { selectedFilename, newFilename, newFilenameError } = this.state;
     return (
       <Form size="small">
         <Form.Group inline>
@@ -86,8 +127,8 @@ class ScheduleTaskForm extends Component {
               selection
               name="false"
               options={options}
-              onChange={this.onChange}
-              value={isEmpty(value) ? '' : value}
+              onChange={this.onSelectedFilenameChange}
+              value={isEmpty(selectedFilename) ? '' : selectedFilename}
               disabled={isScheduling}
               placeholder="Select One"
             />
@@ -101,8 +142,40 @@ class ScheduleTaskForm extends Component {
             >
               Schedule Task
             </Button>
+            <Button
+              size="small"
+              disabled={isScheduling}
+              onClick={this.onReset}
+            >
+              Reset
+            </Button>
           </Form.Field>
         </Form.Group>
+        {shouldProvideFilename(selectedFilename) && (
+          <>
+            <Form.Group inline>
+              <Form.Field
+                width={8}
+                error={!!(newFilenameError)}
+                required
+              >
+                <input placeholder="Filename" onChange={this.onFilenameChange} value={newFilename} />
+              </Form.Field>
+            </Form.Group>
+            {newFilenameError && (
+              <Form.Group>
+                <Form.Field
+                  width={8}
+                  error={!!(newFilenameError)}
+                >
+                  <Label basic color="red">
+                    {newFilenameError}
+                  </Label>
+                </Form.Field>
+              </Form.Group>
+            )}
+          </>
+        )}
       </Form>
     );
   }
@@ -113,7 +186,10 @@ export default connect(
     isScheduling: state.collegeScorecardTasks.isScheduling,
   }),
   (dispatch) => ({
-    onSchedule: (filename) => dispatch(tasksRdx.actions.scheduleTask({ filename }))
+    onSchedule: (filename, newFilename) => dispatch(tasksRdx.actions.scheduleTask({
+      filename,
+      new_filename: newFilename,
+    }))
       .then(() => {
         toast(
           {

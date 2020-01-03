@@ -96,7 +96,7 @@ path_sp_args_map = {
     'POST': {
       'module_name': 'uma_dwh.db.college_scorecard',
       'module_func': 'schedule_task',
-      'sp_in_args': ['filename']
+      'sp_in_args': ['filename', 'new_filename']
     }
   }
 }
