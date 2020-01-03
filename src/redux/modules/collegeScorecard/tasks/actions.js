@@ -1,3 +1,5 @@
+import { createPollingActions } from 'redux-polling';
+
 export const actionTypes = {
   FETCH_BEGIN: 'collegeScorecardTasks/FETCH_BEGIN',
   FETCH_SUCCESS: 'collegeScorecardTasks/FETCH_SUCCESS',
@@ -7,6 +9,8 @@ export const actionTypes = {
   SCHEDULE_SUCCESS: 'collegeScorecardTasks/SCHEDULE_SUCCESS',
   SCHEDULE_FAIL: 'collegeScorecardTasks/SCHEDULE_FAIL',
 };
+
+const POLLING_INTERVAL = 30000;
 
 /**
  * Action to fetch the College scorecard tasks.
@@ -40,3 +44,8 @@ export const scheduleTask = (data) => ({
     data,
   }),
 });
+
+const polling = () => (dispatch) => dispatch(fetch());
+
+export const getPollingActions = () =>
+  createPollingActions(`collegeScorecardTasksPolling_${POLLING_INTERVAL}`, polling(), POLLING_INTERVAL, 0);

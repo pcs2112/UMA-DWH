@@ -15,13 +15,27 @@ class Tasks extends Component {
     dataLoaded: PropTypes.bool.isRequired,
     data: PropTypes.array.isRequired,
     fetchingError: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]).isRequired,
-    fetchData: PropTypes.func.isRequired,
+    dispatchPollingAction: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
-    const { fetchData } = this.props;
-    fetchData();
+    this.startPolling();
   }
+
+  componentWillUnmount() {
+    this.stopPolling();
+  }
+
+  startPolling = () => {
+    const { dispatchPollingAction } = this.props;
+    this.pollingActions = tasksRdx.actions.getPollingActions();
+    dispatchPollingAction(this.pollingActions.start(dispatchPollingAction));
+  };
+
+  stopPolling = () => {
+    const { dispatchPollingAction } = this.props;
+    dispatchPollingAction(this.pollingActions.reset());
+  };
 
   render() {
     const {
@@ -68,16 +82,12 @@ class Tasks extends Component {
 
 export default withMainLayout(connect(
   state => ({
-    isFetching: state.dataLakeEntries.isFetching,
-    dataLoaded: state.dataLakeEntries.dataLoaded,
+    isFetching: state.collegeScorecardTasks.isFetching,
+    dataLoaded: state.collegeScorecardTasks.dataLoaded,
     data: tasksRdx.selectors.getData(state),
     fetchingError: tasksRdx.selectors.getFetchingError(state),
   }),
   dispatch => ({
-    fetchData: () => {
-      Promise.all([
-        dispatch(tasksRdx.actions.fetch()),
-      ]);
-    },
+    dispatchPollingAction: dispatch,
   })
 )(Tasks));

@@ -168,4 +168,4 @@ class ListTable extends Component {
   }
 }
 
-export default withResponsiveTable(ListTable, 510, 280);
+export default withResponsiveTable(ListTable, 540, 320);

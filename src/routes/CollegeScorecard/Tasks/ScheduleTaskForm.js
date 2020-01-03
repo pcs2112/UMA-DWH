@@ -102,7 +102,11 @@ class ScheduleTaskForm extends Component {
             newFilenameError: 'Filename must begin with "FieldOfStudyData"',
           });
         } else {
-          onSchedule(selectedFilename, newFilename);
+          this.setState({
+            ...initialState,
+          }, () => {
+            onSchedule(selectedFilename, newFilename);
+          });
         }
       }
     }
