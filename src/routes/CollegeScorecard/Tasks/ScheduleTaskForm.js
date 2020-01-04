@@ -53,7 +53,7 @@ files.forEach((file) => {
   });
 });
 
-const shouldProvideFilename = (value) => value.includes('Institution-Level') || value.includes('Field of Study');
+const shouldProvideNewFilename = (value) => value.includes('Institution-Level') || value.includes('Field of Study');
 
 const initialState = {
   selectedFilename: '',
@@ -90,17 +90,22 @@ class ScheduleTaskForm extends Component {
     const { selectedFilename, newFilename } = this.state;
     if (!isEmpty(selectedFilename)) {
       const { onSchedule } = this.props;
-      if (!shouldProvideFilename(selectedFilename)) {
-        onSchedule(selectedFilename, '');
-      } else if (!isEmpty(newFilename)) {
+      if (!shouldProvideNewFilename(selectedFilename)) {
+        this.setState({
+          ...initialState,
+        }, () => {
+          onSchedule(selectedFilename, '');
+        });
+      } else {
+        let newFilenameError;
         if (selectedFilename.includes('Institution-Level') && !newFilename.startsWith('MERGED')) {
-          this.setState({
-            newFilenameError: 'Filename must begin with "MERGED"',
-          });
+          newFilenameError = 'Filename must begin with "MERGED".';
         } else if (selectedFilename.includes('Field of Study') && !newFilename.startsWith('FieldOfStudyData')) {
-          this.setState({
-            newFilenameError: 'Filename must begin with "FieldOfStudyData"',
-          });
+          newFilenameError = 'Filename must begin with "FieldOfStudyData".';
+        }
+
+        if (newFilenameError) {
+          this.setState({ newFilenameError });
         } else {
           this.setState({
             ...initialState,
@@ -155,7 +160,7 @@ class ScheduleTaskForm extends Component {
             </Button>
           </Form.Field>
         </Form.Group>
-        {shouldProvideFilename(selectedFilename) && (
+        {shouldProvideNewFilename(selectedFilename) && (
           <>
             <Form.Group inline>
               <Form.Field

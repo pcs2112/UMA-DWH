@@ -28,7 +28,7 @@ const columns = [
   {
     Header: 'STATUS',
     accessor: 'status',
-    width: 200,
+    width: 240,
   },
   {
     Header: 'STEP',
@@ -118,9 +118,15 @@ class ListTable extends Component {
 
     let bgColor = 'none';
     let textColor = '#000';
-    if (row.original.step === 1) {
+    if (row.original.etl_try_catch_error_id > -1) {
+      bgColor = globalCss.colors.error;
+      textColor = '#FFF';
+    } else if (row.original.step === 1) {
+      bgColor = globalCss.colors.orange;
+      textColor = '#FFF';
+    } else if (row.original.step >= 2 && row.original.step <= 5) {
       bgColor = globalCss.colors.warning;
-    } else if (row.original.step > 1) {
+    } else if (row.original.step < 6) {
       bgColor = globalCss.colors.success;
       textColor = '#FFF';
     }
