@@ -61,6 +61,26 @@ const columns = [
     width: 120,
   },
   {
+    Header: 'ROWS',
+    accessor: 'rows_to_process',
+    width: 110,
+    getProps: () => ({
+      style: {
+        textAlign: 'right',
+      }
+    }),
+  },
+  {
+    Header: 'ROWS_PROCESSED',
+    accessor: 'rows_process',
+    width: 110,
+    getProps: () => ({
+      style: {
+        textAlign: 'right',
+      }
+    }),
+  },
+  {
     Header: '',
     value: '',
     minWidth: 120,
