@@ -57,8 +57,13 @@ const columns = [
   },
   {
     Header: 'START_DTTM',
-    accessor: 'start_dttm',
+    accessor: 'load_started',
     width: 120,
+  },
+  {
+    Header: 'CHECK_STATUS',
+    accessor: 'check_status',
+    width: 110,
   },
   {
     Header: 'ROWS',
@@ -72,7 +77,7 @@ const columns = [
   },
   {
     Header: 'ROWS_PROCESSED',
-    accessor: 'rows_process',
+    accessor: 'rows_processed',
     width: 110,
     getProps: () => ({
       style: {
