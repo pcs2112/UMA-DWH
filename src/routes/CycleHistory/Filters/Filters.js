@@ -22,7 +22,7 @@ class Filters extends Component {
           <Form.Field width={10}>
             <InputFilter
               defaultValue={query}
-              placeholder="Filter by TARGET_SCHEMA_TABLE_NAME"
+              placeholder="Filter by TARGET_SCHEMA_TABLE_NAME and STORED_PROCEDURE"
               onChange={this.handleInputFilterOnChange}
             />
           </Form.Field>

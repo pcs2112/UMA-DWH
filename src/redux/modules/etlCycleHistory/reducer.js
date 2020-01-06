@@ -150,8 +150,9 @@ const filterData = (state) => {
   if (!isEmpty(query) && query.length >= 3) {
     const queryNormalized = query.toLowerCase();
     newData = newData.filter((item) => {
-      const normalizedValue = `${item.target_schema_name}.${item.target_table_name}`.toLowerCase();
-      return normalizedValue.indexOf(queryNormalized) > -1;
+      const normalizedTablename = `${item.target_schema_name}.${item.target_table_name}`.toLowerCase();
+      const normalizedCallingProc = `${item.calling_proc}`.toLowerCase();
+      return normalizedTablename.indexOf(queryNormalized) > -1 || normalizedCallingProc.indexOf(queryNormalized) > -1;
     });
   }
 
